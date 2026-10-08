@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ArrowUpRight, Copy, Check, Scissors } from "@phosphor-icons/react";
-import { ponsUrl, short, type Status } from "../lib/api";
+import { DEMO, ponsUrl, short, type Status } from "../lib/api";
 import { prefersReducedMotion } from "../lib/motion";
 
 gsap.registerPlugin(useGSAP);
@@ -29,7 +29,8 @@ export function useMedia(query: string) {
 
 /** The one primary action on the page. Same label everywhere. */
 export function BuyButton({ status, className = "" }: { status: Status | null; className?: string }) {
-  const ca = status?.tokenAddress;
+  // The illustration edition never prints a buy link or a contract address: a made-up CA is a trap.
+  const ca = DEMO ? "" : status?.tokenAddress;
   if (!ca)
     return (
       <span className={`press-btn is-waiting ${className}`} aria-disabled="true">
@@ -47,7 +48,7 @@ export function BuyButton({ status, className = "" }: { status: Status | null; c
 
 /** The contract address as a clip-out coupon. Tap to copy. */
 export function CaCoupon({ status, compact = false }: { status: Status | null; compact?: boolean }) {
-  const ca = status?.tokenAddress || "";
+  const ca = DEMO ? "" : status?.tokenAddress || "";
   const [copied, setCopied] = useState(false);
   const copy = async () => {
     if (!ca) return;

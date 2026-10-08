@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { LinkSimple, Check, MagnifyingGlass, SealCheck, PenNib, Wallet, XLogo } from "@phosphor-icons/react";
-import { DEMO, addrUrl, amount, bylineNonce, claimByline, dateWib, eth, fetchWallet, short, startXLink, txUrl, unlinkX, type WalletInfo } from "../lib/api";
+import { DEMO, demoSaveByline, demoWallet, addrUrl, amount, bylineNonce, claimByline, dateWib, eth, fetchWallet, short, startXLink, txUrl, unlinkX, type WalletInfo } from "../lib/api";
 import { CrewFace, XCheck, XLink } from "./Face";
 import { aliasFor, nameFor } from "../lib/alias";
 import { connectWallet, hasWallet, signText, useAccount } from "../lib/wallet";
@@ -94,10 +94,10 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
 
   const connect = async () => {
     setNote(null);
-    // The illustration edition opens the booth to preview, but never signs.
+    // The illustration edition opens the booth without a wallet; nothing it saves leaves the page.
     if (DEMO) {
       setDemoAccount(info.addr);
-      return setNote({ ok: false, text: "Illustration edition: try the booth, signing is switched off." });
+      return setNote({ ok: true, text: "Illustration edition: try it all. Whatever you print stays on this page only." });
     }
     if (!hasWallet())
       return setNote({ ok: false, text: NO_WALLET });
@@ -114,7 +114,13 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
 
   const sign = async () => {
     setNote(null);
-    if (DEMO) return setNote({ ok: false, text: "Illustration edition: signing is switched off." });
+    const tidy = name.replace(/\s+/g, " ").trim();
+    if (DEMO) {
+      if (tidy.length < 3 || tidy.length > 18 || !/^[A-Za-z0-9 _'-]+$/.test(tidy)) return setNote({ ok: false, text: "Nicknames are 3 to 18 letters, numbers, spaces, - ' or _." });
+      demoSaveByline(info.addr, { nickname: tidy, pp: mug });
+      onSaved({ nickname: tidy, pp: mug });
+      return setNote({ ok: true, text: `Printed. You're "${tidy}" in the vault now. (Illustration edition: on this page only.)` });
+    }
     try {
       setBusy(true);
       const clean = name.replace(/\s+/g, " ").trim();
@@ -136,7 +142,13 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
   // Link X: the wallet signs, then the browser goes to X and comes back to this card.
   const linkX = async () => {
     setNote(null);
-    if (DEMO) return setNote({ ok: false, text: "Illustration edition: X sign-in is switched off." });
+    if (DEMO) {
+      // A stand-in account: the illustration edition never talks to X.
+      const x = { username: "your_x_handle", name: "Your X name", avatar: "/favicon-192.png", verified: "blue" };
+      demoSaveByline(info.addr, { x });
+      onSaved({ x });
+      return setNote({ ok: true, text: "X linked (pretend account). Live, this shows your real handle, picture and badge." });
+    }
     try {
       setBusy(true);
       const { nonce, linkX: text } = await bylineNonce(info.addr);
@@ -151,7 +163,12 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
 
   const dropX = async () => {
     setNote(null);
-    if (DEMO) return setNote({ ok: false, text: "Illustration edition: signing is switched off." });
+    if (DEMO) {
+      demoSaveByline(info.addr, { x: null });
+      onSaved({ x: null });
+      setTab("name");
+      return setNote({ ok: true, text: "X unlinked. The vault prints your nickname and mugshot again." });
+    }
     try {
       setBusy(true);
       const { nonce, unlinkX: text } = await bylineNonce(info.addr);
@@ -502,7 +519,7 @@ export function CrewCard({ live }: { live: boolean }) {
             </div>
           )}
           {info && info.status !== "not-holding" && info.status !== "excluded" ? (
-            <BylineDesk key={info.addr} info={info} flash={xFlash} onSaved={(patch) => setInfo({ ...info, ...patch })} />
+            <BylineDesk key={info.addr} info={info} flash={xFlash} onSaved={(patch) => setInfo(DEMO ? demoWallet(info.addr) : { ...info, ...patch })} />
           ) : info && info.status === "not-holding" ? (
             // Say why the booth is shut instead of leaving a connected holder guessing.
             <p className="byline__shut">

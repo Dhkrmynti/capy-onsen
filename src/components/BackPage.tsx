@@ -3,7 +3,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { ArrowUpRight, XLogo } from "@phosphor-icons/react";
-import { DEFAULT_STEPS, X_URL, dexUrl, stepShare, type Status } from "../lib/api";
+import { DEFAULT_STEPS, DEMO, X_URL, dexUrl, stepShare, type Status } from "../lib/api";
 import { prefersReducedMotion } from "../lib/motion";
 import { BuyButton, CaCoupon, Folio, useMedia } from "./Bits";
 import { Halftone } from "./Halftone";
@@ -12,7 +12,7 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 export function BackPage({ status }: { status: Status | null }) {
   const root = useRef<HTMLElement>(null);
-  const ca = status?.tokenAddress;
+  const ca = DEMO ? "" : status?.tokenAddress;
   const narrow = useMedia("(max-width: 760px)");
   const keep = stepShare(status?.cycle.steps ?? DEFAULT_STEPS, "keeper");
   const min = Number(status?.rules.minBalance ?? "100000").toLocaleString("en-US");

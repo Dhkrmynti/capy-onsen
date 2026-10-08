@@ -114,7 +114,25 @@ export const txUrl = (tx: string) => `${EXPLORER}/tx/${tx}`;
 export const addrUrl = (a: string) => `${EXPLORER}/address/${a}`;
 
 /** ?demo=1 renders labelled illustration data so the page can be judged before launch. */
-export const DEMO = typeof window !== "undefined" && new URLSearchParams(window.location.search).has("demo");
+/**
+ * Illustration edition. On with ?demo, or for everyone when index.html carries
+ * <meta name="rh-mode" content="demo"> (flip that one line on the server; no rebuild).
+ * ?live always shows the real paper.
+ */
+export const DEMO = (() => {
+  if (typeof window === "undefined") return false;
+  const q = new URLSearchParams(window.location.search);
+  if (q.has("live")) return false;
+  return q.has("demo") || document.querySelector('meta[name="rh-mode"]')?.getAttribute("content") === "demo";
+})();
+
+/** What a visitor sets in the illustration edition: kept on this page only, never sent anywhere. */
+const demoBylines: Record<string, { nickname?: string; pp?: number[] | null; x?: XProfile | null }> = {};
+export function demoSaveByline(addr: string, patch: { nickname?: string; pp?: number[] | null; x?: XProfile | null }) {
+  const a = addr.toLowerCase();
+  demoBylines[a] = { ...demoBylines[a], ...patch };
+  window.dispatchEvent(new Event("rbank:refresh"));
+}
 
 async function get<T>(path: string): Promise<T> {
   const r = await fetch(path, { cache: "no-store" });
@@ -127,6 +145,12 @@ export function usePoll<T>(path: string | null, every = 15000, demo?: () => T) {
   const [data, setData] = useState<T | null>(DEMO && demo ? demo() : null);
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
+    // The illustration edition reprints from its own data when a visitor saves a byline.
+    if (DEMO && demo) {
+      const again = () => setData(demo());
+      window.addEventListener("rbank:refresh", again);
+      return () => window.removeEventListener("rbank:refresh", again);
+    }
     if (DEMO || !path) return;
     let alive = true;
     const run = () =>
@@ -245,6 +269,19 @@ const seedAddrs = [
 ];
 
 export const demoPond = (): { total: number; topN: number; rows: PondRow[] } => {
+  const base = seedPond();
+  const rows = base.rows.map((row) => ({ ...row, ...demoBylines[row.addr.toLowerCase()] }));
+  // A visitor who tries the booth with their own wallet joins the table, inside the top 10.
+  for (const [addr, b] of Object.entries(demoBylines)) {
+    if (rows.some((row) => row.addr.toLowerCase() === addr)) continue;
+    rows.push({ rank: 0, addr, inTop: true, balance: String(3.5e6), firstIn: now() - 5 * 86400, padDays: 5, received: "0.0123", nickname: "", pp: null, x: null, ...b });
+  }
+  rows.sort((a, b) => parseFloat(b.balance) - parseFloat(a.balance));
+  rows.forEach((row, i) => ((row.rank = i + 1), (row.inTop = i < 10)));
+  return { ...base, rows };
+};
+
+const seedPond = (): { total: number; topN: number; rows: PondRow[] } => {
   const days = [26, 25, 23, 26, 21, 19, 17, 14, 12, 9, 6, 3];
   const bal = [9.4e6, 6.6e6, 4.8e6, 3.1e6, 2.4e6, 1.7e6, 1.2e6, 0.82e6, 0.56e6, 0.4e6, 0.31e6, 0.24e6];
   const rec = [0.0391, 0.0262, 0.0207, 0.0141, 0.0098, 0.0071, 0.0049, 0.0031, 0.0022, 0.0014, 0.0006, 0];
@@ -295,7 +332,7 @@ export const demoRounds = (): RoundRow[] =>
 export function demoWallet(addr: string): WalletInfo {
   const pond = demoPond();
   const row = pond.rows.find((r) => r.addr.toLowerCase() === addr.toLowerCase());
-  const hopped = addr.toLowerCase().endsWith("dead") || addr.toLowerCase().includes("bad");
+  const hopped = addr.toLowerCase().endsWith("dead");
   const base = { addr, hoppedAt: 0, hoppedTx: "", eligibleAt: 0, topN: 10, lastIndexedBlock: 82931447 };
   if (hopped)
     return { ...base, status: "hopped", balance: "0", firstIn: now() - 12 * 86400, padDays: 12, received: "0.0042", hoppedAt: now() - 2 * 86400, hoppedTx: demoHash(3), rank: null, inTop: false, estNext: "0" };

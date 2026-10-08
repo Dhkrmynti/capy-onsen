@@ -14,7 +14,8 @@ export function ConnectButton({ className = "" }: { className?: string }) {
 
   const press = async () => {
     if (account) return openCard(account);
-    if (DEMO) {
+    // Illustration edition: a real wallet only shares its address; without one, borrow a crew card.
+    if (DEMO && !hasWallet()) {
       const a = demoPond().rows[1].addr;
       pretendAccount(a);
       return openCard(a);
