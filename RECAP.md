@@ -76,6 +76,12 @@ Lalu siklus mengulang. Pembagiannya 25% / 50% / 25%.
   - Password root sempat dikirim lewat chat. **Ganti password root di hPanel.**
 - **Domain:** **robinheist.cloud** (+ `www`), A record ke `76.13.20.64`. HTTPS via Certbot, auto-renew.
 - Terpasang: Node 22, nginx, pm2 (auto-start saat boot), Certbot. Firewall (ufw) tidak aktif.
+- **DNS:** VPS ada di Jakarta. DNS bawaan Hostinger (filter Kominfo) memblokir `rpc.mainnet.chain.robinhood.com` (diarahkan ke `lamanlabuh.aduankonten.id`), sehingga engine tidak bisa ke mainnet.
+  - Sudah diperbaiki (9 Okt) dengan **DNS-over-TLS** ke Cloudflare/Google: `/etc/systemd/resolved.conf.d/10-dot.conf`.
+  - Nameserver di netplan diganti ke 8.8.8.8; backup aslinya ada di `/root/50-cloud-init.yaml.bak-*`.
+  - Cloud-init dicegah menimpa config itu: `/etc/cloud/cloud.cfg.d/99-keep-dns.cfg`.
+  - Kalau pindah ke VPS Indonesia lain, pasang hal yang sama.
+- Di VPS ini juga ada situs lain, **webspider.fun**. Jangan disentuh.
 
 | | Lokasi |
 |---|---|
