@@ -10,22 +10,24 @@ import crypto from "crypto";
 import type { XProfile } from "./byline";
 
 const TTL = 10 * 60;
-const pending = new Map<string, { addr: string; verifier: string; exp: number }>();
+const pending = new Map<string, { addr: string; verifier: string; exp: number; demo?: boolean }>();
 
 const site = () => (process.env.SITE_URL || "https://robinheist.fun").replace(/\/$/, "");
 const redirectUri = () => process.env.X_REDIRECT_URI || `${site()}/api/x/callback`;
 export const xEnabled = () => !!(process.env.X_CLIENT_ID && process.env.X_CLIENT_SECRET);
+/** X_DEMO=1 lets the illustration edition try a real X sign-in: no wallet, no holder check, nothing saved. */
+export const xDemoEnabled = () => xEnabled() && process.env.X_DEMO === "1";
 
 const b64url = (b: Buffer) => b.toString("base64url");
 
 /** Step 1: returns the X authorize URL for a wallet that has already signed. */
-export function startLink(addr: string) {
+export function startLink(addr: string, demo = false) {
   const now = Math.floor(Date.now() / 1000);
   for (const [k, v] of pending) if (v.exp < now) pending.delete(k);
   if (pending.size > 1000) throw new Error("Too many links in progress. Try again in a few minutes.");
   const state = b64url(crypto.randomBytes(18));
   const verifier = b64url(crypto.randomBytes(32));
-  pending.set(state, { addr: addr.toLowerCase(), verifier, exp: now + TTL });
+  pending.set(state, { addr: addr.toLowerCase(), verifier, exp: now + TTL, demo });
   const q = new URLSearchParams({
     response_type: "code",
     client_id: process.env.X_CLIENT_ID!,
@@ -39,14 +41,14 @@ export function startLink(addr: string) {
 }
 
 /** Where the callback sends the browser back to: the wallet's crew card. */
-export function backTo(addr: string, result: string) {
-  const q = new URLSearchParams({ x: result });
+export function backTo(addr: string, result: string, extra: Record<string, string> = {}) {
+  const q = new URLSearchParams({ x: result, ...extra });
   if (addr) q.set("w", addr);
   return `${site()}/?${q}#card`;
 }
 
 /** Step 2: X sends the browser back with a code; trade it for the public profile. */
-export async function finishLink(state: string, code: string): Promise<{ addr: string; x: XProfile }> {
+export async function finishLink(state: string, code: string): Promise<{ addr: string; x: XProfile; demo: boolean }> {
   const p = pending.get(state);
   pending.delete(state);
   if (!p || p.exp < Math.floor(Date.now() / 1000)) throw Object.assign(new Error("expired"), { addr: p?.addr || "" });
@@ -77,6 +79,7 @@ export async function finishLink(state: string, code: string): Promise<{ addr: s
   const vt = u.verified_type && u.verified_type !== "none" ? u.verified_type : u.verified ? "blue" : "";
   return {
     addr: p.addr,
+    demo: !!p.demo,
     x: {
       id: u.id,
       username: u.username,
@@ -87,4 +90,21 @@ export async function finishLink(state: string, code: string): Promise<{ addr: s
       at: Math.floor(Date.now() / 1000),
     },
   };
+}
+
+/* A demo sign-in's profile waits here for the page to collect it once, then it is gone. */
+const demoResults = new Map<string, { x: XProfile; exp: number }>();
+export function parkDemoResult(x: XProfile) {
+  const now = Math.floor(Date.now() / 1000);
+  for (const [k, v] of demoResults) if (v.exp < now) demoResults.delete(k);
+  const code = b64url(crypto.randomBytes(12));
+  demoResults.set(code, { x, exp: now + TTL });
+  return code;
+}
+export function takeDemoResult(code: string) {
+  const r = demoResults.get(code);
+  demoResults.delete(code);
+  if (!r || r.exp < Math.floor(Date.now() / 1000)) return null;
+  const { username, name, avatar, verified } = r.x;
+  return { username, name, avatar, verified };
 }

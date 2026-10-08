@@ -186,6 +186,10 @@ export const unlinkX = (addr: string, nonce: string, signature: string) => post<
 
 export const xUrl = (username: string) => `https://x.com/${username}`;
 
+/** Illustration edition: a real X sign-in whose profile is shown once and never saved. */
+export const startXDemo = (addr: string) => post<{ url: string }>("/api/x/demo/start", { addr }, "Couldn't start X sign-in.");
+export const takeXDemo = (code: string) => get<XProfile>(`/api/x/demo/result?code=${encodeURIComponent(code)}`);
+
 /** Step 2: send the signature; the server rebuilds the text, checks the signer and the rules. */
 export async function claimByline(addr: string, nickname: string, pp: number[], nonce: string, signature: string) {
   const r = await fetch("/api/byline", {

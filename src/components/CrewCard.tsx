@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { LinkSimple, Check, MagnifyingGlass, SealCheck, PenNib, Wallet, XLogo } from "@phosphor-icons/react";
-import { DEMO, demoSaveByline, demoWallet, addrUrl, amount, bylineNonce, claimByline, dateWib, eth, fetchWallet, short, startXLink, txUrl, unlinkX, type WalletInfo } from "../lib/api";
+import { DEMO, demoSaveByline, demoWallet, startXDemo, takeXDemo, addrUrl, amount, bylineNonce, claimByline, dateWib, eth, fetchWallet, short, startXLink, txUrl, unlinkX, type WalletInfo } from "../lib/api";
 import { CrewFace, XCheck, XLink } from "./Face";
 import { aliasFor, nameFor } from "../lib/alias";
 import { connectWallet, hasWallet, signText, useAccount } from "../lib/wallet";
@@ -29,6 +29,7 @@ const STAMP: Record<WalletInfo["status"], { word: string; tone: Tone; line: stri
 /** What X sign-in came back with (?x=…), read once and then cleared from the address bar. */
 const X_RESULT: Record<string, { ok: boolean; text: string }> = {
   linked: { ok: true, text: "X linked. The vault now prints your X handle, picture and badge." },
+  demo: { ok: true, text: "X linked for real: that's your handle, picture and badge. Illustration edition, so nothing was saved." },
   cancelled: { ok: false, text: "X sign-in cancelled. Nothing changed." },
   expired: { ok: false, text: "The X sign-in took too long. Try again." },
   failed: { ok: false, text: "X didn't confirm the account. Try again in a minute." },
@@ -76,10 +77,16 @@ const SLOTS = [
 function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patch: Partial<WalletInfo>) => void; flash: { ok: boolean; text: string } | null }) {
   // The header's Connect button and this desk share one account.
   const shared = useAccount();
-  const [demoAccount, setDemoAccount] = useState("");
+  // Back from a demo X sign-in, the booth reopens already "connected".
+  const [demoAccount, setDemoAccount] = useState(DEMO && flash ? info.addr : "");
   const account = demoAccount || shared;
   const [open, setOpen] = useState(!!flash || (!!shared && shared.toLowerCase() === info.addr.toLowerCase()));
   const [tab, setTab] = useState<"name" | "x">(info.x ? "x" : "name");
+  // A freshly linked X account opens on its own tab.
+  const hasX = !!info.x;
+  useEffect(() => {
+    if (hasX) setTab("x");
+  }, [hasX]);
   const [name, setName] = useState(info.nickname || aliasFor(info.addr));
   const [mug, setMug] = useState<Traits>(mugOf(info.addr, info.pp));
   const turn = (slot: number, by: number) => {
@@ -143,11 +150,18 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
   const linkX = async () => {
     setNote(null);
     if (DEMO) {
-      // A stand-in account: the illustration edition never talks to X.
+      // Try a real X sign-in (shown once, never saved); without X keys on the engine, a stand-in.
+      try {
+        setBusy(true);
+        const { url } = await startXDemo(info.addr);
+        return window.location.assign(url);
+      } catch {
+        setBusy(false);
+      }
       const x = { username: "your_x_handle", name: "Your X name", avatar: "/favicon-192.png", verified: "blue" };
       demoSaveByline(info.addr, { x });
       onSaved({ x });
-      return setNote({ ok: true, text: "X linked (pretend account). Live, this shows your real handle, picture and badge." });
+      return setNote({ ok: true, text: "X linked (pretend account): real X sign-in isn't switched on yet. Live, this shows your real handle, picture and badge." });
     }
     try {
       setBusy(true);
@@ -332,7 +346,16 @@ export function CrewCard({ live }: { live: boolean }) {
 
   useEffect(() => {
     const q = readQuery();
-    if (q) lookup(q);
+    const code = new URLSearchParams(window.location.search).get("xdemo");
+    if (DEMO && code && q) {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("xdemo");
+      window.history.replaceState(null, "", url);
+      takeXDemo(code)
+        .then((x) => demoSaveByline(q, { x }))
+        .catch(() => {})
+        .finally(() => lookup(q));
+    } else if (q) lookup(q);
     const open = (e: Event) => {
       const addr = (e as CustomEvent<string>).detail;
       setInput(addr);

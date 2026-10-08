@@ -17,7 +17,7 @@ import { ethers } from "ethers";
 import { config, saveConfig, state, saveStateNow, saveStateSoon, resetStateForToken, logs, log, CYCLE, type Holder, type Payout, type Round, type RoundKind } from "./store";
 import { buildUniswapV4Buy, UNISWAP_V4_UNIVERSAL_ROUTER } from "./uniswap-v4";
 import { bylineOf, bylineMessage, claimByline, clearX, issueNonce, mugshotOf, rateLimited, removeByline, setX, spendNonce, xMessage, xOf } from "./byline";
-import { backTo, finishLink, startLink, xEnabled } from "./xlink";
+import { backTo, finishLink, parkDemoResult, startLink, takeDemoResult, xDemoEnabled, xEnabled } from "./xlink";
 
 const PONS_FEE_ESCROW = "0xd3AFEB2a57f70eF218Aa82451c51B2fb0416Ac9e";
 const DEAD = "0x000000000000000000000000000000000000dEaD".toLowerCase();
@@ -746,7 +746,9 @@ const server = http.createServer((req, res) => {
       return go(backTo("", url.searchParams.get("error") === "access_denied" ? "cancelled" : "failed"));
     }
     finishLink(st, code)
-      .then(({ addr, x }) => {
+      .then(({ addr, x, demo }) => {
+        // A demo sign-in is shown on the page once and never saved to the bylines.
+        if (demo) return go(backTo(addr, "demo", { xdemo: parkDemoResult(x) }));
         setX(addr, x);
         log("info", `[X] ${addr.slice(0, 8)}… linked @${x.username}${x.verified ? ` (${x.verified})` : ""}`);
         go(backTo(addr, "linked"));
@@ -756,6 +758,27 @@ const server = http.createServer((req, res) => {
         go(backTo(e?.addr || "", e?.message === "expired" ? "expired" : "failed"));
       });
     return;
+  }
+
+  /* Illustration edition: a real X sign-in to try the link, with nothing saved. Off unless X_DEMO=1. */
+  if (req.method === "POST" && p === "/api/x/demo/start") {
+    if (!xDemoEnabled()) return send(res, 503, { success: false, error: "Real X sign-in isn't switched on for the demo." });
+    if (rateLimited(clientIp(req))) return send(res, 429, { success: false, error: "Too many tries. Wait a minute." });
+    readJson(req, res, (d) => {
+      const addr = typeof d.addr === "string" && isAddr(d.addr) ? lc(d.addr) : "";
+      try {
+        return send(res, 200, { success: true, data: { url: startLink(addr, true) } });
+      } catch (e: any) {
+        return send(res, 503, { success: false, error: e.message });
+      }
+    });
+    return;
+  }
+
+  if (req.method === "GET" && p === "/api/x/demo/result") {
+    const x = takeDemoResult(url.searchParams.get("code") || "");
+    if (!x) return send(res, 404, { success: false, error: "That X sign-in expired. Try again." });
+    return send(res, 200, { success: true, data: x });
   }
 
   if (req.method === "POST" && p === "/api/x/unlink") {
