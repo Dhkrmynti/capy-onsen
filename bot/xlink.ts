@@ -65,7 +65,12 @@ export async function finishLink(state: string, code: string): Promise<{ addr: s
   const me = await fetch("https://api.x.com/2/users/me?user.fields=profile_image_url,verified,verified_type", {
     headers: { Authorization: `Bearer ${t.access_token}` },
   });
-  const j = (await me.json().catch(() => ({}))) as { data?: { id: string; username: string; name: string; profile_image_url?: string; verified?: boolean; verified_type?: string } };
+  const j = (await me.json().catch(() => ({}))) as {
+    data?: { id: string; username: string; name: string; profile_image_url?: string; verified?: boolean; verified_type?: string };
+    title?: string;
+    detail?: string;
+    type?: string;
+  };
   // Done with the token: revoke it so it can never be used again.
   fetch("https://api.x.com/2/oauth2/revoke", {
     method: "POST",
@@ -73,7 +78,9 @@ export async function finishLink(state: string, code: string): Promise<{ addr: s
     body: new URLSearchParams({ token: t.access_token, token_type_hint: "access_token" }),
   }).catch(() => {});
   const u = j.data;
-  if (!me.ok || !u?.id || !/^[A-Za-z0-9_]{1,15}$/.test(u.username)) throw Object.assign(new Error(`users/me ${me.status}`), { addr: p.addr });
+  // X explains a refusal (no credits, app not enrolled…) in title/detail: keep it for the log.
+  const why = [j.title, j.detail, j.type].filter(Boolean).join(" · ").slice(0, 300);
+  if (!me.ok || !u?.id || !/^[A-Za-z0-9_]{1,15}$/.test(u.username)) throw Object.assign(new Error(`users/me ${me.status}${why ? ` (${why})` : ""}`), { addr: p.addr });
 
   const img = u.profile_image_url || "";
   const vt = u.verified_type && u.verified_type !== "none" ? u.verified_type : u.verified ? "blue" : "";
