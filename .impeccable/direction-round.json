@@ -1,0 +1,125 @@
+{
+  "title": "Choose the visual world for $PADS",
+  "question": "The roll assigned Lily Pad Central, a split-flap departures board where every sitter is a row that never departs. Keep it, take an alternate, or re-roll.",
+  "options": [
+    {
+      "id": "assigned",
+      "label": "Lily Pad Central",
+      "kicker": "THE ROLL",
+      "lineage": "Solari split-flap departure boards in old railway halls",
+      "thesis": "The site is a station departures board, and Sitwell is the one passenger who never boards.",
+      "palette": ["#1f6b4a", "#1b1e1c", "#f2eee3", "#f2b31b", "#d9452b"],
+      "materials": ["clattering split-flap tiles", "enamel station signage", "glazed platform tile"],
+      "viewport": "A full-width departures board: NEXT FEEDING 20:00 WIB, the fly jar total and the top sitters flip into place; Sitwell sits on the bench beneath; BOARD ON PONS and the CA ticket sit on the board's own footer rail.",
+      "risk": "If the flaps are drawn timidly it reads as a skin; the flip motion and strict board grid must carry it.",
+      "raised": [
+        {"from": "medium-native-hypercard-stack-shoebox", "raise": "Every wallet row is its own addressable URL, shareable as a ticket."},
+        {"from": "signals-instruments-darkroom-safelight-bay", "raise": "Irreversibility gets its own material: a hopped-off flap locks red and never flips again."},
+        {"from": "luxury-fashion-flagship", "raise": "One monumental number per section, with quiet station wall between dense boards."},
+        {"from": "kinetic-sculpture-automata-tensegrity-breathing-column", "raise": "Every figure carries its source label (block, tx) pinned beside it."},
+        {"from": "textiles-weave-drape-fashion-jacquard-punched-brocade", "raise": "Full traceability: feeding total → each recipient row → its tx."}
+      ]
+    },
+    {
+      "id": "model-pick",
+      "label": "The Sitting Hall",
+      "kicker": "IMPECCABLE’S PICK",
+      "lineage": "zazen meditation halls and their bell schedules",
+      "thesis": "Holding is sitting meditation; feeding time is the evening bell.",
+      "palette": ["#2c3a2e", "#e9e4d4", "#b8862f", "#7a8f6a"],
+      "materials": ["tatami weave", "ink-brush enso", "bronze bell"],
+      "viewport": "Sitwell on his pad inside an ink enso, an unbroken-sit counter and the next bell time beneath.",
+      "risk": "Calm can undersell to a degen audience; the most familiar 'diamond hands = zen' framing."
+    },
+    {
+      "id": "pop-culture-shelf-manga-screentone-page",
+      "label": "Weekly Manga Page",
+      "verdict": "competitive",
+      "lineage": "weekly shonen manga, screentone and speed lines",
+      "thesis": "$PADS as a weekly manga: every feeding is a new chapter page.",
+      "palette": ["#111111", "#f4f1ea", "#9a9a9a", "#2fae5f"],
+      "materials": ["newsprint", "screentone dots", "speed lines"],
+      "viewport": "A right-to-left page where Sitwell refuses to jump in the decisive black panel; the CA sits in a speech bubble.",
+      "case": "Fuses well and CT loves the register (audience identification holds); loses on clarity because live numbers and a wallet checker fight the panel grid.",
+      "risk": "Numbers-heavy sections read awkward inside panels.",
+      "hero": "https://impeccable.style/worlds/cards/pop-culture-shelf-manga-screentone-page-hero.webp"
+    },
+    {
+      "id": "medium-native-hypercard-stack-shoebox",
+      "label": "HyperCard Stack",
+      "verdict": "declined",
+      "lineage": "1987 HyperCard stacks",
+      "thesis": "The pond as a one-bit card stack.",
+      "palette": ["#000000", "#ffffff"],
+      "materials": ["1-bit dither", "painted buttons"],
+      "viewport": "A single card with Sitwell dithered and buttons to flip cards.",
+      "case": "Fuses poorly: traders don't identify with it and one-bit hides live data.",
+      "kept": "Every row addressable as its own URL.",
+      "risk": "Nostalgia for the wrong crowd."
+    },
+    {
+      "id": "signals-instruments-darkroom-safelight-bay",
+      "label": "Darkroom Safelight",
+      "verdict": "declined",
+      "lineage": "photo darkroom under amber safelight",
+      "thesis": "Holding as a print developing; selling pulls it too early.",
+      "palette": ["#c8641c", "#2a2420", "#d9d4cc"],
+      "materials": ["amber safelight", "wet silver print"],
+      "viewport": "A print of Sitwell emerging in the tray as pad days count up.",
+      "case": "Strong metaphor for irreversibility, weak audience identification.",
+      "kept": "Irreversible states get their own material.",
+      "risk": "Moody and slow for a memecoin."
+    },
+    {
+      "id": "luxury-fashion-flagship",
+      "label": "Fashion Flagship",
+      "verdict": "declined",
+      "lineage": "luxury fashion house sites",
+      "thesis": "Sitwell as the season's lookbook.",
+      "palette": ["#f1ede4", "#141414", "#3e7d5a"],
+      "materials": ["bone-white space", "monumental serif"],
+      "viewport": "One huge Sitwell look with a single serif word.",
+      "case": "Loses both axes for a degen trader.",
+      "kept": "One monumental figure per section with real quiet around it.",
+      "risk": "Ironic at best."
+    },
+    {
+      "id": "kinetic-sculpture-automata-tensegrity-breathing-column",
+      "label": "Tensegrity Column",
+      "verdict": "declined",
+      "lineage": "tensegrity sculpture",
+      "thesis": "Holders as tension holding the column up.",
+      "palette": ["#dcd8d0", "#151515", "#c8302a"],
+      "materials": ["carbon rods", "red cord"],
+      "viewport": "A breathing column whose cords are the sitters.",
+      "case": "Abstract; loses both axes.",
+      "kept": "Labels pinned to their source values.",
+      "risk": "Too abstract."
+    },
+    {
+      "id": "textiles-weave-drape-fashion-jacquard-punched-brocade",
+      "label": "Jacquard Brocade",
+      "verdict": "declined",
+      "lineage": "punched-card jacquard looms",
+      "thesis": "Each feeding a woven row.",
+      "palette": ["#16204a", "#c9a24a", "#efe6cf"],
+      "materials": ["silk", "punch cards"],
+      "viewport": "A loom weaving Sitwell row by row.",
+      "case": "Beautiful, loses both axes.",
+      "kept": "Traceability from total to every thread.",
+      "risk": "Ornate and slow."
+    }
+  ],
+  "reroll": {"registers": ["safer", "bolder"]},
+  "buildPath": {"value": "code", "toggle": false},
+  "canon": true,
+  "canonCard": {
+    "label": "The category standard",
+    "thesis": "A memecoin landing page: big mascot hero, ticker, CA copy, stats row, how-it-works steps, leaderboard table.",
+    "palette": ["#0d1a12", "#7cff6b", "#ffffff"],
+    "materials": ["dark ground", "neon accent", "glass cards"],
+    "viewport": "Mascot left, ticker and buy button right, stat cards under it.",
+    "risk": "Indistinguishable from every other token on the VPS by design."
+  },
+  "steer": true
+}

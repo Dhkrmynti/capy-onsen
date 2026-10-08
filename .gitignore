@@ -1,0 +1,13 @@
+node_modules
+dist
+bot-config.json
+bot-state.json
+bot-logs.json
+.env
+.impeccable/config.local.json
+remotion-x/build
+remotion-x/out
+bot-bylines.json
+.DS_Store
+remotion-x/build2
+remotion-x/build-gz
