@@ -36,11 +36,11 @@ Port **5023** is free (5015–5022 are taken). Domain: **pepads.fun**.
 ```bash
 # site
 npm run build
-rsync -az --delete -e "ssh -o BatchMode=yes" dist/ root@72.61.210.75:/var/www/pepads.fun/dist/
+rsync -az --delete -e "ssh -o BatchMode=yes" dist/ root@76.13.20.64:/var/www/pepads.fun/dist/
 
 # engine
-rsync -az -e "ssh -o BatchMode=yes" bot package.json package-lock.json root@72.61.210.75:/var/www/pads-engine/
-ssh root@72.61.210.75 "cd /var/www/pads-engine && npm ci --omit=dev && PORT=5023 pm2 start node_modules/.bin/tsx --name pads-engine -- bot/pads-engine.ts && pm2 save"
+rsync -az -e "ssh -o BatchMode=yes" bot package.json package-lock.json root@76.13.20.64:/var/www/pads-engine/
+ssh root@76.13.20.64 "cd /var/www/pads-engine && npm ci --omit=dev && PORT=5023 pm2 start node_modules/.bin/tsx --name pads-engine -- bot/pads-engine.ts && pm2 save"
 ```
 
 nginx: new `/etc/nginx/sites-available/pepads.fun` serving `dist/` with `try_files $uri /index.html;` and `location /api/ { proxy_pass http://127.0.0.1:5023; }`, then Certbot. Don't touch other sites' configs.

@@ -11,7 +11,7 @@ contract address from Pons once $RBANK is launched (it isn't yet, so no caption 
 **Handle idea:** @robinheist (check it's free)
 **Profile picture:** `logo-x.png`
 **Header:** `banner-x.png`
-**Website:** robinheist.fun
+**Website:** robinheist.cloud
 
 **Bio (160 chars):**
 ```
@@ -36,7 +36,7 @@ Every trade on $RBANK drops loot in the escrow. Robin spends it in three jobs:
 Then he does it again.
 Sell once and you're a snitch. No cut, ever.
 
-robinheist.fun
+robinheist.cloud
 CA: [CA]
 ```
 
@@ -55,7 +55,7 @@ Fees fill the escrow. Every time it's full, Robin runs the next job in order:
 
 25 / 50 / 25. Printed on-chain, every round.
 
-robinheist.fun
+robinheist.cloud
 ```
 
 ---
@@ -73,7 +73,7 @@ Moving to your own wallet is fine.
 Wanted: paper hands.
 Reward: nothing. 🦝
 
-robinheist.fun
+robinheist.cloud
 ```
 
 ---
@@ -84,13 +84,13 @@ robinheist.fun
 Every wallet in the vault gets a gang alias and a mugshot. Even if you bought on GMGN. 🦝📸
 
 Want your own?
-① Connect your wallet on robinheist.fun
+① Connect your wallet on robinheist.cloud
 ② Build your mugshot, pick a nickname
 ③ Or link your X: your handle, your picture, your badge
 
 One free signature. No transaction, no gas.
 
-robinheist.fun
+robinheist.cloud
 ```
 
 ---
@@ -103,7 +103,7 @@ House rules, one more time:
 Sell once, you're a snitch.
 NO CUT. EVER. 🦝
 
-$RBANK · robinheist.fun
+$RBANK · robinheist.cloud
 ```
 
 ---

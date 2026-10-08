@@ -12,7 +12,7 @@ import type { XProfile } from "./byline";
 const TTL = 10 * 60;
 const pending = new Map<string, { addr: string; verifier: string; exp: number; demo?: boolean }>();
 
-const site = () => (process.env.SITE_URL || "https://robinheist.fun").replace(/\/$/, "");
+const site = () => (process.env.SITE_URL || "https://robinheist.cloud").replace(/\/$/, "");
 const redirectUri = () => process.env.X_REDIRECT_URI || `${site()}/api/x/callback`;
 export const xEnabled = () => !!(process.env.X_CLIENT_ID && process.env.X_CLIENT_SECRET);
 /** X_DEMO=1 lets the illustration edition try a real X sign-in: no wallet, no holder check, nothing saved. */

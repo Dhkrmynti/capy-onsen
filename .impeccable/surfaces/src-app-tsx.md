@@ -28,4 +28,4 @@ FORM: Crime tabloid front page, my grounded list #3, seed 8305b263. Raises: ever
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
 
 ## Open
-Domain robinheist.fun purchase, X handle rename, $RBANK CA.
+Domain robinheist.cloud purchase, X handle rename, $RBANK CA.

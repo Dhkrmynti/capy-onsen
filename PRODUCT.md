@@ -30,7 +30,7 @@ Every other fee-engine token on the owner's VPS burns. $PADS rewards patience di
 
 - Traders compare tokens on Pons launchpad and DexScreener; they live on X.
 - Ritual: every feeding → X post with the ETH sent and the tx.
-- Infra: shared VPS `72.61.210.75` (nginx + Certbot + pm2) hosting ~15 other token sites; never touch their configs or processes.
+- Infra: shared VPS `76.13.20.64` (nginx + Certbot + pm2) hosting ~15 other token sites; never touch their configs or processes.
 
 ## Capabilities and Constraints
 
@@ -45,7 +45,7 @@ Every other fee-engine token on the owner's VPS burns. $PADS rewards patience di
 
 ## Brand Commitments
 
-- Name **Robin Heist**, ticker **$RBANK** (rebrand from Pepads/$PADS, 8 Oct 2026; site domain planned: robinheist.fun). Mascot **Robin**: an original raccoon in a bowler-hat disguise; natural bandit mask, bowler hat with brass band, red bow tie, gold monocle, ringed tail, sits on a coin pile next to a $ sack. Tagline **"never snitch."**, sub-line "robbing the paper hands since block one."
+- Name **Robin Heist**, ticker **$RBANK** (rebrand from Pepads/$PADS, 8 Oct 2026; site domain planned: robinheist.cloud). Mascot **Robin**: an original raccoon in a bowler-hat disguise; natural bandit mask, bowler hat with brass band, red bow tie, gold monocle, ringed tail, sits on a coin pile next to a $ sack. Tagline **"never snitch."**, sub-line "robbing the paper hands since block one."
 - **Parody, not finance.** Never call the split a dividend, holders shareholders, or $RBANK an investment. Keep "memecoin, no promise of value" and "not a security, not a dividend" visible.
 - **No borrowed IP.** Not a fox Robin Hood (Disney), no Pepe, no other project's art.
 - Lore terms: fees → **loot**; claim → **the heist**; step 1 (ETH to top 10) → **the split**; step 2 (treasury) → **hideout fund** (always shown openly); step 3 (buyback + burn) → **burn the ledger**; eligible holders → **the crew**; sold → **snitched**; under minimum → **lookout**; leaderboard → **the vault**; wallet check → **crew card**; history → **the ledger**.

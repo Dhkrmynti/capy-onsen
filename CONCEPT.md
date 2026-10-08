@@ -2,7 +2,7 @@
 
 Rebrand 8 Okt 2026 dari Pepads ($PADS). Mekanik engine tidak berubah; nama, ticker, maskot, UI dan lore diganti total. Token baru di-launch di Pons; engine dipindah ke CA baru, $PADS lama berhenti dapat split.
 
-> Status: situs dan konten siap. Menunggu launch $RBANK, domain robinheist.fun, dan ganti handle X.
+> Status: situs dan konten siap. Menunggu launch $RBANK, domain robinheist.cloud, dan ganti handle X.
 
 ---
 

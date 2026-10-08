@@ -43,7 +43,7 @@ function takeXResult() {
   return X_RESULT[r] ?? X_RESULT.failed;
 }
 
-export const NO_WALLET = "No wallet in this browser. Open robinheist.fun inside your wallet app (MetaMask, Rabby, OKX) to connect. GMGN's built-in wallet can't sign here yet.";
+export const NO_WALLET = "No wallet in this browser. Open robinheist.cloud inside your wallet app (MetaMask, Rabby, OKX) to connect. GMGN's built-in wallet can't sign here yet.";
 
 function readQuery() {
   const p = new URLSearchParams(window.location.search).get("w") || window.location.hash.match(/w=(0x[0-9a-fA-F]{40})/)?.[1] || "";

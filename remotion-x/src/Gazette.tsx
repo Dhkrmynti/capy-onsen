@@ -1,5 +1,5 @@
 /**
- * Robin Heist X assets in the Gazette look of robinheist.fun: newsprint stock, one red,
+ * Robin Heist X assets in the Gazette look of robinheist.cloud: newsprint stock, one red,
  * League Gothic heads, Alfa Slab masthead, wire-service Courier. Same Robin, same mugshots.
  */
 import type { CSSProperties, ReactNode } from "react";
@@ -33,7 +33,7 @@ const F = {
   wire: loadWire("normal", { weights: ["400", "700"], subsets: ["latin"] }).fontFamily,
 };
 
-const SITE = "robinheist.fun";
+const SITE = "robinheist.cloud";
 
 /* ─────────────────────────── shared press parts ─────────────────────────── */
 
