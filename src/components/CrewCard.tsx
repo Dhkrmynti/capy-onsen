@@ -150,18 +150,17 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
   const linkX = async () => {
     setNote(null);
     if (DEMO) {
-      // Try a real X sign-in (shown once, never saved); without X keys on the engine, a stand-in.
+      // A real X sign-in (shown once, never saved). Without X keys on the engine, say so plainly;
+      // a pretend account is only used if the visitor asks for one.
       try {
         setBusy(true);
         const { url } = await startXDemo(info.addr);
         return window.location.assign(url);
-      } catch {
+      } catch (e: any) {
         setBusy(false);
+        setPretend(true);
+        return setNote({ ok: false, text: `Real X sign-in isn't switched on yet (${e?.message || "no X app keys on the server"}). You can preview with a pretend account instead.` });
       }
-      const x = { username: "your_x_handle", name: "Your X name", avatar: "/favicon-192.png", verified: "blue" };
-      demoSaveByline(info.addr, { x });
-      onSaved({ x });
-      return setNote({ ok: true, text: "X linked (pretend account): real X sign-in isn't switched on yet. Live, this shows your real handle, picture and badge." });
     }
     try {
       setBusy(true);
@@ -173,6 +172,15 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
       failed(e, "Couldn't start X sign-in.");
       setBusy(false);
     }
+  };
+
+  const [pretend, setPretend] = useState(false);
+  const usePretend = () => {
+    const x = { username: "your_x_handle", name: "Your X name", avatar: "/favicon-192.png", verified: "blue" };
+    demoSaveByline(info.addr, { x });
+    onSaved({ x });
+    setPretend(false);
+    setNote({ ok: true, text: "Pretend X account linked. With X sign-in switched on, this is your real handle, picture and badge." });
   };
 
   const dropX = async () => {
@@ -256,6 +264,11 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
                   <button type="button" className="press-btn is-ink" onClick={linkX} disabled={busy || !info.xLogin}>
                     <XLogo weight="bold" aria-hidden="true" /> {busy ? "Opening X" : "Sign & connect X"}
                   </button>
+                  {DEMO && pretend ? (
+                    <button type="button" className="press-btn" onClick={usePretend}>
+                      Use a pretend account
+                    </button>
+                  ) : null}
                   <p className="lookup__help">{info.xLogin ? "Read-only: we never post or see your DMs. Your picture and handle then can't be edited here." : "X sign-in opens at launch."}</p>
                 </>
               )}
