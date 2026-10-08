@@ -73,6 +73,36 @@ robinheist.cloud
 
 ---
 
+## 1b. Tutorial video: `video-tutorial.mp4` (how to get your name on the board)
+
+```
+How to get your name in the vault 🦝📸
+
+1️⃣ Open robinheist.cloud in your wallet's browser (MetaMask, Rabby, OKX)
+2️⃣ Press Connect: your wallet only shares its address
+3️⃣ Build your mugshot: fur, hat, extra, backdrop
+4️⃣ Pick a gang nickname
+5️⃣ Sign & print: one free signature, no gas, no transaction
+
+Or link your X: your real handle, picture and badge go on the leaderboard.
+
+Bought on GMGN? Import that wallet into MetaMask/Rabby/OKX first; GMGN's built-in wallet can't sign yet.
+
+Hold $RBANK to unlock the booth.
+robinheist.cloud
+```
+
+**Short version** (for a reply or a quote post)
+```
+No name on the board yet? 🦝
+Connect → build your mugshot → pick a nickname → sign (free).
+Or link your X. robinheist.cloud
+```
+
+**Alt text:** Screen-recorded walkthrough of robinheist.cloud: pressing Connect, approving the wallet, building a raccoon mugshot, typing the nickname "Lucky Lou", signing a free message, the name appearing on the vault leaderboard, and the alternative of linking an X account.
+
+---
+
 ## 2. Post 1: `post-1-every-trade-is-a-heist.png` (how it works)
 
 ```
@@ -187,7 +217,7 @@ Best one gets printed in tomorrow's Gazette.
 
 1. **Before launch:** profile set up → video demo (pin it) → Post 1 → teaser.
 2. **Launch day:** "the vault is open" video caption with the CA → Post 2 → GIF in replies.
-3. **Day after:** Post 3 (mugshots) → community hook.
+3. **Day after:** tutorial video → Post 3 (mugshots) → community hook. Reply to "how do I get a name?" with the tutorial's short version.
 4. **When the first split pays out:** the "Heist #1" post with the real amount and tx.
 
 ### Rules for every post

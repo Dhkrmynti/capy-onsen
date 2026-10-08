@@ -1,4 +1,5 @@
 import { Composition, Still } from "remotion";
+import { GZTutorial, TUTORIAL_LENGTH } from "./Tutorial";
 import { GZBanner, GZDemo, GZGif, GZLogo, GZPostMugshots, GZPostPlan, GZPostWanted, GIF_LENGTH, GZ_DEMO_LENGTH } from "./Gazette";
 import { Logo, Banner } from "./Stills";
 import { GifSnap, GifBoard, Demo, DEMO_LENGTH } from "./Motion";
@@ -15,6 +16,7 @@ export function RemotionRoot() {
       <Still id="GZPostWanted" component={GZPostWanted} width={1600} height={900} />
       <Still id="GZPostMugshots" component={GZPostMugshots} width={1600} height={900} />
       <Composition id="GZGif" component={GZGif} width={720} height={720} fps={30} durationInFrames={GIF_LENGTH} />
+      <Composition id="GZTutorial" component={GZTutorial} width={1920} height={1080} fps={30} durationInFrames={TUTORIAL_LENGTH} />
       <Composition id="GZDemo" component={GZDemo} width={1920} height={1080} fps={30} durationInFrames={GZ_DEMO_LENGTH} />
       <Still id="RBLogo" component={RBLogo} width={1080} height={1080} />
       <Still id="RBBanner" component={RBBanner} width={1500} height={500} />

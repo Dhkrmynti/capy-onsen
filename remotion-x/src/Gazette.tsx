@@ -13,7 +13,7 @@ import { Robin } from "./Robin";
 import { Mugshot, type Traits } from "./Mugshot";
 
 // Same tokens as src/styles/tokens.css.
-const G = {
+export const G = {
   paper: "#dedcd5",
   paperDeep: "#cfccc3",
   paperLift: "#e9e7e1",
@@ -24,7 +24,7 @@ const G = {
   redDeep: "#9e1a13",
   redInk: "#fbf3ee",
 };
-const F = {
+export const F = {
   mast: loadMast("normal", { weights: ["400"], subsets: ["latin"] }).fontFamily,
   head: loadHead("normal", { weights: ["400"], subsets: ["latin"] }).fontFamily,
   body: loadBody("normal", { weights: ["400", "700"], subsets: ["latin"] }).fontFamily,
@@ -38,7 +38,7 @@ const SITE = "robinheist.cloud";
 /* ─────────────────────────── shared press parts ─────────────────────────── */
 
 /** Newsprint: the stock colour plus a faint printed grain. */
-function Stock({ children, style }: { children?: ReactNode; style?: CSSProperties }) {
+export function Stock({ children, style }: { children?: ReactNode; style?: CSSProperties }) {
   return (
     <AbsoluteFill
       style={{
@@ -57,7 +57,7 @@ function Stock({ children, style }: { children?: ReactNode; style?: CSSPropertie
 }
 
 /** Robin printed as a halftone plate: grayscale, then seen through a dot screen. */
-function HalftoneRobin({ size, frameStyle, grab = 0, blink = 0 }: { size: number; frameStyle?: CSSProperties; grab?: number; blink?: number }) {
+export function HalftoneRobin({ size, frameStyle, grab = 0, blink = 0 }: { size: number; frameStyle?: CSSProperties; grab?: number; blink?: number }) {
   const dot = Math.max(5, Math.round(size / 70));
   return (
     <div style={{ position: "relative", width: size, height: size * 1.02, padding: size * 0.03, border: `2px solid ${G.ink}`, background: G.paperLift, ...frameStyle }}>
@@ -78,11 +78,11 @@ function HalftoneRobin({ size, frameStyle, grab = 0, blink = 0 }: { size: number
   );
 }
 
-function Masthead({ size, color = G.red }: { size: number; color?: string }) {
+export function Masthead({ size, color = G.red }: { size: number; color?: string }) {
   return <div style={{ fontFamily: F.mast, fontSize: size, lineHeight: 1.05, color, whiteSpace: "nowrap" }}>The Robin Heist Gazette</div>;
 }
 
-function Dateline({ left, mid, right, size = 18 }: { left: string; mid?: string; right: string; size?: number }) {
+export function Dateline({ left, mid, right, size = 18 }: { left: string; mid?: string; right: string; size?: number }) {
   return (
     <div
       style={{
@@ -105,7 +105,7 @@ function Dateline({ left, mid, right, size = 18 }: { left: string; mid?: string;
 }
 
 /** The red EXTRA banner across the page. */
-function Extra({ word, size = 26, style }: { word: string; size?: number; style?: CSSProperties }) {
+export function Extra({ word, size = 26, style }: { word: string; size?: number; style?: CSSProperties }) {
   return (
     <div
       style={{
@@ -131,11 +131,11 @@ function Extra({ word, size = 26, style }: { word: string; size?: number; style?
 
 const Rule = ({ double = false, style }: { double?: boolean; style?: CSSProperties }) => <div style={{ borderTop: double ? `7px double ${G.ink}` : `1.5px solid ${G.ink}`, ...style }} />;
 
-function Head({ children, size, color = G.ink, style }: { children: ReactNode; size: number; color?: string; style?: CSSProperties }) {
+export function Head({ children, size, color = G.ink, style }: { children: ReactNode; size: number; color?: string; style?: CSSProperties }) {
   return <div style={{ fontFamily: F.head, fontSize: size, lineHeight: 0.9, textTransform: "uppercase", color, letterSpacing: "0.005em", ...style }}>{children}</div>;
 }
 
-function Ticker({ size = 22 }: { size?: number }) {
+export function Ticker({ size = 22 }: { size?: number }) {
   return <span style={{ display: "inline-block", padding: `${size * 0.18}px ${size * 0.45}px ${size * 0.1}px`, background: G.ink, color: G.paperLift, fontFamily: F.head, fontSize: size, lineHeight: 1, letterSpacing: "0.04em" }}>$RBANK</span>;
 }
 
