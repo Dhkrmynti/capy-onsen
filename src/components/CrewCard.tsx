@@ -501,7 +501,16 @@ export function CrewCard({ live }: { live: boolean }) {
               <p className="card__blank">Your card prints here.</p>
             </div>
           )}
-          {info && info.status !== "not-holding" && info.status !== "excluded" ? <BylineDesk key={info.addr} info={info} flash={xFlash} onSaved={(patch) => setInfo({ ...info, ...patch })} /> : null}
+          {info && info.status !== "not-holding" && info.status !== "excluded" ? (
+            <BylineDesk key={info.addr} info={info} flash={xFlash} onSaved={(patch) => setInfo({ ...info, ...patch })} />
+          ) : info && info.status === "not-holding" ? (
+            // Say why the booth is shut instead of leaving a connected holder guessing.
+            <p className="byline__shut">
+              {live
+                ? "Nicknames, mugshots and X links are for wallets holding $RBANK. Buy in, then come back to this card."
+                : "The booth opens at launch: once $RBANK is trading, any wallet holding it can set a nickname, build a mugshot or link X here."}
+            </p>
+          ) : null}
         </div>
       </div>
     </section>

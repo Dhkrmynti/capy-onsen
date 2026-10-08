@@ -1845,3 +1845,13 @@
   background: var(--ink);
   color: var(--paper-lift);
 }
+
+/* why the mugshot booth is shut for this wallet */
+.byline__shut {
+  width: 100%;
+  max-width: 520px;
+  padding: 12px 16px;
+  border: 2px dashed var(--rule-soft);
+  font: italic 400 16px/1.45 var(--f-body);
+  color: var(--ink-soft);
+}
