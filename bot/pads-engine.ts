@@ -766,7 +766,7 @@ const server = http.createServer((req, res) => {
         return send(res, refused.length ? 403 : 200, {
           success: refused.length === 0,
           refused,
-          error: refused.length ? `Already set and locked: ${refused.join(", ")}. Changing them needs the admin secret.` : undefined,
+          error: refused.length ? `Needs the admin secret: ${refused.join(", ")}. Paste ADMIN_SECRET from the server .env.` : undefined,
           tokenAddress: config.tokenAddress,
           treasuryAddress: config.treasuryAddress,
           walletAddress: wallet?.address || "",
