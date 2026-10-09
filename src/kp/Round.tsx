@@ -30,7 +30,7 @@ export function Round({ status }: { status: Status | null }) {
       gsap.to(track, {
         x: () => -dist(),
         ease: "none",
-        scrollTrigger: { trigger: root.current, start: "top top", end: () => `+=${dist()}`, scrub: 0.6, pin: true, invalidateOnRefresh: true, anticipatePin: 1 },
+        scrollTrigger: { trigger: root.current, start: "top top", end: () => `+=${dist()}`, scrub: 0.6, pin: true, invalidateOnRefresh: true, anticipatePin: 1, refreshPriority: 1 },
       });
     },
     { scope: root, dependencies: [narrow] },

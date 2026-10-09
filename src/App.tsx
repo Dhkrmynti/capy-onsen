@@ -25,6 +25,36 @@ export function App() {
   // A wallet that already trusts this site shows as connected without a popup.
   useEffect(restoreWallet, []);
 
+  // The pinned scenes (hero, Round) measure where they start once; when fonts, X pictures or
+  // the live Ladder change the height above them, measure again so a pin never jumps or vanishes.
+  useEffect(() => {
+    ScrollTrigger.config({ ignoreMobileResize: true });
+    let t = 0;
+    const again = () => {
+      clearTimeout(t);
+      t = window.setTimeout(() => ScrollTrigger.refresh(), 150);
+    };
+    document.fonts?.ready.then(again);
+    window.addEventListener("load", again);
+    const watched = ["ladder", "rules", "card", "record"].map((id) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
+    const heights = new Map<Element, number>();
+    const ro = new ResizeObserver((entries) => {
+      for (const e of entries) {
+        const h = Math.round(e.contentRect.height);
+        if (heights.get(e.target) !== h) {
+          heights.set(e.target, h);
+          again();
+        }
+      }
+    });
+    watched.forEach((el) => ro.observe(el));
+    return () => {
+      clearTimeout(t);
+      window.removeEventListener("load", again);
+      ro.disconnect();
+    };
+  }, []);
+
   // Smooth scroll that ScrollTrigger reads from; off for reduced motion.
   useEffect(() => {
     if (prefersReducedMotion()) return;

@@ -52,9 +52,8 @@ export function Hero({ status, pond, offline }: { status: Status | null; pond: P
         .from(".hero__read, .hero__acts, .hero__clock", { y: 24, opacity: 0, duration: 0.8, stagger: 0.08 }, "-=0.6");
       // scroll lays the board flat and carries you onto the Ladder
       gsap
-        .timeline({ scrollTrigger: { trigger: root.current, start: "top top", end: "+=85%", scrub: 0.6, pin: true, anticipatePin: 1 } })
+        .timeline({ scrollTrigger: { trigger: root.current, start: "top top", end: "+=85%", scrub: 0.6, pin: true, anticipatePin: 1, refreshPriority: 2 } })
         .to(".hero__copy", { y: -140, opacity: 0, ease: "power1.in" }, 0)
-        .to(".hero__clock", { y: 80, opacity: 0, ease: "power1.in" }, 0)
         .to(".board3d", { rotateX: 0, scale: 1.45, y: -40, ease: "none" }, 0)
         .to(".hero__throne", { scale: 0.5, y: 120, rotate: -6, opacity: 0, ease: "power1.in" }, 0.1);
     },
