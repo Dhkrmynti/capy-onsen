@@ -19,6 +19,7 @@ Semua file ada di folder ini:
 
 ## Nama & bio
 
+**Akun:** `@heirloom_rh` (https://x.com/heirloom_rh)
 **Nama tampilan:** `Heirloom $HEIR`
 **Lokasi:** `The Family Vault`  **Website:** `heirlooms.fun`
 
