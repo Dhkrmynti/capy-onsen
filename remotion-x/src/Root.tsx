@@ -1,5 +1,5 @@
 import { Composition, Still } from "remotion";
-import { KPBanner, KPGif, KPLogo, KPPostEmpty, KPPostLadder, KPPostWho, KPHookPaper, KPHookOuthold, KPHookTen, KPPostRules, KP_GIF_LENGTH } from "./KPStills";
+import { KPBanner, KPGif, KPLogo, KPPostEmpty, KPPostLadder, KPPostWho, KPLogoPad, KPHookPaper, KPHookOuthold, KPHookTen, KPPostRules, KP_GIF_LENGTH } from "./KPStills";
 import { KPExplainer, KP_EXPLAINER_LENGTH } from "./KPExplainer";
 import { KPTutorial, KP_TUTORIAL_LENGTH } from "./KPTutorial";
 import { KPSimulation, KP_SIM_LENGTH } from "./KPSimulation";
@@ -18,6 +18,7 @@ import { HLSimulation, HL_SIM_LENGTH } from "./HLSimulation";
 export function RemotionRoot() {
   return (
     <>
+      <Still id="KPLogoPad" component={KPLogoPad} width={1080} height={1080} />
       <Still id="KPLogo" component={KPLogo} width={1080} height={1080} />
       <Still id="KPBanner" component={KPBanner} width={1500} height={500} />
       <Still id="KPPostLadder" component={KPPostLadder} width={1600} height={900} />

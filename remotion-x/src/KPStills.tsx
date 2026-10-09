@@ -342,3 +342,49 @@ export function KPHookTen() {
     </HookFrame>
   );
 }
+
+/* ───────── launchpad logo: one loud cartoon King that reads at 48px ───────── */
+export function KPLogoPad() {
+  const rays = Array.from({ length: 24 }, (_, i) => i);
+  return (
+    <AbsoluteFill style={{ background: K.violet, overflow: "hidden" }}>
+      {/* sunburst */}
+      <svg width={1080} height={1080} viewBox="-540 -540 1080 1080" style={{ position: "absolute", inset: 0 }}>
+        {rays.map((i) => {
+          const a = (i / rays.length) * Math.PI * 2;
+          const b = ((i + 0.5) / rays.length) * Math.PI * 2;
+          return <path key={i} d={`M0 0 L ${Math.cos(a) * 900} ${Math.sin(a) * 900} L ${Math.cos(b) * 900} ${Math.sin(b) * 900} Z`} fill={i % 2 ? K.violetDeep : K.violet} />;
+        })}
+        <circle r="400" fill={K.lime} stroke={K.ink} strokeWidth="18" />
+      </svg>
+      {/* the King: a toy piece with a face, wearing the crown */}
+      <svg width={1080} height={1080} viewBox="0 0 1080 1080" style={{ position: "absolute", inset: 0 }}>
+        <g stroke={K.ink} strokeWidth="22" strokeLinejoin="round" strokeLinecap="round">
+          {/* base */}
+          <rect x="300" y="830" width="480" height="96" rx="30" fill={K.cream} />
+          <path d="M340 836 L 380 640 H 700 L 740 836 Z" fill={K.crown} />
+          {/* head */}
+          <circle cx="540" cy="520" r="200" fill={K.crown} />
+          {/* crown */}
+          <path d="M340 380 L 360 170 L 450 290 L 540 140 L 630 290 L 720 170 L 740 380 Z" fill="#ffd23f" />
+          <rect x="326" y="360" width="428" height="70" rx="20" fill={K.cream} />
+          <circle cx="360" cy="160" r="30" fill={K.cream} />
+          <circle cx="540" cy="126" r="34" fill={K.cream} />
+          <circle cx="720" cy="160" r="30" fill={K.cream} />
+          <rect x="400" y="378" width="56" height="36" rx="8" fill={K.lime} strokeWidth="14" />
+          <rect x="512" y="378" width="56" height="36" rx="8" fill={K.violet} strokeWidth="14" />
+          <rect x="624" y="378" width="56" height="36" rx="8" fill={K.lime} strokeWidth="14" />
+        </g>
+        {/* face: shades and a smirk */}
+        <g stroke={K.ink} strokeWidth="18" strokeLinejoin="round" strokeLinecap="round">
+          <path d="M390 500 H 690" />
+          <path d="M400 500 C 400 570, 520 575, 525 505 Z" fill={K.ink} />
+          <path d="M555 505 C 560 575, 680 570, 680 500 Z" fill={K.ink} />
+          <path d="M470 630 C 520 668, 590 660, 625 620" fill="none" strokeWidth="20" />
+        </g>
+        <path d="M425 515 L 455 515" stroke={K.cream} strokeWidth="12" strokeLinecap="round" />
+        <path d="M580 515 L 610 515" stroke={K.cream} strokeWidth="12" strokeLinecap="round" />
+      </svg>
+    </AbsoluteFill>
+  );
+}

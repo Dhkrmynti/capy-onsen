@@ -2,7 +2,7 @@
 
 | File | Untuk |
 |---|---|
-| `logo-x.png` | Foto profil (1080×1080, Raja oranye bermahkota; aman untuk crop bulat X) |
+| `logo-x.png` | Logo token ala launchpad (1080×1080): Raja kartun berkacamata hitam bermahkota, latar sunburst; juga dipakai di Pons dan foto profil X |
 | `banner-x.png` | Header (1500×500; teks di tengah-kanan, tidak tertutup foto profil) |
 | `post-0-the-throne-is-empty.png` | Post 0: kondisi sekarang — takhta kosong, menunggu Raja pertama |
 | `post-0b-who-will-be-king.png` | Post 0b: "Who will be the first King?" — ajakan untuk putaran pertama |
