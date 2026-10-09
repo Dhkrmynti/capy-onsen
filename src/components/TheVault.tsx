@@ -41,7 +41,7 @@ export function TheVault({ status }: { status: Status | null }) {
   return (
     <section className="stop stop--tall register" id="register" ref={root} aria-labelledby="ledger-head">
       <div className="h-wrap stop__inner">
-        <div className="plaque plaque--ledger plaque--wide">
+        <div className="plaque plaque--ledger plaque--wide" style={{ "--cols": Math.max(1, cols.length) } as React.CSSProperties}>
           <div className="heirs__top">
             <h2 className="plaque__head" id="ledger-head">
               The Ten Heirs.

@@ -1077,3 +1077,27 @@ body:has(.house) {
     content: "";
   }
 }
+
+/* the book grows with the family: one column per ten holders, centred, widening up to five */
+.register .stop__inner {
+  justify-content: center;
+}
+.plaque--ledger.plaque--wide {
+  width: min(100%, max(560px, calc(var(--cols, 5) * 216px + 70px)));
+}
+.heirs {
+  grid-template-columns: repeat(var(--cols, 5), minmax(0, 1fr));
+}
+@media (max-width: 1080px) and (min-width: 761px) {
+  .heirs {
+    grid-template-columns: repeat(var(--cols, 5), minmax(150px, 1fr));
+  }
+}
+@media (max-width: 760px) {
+  .heirs__col:only-child {
+    flex-basis: 100%;
+  }
+  .heirs__col:only-child .heirs__label::after {
+    content: "";
+  }
+}
