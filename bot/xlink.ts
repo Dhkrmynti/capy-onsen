@@ -12,9 +12,10 @@ import type { XProfile } from "./byline";
 const TTL = 10 * 60;
 const pending = new Map<string, { addr: string; verifier: string; exp: number; demo?: boolean }>();
 
-const site = () => (process.env.SITE_URL || "https://robinheist.cloud").replace(/\/$/, "");
+const site = () => (process.env.SITE_URL || "").replace(/\/$/, "");
 const redirectUri = () => process.env.X_REDIRECT_URI || `${site()}/api/x/callback`;
-export const xEnabled = () => !!(process.env.X_CLIENT_ID && process.env.X_CLIENT_SECRET);
+// SITE_URL is where X sends people back, so sign-in stays off until it is set too.
+export const xEnabled = () => !!(process.env.X_CLIENT_ID && process.env.X_CLIENT_SECRET && process.env.SITE_URL);
 /** X_DEMO=1 lets the illustration edition try a real X sign-in: no wallet, no holder check, nothing saved. */
 export const xDemoEnabled = () => xEnabled() && process.env.X_DEMO === "1";
 
@@ -40,7 +41,7 @@ export function startLink(addr: string, demo = false) {
   return `https://x.com/i/oauth2/authorize?${q}`;
 }
 
-/** Where the callback sends the browser back to: the wallet's crew card. */
+/** Where the callback sends the browser back to: the wallet's citizen card. */
 export function backTo(addr: string, result: string, extra: Record<string, string> = {}) {
   const q = new URLSearchParams({ x: result, ...extra });
   if (addr) q.set("w", addr);

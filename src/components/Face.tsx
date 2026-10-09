@@ -1,5 +1,5 @@
 /**
- * How a crew member is printed: a linked X account shows its own picture, handle and
+ * How a citizen is printed: a linked X account shows its own picture, handle and
  * badge; everyone else gets their mugshot. The X picture falls back to the mugshot if
  * X ever stops serving it.
  */

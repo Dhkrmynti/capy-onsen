@@ -2,7 +2,7 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { ArrowRight, ArrowsClockwise, Coins, Fire, UsersThree, Vault } from "@phosphor-icons/react";
+import { ArrowRight, ArrowsClockwise, Bank, Coins, Fire, UsersThree } from "@phosphor-icons/react";
 import { DEFAULT_STEPS, STEP, stepShare, type RoundKind, type Status } from "../lib/api";
 import { prefersReducedMotion } from "../lib/motion";
 import { slamHead } from "../lib/press";
@@ -22,7 +22,7 @@ export function TheTake({ status }: { status: Status | null }) {
     () => {
       slamHead(root.current!);
       if (prefersReducedMotion()) return;
-      // The job is drawn panel by panel, like a heist plan pinned to the wall.
+      // The payout is drawn panel by panel, like a decree carved on a stele.
       gsap.from(".plan__panel, .plan__arrow", {
         opacity: 0,
         y: 26,
@@ -31,7 +31,7 @@ export function TheTake({ status }: { status: Status | null }) {
         stagger: 0.09,
         scrollTrigger: { trigger: ".plan", start: "top 82%" },
       });
-      // The take is counted out: each share of the loot is laid down in order.
+      // The take is counted out: each part of the fees is laid on the table in order.
       gsap.from(".take__share", {
         scaleX: 0,
         transformOrigin: "0% 50%",
@@ -45,20 +45,20 @@ export function TheTake({ status }: { status: Status | null }) {
   );
 
   return (
-    <section className="page take" id="heist" ref={root} aria-labelledby="take-head">
+    <section className="page take" id="payout" ref={root} aria-labelledby="take-head">
       <div className="wrap">
-        <Folio page={2} label="Crime desk" />
+        <Folio page={2} label="Treasury desk" />
         <h2 className="page__head" id="take-head">
-          How the heist runs
+          How the table pays
         </h2>
-        <p className="page__deck">Every trade drops loot. Robin spends it in three jobs, always in this order.</p>
-        <p className="page__byline">By the Gazette crime desk</p>
+        <p className="page__deck">Every trade drops a coin on the table. Glaux pays it out three ways, always in this order.</p>
+        <p className="page__byline">By the Gazette treasury desk</p>
 
-        <ol className="plan" aria-label="The heist, step by step">
+        <ol className="plan" aria-label="The payout, step by step">
           <li className="plan__panel is-loot">
             <Coins className="plan__icon" weight="duotone" aria-hidden="true" />
             <span className="plan__big">Every trade</span>
-            <span className="plan__what">drops loot in the escrow</span>
+            <span className="plan__what">drops a coin in the escrow</span>
           </li>
           <li className="plan__arrow" aria-hidden="true">
             <ArrowRight weight="bold" />
@@ -66,15 +66,15 @@ export function TheTake({ status }: { status: Status | null }) {
           <li className="plan__panel is-feeding">
             <UsersThree className="plan__icon" weight="duotone" aria-hidden="true" />
             <span className="plan__big tabular">{at("feeding")} ETH</span>
-            <span className="plan__what">to the top {top} bags</span>
+            <span className="plan__what">to the top {top} holders</span>
           </li>
           <li className="plan__arrow" aria-hidden="true">
             <ArrowRight weight="bold" />
           </li>
           <li className="plan__panel is-keeper">
-            <Vault className="plan__icon" weight="duotone" aria-hidden="true" />
+            <Bank className="plan__icon" weight="duotone" aria-hidden="true" />
             <span className="plan__big tabular">{at("keeper")} ETH</span>
-            <span className="plan__what">to the hideout</span>
+            <span className="plan__what">to the treasury</span>
           </li>
           <li className="plan__arrow" aria-hidden="true">
             <ArrowRight weight="bold" />
@@ -82,7 +82,7 @@ export function TheTake({ status }: { status: Status | null }) {
           <li className="plan__panel is-sink">
             <Fire className="plan__icon" weight="duotone" aria-hidden="true" />
             <span className="plan__big tabular">{at("sink")} ETH</span>
-            <span className="plan__what">buys $RBANK, burns it</span>
+            <span className="plan__what">buys $TRPZ, burns it</span>
           </li>
           <li className="plan__again" aria-label="then it repeats">
             <ArrowsClockwise weight="bold" aria-hidden="true" />
@@ -101,7 +101,7 @@ export function TheTake({ status }: { status: Status | null }) {
         </div>
 
         <blockquote className="take__quote">
-          <p>Sell once = snitch. No cut, ever.</p>
+          <p>Sell once = ostracized. No share, ever.</p>
         </blockquote>
       </div>
     </section>

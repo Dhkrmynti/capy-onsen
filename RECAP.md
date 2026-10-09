@@ -4,6 +4,31 @@
 
 ---
 
+## 0. UPDATE TERBARU: rebrand ke TRAPEZA (9 Okt 2026)
+
+Robin Heist **diganti total lorenya** karena domain robinheist.fun dan robinheist.cloud ditangguhkan Hostinger. Alasan resmi dari Hostinger: *"phishing mirroring"* pada robinheist.fun. Dugaan penyebabnya, domain itu sempat menampilkan situs default VPS (prestige.lol) sebelum situs kita dipasang. Kedua VPS (srv2009110, srv2046329) ikut ditangguhkan, dan banding sedang diajukan dengan upload dokumen.
+
+| Lama | Baru |
+|---|---|
+| Robin Heist / $RBANK | **Trapeza / $TRPZ** (τράπεζα = "bank" dalam bahasa Yunani) |
+| Robin si rakun | **Glaux**, burung hantu Athena (`src/components/Glaux.tsx`) |
+| The Robin Heist Gazette | **The Trapeza Gazette** (gaya koran tetap) |
+| Crew / top 10 bags | **The Ten** (10 holder terbesar) / citizens |
+| The split · Hideout · Burn the ledger | **The Share · Treasury of Athena · The Offering** |
+| Snitch | **Ostracized** (jual = diasingkan selamanya) |
+| Mugshot rakun | **Potret koin burung hantu** (plumage, crown, extra, backdrop) |
+| Merah | **Terakota** |
+
+- Mekanisme, engine, tokenomics, dan fitur **tidak berubah**. Jumlah bagian potret tetap [5,5,6,6], jadi validasi backend sama.
+- Domain baru dan VPS baru **belum dipilih**. Saran: VPS Vultr/DigitalOcean (Singapura) + domain di Porkbun/Cloudflare, nama tanpa robin/heist/bank.
+- Setelah domain ada:
+  - isi `SITE_URL` di `.env` engine (Connect X mati selama `SITE_URL` kosong),
+  - tambahkan callback `https://DOMAIN/api/x/callback` di console X,
+  - render ulang konten X (`remotion-x/`). Konten di `konten-x/` saat ini masih bergaya Robin Heist.
+- Isi bagian di bawah ini sebagian besar masih menyebut nama lama. Mekanismenya tetap berlaku.
+
+---
+
 ## 1. Proyek ini apa
 
 Memecoin di **Robinhood Chain** (chain id 4663) yang di-launch lewat **Pons** (ponsfamily.com), plus **fee engine** otomatis. Engine meng-claim fee creator dari escrow Pons lalu menjalankan siklus 3 langkah:

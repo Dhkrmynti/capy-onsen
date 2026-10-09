@@ -34,7 +34,7 @@ export function BuyButton({ status, className = "" }: { status: Status | null; c
   if (!ca)
     return (
       <span className={`press-btn is-waiting ${className}`} aria-disabled="true">
-        <span className="btn__long">Vault opens soon</span>
+        <span className="btn__long">Table opens soon</span>
         <span className="btn__short">Soon</span>
       </span>
     );
@@ -79,7 +79,7 @@ export function CaCoupon({ status, compact = false }: { status: Status | null; c
 export function Folio({ page, label }: { page: number; label: string }) {
   return (
     <p className="folio" aria-hidden="true">
-      <span>The Robin Heist Gazette</span>
+      <span>The Trapeza Gazette</span>
       <span>{label}</span>
       <span className="tabular">Page {page}</span>
     </p>
@@ -88,7 +88,7 @@ export function Folio({ page, label }: { page: number; label: string }) {
 
 /**
  * The escrow as a lit fuse: a twisted cord burning from the left. The charred length is
- * how much loot has gathered toward the next step; the flame sits on the burning end.
+ * how much fee has gathered toward the next step; the flame sits on the burning end.
  */
 export function Fuse({ value, target, label }: { value: number; target: number; label: string }) {
   const root = useRef<HTMLDivElement>(null);

@@ -34,9 +34,9 @@ export function BackPage({ status }: { status: Status | null }) {
         <Folio page={7} label="Classifieds" />
         <div className="ads">
           <article className="ad ad--lead">
-            <h3>Help wanted: crew</h3>
+            <h3>Wanted: citizens</h3>
             <p>
-              Hold {min} $RBANK. Never snitch. Paid in ETH, every split.
+              Hold {min} $TRPZ. Never sell. Paid in ETH, every Share.
             </p>
             <div className="ad__deal">
               <BuyButton status={status} />
@@ -45,20 +45,20 @@ export function BackPage({ status }: { status: Status | null }) {
           </article>
           <article className="ad ad--lost">
             <h3>Lost</h3>
-            <p>One bag, sold at the bottom. Now a snitch.</p>
+            <p>One bag, sold at the bottom. Now ostracized.</p>
           </article>
           <article className="ad ad--sale">
             <h3>For sale</h3>
-            <p>Nothing. Robin doesn&rsquo;t sell.</p>
+            <p>Nothing. Glaux doesn&rsquo;t sell.</p>
           </article>
           <article className="ad ad--notice">
             <h3>Public notice</h3>
-            <p>Not a security. Not a dividend. A raccoon with a spreadsheet.</p>
+            <p>Not a security. Not a dividend. An owl with an abacus.</p>
           </article>
         </div>
 
         <div className="back__end">
-          <Halftone className="back__photo" label="Robin sitting on his coin pile, still holding." />
+          <Halftone className="back__photo" label="Glaux perched on his drachma pile, still holding." />
           <p className="back__close">
             <span>Still</span> <span>holding.</span>
           </p>
@@ -73,11 +73,11 @@ export function BackPage({ status }: { status: Status | null }) {
           <a href={X_URL} target="_blank" rel="noreferrer">
             <XLogo weight="bold" aria-hidden="true" /> The Gazette on X <ArrowUpRight weight="bold" aria-hidden="true" />
           </a>
-          <a href="#rules">Read the crew rules again</a>
+          <a href="#rules">Read the decree again</a>
         </nav>
 
         <p className="back__fine">
-          <strong>Corrections and clarifications.</strong> $RBANK is a memecoin with no promise of value. It is not a security or an investment, and the split is not a dividend: it is trading fees, which can drop to nothing. The hideout fund ({keep}% of all loot) goes to the creator&rsquo;s treasury, and every transfer is printed in the blotter. Robin is an original character.
+          <strong>Corrections and clarifications.</strong> $TRPZ is a memecoin with no promise of value. It is not a security or an investment, and the Share is not a dividend: it is trading fees, which can drop to nothing. The treasury ({keep}% of all fees) goes to the creator&rsquo;s wallet, and every transfer is carved in the ledger. Glaux is an original character.
         </p>
       </div>
     </footer>

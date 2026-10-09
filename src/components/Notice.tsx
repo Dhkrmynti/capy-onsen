@@ -19,19 +19,19 @@ export function Notice({ status }: { status: Status | null }) {
   const holdText = hold === 1 ? "an hour" : `${hold} hours`;
 
   const rules = [
-    { icon: Coins, title: `Hold ${amount(min)}+ $RBANK`, text: "Under that you're a lookout, not crew. It keeps dust wallets out of the split." },
-    { icon: Ranking, title: `Top ${top} bags get the split`, text: `Each split goes to the ${top} biggest balances in the crew, in ETH, shared by bag size. Hold more, climb the vault.` },
-    ...(hold > 0 ? [{ icon: Clock, title: `Hold ${holdText} first`, text: `Your first $RBANK must be ${holdText} old when the heist runs. No buying in the second before the split.` }] : []),
-    { icon: Prohibit, title: "Never snitch", text: "Selling on the Pons curve, or sending $RBANK into a DEX or any other contract, makes your wallet a snitch. Out of the crew for good." },
-    { icon: ArrowsLeftRight, title: "Wallet to wallet is fine", text: "Moving $RBANK to your own other wallet is not a sell. The receiving wallet starts its days in the crew from zero." },
-    { icon: Eye, title: "Staff get no cut", text: "The curve, the engine, the treasury and the dead address are left out of every split." },
+    { icon: Coins, title: `Hold ${amount(min)}+ $TRPZ`, text: "Under that you're a visitor, not a citizen. It keeps dust wallets out of the Share." },
+    { icon: Ranking, title: `Top ${top} holders get the Share`, text: `Each Share goes to the ${top} biggest balances among the citizens, in ETH, split by size. Hold more, climb the agora.` },
+    ...(hold > 0 ? [{ icon: Clock, title: `Hold ${holdText} first`, text: `Your first $TRPZ must be ${holdText} old when the Share is paid. No buying in the second before it.` }] : []),
+    { icon: Prohibit, title: "Never sell", text: "Selling on the Pons curve, or sending $TRPZ into a DEX or any other contract, gets your wallet ostracized. Out of the city for good." },
+    { icon: ArrowsLeftRight, title: "Wallet to wallet is fine", text: "Moving $TRPZ to your own other wallet is not a sell. The receiving wallet starts its days as a citizen from zero." },
+    { icon: Eye, title: "Officials get no share", text: "The curve, the engine, the treasury and the dead address are left out of every Share." },
   ];
 
   useGSAP(
     () => {
       slamHead(root.current!);
       if (prefersReducedMotion()) return;
-      // The notice is pasted up line by line; the wanted poster is slapped on the wall and settles crooked.
+      // The decree is carved line by line; the ostracon is tossed onto the pile and settles crooked.
       gsap.from(".notice__rule", { clipPath: "inset(0 100% 0 0)", duration: 0.8, ease: "expo.out", stagger: 0.07, scrollTrigger: { trigger: ".notice__list", start: "top 80%" } });
       gsap.from(".wanted", { y: -60, rotate: -9, scale: 1.08, opacity: 0, duration: 1.1, ease: "back.out(1.6)", scrollTrigger: { trigger: ".wanted", start: "top 82%" } });
     },
@@ -44,9 +44,9 @@ export function Notice({ status }: { status: Status | null }) {
         <Folio page={3} label="Notices" />
         <div className="notice__sheet">
           <h2 className="page__head" id="notice-head">
-            Notice to the crew
+            Decree of the assembly
           </h2>
-          <p className="page__deck">By order of Robin. Enforced by code, checked on chain.</p>
+          <p className="page__deck">Voted by the citizens. Enforced by code, checked on chain.</p>
           <ol className="notice__list">
             {rules.map(({ icon: Icon, title, text }) => (
               <li className="notice__rule" key={title} title={text}>
@@ -58,12 +58,12 @@ export function Notice({ status }: { status: Status | null }) {
           </ol>
         </div>
 
-        <aside className="wanted" aria-label={`Wanted: ${snitches} snitches`}>
-          <p className="wanted__word">Wanted</p>
+        <aside className="wanted" aria-label={`Ostracized: ${snitches} wallets`}>
+          <p className="wanted__word">Ostracized</p>
           <p className="wanted__n tabular">{snitches}</p>
-          <p className="wanted__what">{snitches === 1 ? "snitch" : "snitches"}</p>
-          <p className="wanted__crime">For selling $RBANK on the curve or a DEX.</p>
-          <p className="wanted__reward">Reward: nothing. Ever.</p>
+          <p className="wanted__what">{snitches === 1 ? "wallet" : "wallets"}</p>
+          <p className="wanted__crime">Named on a shard for selling $TRPZ on the curve or a DEX.</p>
+          <p className="wanted__reward">Exiled. No share, ever.</p>
         </aside>
       </div>
     </section>

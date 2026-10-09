@@ -19,18 +19,18 @@ function Tx({ hash }: { hash: string }) {
   );
 }
 
-/** One heist, written up the way a desk sergeant would. */
+/** One payout, carved into the ledger the way a city scribe would. */
 function Entry({ r }: { r: RoundRow }) {
   const done = r.stage === "done";
   const what =
     r.kind === "feeding"
-      ? `${parseFloat(done ? r.fedETH : r.spentETH).toFixed(4)} ETH to ${r.recipients || "the"} crew`
+      ? `${parseFloat(done ? r.fedETH : r.spentETH).toFixed(4)} ETH to ${r.recipients ? `${r.recipients} of the Ten` : "the Ten"}`
       : r.kind === "keeper"
-        ? `${parseFloat(r.spentETH).toFixed(4)} ETH to the hideout`
+        ? `${parseFloat(r.spentETH).toFixed(4)} ETH to the treasury`
         : done
-          ? `${amount(r.tokensBurned)} $RBANK burned`
+          ? `${amount(r.tokensBurned)} $TRPZ burned`
           : `buying back`;
-  const label = r.kind === "feeding" ? "The split" : r.kind === "keeper" ? "Hideout fund" : "Burn the ledger";
+  const label = r.kind === "feeding" ? "The Share" : r.kind === "keeper" ? "Treasury" : "The Offering";
   return (
     <li className={`entry is-${r.kind} ${done ? "" : "is-open"}`}>
       <p className="entry__meta tabular">
@@ -75,24 +75,24 @@ export function Blotter({ status }: { status: Status | null }) {
   return (
     <section className="page blotter" id="blotter" ref={root} aria-labelledby="blotter-head">
       <div className="wrap">
-        <Folio page={6} label="Police blotter" />
+        <Folio page={6} label="The ledger" />
         <h2 className="page__head" id="blotter-head">
-          Police blotter
+          The stone ledger
         </h2>
-        <p className="page__deck">Every heist, with its tx. No tx, didn&rsquo;t happen.</p>
+        <p className="page__deck">Every payout, carved with its tx. No tx, didn&rsquo;t happen.</p>
 
         <dl className="tally">
           <div>
-            <dt>Split to crew</dt>
+            <dt>Shared to the Ten</dt>
             <dd className="tabular">{eth(t?.fedETH ?? "0")}</dd>
           </div>
           <div>
-            <dt>Hideout ({keep}%)</dt>
+            <dt>Treasury ({keep}%)</dt>
             <dd className="tabular">{eth(t?.keeperETH ?? "0")}</dd>
           </div>
           <div>
             <dt>Burned</dt>
-            <dd className="tabular">{amount(t?.tokensBurned ?? "0")} $RBANK</dd>
+            <dd className="tabular">{amount(t?.tokensBurned ?? "0")} $TRPZ</dd>
           </div>
         </dl>
 
@@ -110,7 +110,7 @@ export function Blotter({ status }: { status: Status | null }) {
         ) : null}
         {shown.length ? null : (
           <p className="blotter__empty">
-            Nothing on the books yet. The first entry is written when the escrow reaches {status?.cycle.steps[0].thresholdETH ?? "0.01"} ETH and Robin runs the split.
+            Nothing on the books yet. The first entry is written when the escrow reaches {status?.cycle.steps[0].thresholdETH ?? "0.01"} ETH and Glaux pays the first Share.
           </p>
         )}
       </div>

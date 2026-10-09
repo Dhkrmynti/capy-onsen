@@ -1,4 +1,4 @@
-/* The Robin Heist Gazette. One sheet of newsprint, set in wood type, ink and one red. */
+/* The Trapeza Gazette. One sheet of newsprint, set in wood type, ink and one terracotta. */
 
 .wrap {
   width: 100%;
@@ -594,7 +594,7 @@
   text-wrap: pretty;
 }
 
-/* ───────── how the heist runs ───────── */
+/* ───────── how the table pays ───────── */
 
 .take__bar {
   display: flex;
@@ -636,7 +636,7 @@
   opacity: 0.85;
 }
 
-/* the heist plan: four panels pinned in a row, arrows between, a loop at the end */
+/* the payout plan: four panels in a row, arrows between, a loop at the end */
 .plan {
   display: grid;
   grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr auto;

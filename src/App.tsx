@@ -53,7 +53,7 @@ export function App() {
     <>
       {DEMO ? (
         <div className="demo-strip" role="note">
-          Illustration edition: every number on this page is made up to preview the paper. Try the crew card and the mugshot booth; nothing you set is saved.
+          Illustration edition: every number on this page is made up to preview the paper. Try the citizen card and the portrait booth; nothing you set is saved.
         </div>
       ) : null}
       <Masthead status={status} />

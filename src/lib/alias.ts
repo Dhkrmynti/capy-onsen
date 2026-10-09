@@ -1,17 +1,17 @@
 /**
- * Every wallet gets a gang alias until its owner claims a byline. The alias is computed
+ * Every wallet gets a citizen name until its owner claims one. The alias is computed
  * from the address alone, so the same wallet always gets the same name, everywhere,
  * with nothing stored.
  */
 const HANDLES = [
-  "Two-Bag", "Silent", "Lucky", "Iron", "Velvet", "Quiet", "Smokey", "Slick", "Big", "Little",
-  "Diamond", "Cold", "Steady", "Patient", "Midnight", "Lefty", "Brass", "Sleepy", "Golden", "Stone",
-  "Sharp", "Crooked", "Gentle", "No-Sell", "Long-Haul", "Deep-Pocket", "Bottom-Line", "Night-Shift", "Old", "Sunday",
+  "Patient", "Silent", "Lucky", "Iron", "Golden", "Quiet", "Steady", "Wise", "Bold", "Old",
+  "Diamond", "Stoic", "Bronze", "Marble", "Olive", "Night", "Silver", "Sleepless", "Brave", "Stone",
+  "Honest", "Swift", "Gentle", "Never-Sell", "Long-Haul", "Deep-Pocket", "Owl-Eyed", "Sunday", "Stubborn", "Little",
 ];
 const NAMES = [
-  "Tony", "Sal", "Vinnie", "Rocco", "Lou", "Frankie", "Mickey", "Benny", "Nicky", "Joey",
-  "Dino", "Carmine", "Gus", "Moe", "Eddie", "Sonny", "Rita", "Lola", "Dolly", "Mae",
-  "Ruby", "Vera", "Fats", "Pauly", "Sammy", "Bugsy", "Mugsy", "Toots", "Ace", "Babe",
+  "Dion", "Theo", "Nikos", "Leon", "Kostas", "Yannis", "Stavros", "Petros", "Alexios", "Damon",
+  "Castor", "Philon", "Kleon", "Lysander", "Milo", "Daphne", "Lyra", "Ione", "Thalia", "Phaedra",
+  "Calla", "Iris", "Nyx", "Zoe", "Melina", "Xanthe", "Rhea", "Selene", "Ariadne", "Electra",
 ];
 
 function hash(s: string) {
@@ -29,7 +29,7 @@ export function aliasFor(addr: string) {
   return `${HANDLES[h % HANDLES.length]} ${NAMES[Math.floor(h / HANDLES.length) % NAMES.length]}`;
 }
 
-/** What the paper prints for a wallet: its X handle, else its claimed byline, else its gang alias. */
+/** What the paper prints for a wallet: its X handle, else its claimed name, else its citizen name. */
 export function nameFor(addr: string, nickname?: string, x?: { username: string } | null) {
   if (x) return { name: `@${x.username}`, claimed: true, x: true };
   return nickname ? { name: nickname, claimed: true, x: false } : { name: aliasFor(addr), claimed: false, x: false };

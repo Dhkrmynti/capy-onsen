@@ -23,19 +23,19 @@ function story(status: Status | null, offline: boolean) {
     };
   if (!status || !status.tokenAddress)
     return {
-      head: ["Robin cases", "the vault."],
-      deck: "Robin robs every trade and pays the top 10 bags in ETH. Sell once, you're a snitch.",
+      head: ["Glaux watches", "the agora."],
+      deck: "Every trade drops a coin on the table, and the 10 biggest holders are paid in ETH. Sell once and you're ostracized.",
     };
   const rounds = status.rounds;
   const fed = parseFloat(status.totals.fedETH);
   if (rounds === 0)
     return {
-      head: ["The vault", "is open."],
-      deck: "Every trade drops loot. The first heist runs when the escrow fills. Hold big, never snitch.",
+      head: ["The table", "is open."],
+      deck: "Every trade drops a coin on the table. The first Share is paid when the escrow fills. Hold big, never sell.",
     };
   return {
-    head: ["Robin hits", "the vault again."],
-    deck: `Robin has paid the crew ${eth(fed.toString())} so far. ${status.counts.hopped} snitches got nothing.`,
+    head: ["Glaux pays", "the Ten again."],
+    deck: `The Trapeza has paid the Ten ${eth(fed.toString())} so far. ${status.counts.hopped} ostracized got nothing.`,
   };
 }
 
@@ -116,16 +116,16 @@ export function FrontPage({ status, offline }: { status: Status | null; offline:
             </span>
           </div>
           <p className="masthead">
-            The Robin Heist Gazette
+            The Trapeza Gazette
           </p>
           <div className="submast">
-            <span>Robbing the paper hands since block one</span>
+            <span>Keeping the agora&rsquo;s books since block one</span>
             <span>Robinhood Chain edition</span>
           </div>
 
           <p className="front__extra">
             <span>Extra</span>
-            <span>{offline ? "No signal" : live ? STEP[next.kind].name : "Before the job"}</span>
+            <span>{offline ? "No signal" : live ? STEP[next.kind].name : "Before the opening"}</span>
             <span>Extra</span>
           </p>
 
@@ -138,8 +138,8 @@ export function FrontPage({ status, offline }: { status: Status | null; offline:
 
           <div className="front__grid">
             <figure className="front__photo">
-              <Halftone develop="load" label="Robin, a raccoon in a bowler hat and monocle, sitting on a pile of gold coins next to a money sack." />
-              <figcaption>Robin, &ldquo;businessman&rdquo;, outside the vault. The mask is his own fur. Photo: Gazette staff.</figcaption>
+              <Halftone develop="load" label="Glaux, a little owl, perched on a pile of drachma coins beside an olive sprig." />
+              <figcaption>Glaux, keeper of the table, in the agora. He has never sold a coin. Photo: Gazette staff.</figcaption>
             </figure>
 
             <div className="front__story">
@@ -150,8 +150,8 @@ export function FrontPage({ status, offline }: { status: Status | null; offline:
               </div>
             </div>
 
-            <aside className="rail" aria-label="Latest heist">
-              <h2 className="rail__head">Latest heist</h2>
+            <aside className="rail" aria-label="Latest share">
+              <h2 className="rail__head">At the table</h2>
               {offline ? (
                 <p className="rail__note">No signal from the engine. Nothing printed until it answers.</p>
               ) : (
@@ -161,24 +161,24 @@ export function FrontPage({ status, offline }: { status: Status | null; offline:
                   </p>
                   <Fuse value={escrow} target={target} label={`Escrow ${escrow} of ${target} ETH toward ${STEP[next.kind].name}`} />
                   <p className="rail__fuse tabular">
-                    {live ? `Loot: ${escrow.toFixed(4)} / ${next.thresholdETH} ETH` : `Fires at ${next.thresholdETH} ETH`}
+                    {live ? `Table: ${escrow.toFixed(4)} / ${next.thresholdETH} ETH` : `Fires at ${next.thresholdETH} ETH`}
                   </p>
                   <dl className="rail__facts">
                     <div>
-                      <dt>Crew</dt>
+                      <dt>Citizens</dt>
                       <dd className="tabular">{live ? amount(status!.counts.sitters) : "none yet"}</dd>
                     </div>
                     <div>
-                      <dt>Heists run</dt>
+                      <dt>Payouts</dt>
                       <dd className="tabular">{live ? status!.rounds : 0}</dd>
                     </div>
                     <div className="is-red">
-                      <dt>Snitches</dt>
+                      <dt>Ostracized</dt>
                       <dd className="tabular">{live ? status!.counts.hopped : 0}</dd>
                     </div>
                   </dl>
                   <p className="rail__source tabular">
-                    {live ? `Wire: block ${status!.lastIndexedBlock.toLocaleString("en-US")}` : "Goes live when the vault opens."}
+                    {live ? `Wire: block ${status!.lastIndexedBlock.toLocaleString("en-US")}` : "Goes live when the table opens."}
                   </p>
                 </>
               )}

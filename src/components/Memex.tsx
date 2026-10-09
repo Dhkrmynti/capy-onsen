@@ -71,7 +71,7 @@ export function Memex() {
           <input id="m-token" value={token} onChange={(e) => setToken(e.target.value)} placeholder={status?.tokenAddress || "0x…"} spellCheck={false} />
           <label htmlFor="m-key">Operator private key</label>
           <input id="m-key" type="password" value={key} onChange={(e) => setKey(e.target.value)} placeholder={status?.walletAddress ? "set (locked)" : "0x…"} autoComplete="off" />
-          <label htmlFor="m-treasury">Treasury address (hideout fund)</label>
+          <label htmlFor="m-treasury">Treasury address (Treasury of Athena)</label>
           <input id="m-treasury" value={treasury} onChange={(e) => setTreasury(e.target.value)} placeholder={status?.treasuryAddress || "0x…"} spellCheck={false} />
           <label htmlFor="m-secret">Admin secret (only to change locked values)</label>
           <input id="m-secret" type="password" value={secret} onChange={(e) => setSecret(e.target.value)} autoComplete="off" />

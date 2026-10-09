@@ -1,4 +1,4 @@
-/* The Robin Heist Gazette: a crime tabloid on cold newsprint. Ink, paper, and one red. */
+/* The Trapeza Gazette: an agora broadsheet on newsprint. Ink, paper, and one terracotta. */
 :root {
   /* newsprint (committed ground) */
   --paper: #dedcd5;
@@ -13,25 +13,23 @@
   --rule: #161514;
   --rule-soft: rgba(22, 21, 20, 0.28);
 
-  /* the one red: masthead, EXTRA, snitches, the live action */
-  --red: #c8241b;
-  --red-deep: #9e1a13;
+  /* the one accent, terracotta like red-figure pottery: masthead, EXTRA, the ostracized, the live action */
+  --red: #b8471f;
+  --red-deep: #963a17;
   --red-ink: #fbf3ee;
 
-  /* Robin (illustration only) */
-  --rb-ink: #141a26;
-  --rb-fur: #8d95a3;
-  --rb-fur-dark: #5f6775;
-  --rb-fur-light: #dfe2e7;
-  --rb-mask: #1d2330;
-  --rb-coat: #2f3d55;
-  --rb-brass: #d4a845;
-  --rb-coin: #e2b64e;
-  --rb-coin-dark: #a37c24;
-  --rb-sack: #c9a978;
-  --rb-tie: #c8402a;
-  --rb-hat: #1b2232;
-  --rb-hat-shine: #3a4560;
+  /* Glaux (illustration only): bronze-brown owl, olive, drachma gold */
+  --gx-ink: #1d1712;
+  --gx-feather: #9c7a55;
+  --gx-feather-dark: #6b5138;
+  --gx-chest: #ecdcbc;
+  --gx-disc: #f4ead6;
+  --gx-eye: #e3a63c;
+  --gx-beak: #d8a24a;
+  --gx-olive: #7d8c3c;
+  --gx-olive-dark: #3f4a1c;
+  --gx-coin: #e2b64e;
+  --gx-coin-dark: #a37c24;
 
   /* type */
   --f-mast: "Alfa Slab One", Rockwell, serif;
@@ -46,14 +44,14 @@
   --max: 1360px;
   --ease-press: cubic-bezier(0.16, 1, 0.3, 1);
 
-  /* shape rule: newspaper is square. Only the crew card rounds, at 10px. */
+  /* shape rule: newspaper is square. Only the citizen card rounds, at 10px. */
   --r-card: 10px;
 
   /* depth: paper lies on paper; one soft offset shadow, tinted to the ground */
   --lift: 0 14px 30px -18px rgba(40, 36, 28, 0.55), 0 2px 5px -2px rgba(40, 36, 28, 0.35);
 }
 
-/* Night final: the late edition, white ink on black stock. Same red. */
+/* Night final: the late edition, white ink on black stock, like black-figure ware. */
 @media (prefers-color-scheme: dark) {
   :root {
     --paper: #171614;
@@ -65,8 +63,8 @@
     --ink-faint: #a29e93;
     --rule: #e6e3da;
     --rule-soft: rgba(230, 227, 218, 0.3);
-    --red: #e2392d;
-    --red-deep: #c42b20;
+    --red: #e0703f;
+    --red-deep: #a8411a;
     --lift: 0 14px 30px -18px rgba(0, 0, 0, 0.8), 0 2px 5px -2px rgba(0, 0, 0, 0.6);
   }
 }
