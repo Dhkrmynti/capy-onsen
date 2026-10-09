@@ -43,6 +43,8 @@ export interface Config {
   sinkETH: string;
   /** Feedings go to this many sitters, the biggest balances first. */
   feedingTopN: number;
+  /** Tiers inside the top N: ranks up to `upTo` share `pct`% of each feeding, by balance. */
+  feedingTiers: { upTo: number; pct: number }[];
   /** Minimum balance (whole tokens) to be fed. */
   minBalance: string;
   /** A wallet's first $PADS must be at least this old to be fed (stops last-second snipes). */
@@ -67,6 +69,12 @@ export const config: Config = {
   keeperETH: env.KEEPER_ETH || "0.025",
   sinkETH: env.SINK_ETH || "0.01",
   feedingTopN: parseInt(env.FEEDING_TOP_N || "10", 10),
+  // "5:70,10:30": ranks 1–5 share 70% (0.014 of 0.02 ETH), ranks 6–10 share 30% (0.006).
+  feedingTiers: (env.FEEDING_TIERS || "5:70,10:30")
+    .split(",")
+    .map((t) => t.split(":").map(Number))
+    .filter(([u, p]) => u > 0 && p > 0)
+    .map(([upTo, pct]) => ({ upTo, pct })),
   minBalance: env.MIN_BALANCE || "100000",
   minHoldHours: parseFloat(env.MIN_HOLD_HOURS || "1"),
   pollIntervalSeconds: parseInt(env.POLL_INTERVAL_SECONDS || "10", 10),

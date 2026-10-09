@@ -2,7 +2,7 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { DEFAULT_STEPS, STEP, stepShare, type RoundKind, type Status } from "../lib/api";
+import { DEFAULT_STEPS, DEFAULT_TIERS, STEP, stepShare, type RoundKind, type Status } from "../lib/api";
 import { prefersReducedMotion } from "../lib/motion";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
@@ -15,6 +15,8 @@ export function TheTake({ status }: { status: Status | null }) {
   const root = useRef<HTMLElement>(null);
   const steps = status?.cycle.steps ?? DEFAULT_STEPS;
   const at = (k: RoundKind) => steps.find((s) => s.kind === k)?.thresholdETH ?? "0.01";
+  const tiers = status?.rules.tiers ?? DEFAULT_TIERS;
+  const where = (k: RoundKind) => (k === "feeding" && tiers.length > 1 ? tiers.map((t) => `${t.eth} to ranks ${t.from}–${t.to}`).join(", ") : WHERE[k]);
 
   useGSAP(
     () => {
@@ -37,7 +39,7 @@ export function TheTake({ status }: { status: Status | null }) {
               <li className={`tags__row is-${k}`} key={k}>
                 <span className="tags__name">{STEP[k].name}</span>
                 <span className="tags__eth tabular">{at(k)} ETH</span>
-                <span className="tags__where">{WHERE[k]}</span>
+                <span className="tags__where">{where(k)}</span>
               </li>
             ))}
           </ol>

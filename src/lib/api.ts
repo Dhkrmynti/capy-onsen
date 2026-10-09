@@ -11,7 +11,7 @@ export interface Status {
   treasuryAddress: string;
   escrowETH: string;
   cycle: { index: number; kind: RoundKind; thresholdETH: string; steps: { kind: RoundKind; thresholdETH: string }[] };
-  rules: { minBalance: string; minHoldHours: number; topN: number };
+  rules: { minBalance: string; minHoldHours: number; topN: number; tiers?: Tier[] };
   counts: { sitters: number; waiting: number; hopped: number; holders: number };
   totals: { feesClaimedETH: string; fedETH: string; keeperETH: string; sinkETH: string; tokensBurned: string };
   rounds: number;
@@ -28,10 +28,42 @@ export interface XProfile {
   verified: string;
 }
 
+/** A band of ranks inside the top N that shares `eth` of each inheritance, by balance. */
+export interface Tier {
+  from: number;
+  to: number;
+  pct: number;
+  eth: string;
+}
+
+export const DEFAULT_TIERS: Tier[] = [
+  { from: 1, to: 5, pct: 70, eth: "0.014" },
+  { from: 6, to: 10, pct: 30, eth: "0.006" },
+];
+
+/** Which tier (1-based) a rank sits in, 0 outside the inheritance zone. */
+export const tierOf = (rank: number, tiers: Tier[] = DEFAULT_TIERS) => tiers.findIndex((t) => rank >= t.from && rank <= t.to) + 1;
+
+/** Splits one inheritance the engine's way: each tier its share, by balance inside the tier. */
+export function splitInheritance(pay: number, balances: number[], tiers: Tier[] = DEFAULT_TIERS) {
+  const out = balances.map(() => 0);
+  const live = tiers.filter((t) => t.from <= balances.length);
+  const pctSum = live.reduce((s, t) => s + t.pct, 0);
+  live.forEach((t) => {
+    const pot = (pay * t.pct) / pctSum;
+    const idx = balances.map((_, i) => i).filter((i) => i + 1 >= t.from && i + 1 <= t.to);
+    const sum = idx.reduce((s, i) => s + balances[i], 0);
+    idx.forEach((i) => (out[i] = sum > 0 ? (pot * balances[i]) / sum : 0));
+  });
+  return out;
+}
+
 export interface PondRow {
   rank: number;
   addr: string;
   inTop: boolean;
+  /** 1 for ranks 1–5, 2 for ranks 6–10, 0 outside the zone (older engines omit it). */
+  tier?: number;
   balance: string;
   firstIn: number;
   padDays: number;
@@ -250,7 +282,7 @@ export const demoStatus = (): Status => ({
   treasuryAddress: "0x7a1c3e5f9b2d4f6a8c0e2b4d6f8a1c3e5b7d9f0a",
   escrowETH: "0.0063",
   cycle: { index: 0, kind: "feeding", thresholdETH: "0.02", steps: DEFAULT_STEPS },
-  rules: { minBalance: "100000", minHoldHours: 1, topN: 10 },
+  rules: { minBalance: "100000", minHoldHours: 1, topN: 10, tiers: DEFAULT_TIERS },
   counts: { sitters: 87, waiting: 23, hopped: 41, holders: 151 },
   totals: { feesClaimedETH: "0.6612", fedETH: "0.2408", keeperETH: "0.3012", sinkETH: "0.1192", tokensBurned: "6912204.8" },
   rounds: 36,
@@ -281,7 +313,7 @@ export const demoPond = (): { total: number; topN: number; rows: PondRow[] } => 
     rows.push({ rank: 0, addr, inTop: true, balance: String(3.5e6), firstIn: now() - 5 * 86400, padDays: 5, received: "0.0123", nickname: "", pp: null, x: null, ...b });
   }
   rows.sort((a, b) => parseFloat(b.balance) - parseFloat(a.balance));
-  rows.forEach((row, i) => ((row.rank = i + 1), (row.inTop = i < 10)));
+  rows.forEach((row, i) => ((row.rank = i + 1), (row.inTop = i < 10), (row.tier = tierOf(i + 1))));
   return { ...base, rows };
 };
 
@@ -350,8 +382,8 @@ export function demoWallet(addr: string): WalletInfo {
   const base = { addr, hoppedAt: 0, hoppedTx: "", eligibleAt: 0, topN: 10, lastIndexedBlock: 82931447 };
   if (hopped)
     return { ...base, status: "hopped", balance: "0", firstIn: now() - 12 * 86400, padDays: 12, received: "0.0042", hoppedAt: now() - 2 * 86400, hoppedTx: demoHash(3), rank: null, inTop: false, estNext: "0" };
-  const top = pond.rows.filter((r) => r.inTop).reduce((t, r) => t + parseFloat(r.balance), 0);
   const bal = row ? parseFloat(row.balance) : 410000;
+  const split = splitInheritance(0.02, pond.rows.filter((r) => r.inTop).map((r) => parseFloat(r.balance)));
   const rank = row?.rank ?? 34;
   const inTop = rank <= 10;
   return {
@@ -367,6 +399,6 @@ export function demoWallet(addr: string): WalletInfo {
     pp: row?.pp ?? null,
     x: row?.x ?? null,
     xLogin: true,
-    estNext: inTop ? String((0.01 * bal) / top) : "0",
+    estNext: inTop ? String(split[rank - 1] ?? 0) : "0",
   };
 }

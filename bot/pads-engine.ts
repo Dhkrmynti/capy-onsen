@@ -320,9 +320,9 @@ async function feed(r: Round) {
     const top = sittersByBalance(Math.floor(Date.now() / 1000)).slice(0, config.feedingTopN);
     if (!top.length) return note(`Round #${r.n}: nobody seated right now. Holding the ETH until someone is.`);
     const pay = big(r.payWei);
-    const sum = top.reduce((t, s) => t + big(s.h.balance), 0n);
+    const split = splitFeeding(pay, top.map((s) => big(s.h.balance)));
     r.snapshotBlock = state.lastIndexedBlock;
-    r.payouts = top.map((s) => ({ addr: s.addr, balance: s.h.balance, amount: ((pay * big(s.h.balance)) / sum).toString(), tx: "" })).filter((p) => big(p.amount) > 0n);
+    r.payouts = top.map((s, i) => ({ addr: s.addr, balance: s.h.balance, amount: split[i].toString(), tx: "" })).filter((p) => big(p.amount) > 0n);
     saveStateNow();
     log("info", `Feeding #${r.n}: ${ethers.formatEther(pay)} ETH to the top ${r.payouts.length} sitters.`);
   }
@@ -498,10 +498,35 @@ function counts(now: number) {
 /** A sitter's share of the next feeding, if it is in the top N right now. */
 function estimateNext(addr: string, now: number) {
   const top = sittersByBalance(now).slice(0, config.feedingTopN);
-  const me = top.find((s) => s.addr === addr);
-  if (!me) return 0n;
-  const sum = top.reduce((t, s) => t + big(s.h.balance), 0n);
-  return (ethers.parseEther(config.feedingETH) * big(me.h.balance)) / sum;
+  const i = top.findIndex((s) => s.addr === addr);
+  return i === -1 ? 0n : splitFeeding(ethers.parseEther(config.feedingETH), top.map((s) => big(s.h.balance)))[i];
+}
+
+/** The tiers, cut to the top N, as rank ranges (1-based, inclusive). Without tiers: one tier of N. */
+function tiers() {
+  const t = [...config.feedingTiers].sort((a, b) => a.upTo - b.upTo).filter((x) => x.upTo <= config.feedingTopN);
+  if (!t.length) return [{ from: 1, to: config.feedingTopN, pct: 100 }];
+  return t.map((x, i) => ({ from: i === 0 ? 1 : t[i - 1].upTo + 1, to: x.upTo, pct: x.pct }));
+}
+
+/**
+ * Splits one feeding between the top sitters (biggest first). Each tier gets its percentage and
+ * shares it by balance. A tier with nobody in it passes its share to the tiers that have someone,
+ * so the whole feeding is always paid out.
+ */
+function splitFeeding(pay: bigint, balances: bigint[]) {
+  const out = balances.map(() => 0n);
+  const live = tiers().filter((t) => t.from <= balances.length);
+  const pctSum = live.reduce((s, t) => s + t.pct, 0);
+  let left = pay;
+  live.forEach((t, k) => {
+    const pot = k === live.length - 1 ? left : (pay * BigInt(t.pct)) / BigInt(pctSum);
+    left -= pot;
+    const idx = balances.map((_, i) => i).filter((i) => i + 1 >= t.from && i + 1 <= t.to);
+    const sum = idx.reduce((s, i) => s + balances[i], 0n);
+    if (sum > 0n) idx.forEach((i) => (out[i] = (pot * balances[i]) / sum));
+  });
+  return out;
 }
 
 function roundRow(r: Round) {
@@ -573,7 +598,12 @@ const server = http.createServer((req, res) => {
         treasuryAddress: config.treasuryAddress,
         escrowETH: ethers.formatEther(escrowWei),
         cycle: { index: state.cycle % CYCLE.length, kind, thresholdETH: stepETH(kind), steps: CYCLE.map((k) => ({ kind: k, thresholdETH: stepETH(k) })) },
-        rules: { minBalance: config.minBalance, minHoldHours: config.minHoldHours, topN: config.feedingTopN },
+        rules: {
+          minBalance: config.minBalance,
+          minHoldHours: config.minHoldHours,
+          topN: config.feedingTopN,
+          tiers: tiers().map((t) => ({ ...t, eth: ethers.formatEther((ethers.parseEther(config.feedingETH) * BigInt(t.pct)) / 100n) })),
+        },
         counts: counts(now),
         totals: {
           feesClaimedETH: ethOf(state.totals.feesClaimedWei),
@@ -601,6 +631,7 @@ const server = http.createServer((req, res) => {
           rank: i + 1,
           addr: r.addr,
           inTop: i < config.feedingTopN,
+          tier: i < config.feedingTopN ? tiers().findIndex((t) => i + 1 >= t.from && i + 1 <= t.to) + 1 : 0,
           balance: fmt(r.h.balance),
           firstIn: r.h.firstIn,
           padDays: padDays(r.h, now),

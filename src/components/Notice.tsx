@@ -2,7 +2,7 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { amount, type Status } from "../lib/api";
+import { DEFAULT_TIERS, amount, type Status } from "../lib/api";
 import { prefersReducedMotion } from "../lib/motion";
 import { Monogram } from "./Engrave";
 
@@ -18,7 +18,9 @@ export function Notice({ status }: { status: Status | null }) {
 
   const clauses = [
     [`${amount(min)} $HEIR`, "names you in the will"],
-    [`Top ${top}`, "share every inheritance, by balance"],
+    ...((status?.rules.tiers ?? DEFAULT_TIERS).length > 1
+      ? (status?.rules.tiers ?? DEFAULT_TIERS).map((t) => [`No. ${t.from}–${t.to}`, `share ${t.pct}% of every inheritance, by balance`])
+      : [[`Top ${top}`, "share every inheritance, by balance"]]),
     ...(hold > 0 ? [[hold === 1 ? "1 hour" : `${hold} hours`, "a holding must age before it is paid"]] : []),
     ["One sale", "writes you out, for good"],
     ["Your own wallets", "transfers between them are not sales"],

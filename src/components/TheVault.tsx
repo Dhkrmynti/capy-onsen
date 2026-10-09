@@ -3,7 +3,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { SealCheck } from "@phosphor-icons/react";
-import { compact, demoPond, usePoll, type PondRow, type Status } from "../lib/api";
+import { DEFAULT_TIERS, compact, demoPond, splitInheritance, tierOf, usePoll, type PondRow, type Status } from "../lib/api";
 import { useAccount } from "../lib/wallet";
 import { prefersReducedMotion } from "../lib/motion";
 import { nameFor } from "../lib/alias";
@@ -28,6 +28,10 @@ export function TheVault({ status }: { status: Status | null }) {
   const bar = all.length >= top ? parseFloat(all[top - 1].balance) : 0;
   const cols = Array.from({ length: COLS }, (_, c) => all.slice(c * PER_COL, (c + 1) * PER_COL)).filter((c) => c.length);
   const mine = me ? all.find((r) => r.addr.toLowerCase() === me) : undefined;
+  const tiers = status?.rules.tiers ?? DEFAULT_TIERS;
+  const next = parseFloat(status?.cycle.steps.find((s) => s.kind === "feeding")?.thresholdETH ?? "0.02");
+  // Each heir's part of the next inheritance, worked out the engine's way.
+  const share = splitInheritance(next, all.filter((r) => r.inTop).map((r) => parseFloat(r.balance)), tiers);
 
   useGSAP(
     () => {
@@ -47,7 +51,7 @@ export function TheVault({ status }: { status: Status | null }) {
               The Ten Heirs.
             </h2>
             <p className="plaque__deck">
-              {family.toLocaleString("en-US")} in the family, ranked by balance. Only the first {top} inherit
+              {family.toLocaleString("en-US")} in the family, ranked by balance. No. 1–5 and 6–10 inherit
               {mine ? (
                 <>
                   {" "}
@@ -66,10 +70,17 @@ export function TheVault({ status }: { status: Status | null }) {
                   <ol className="heirs__list" start={c * PER_COL + 1}>
                     {col.map((r) => {
                       const who = nameFor(r.addr, r.nickname, r.x);
+                      const tier = r.inTop ? (r.tier ?? tierOf(r.rank, tiers)) : 0;
+                      const band = tier ? tiers[tier - 1] : null;
                       const gap = bar - parseFloat(r.balance);
                       const isMe = me === r.addr.toLowerCase();
                       return (
-                        <li key={r.addr} className={`heir ${r.inTop ? "is-heir" : ""} ${isMe ? "is-me" : ""}`}>
+                        <li key={r.addr} className={`heir ${r.inTop ? "is-heir" : ""} ${tier ? `is-tier${tier}` : ""} ${isMe ? "is-me" : ""}`}>
+                          {band && r.rank === band.from ? (
+                            <span className="heir__band">
+                              {tier === 1 ? "I" : "II"} · No. {band.from}–{band.to} · {band.eth} ETH
+                            </span>
+                          ) : null}
                           <span className="heir__rank tabular">{r.rank}</span>
                           <button type="button" className="heir__open" onClick={() => openCard(r.addr)} aria-label={`Open the card of ${who.name}, number ${r.rank}, ${r.addr}`}>
                             <CrewFace addr={r.addr} pp={r.pp} x={r.x} size={20} className="heir__seal" />
@@ -80,7 +91,7 @@ export function TheVault({ status }: { status: Status | null }) {
                               </span>
                               <span className="heir__sub tabular">
                                 {compact(r.balance)}
-                                {r.inTop ? ` · ${parseFloat(r.received) > 0 ? parseFloat(r.received).toFixed(3) : "0"} ETH` : gap > 0 ? ` · +${compact(gap + 1)} to enter` : " · at the line"}
+                                {r.inTop ? ` · next ${(share[r.rank - 1] ?? 0).toFixed(4)} ETH` : gap > 0 ? ` · +${compact(gap + 1)} to enter` : " · at the line"}
                               </span>
                             </span>
                           </button>
