@@ -10,6 +10,8 @@ export interface Status {
   curveAddress: string;
   treasuryAddress: string;
   escrowETH: string;
+  /** Display-only prices: USD per $HEIR and per ETH (0 when unknown). */
+  price?: { tokenUSD: number; ethUSD: number; source: string; at: number };
   cycle: { index: number; kind: RoundKind; thresholdETH: string; steps: { kind: RoundKind; thresholdETH: string }[] };
   rules: { minBalance: string; minHoldHours: number; topN: number; tiers?: Tier[] };
   counts: { sitters: number; waiting: number; hopped: number; holders: number };
@@ -251,6 +253,16 @@ export function amount(v: string | number, digits = 0) {
 }
 
 /** Fits a 5-tile flap: 1.9M, 630K, 940. */
+/** Dollars, short: $12.4K, $940, $3.20. */
+export function usd(v: number) {
+  if (!isFinite(v) || v <= 0) return "";
+  if (v >= 1e6) return `$${(v / 1e6).toFixed(1)}M`;
+  if (v >= 1e4) return `$${Math.round(v / 1e3)}K`;
+  if (v >= 1e3) return `$${(v / 1e3).toFixed(1)}K`;
+  if (v >= 10) return `$${Math.round(v)}`;
+  return `$${v.toFixed(2)}`;
+}
+
 export function compact(v: string | number) {
   const n = typeof v === "string" ? parseFloat(v) : v;
   if (!isFinite(n) || n <= 0) return "0";
@@ -281,6 +293,7 @@ export const demoStatus = (): Status => ({
   curveAddress: "0x3c8e1f5a7b9d2c4e6f8a0b1c3d5e7f9a2b4c6d8e",
   treasuryAddress: "0x7a1c3e5f9b2d4f6a8c0e2b4d6f8a1c3e5b7d9f0a",
   escrowETH: "0.0063",
+  price: { tokenUSD: 0.0000412, ethUSD: 3180, source: "illustration", at: 0 },
   cycle: { index: 0, kind: "feeding", thresholdETH: "0.02", steps: DEFAULT_STEPS },
   rules: { minBalance: "100000", minHoldHours: 1, topN: 10, tiers: DEFAULT_TIERS },
   counts: { sitters: 87, waiting: 23, hopped: 41, holders: 151 },

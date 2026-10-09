@@ -462,6 +462,46 @@ async function tick() {
 setInterval(tick, config.pollIntervalSeconds * 1000);
 tick();
 
+/* ───────────────────────── price (for the ledger's dollar figures) ───────────────────────── */
+
+/** USD per token and per ETH. Display only: no payout ever depends on it. */
+const price = { tokenUSD: 0, ethUSD: 0, source: "", at: 0 };
+
+async function getJson(url: string): Promise<any> {
+  const r = await fetch(url, { signal: AbortSignal.timeout(8000), headers: { accept: "application/json" } });
+  if (!r.ok) throw new Error(`${url} ${r.status}`);
+  return r.json();
+}
+
+async function refreshPrice() {
+  try {
+    const eth = await getJson("https://api.coinbase.com/v2/prices/ETH-USD/spot").catch(() => null);
+    const ethUSD = parseFloat(eth?.data?.amount ?? "0") || (await getJson("https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd").then((d) => d?.ethereum?.usd ?? 0).catch(() => 0));
+    if (ethUSD > 0) price.ethUSD = ethUSD;
+    if (!isAddr(config.tokenAddress)) return;
+    // A listed pair gives the market price directly (also after graduation).
+    const dex = await getJson(`https://api.dexscreener.com/latest/dex/tokens/${config.tokenAddress}`).catch(() => null);
+    const pair = (dex?.pairs ?? []).filter((p: any) => parseFloat(p?.priceUsd) > 0).sort((a: any, b: any) => (b?.liquidity?.usd ?? 0) - (a?.liquidity?.usd ?? 0))[0];
+    if (pair) {
+      Object.assign(price, { tokenUSD: parseFloat(pair.priceUsd), source: "dexscreener", at: Date.now() });
+      return;
+    }
+    // Still on the Pons curve: quote a tiny buy without sending it.
+    if (isAddr(config.curveAddress) && price.ethUSD > 0 && provider) {
+      const q = ethers.parseEther("0.0001");
+      const from = wallet?.address || config.treasuryAddress || PONS_FEE_ESCROW;
+      const curve = new ethers.Contract(config.curveAddress, CURVE_ABI, provider);
+      const out: bigint = await curve.buy.staticCall(q, 0n, from, { value: q, from });
+      const tokens = parseFloat(ethers.formatUnits(out, decimals));
+      if (tokens > 0) Object.assign(price, { tokenUSD: (0.0001 / tokens) * price.ethUSD, source: "pons-curve", at: Date.now() });
+    }
+  } catch (e: any) {
+    log("warn", `Price check failed: ${errText(e)}`);
+  }
+}
+setInterval(refreshPrice, 60_000);
+refreshPrice();
+
 /* ───────────────────────── API ───────────────────────── */
 
 function send(res: http.ServerResponse, code: number, data: unknown) {
@@ -597,6 +637,7 @@ const server = http.createServer((req, res) => {
         curveAddress: config.curveAddress,
         treasuryAddress: config.treasuryAddress,
         escrowETH: ethers.formatEther(escrowWei),
+        price: { tokenUSD: price.tokenUSD, ethUSD: price.ethUSD, source: price.source, at: price.at },
         cycle: { index: state.cycle % CYCLE.length, kind, thresholdETH: stepETH(kind), steps: CYCLE.map((k) => ({ kind: k, thresholdETH: stepETH(k) })) },
         rules: {
           minBalance: config.minBalance,

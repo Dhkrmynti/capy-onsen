@@ -3,7 +3,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { SealCheck } from "@phosphor-icons/react";
-import { DEFAULT_TIERS, compact, demoPond, splitInheritance, tierOf, usePoll, type PondRow, type Status } from "../lib/api";
+import { DEFAULT_TIERS, compact, demoPond, splitInheritance, tierOf, usd, usePoll, type PondRow, type Status } from "../lib/api";
 import { useAccount } from "../lib/wallet";
 import { prefersReducedMotion } from "../lib/motion";
 import { nameFor } from "../lib/alias";
@@ -31,6 +31,8 @@ export function TheVault({ status }: { status: Status | null }) {
   const tiers = status?.rules.tiers ?? DEFAULT_TIERS;
   const next = parseFloat(status?.cycle.steps.find((s) => s.kind === "feeding")?.thresholdETH ?? "0.02");
   // Each heir's part of the next inheritance, worked out the engine's way.
+  const px = status?.price?.tokenUSD ?? 0;
+  const worth = (bal: string) => (px > 0 ? ` · ${usd(parseFloat(bal) * px)}` : "");
   const share = splitInheritance(next, all.filter((r) => r.inTop).map((r) => parseFloat(r.balance)), tiers);
 
   useGSAP(
@@ -51,7 +53,7 @@ export function TheVault({ status }: { status: Status | null }) {
               The Ten Heirs.
             </h2>
             <p className="plaque__deck">
-              {family.toLocaleString("en-US")} in the family, ranked by balance. No. 1–5 and 6–10 inherit
+              {family.toLocaleString("en-US")} in the family, ranked by balance. No. 1–5 and 6–10 inherit{px > 0 ? <> · 1 $HEIR ≈ ${px < 0.01 ? px.toPrecision(3) : px.toFixed(4)}</> : null}
               {mine ? (
                 <>
                   {" "}
@@ -91,6 +93,7 @@ export function TheVault({ status }: { status: Status | null }) {
                               </span>
                               <span className="heir__sub tabular">
                                 {compact(r.balance)}
+                                {worth(r.balance)}
                                 {r.inTop ? ` · next ${(share[r.rank - 1] ?? 0).toFixed(4)} ETH` : gap > 0 ? ` · +${compact(gap + 1)} to enter` : " · at the line"}
                               </span>
                             </span>
