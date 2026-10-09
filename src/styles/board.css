@@ -2254,3 +2254,20 @@ button {
     right: -12%;
   }
 }
+/* the crown needs its full height above the portrait: drop the frame clear of the header */
+.hero__throne {
+  top: calc(var(--head) + 190px);
+}
+/* short laptop screens: the clock tucks under the CTAs' line, clear of them */
+@media (max-height: 760px) and (min-width: 761px) {
+  .hero__clock {
+    bottom: 20px;
+  }
+  .clock {
+    width: 190px;
+    padding: 16px 14px 12px;
+  }
+  .clock__read b {
+    font-size: 24px;
+  }
+}
