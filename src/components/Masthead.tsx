@@ -9,11 +9,11 @@ import { ConnectButton } from "./Connect";
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const PAGES = [
-  ["#payout", "How it pays"],
-  ["#rules", "The decree"],
-  ["#card", "Citizen card"],
-  ["#agora", "The agora"],
-  ["#blotter", "Ledger"],
+  ["#payout", "The dividend"],
+  ["#rules", "Terms"],
+  ["#card", "Your account"],
+  ["#register", "The register"],
+  ["#blotter", "Statement"],
 ] as const;
 
 /** The running head: appears once the big front-page masthead has scrolled away. */
@@ -25,9 +25,9 @@ export function Masthead({ status }: { status: Status | null }) {
   return (
     <header className="runhead" ref={root}>
       <div className="wrap runhead__inner">
-        <a className="runhead__name" href="#top" aria-label="The Trapeza Gazette, back to the front page">
-          <span className="runhead__long">The Trapeza Gazette</span>
-          <span className="runhead__short">Trapeza</span>
+        <a className="runhead__name" href="#top" aria-label="The Old Money Gazette, back to the front page">
+          <span className="runhead__long">The Old Money Gazette</span>
+          <span className="runhead__short">Old Money</span>
         </a>
         <nav className="runhead__index" aria-label="Pages">
           {PAGES.map(([href, label]) => (

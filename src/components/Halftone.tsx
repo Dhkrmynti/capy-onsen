@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { Glaux } from "./Glaux";
+import { Notes } from "./Notes";
 import { prefersReducedMotion } from "../lib/motion";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
@@ -13,7 +13,7 @@ interface Props {
   label: string;
   /** "load" resolves once on mount (above the fold); "scroll" resolves as the photo crosses the viewport. */
   develop?: "load" | "scroll";
-  /** Draw the drachma pile under Glaux. */
+  /** Draw the coin pile beside the notes. */
   pad?: boolean;
 }
 
@@ -31,9 +31,9 @@ function isLight(hex: string) {
 }
 
 /**
- * A press photograph of Glaux, printed as a halftone. The screen starts coarse and
+ * A press photograph of the notes, printed as a halftone. The screen starts coarse and
  * tightens to a fine screen as the story arrives; the printed dots are the resting state.
- * The dots are computed from Glaux's own SVG, so the "photo" is always the real mascot.
+ * The dots are computed from the notes' own SVG, so the "photo" is always the real mascot.
  */
 export function Halftone({ className = "", label, develop = "scroll", pad = true }: Props) {
   const root = useRef<HTMLDivElement>(null);
@@ -75,7 +75,7 @@ export function Halftone({ className = "", label, develop = "scroll", pad = true
     if (art.current) art.current.style.opacity = String(state.current.sharp * PLATE_MIX);
   };
 
-  // Rasterise Glaux's SVG once into a darkness map, resolving the CSS colour tokens first.
+  // Rasterise the notes' SVG once into a darkness map, resolving the CSS colour tokens first.
   useEffect(() => {
     const host = art.current?.querySelector("svg");
     const c = canvas.current;
@@ -146,7 +146,7 @@ export function Halftone({ className = "", label, develop = "scroll", pad = true
     <div className={`halftone ${className}`} ref={root} role="img" aria-label={label}>
       <canvas ref={canvas} className="halftone__screen" aria-hidden="true" />
       <div ref={art} className="halftone__plate" aria-hidden="true" style={{ opacity: 0 }}>
-        <Glaux pad={pad} />
+        <Notes pad={pad} />
       </div>
     </div>
   );

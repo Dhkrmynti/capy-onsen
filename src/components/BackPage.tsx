@@ -34,9 +34,9 @@ export function BackPage({ status }: { status: Status | null }) {
         <Folio page={7} label="Classifieds" />
         <div className="ads">
           <article className="ad ad--lead">
-            <h3>Wanted: citizens</h3>
+            <h3>Now opening: accounts</h3>
             <p>
-              Hold {min} $TRPZ. Never sell. Paid in ETH, every Share.
+              Hold {min} $OLDM. Never sell. Paid in ETH, every dividend.
             </p>
             <div className="ad__deal">
               <BuyButton status={status} />
@@ -45,20 +45,20 @@ export function BackPage({ status }: { status: Status | null }) {
           </article>
           <article className="ad ad--lost">
             <h3>Lost</h3>
-            <p>One bag, sold at the bottom. Now ostracized.</p>
+            <p>One bag, sold at the bottom. Account closed.</p>
           </article>
           <article className="ad ad--sale">
             <h3>For sale</h3>
-            <p>Nothing. Glaux doesn&rsquo;t sell.</p>
+            <p>Nothing. Old money doesn&rsquo;t sell.</p>
           </article>
           <article className="ad ad--notice">
             <h3>Public notice</h3>
-            <p>Not a security. Not a dividend. An owl with an abacus.</p>
+            <p>Not a security. The &ldquo;dividend&rdquo; is trading fees, not company profit.</p>
           </article>
         </div>
 
         <div className="back__end">
-          <Halftone className="back__photo" label="Glaux perched on his drachma pile, still holding." />
+          <Halftone className="back__photo" label="The banded notes, still held." />
           <p className="back__close">
             <span>Still</span> <span>holding.</span>
           </p>
@@ -73,11 +73,11 @@ export function BackPage({ status }: { status: Status | null }) {
           <a href={X_URL} target="_blank" rel="noreferrer">
             <XLogo weight="bold" aria-hidden="true" /> The Gazette on X <ArrowUpRight weight="bold" aria-hidden="true" />
           </a>
-          <a href="#rules">Read the decree again</a>
+          <a href="#rules">Read the terms again</a>
         </nav>
 
         <p className="back__fine">
-          <strong>Corrections and clarifications.</strong> $TRPZ is a memecoin with no promise of value. It is not a security or an investment, and the Share is not a dividend: it is trading fees, which can drop to nothing. The treasury ({keep}% of all fees) goes to the creator&rsquo;s wallet, and every transfer is carved in the ledger. Glaux is an original character.
+          <strong>Corrections and clarifications.</strong> $OLDM is a memecoin with no promise of value. It is not a security, a deposit or an investment, and there is no company behind it. &ldquo;The dividend&rdquo; is only the paper&rsquo;s name for trading fees passed to the 10 biggest holders, and those fees can drop to nothing. The reserve ({keep}% of all fees) goes to the creator&rsquo;s wallet, and every transfer is entered on the statement. Old Money is not a bank.
         </p>
       </div>
     </footer>

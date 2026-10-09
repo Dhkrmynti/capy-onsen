@@ -1,17 +1,17 @@
 /**
- * Every wallet gets a citizen name until its owner claims one. The alias is computed
+ * Every wallet gets a house name until its owner claims one. The alias is computed
  * from the address alone, so the same wallet always gets the same name, everywhere,
  * with nothing stored.
  */
 const HANDLES = [
-  "Patient", "Silent", "Lucky", "Iron", "Golden", "Quiet", "Steady", "Wise", "Bold", "Old",
-  "Diamond", "Stoic", "Bronze", "Marble", "Olive", "Night", "Silver", "Sleepless", "Brave", "Stone",
-  "Honest", "Swift", "Gentle", "Never-Sell", "Long-Haul", "Deep-Pocket", "Owl-Eyed", "Sunday", "Stubborn", "Little",
+  "Sterling", "Winston", "Reginald", "Archibald", "Percival", "Montgomery", "Thaddeus", "Cornelius", "Bartholomew", "Ambrose",
+  "Augustus", "Edmund", "Lionel", "Mortimer", "Barnaby", "Penelope", "Beatrice", "Cordelia", "Margaux", "Eleanor",
+  "Josephine", "Wilhelmina", "Genevieve", "Theodora", "Victoria", "Rosalind", "Imogen", "Clementine", "Vivienne", "Henrietta",
 ];
 const NAMES = [
-  "Dion", "Theo", "Nikos", "Leon", "Kostas", "Yannis", "Stavros", "Petros", "Alexios", "Damon",
-  "Castor", "Philon", "Kleon", "Lysander", "Milo", "Daphne", "Lyra", "Ione", "Thalia", "Phaedra",
-  "Calla", "Iris", "Nyx", "Zoe", "Melina", "Xanthe", "Rhea", "Selene", "Ariadne", "Electra",
+  "Whitmore", "Ashford", "Pemberton", "Thornbury", "Kensington", "Hargreave", "Blackwood", "Fairchild", "Worthington", "Sinclair",
+  "Montague", "Carrington", "Wexley", "Aldridge", "Beaumont", "Crawley", "Harcourt", "Langley", "Rothwell", "Winslow",
+  "Grantham", "Hastings", "Stanhope", "Ellsworth", "Radcliffe", "Pennington", "Dunmore", "Ashcombe", "Wycliffe", "Lockhart",
 ];
 
 function hash(s: string) {
@@ -29,7 +29,7 @@ export function aliasFor(addr: string) {
   return `${HANDLES[h % HANDLES.length]} ${NAMES[Math.floor(h / HANDLES.length) % NAMES.length]}`;
 }
 
-/** What the paper prints for a wallet: its X handle, else its claimed name, else its citizen name. */
+/** What the paper prints for a wallet: its X handle, else its claimed name, else its house name. */
 export function nameFor(addr: string, nickname?: string, x?: { username: string } | null) {
   if (x) return { name: `@${x.username}`, claimed: true, x: true };
   return nickname ? { name: nickname, claimed: true, x: false } : { name: aliasFor(addr), claimed: false, x: false };

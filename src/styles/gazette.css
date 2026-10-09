@@ -1,4 +1,4 @@
-/* The Trapeza Gazette. One sheet of newsprint, set in wood type, ink and one terracotta. */
+/* The Old Money Gazette. One sheet of newsprint, set in wood type, ink and one money green. */
 
 .wrap {
   width: 100%;
@@ -594,7 +594,7 @@
   text-wrap: pretty;
 }
 
-/* ───────── how the table pays ───────── */
+/* ───────── how the dividend pays ───────── */
 
 .take__bar {
   display: flex;

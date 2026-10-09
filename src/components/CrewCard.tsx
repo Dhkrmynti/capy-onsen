@@ -18,17 +18,17 @@ const VALID = /^0x[0-9a-fA-F]{40}$/;
 
 type Tone = "ok" | "wait" | "stop" | "dim";
 const STAMP: Record<WalletInfo["status"], { word: string; tone: Tone; line: string }> = {
-  sitting: { word: "Citizen", tone: "ok", line: "A citizen. You get a part of the next Share." },
-  waiting: { word: "Newcomer", tone: "wait", line: "A citizen, but your first $TRPZ are still under the hold time." },
-  "too-small": { word: "Visitor", tone: "wait", line: "Holding, but under the minimum to be a citizen." },
-  hopped: { word: "Exiled", tone: "stop", line: "This wallet sold. Ostracized from the city for good." },
-  excluded: { word: "Official", tone: "dim", line: "Engine, curve, treasury or dead address. Never gets a share." },
-  "not-holding": { word: "No card", tone: "dim", line: "This wallet holds no $TRPZ." },
+  sitting: { word: "Account", tone: "ok", line: "An open account. You get a part of the next dividend." },
+  waiting: { word: "Pending", tone: "wait", line: "Account open, but your first $OLDM are still under the hold time." },
+  "too-small": { word: "Savings", tone: "wait", line: "Holding, but under the minimum for an account." },
+  hopped: { word: "Closed", tone: "stop", line: "This wallet sold. Account closed for good." },
+  excluded: { word: "House", tone: "dim", line: "Engine, curve, reserve or dead address. Never gets a dividend." },
+  "not-holding": { word: "No account", tone: "dim", line: "This wallet holds no $OLDM." },
 };
 
 /** What X sign-in came back with (?x=…), read once and then cleared from the address bar. */
 const X_RESULT: Record<string, { ok: boolean; text: string }> = {
-  linked: { ok: true, text: "X linked. The agora now prints your X handle, picture and badge." },
+  linked: { ok: true, text: "X linked. The register now prints your X handle, picture and badge." },
   demo: { ok: true, text: "X linked for real: that's your handle, picture and badge. Illustration edition, so nothing was saved." },
   cancelled: { ok: false, text: "X sign-in cancelled. Nothing changed." },
   expired: { ok: false, text: "The X sign-in took too long. Try again." },
@@ -59,19 +59,19 @@ export function openCard(addr: string) {
 }
 
 /**
- * The name desk: the holder connects the wallet on this card, types a citizen
+ * The seal desk: the holder connects the wallet on this card, types an account
  * name and signs one plain message. No transaction is ever requested.
  */
-/** A wallet's coin portrait: the parts it picked, else the ones its address generates. */
+/** A wallet's account seal: the parts it picked, else the ones its address generates. */
 export function mugOf(addr: string, pp?: number[] | null): Traits {
   return validTraits(pp) ? pp : traitsFor(addr);
 }
 
 const SLOTS = [
-  ["fur", "Plumage"],
-  ["hat", "Crown"],
-  ["acc", "Extra"],
-  ["bg", "Backdrop"],
+  ["fur", "Ink"],
+  ["hat", "Frame"],
+  ["acc", "Emblem"],
+  ["bg", "Paper"],
 ] as const;
 
 function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patch: Partial<WalletInfo>) => void; flash: { ok: boolean; text: string } | null }) {
@@ -104,7 +104,7 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
     // The illustration edition opens the booth without a wallet; nothing it saves leaves the page.
     if (DEMO) {
       setDemoAccount(info.addr);
-      return setNote({ ok: true, text: "Illustration edition: try it all. Whatever you carve stays on this page only." });
+      return setNote({ ok: true, text: "Illustration edition: try it all. Whatever you stamp stays on this page only." });
     }
     if (!hasWallet())
       return setNote({ ok: false, text: NO_WALLET });
@@ -126,7 +126,7 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
       if (tidy.length < 3 || tidy.length > 18 || !/^[A-Za-z0-9 _'-]+$/.test(tidy)) return setNote({ ok: false, text: "Names are 3 to 18 letters, numbers, spaces, - ' or _." });
       demoSaveByline(info.addr, { nickname: tidy, pp: mug });
       onSaved({ nickname: tidy, pp: mug });
-      return setNote({ ok: true, text: `Carved. You're "${tidy}" in the agora now. (Illustration edition: on this page only.)` });
+      return setNote({ ok: true, text: `Stamped. You're "${tidy}" on the register now. (Illustration edition: on this page only.)` });
     }
     try {
       setBusy(true);
@@ -135,7 +135,7 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
       const signature = await signText(account, template.replace("{nickname}", clean).replace("{mugshot}", mug.join("-")));
       const saved = await claimByline(info.addr, clean, mug, nonce, signature);
       onSaved({ nickname: saved.nickname, pp: saved.pp });
-      setNote({ ok: true, text: `Carved. You're "${saved.nickname}" in the agora now.` });
+      setNote({ ok: true, text: `Stamped. You're "${saved.nickname}" on the register now.` });
       window.dispatchEvent(new Event("rbank:refresh"));
     } catch (e: any) {
       setNote({ ok: false, text: e?.code === 4001 ? "You cancelled the signature. Nothing was saved." : e?.message || "Couldn't save the name." });
@@ -189,7 +189,7 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
       demoSaveByline(info.addr, { x: null });
       onSaved({ x: null });
       setTab("name");
-      return setNote({ ok: true, text: "X unlinked. The agora prints your name and portrait again." });
+      return setNote({ ok: true, text: "X unlinked. The register prints your name and seal again." });
     }
     try {
       setBusy(true);
@@ -197,7 +197,7 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
       await unlinkX(info.addr, nonce, await signText(account, text));
       onSaved({ x: null });
       setTab("name");
-      setNote({ ok: true, text: "X unlinked. The agora prints your name and portrait again." });
+      setNote({ ok: true, text: "X unlinked. The register prints your name and seal again." });
       window.dispatchEvent(new Event("rbank:refresh"));
     } catch (e: any) {
       failed(e, "Couldn't unlink X.");
@@ -209,13 +209,13 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
   if (!open)
     return (
       <button type="button" className="press-btn is-ink byline__open" onClick={() => setOpen(true)}>
-        <PenNib weight="bold" aria-hidden="true" /> {info.x ? "Manage X link" : info.nickname ? "Edit name & portrait" : "Set your name or connect X"}
+        <PenNib weight="bold" aria-hidden="true" /> {info.x ? "Manage X link" : info.nickname ? "Edit name & seal" : "Set your name or connect X"}
       </button>
     );
 
   return (
     <div className="byline">
-      <p className="byline__head">Portrait booth</p>
+      <p className="byline__head">The seal desk</p>
       {!mine ? (
         <>
           <button type="button" className="press-btn is-ink" onClick={connect} disabled={busy}>
@@ -225,9 +225,9 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
         </>
       ) : (
         <>
-          <div className="byline__tabs" role="tablist" aria-label="How the agora prints you">
+          <div className="byline__tabs" role="tablist" aria-label="How the register prints you">
             <button type="button" role="tab" aria-selected={tab === "name"} className="byline__tab" onClick={() => setTab("name")}>
-              <PenNib weight="bold" aria-hidden="true" /> Name & portrait
+              <PenNib weight="bold" aria-hidden="true" /> Name & seal
             </button>
             <button type="button" role="tab" aria-selected={tab === "x"} className="byline__tab" onClick={() => setTab("x")}>
               <XLogo weight="bold" aria-hidden="true" /> Connect X
@@ -260,7 +260,7 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
                 </>
               ) : (
                 <>
-                  <p className="xdesk__pitch">Carve your X account instead: your handle, your picture, and your badge if X gave you one. A logo next to your name opens your profile.</p>
+                  <p className="xdesk__pitch">Print your X account instead: your handle, your picture, and your badge if X gave you one. A logo next to your name opens your profile.</p>
                   <button type="button" className="press-btn is-ink" onClick={linkX} disabled={busy || !info.xLogin}>
                     <XLogo weight="bold" aria-hidden="true" /> {busy ? "Opening X" : "Sign & connect X"}
                   </button>
@@ -275,7 +275,7 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
             </div>
           ) : info.x ? (
             <p className="lookup__help" role="tabpanel">
-              Your X account is showing right now. Unlink X on the other tab to carve a name and portrait instead.
+              Your X account is showing right now. Unlink X on the other tab to stamp a name and seal instead.
             </p>
           ) : (
             <form
@@ -290,7 +290,7 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
                   traits={mug}
                   size={132}
                   className="booth__shot"
-                  title={`Your portrait: ${PART_NAMES.fur[mug[0]]} plumage, ${PART_NAMES.hat[mug[1]]}, ${PART_NAMES.acc[mug[2]]}, ${PART_NAMES.bg[mug[3]]} backdrop`}
+                  title={`Your seal: ${PART_NAMES.fur[mug[0]]} ink, ${PART_NAMES.hat[mug[1]]} frame, ${PART_NAMES.acc[mug[2]]}, ${PART_NAMES.bg[mug[3]]} paper`}
                 />
                 <div className="booth__dials">
                   {SLOTS.map(([key, label], i) => (
@@ -307,11 +307,11 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
                   ))}
                 </div>
               </div>
-              <label htmlFor="byline-name">Citizen name</label>
+              <label htmlFor="byline-name">Account name</label>
               <div className="lookup__field">
                 <input id="byline-name" value={name} maxLength={18} onChange={(e) => setName(e.target.value)} autoComplete="off" spellCheck={false} />
                 <button type="submit" className="press-btn" disabled={busy}>
-                  {busy ? "Signing" : "Sign & carve"}
+                  {busy ? "Signing" : "Sign & stamp"}
                 </button>
               </div>
               <p className="lookup__help">3 to 18 letters or numbers. Free to sign, moves no funds, once a day.</p>
@@ -351,7 +351,7 @@ export function CrewCard({ live }: { live: boolean }) {
       url.searchParams.set("w", addr);
       window.history.replaceState(null, "", url);
     } catch (e: any) {
-      setError(e?.message === "Not Found" || !live ? "The table isn't open yet, so there are no citizen cards to check." : "Couldn't reach the engine. Try again in a moment.");
+      setError(e?.message === "Not Found" || !live ? "The doors aren't open yet, so there are no accounts to check." : "Couldn't reach the engine. Try again in a moment.");
     } finally {
       setBusy(false);
     }
@@ -425,18 +425,18 @@ export function CrewCard({ live }: { live: boolean }) {
   // Crew outside the top N gets no cut yet: say how far it has to climb.
   const stamp =
     info && base && info.status === "sitting" && !info.inTop
-      ? { ...base, tone: "wait" as const, line: `Rank #${info.rank}. Only the top ${info.topN} holders get the Share, so climb ${info.rank! - info.topN} more places.` }
+      ? { ...base, tone: "wait" as const, line: `Rank #${info.rank}. Only the Preferred Ten get the dividend, so climb ${info.rank! - info.topN} more places.` }
       : info && base && info.status === "sitting"
-        ? { ...base, line: `One of the Ten. You get a part of the next Share.` }
+        ? { ...base, line: `One of the Preferred Ten. You get a part of the next dividend.` }
         : base;
 
   return (
     <section className="page cardpage" id="card" ref={root} aria-labelledby="card-head">
       <div className="wrap cardpage__grid">
-        <Folio page={4} label="Citizen affairs" />
+        <Folio page={4} label="Private clients" />
         <div className="cardpage__ask">
           <h2 className="page__head" id="card-head">
-            Check your citizen card
+            Check your account
           </h2>
           <p className="page__deck">Paste a wallet. See its rank and its ETH.</p>
           <form className="lookup" onSubmit={submit} noValidate>
@@ -467,8 +467,8 @@ export function CrewCard({ live }: { live: boolean }) {
           {info && stamp ? (
             <article className={`card is-${stamp.tone}`}>
               <header className="card__top">
-                <span className="card__org">The Trapeza Gazette</span>
-                <span className="card__kind">Citizen card</span>
+                <span className="card__org">The Old Money Gazette</span>
+                <span className="card__kind">Account card</span>
               </header>
               <div className="card__body">
                 <div className="card__mug" aria-hidden="true">
@@ -493,7 +493,7 @@ export function CrewCard({ live }: { live: boolean }) {
                               <XLink x={info.x} className="card__xlink" />
                             </>
                           ) : who.claimed ? null : (
-                            <span> · citizen name</span>
+                            <span> · house name</span>
                           )}
                         </p>
                       </>
@@ -501,7 +501,7 @@ export function CrewCard({ live }: { live: boolean }) {
                   })()}
                   <dl className="card__facts">
                     <div>
-                      <dt>Days a citizen</dt>
+                      <dt>Days held</dt>
                       <dd className="tabular">{info.padDays}</dd>
                     </div>
                     <div>
@@ -513,7 +513,7 @@ export function CrewCard({ live }: { live: boolean }) {
                       <dd className="tabular">{eth(info.received)}</dd>
                     </div>
                     <div>
-                      <dt>{info.status === "sitting" && info.inTop ? "Next Share, est." : info.status === "hopped" ? "Ostracized" : "Rank"}</dt>
+                      <dt>{info.status === "sitting" && info.inTop ? "Next dividend, est." : info.status === "hopped" ? "Closed" : "Rank"}</dt>
                       <dd className="tabular">
                         {info.status === "sitting" && info.inTop ? (
                           eth(info.estNext)
@@ -548,8 +548,8 @@ export function CrewCard({ live }: { live: boolean }) {
           ) : (
             <div className="card is-blank" aria-hidden="true">
               <header className="card__top">
-                <span className="card__org">The Trapeza Gazette</span>
-                <span className="card__kind">Citizen card</span>
+                <span className="card__org">The Old Money Gazette</span>
+                <span className="card__kind">Account card</span>
               </header>
               <p className="card__blank">Your card prints here.</p>
             </div>
@@ -560,8 +560,8 @@ export function CrewCard({ live }: { live: boolean }) {
             // Say why the booth is shut instead of leaving a connected holder guessing.
             <p className="byline__shut">
               {live
-                ? "Names, portraits and X links are for wallets holding $TRPZ. Buy in, then come back to this card."
-                : "The booth opens at launch: once $TRPZ is trading, any wallet holding it can set a name, strike a portrait or link X here."}
+                ? "Names, seals and X links are for wallets holding $OLDM. Buy in, then come back to this card."
+                : "The seal desk opens at launch: once $OLDM is trading, any wallet holding it can set a name, stamp a seal or link X here."}
             </p>
           ) : null}
         </div>

@@ -22,7 +22,7 @@ export function TheTake({ status }: { status: Status | null }) {
     () => {
       slamHead(root.current!);
       if (prefersReducedMotion()) return;
-      // The payout is drawn panel by panel, like a decree carved on a stele.
+      // The payout is laid out panel by panel, like a prospectus.
       gsap.from(".plan__panel, .plan__arrow", {
         opacity: 0,
         y: 26,
@@ -47,18 +47,18 @@ export function TheTake({ status }: { status: Status | null }) {
   return (
     <section className="page take" id="payout" ref={root} aria-labelledby="take-head">
       <div className="wrap">
-        <Folio page={2} label="Treasury desk" />
+        <Folio page={2} label="Dividend desk" />
         <h2 className="page__head" id="take-head">
-          How the table pays
+          How the dividend pays
         </h2>
-        <p className="page__deck">Every trade drops a coin on the table. Glaux pays it out three ways, always in this order.</p>
-        <p className="page__byline">By the Gazette treasury desk</p>
+        <p className="page__deck">Every trade pays a fee into the escrow. Old Money pays it out three ways, always in this order.</p>
+        <p className="page__byline">By the Gazette dividend desk</p>
 
         <ol className="plan" aria-label="The payout, step by step">
           <li className="plan__panel is-loot">
             <Coins className="plan__icon" weight="duotone" aria-hidden="true" />
             <span className="plan__big">Every trade</span>
-            <span className="plan__what">drops a coin in the escrow</span>
+            <span className="plan__what">pays a fee into the escrow</span>
           </li>
           <li className="plan__arrow" aria-hidden="true">
             <ArrowRight weight="bold" />
@@ -74,7 +74,7 @@ export function TheTake({ status }: { status: Status | null }) {
           <li className="plan__panel is-keeper">
             <Bank className="plan__icon" weight="duotone" aria-hidden="true" />
             <span className="plan__big tabular">{at("keeper")} ETH</span>
-            <span className="plan__what">to the treasury</span>
+            <span className="plan__what">to the reserve</span>
           </li>
           <li className="plan__arrow" aria-hidden="true">
             <ArrowRight weight="bold" />
@@ -82,7 +82,7 @@ export function TheTake({ status }: { status: Status | null }) {
           <li className="plan__panel is-sink">
             <Fire className="plan__icon" weight="duotone" aria-hidden="true" />
             <span className="plan__big tabular">{at("sink")} ETH</span>
-            <span className="plan__what">buys $TRPZ, burns it</span>
+            <span className="plan__what">buys $OLDM, retires it</span>
           </li>
           <li className="plan__again" aria-label="then it repeats">
             <ArrowsClockwise weight="bold" aria-hidden="true" />
@@ -101,7 +101,7 @@ export function TheTake({ status }: { status: Status | null }) {
         </div>
 
         <blockquote className="take__quote">
-          <p>Sell once = ostracized. No share, ever.</p>
+          <p>Sell once = account closed. No dividend, ever.</p>
         </blockquote>
       </div>
     </section>

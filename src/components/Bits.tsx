@@ -34,7 +34,7 @@ export function BuyButton({ status, className = "" }: { status: Status | null; c
   if (!ca)
     return (
       <span className={`press-btn is-waiting ${className}`} aria-disabled="true">
-        <span className="btn__long">Table opens soon</span>
+        <span className="btn__long">Doors open soon</span>
         <span className="btn__short">Soon</span>
       </span>
     );
@@ -79,7 +79,7 @@ export function CaCoupon({ status, compact = false }: { status: Status | null; c
 export function Folio({ page, label }: { page: number; label: string }) {
   return (
     <p className="folio" aria-hidden="true">
-      <span>The Trapeza Gazette</span>
+      <span>The Old Money Gazette</span>
       <span>{label}</span>
       <span className="tabular">Page {page}</span>
     </p>

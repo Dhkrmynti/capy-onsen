@@ -37,7 +37,7 @@ export interface PondRow {
   padDays: number;
   /** ETH received from feedings. */
   received: string;
-  /** The holder's claimed byline, empty when unclaimed (the site then prints a citizen name). */
+  /** The holder's claimed byline, empty when unclaimed (the site then prints a house name). */
   nickname?: string;
   /** Claimed mugshot parts [fur, hat, accessory, background]; null means the generated one. */
   pp?: number[] | null;
@@ -88,9 +88,9 @@ export interface RoundRow {
 
 /** The cycle, in plain names. */
 export const STEP: Record<RoundKind, { name: string; does: string }> = {
-  feeding: { name: "The Share", does: "ETH to the Ten, the 10 biggest holders" },
-  keeper: { name: "Treasury of Athena", does: "to the treasury" },
-  sink: { name: "The Offering", does: "buy $TRPZ and burn it" },
+  feeding: { name: "The Dividend", does: "ETH to the Preferred Ten, the 10 biggest holders" },
+  keeper: { name: "The Reserve", does: "to the reserve" },
+  sink: { name: "Retired Notes", does: "buy $OLDM and retire it" },
 };
 
 export const DEFAULT_STEPS: Status["cycle"]["steps"] = [
@@ -300,9 +300,9 @@ const seedPond = (): { total: number; topN: number; rows: PondRow[] } => {
       firstIn: now() - days[i] * 86400 - 3600 * i,
       padDays: days[i],
       received: String(rec[i]),
-      nickname: ["Nikos of the Ten", "", "olivegrove", "", "", "Patient Phaedra", "", "", "", "", "", ""][i] || "",
+      nickname: ["Sterling Whitmore III", "", "trustfundtony", "", "", "Lady Penelope", "", "", "", "", "", ""][i] || "",
       pp: [[1, 4, 3, 3], null, [2, 0, 2, 4], null, null, [4, 2, 4, 5], null, null, null, null, null, null][i],
-      x: [null, { username: "agorawhale", name: "Agora Whale", avatar: "/favicon-192.png", verified: "blue" }, null, null, { username: "lyra_of_delos", name: "Lyra of Delos", avatar: "", verified: "" }, null, null, null, null, null, null, null][i],
+      x: [null, { username: "oldmoneywhale", name: "Old Money Whale", avatar: "/favicon-192.png", verified: "blue" }, null, null, { username: "margaux_ashford", name: "Margaux Ashford", avatar: "", verified: "" }, null, null, null, null, null, null, null][i],
     })),
   };
 };

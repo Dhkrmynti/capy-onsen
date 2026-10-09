@@ -41,7 +41,7 @@ export function startLink(addr: string, demo = false) {
   return `https://x.com/i/oauth2/authorize?${q}`;
 }
 
-/** Where the callback sends the browser back to: the wallet's citizen card. */
+/** Where the callback sends the browser back to: the wallet's account card. */
 export function backTo(addr: string, result: string, extra: Record<string, string> = {}) {
   const q = new URLSearchParams({ x: result, ...extra });
   if (addr) q.set("w", addr);

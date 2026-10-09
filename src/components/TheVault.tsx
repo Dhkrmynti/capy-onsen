@@ -22,7 +22,7 @@ export function TheVault({ status }: { status: Status | null }) {
   const all = data?.rows ?? [];
   const crew = status?.counts.sitters ?? 0;
   const top = status?.rules.topN ?? 10;
-  // The board opens on the Ten; the citizens chasing them are one press away.
+  // The register opens on the Preferred Ten; the accounts chasing them are one press away.
   const rows = more ? all : all.slice(0, top);
   const paid = (v: string) => (parseFloat(v) > 0 ? parseFloat(v).toFixed(narrow ? 3 : 4) : "-");
 
@@ -44,27 +44,27 @@ export function TheVault({ status }: { status: Status | null }) {
   );
 
   return (
-    <section className="page vault" id="agora" ref={root} aria-labelledby="vault-head">
+    <section className="page vault" id="register" ref={root} aria-labelledby="vault-head">
       <div className="wrap">
-        <Folio page={5} label="The agora" />
+        <Folio page={5} label="The register" />
         <div className="vault__lead">
           <h2 className="page__head" id="vault-head">
-            The agora
+            The register
           </h2>
           <p className="page__deck">
-            {crew.toLocaleString("en-US")} citizens. The top {top} holders, the Ten, get every Share.
+            {crew.toLocaleString("en-US")} accounts. The top {top}, the Preferred Ten, get every dividend.
           </p>
         </div>
 
         {rows.length ? (
           <table className="quotes">
-            <caption className="sr-only">Biggest holders among the citizens, ranked by balance. The top {top} share the next payout.</caption>
+            <caption className="sr-only">Biggest accounts, ranked by balance. The top {top} share the next dividend.</caption>
             <thead>
               <tr>
                 <th scope="col" className="num">
                   Rank
                 </th>
-                <th scope="col">Citizen</th>
+                <th scope="col">Account</th>
                 <th scope="col" className="num">
                   Bag
                 </th>
@@ -91,7 +91,7 @@ export function TheVault({ status }: { status: Status | null }) {
                             type="button"
                             className={`quotes__who ${who.claimed ? "is-claimed" : "is-alias"}`}
                             onClick={() => openCard(r.addr)}
-                            aria-label={`Open citizen card for ${who.name}, ${r.addr}`}
+                            aria-label={`Open account card for ${who.name}, ${r.addr}`}
                           >
                             <CrewFace addr={r.addr} pp={r.pp} x={r.x} size={narrow ? 30 : 34} className="quotes__mug" />
                             <span className="quotes__id">
@@ -116,7 +116,7 @@ export function TheVault({ status }: { status: Status | null }) {
           </table>
         ) : (
           <p className="vault__empty">
-            {live ? "No citizens yet. The board fills as soon as the first wallet holds the minimum." : "Trading opens at launch. The first citizens land on this board the moment the table opens."}
+            {live ? "No accounts yet. The register fills as soon as the first wallet holds the minimum." : "Trading opens at launch. The first accounts land on this register the moment the doors open."}
           </p>
         )}
         {all.length > rows.length ? (
@@ -124,7 +124,7 @@ export function TheVault({ status }: { status: Status | null }) {
             Show the next {all.length - rows.length} in line
           </button>
         ) : null}
-        <p className="vault__foot">Bold rows are the Ten and share the next payout. Unclaimed wallets print under a citizen name. Set your own or connect X on your citizen card.</p>
+        <p className="vault__foot">Bold rows are the Preferred Ten and share the next dividend. Unclaimed wallets print under a house name. Set your own or connect X on your account card.</p>
       </div>
     </section>
   );
