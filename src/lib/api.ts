@@ -338,7 +338,16 @@ export interface HouseRow {
   pp: number[] | null;
   x: XProfile | null;
 }
-export type Pond = { total: number; topN: number; rows: PondRow[]; house?: HouseRow | null };
+/** A wallet over the minimum whose holding is still ageing; `eligibleAt` is when it joins the book. */
+export interface WaitingRow {
+  addr: string;
+  balance: string;
+  eligibleAt: number;
+  nickname: string;
+  pp: number[] | null;
+  x: XProfile | null;
+}
+export type Pond = { total: number; topN: number; rows: PondRow[]; house?: HouseRow | null; waiting?: WaitingRow[] };
 
 export const demoPond = (): Pond => {
   const base = seedPond();

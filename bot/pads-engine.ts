@@ -682,6 +682,15 @@ const server = http.createServer((req, res) => {
           pp: mugshotOf(r.addr),
           x: xOf(r.addr),
         })),
+        // Wallets over the minimum whose holding hasn't aged yet: shown with a countdown, not ranked.
+        waiting: (() => {
+          const ex = excluded();
+          return Object.entries(state.holders)
+            .filter(([a, h]) => standing(a, h, now, ex) === "waiting")
+            .sort((a, b) => (big(b[1].balance) > big(a[1].balance) ? 1 : -1))
+            .slice(0, 20)
+            .map(([a, h]) => ({ addr: a, balance: fmt(h.balance), eligibleAt: h.firstIn + Math.round(config.minHoldHours * 3600), nickname: bylineOf(a), pp: mugshotOf(a), x: xOf(a) }));
+        })(),
         // The dev (the creator wallet the engine runs on): shown with a crown, never ranked or paid.
         house: wallet
           ? (() => {

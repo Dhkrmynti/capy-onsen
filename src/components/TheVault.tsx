@@ -2,7 +2,7 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { Crown, SealCheck } from "@phosphor-icons/react";
+import { Crown, HourglassMedium, SealCheck } from "@phosphor-icons/react";
 import { DEFAULT_TIERS, compact, demoPond, splitInheritance, tierOf, usd, usePoll, type Pond, type Status } from "../lib/api";
 import { useAccount } from "../lib/wallet";
 import { prefersReducedMotion } from "../lib/motion";
@@ -87,6 +87,29 @@ export function TheVault({ status }: { status: Status | null }) {
             </div>
           ) : null}
 
+          {/* bought, over the minimum, but the holding is still ageing: a countdown, not a rank yet */}
+          {data?.waiting?.length ? (
+            <div className="waitroom">
+              <span className="waitroom__label">
+                <HourglassMedium weight="fill" aria-hidden="true" /> Waiting room · {data.waiting.length}
+              </span>
+              <div className="waitroom__list">
+                {data.waiting.map((w) => {
+                  const left = Math.max(0, w.eligibleAt - Math.floor(Date.now() / 1000));
+                  return (
+                    <button type="button" key={w.addr} className="waitroom__one" onClick={() => openCard(w.addr)} title={`Joins the book in ${Math.ceil(left / 60)} min`}>
+                      <CrewFace addr={w.addr} pp={w.pp} x={w.x} size={20} className="heir__seal" />
+                      <span className="waitroom__name">{nameFor(w.addr, w.nickname, w.x).name}</span>
+                      <span className="waitroom__sub tabular">
+                        {compact(w.balance)} · {left > 0 ? `in ${Math.ceil(left / 60)}m` : "any moment"}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ) : null}
+
           {all.length ? (
             <div className="heirs" role="list" aria-label={`The first ${all.length} holders by balance. The top ${top} share the next inheritance.`}>
               {cols.map((col, c) => (
@@ -135,7 +158,7 @@ export function TheVault({ status }: { status: Status | null }) {
               ))}
             </div>
           ) : (
-            <p className="book__empty">{live ? "No family yet. The first entry is written the moment a wallet holds the minimum balance." : "The book opens at launch. The first names are entered the moment trading begins."}</p>
+            <p className="book__empty">{live ? (data?.waiting?.length ? "The first heirs are in the waiting room above: a holding ages one hour before it is entered in the book." : "No family yet. A wallet is entered once it holds the minimum for an hour.") : "The book opens at launch. The first names are entered the moment trading begins."}</p>
           )}
         </div>
       </div>
