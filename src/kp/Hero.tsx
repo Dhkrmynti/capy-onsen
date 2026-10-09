@@ -18,6 +18,7 @@ import { Piece, type PieceKind } from "./Pieces";
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const Crown3D = lazy(() => import("./Crown3D"));
+const Board3D = lazy(() => import("./Board3D"));
 
 /** The opening position: back ranks and pawns for both sides, the light side nearest you. */
 const BACK: PieceKind[] = ["rook", "knight", "bishop", "queen", "king", "bishop", "knight", "rook"];
@@ -52,22 +53,26 @@ export function Hero({ status, pond, offline }: { status: Status | null; pond: P
   const who = king ? nameFor(king.addr, king.nickname, king.x) : null;
   const px = status?.price?.tokenUSD ?? 0;
   const still = prefersReducedMotion();
+  const gl = canWebGL();
+  // how far the hero has been scrolled (0→1): the 3D board's camera follows it to straight down
+  const progress = useRef(0);
 
   useGSAP(
     () => {
       if (still) return;
       gsap
         .timeline({ defaults: { ease: "expo.out" } })
-        .from(".board3d", { rotateX: 75, y: 160, opacity: 0, duration: 1.4 })
+        .from(gl ? ".board3dgl" : ".board3d", { y: 160, opacity: 0, duration: 1.4 })
         .from(".hero__frame", { y: 80, rotate: 8, opacity: 0, duration: 1 }, "-=1")
         .from(".hero__h .ln", { yPercent: 110, duration: 1, stagger: 0.08 }, "-=0.8")
         .from(".hero__read, .hero__acts, .hero__clock", { y: 24, opacity: 0, duration: 0.8, stagger: 0.08 }, "-=0.6");
       // scroll lays the board flat and carries you onto the Ladder
       gsap
-        .timeline({ scrollTrigger: { trigger: root.current, start: "top top", end: "+=85%", scrub: 0.6, pin: true, anticipatePin: 1, refreshPriority: 2 } })
+        .timeline({
+          scrollTrigger: { trigger: root.current, start: "top top", end: "+=85%", scrub: 0.6, pin: true, anticipatePin: 1, refreshPriority: 2, onUpdate: (st) => (progress.current = st.progress) },
+        })
         .to(".hero__copy", { y: -140, opacity: 0, ease: "power1.in" }, 0)
-        .to(".board3d", { rotateX: 0, scale: 1.45, y: -40, ease: "none" }, 0)
-        .to(".board3d .pc", { "--stand": "0deg", ease: "none" }, 0)
+        .to(gl ? ".board3dgl" : ".board3d", gl ? { scale: 1.12, ease: "none" } : { rotateX: 0, scale: 1.45, y: -40, ease: "none" }, 0)
         .to(".hero__throne", { scale: 0.5, y: 120, rotate: -6, opacity: 0, ease: "power1.in" }, 0.1);
     },
     { scope: root },
@@ -78,6 +83,13 @@ export function Hero({ status, pond, offline }: { status: Status | null; pond: P
 
   return (
     <section className="hero" id="top" ref={root} aria-label="Kingpin: who wears the crown">
+      {gl ? (
+        <div className="hero__board3d" aria-hidden="true">
+          <Suspense fallback={null}>
+            <Board3D progress={progress} still={still} />
+          </Suspense>
+        </div>
+      ) : (
       <div className="hero__board" aria-hidden="true">
         <div className="board3d">
           {Array.from({ length: 64 }, (_, i) => {
@@ -94,6 +106,7 @@ export function Hero({ status, pond, offline }: { status: Status | null; pond: P
           })}
         </div>
       </div>
+      )}
 
       <div className="hero__copy">
         <h1 className="hero__h">

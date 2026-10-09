@@ -2202,3 +2202,55 @@ button {
     font-size: 12px;
   }
 }
+
+/* ───────── hero board in 3D ───────── */
+.hero__board3d {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.board3dgl,
+.board3dgl canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+.board3dgl {
+  transform-origin: 60% 70%;
+}
+/* the board owns the lower half; the portrait sits top-right, clear of the pieces */
+.hero__throne {
+  top: calc(var(--head) + 26px);
+  right: clamp(20px, 4vw, 64px);
+  width: clamp(170px, 15vw, 230px);
+}
+.hero__crown {
+  bottom: calc(100% - 70px);
+}
+.hero__plate {
+  font-size: 15px;
+}
+.hero__plate-sq {
+  display: none;
+}
+.hero__board3d {
+  top: 22%;
+}
+@media (max-width: 760px) {
+  .hero__board3d {
+    top: 38%;
+  }
+  .hero__throne {
+    display: none;
+  }
+}
+.hero__throne {
+  top: calc(var(--head) + 96px);
+}
+@media (max-width: 760px) {
+  .hero__board3d {
+    top: 34%;
+    left: -12%;
+    right: -12%;
+  }
+}
