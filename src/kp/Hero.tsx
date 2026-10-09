@@ -121,9 +121,9 @@ export function Hero({ status, pond, offline }: { status: Status | null; pond: P
           {offline
             ? "Back in a moment."
             : !live
-              ? "Opens at launch. Hold the most $KING and the crown drops on you."
+              ? "Hold the most $KING and the crown is yours."
               : empty
-                ? "Hold 100,000 $KING without selling and the crown is yours."
+                ? "Hold the most $KING and the crown is yours."
                 : `${compact(king!.balance)} $KING${px > 0 ? ` (${usd(parseFloat(king!.balance) * px)})` : ""}${second ? ` · +${compact(lead)} ahead of No. 2` : ""}`}
         </p>
         <p className="hero__escrow tabular">

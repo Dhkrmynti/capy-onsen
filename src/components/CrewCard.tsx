@@ -4,7 +4,7 @@ import { useGSAP } from "@gsap/react";
 import { LinkSimple, Check, MagnifyingGlass, SealCheck, PenNib, Wallet, XLogo } from "@phosphor-icons/react";
 import { DEMO, demoSaveByline, demoWallet, startXDemo, takeXDemo, addrUrl, amount, bylineNonce, claimByline, dateWib, eth, fetchWallet, short, startXLink, txUrl, unlinkX, type WalletInfo } from "../lib/api";
 import { CrewFace, XCheck, XLink } from "./Face";
-import { aliasFor, nameFor } from "../lib/alias";
+import { nameFor } from "../lib/alias";
 import { connectWallet, hasWallet, signText, useAccount } from "../lib/wallet";
 import { Mugshot, PARTS, PART_NAMES, traitsFor, validTraits, type Traits } from "./Mugshot";
 import { CaretLeft, CaretRight } from "@phosphor-icons/react";
@@ -86,7 +86,7 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
   useEffect(() => {
     if (hasX) setTab("x");
   }, [hasX]);
-  const [name, setName] = useState(info.nickname || aliasFor(info.addr));
+  const [name, setName] = useState(info.nickname || "");
   const [mug, setMug] = useState<Traits>(mugOf(info.addr, info.pp));
   const turn = (slot: number, by: number) => {
     const max = [PARTS.fur, PARTS.hat, PARTS.acc, PARTS.bg][slot];
@@ -308,7 +308,7 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
               </div>
               <label htmlFor="byline-name">Account name</label>
               <div className="lookup__field">
-                <input id="byline-name" value={name} maxLength={18} onChange={(e) => setName(e.target.value)} autoComplete="off" spellCheck={false} />
+                <input id="byline-name" value={name} maxLength={18} placeholder="Your name" onChange={(e) => setName(e.target.value)} autoComplete="off" spellCheck={false} />
                 <button type="submit" className="press-btn" disabled={busy}>
                   {busy ? "Signing" : "Sign & stamp"}
                 </button>
@@ -488,7 +488,7 @@ export function CrewCard({ live }: { live: boolean }) {
                           {info.x ? (
                             <span> · @{info.x.username}</span>
                           ) : who.claimed ? null : (
-                            <span> · house name</span>
+                            <span> · no name set</span>
                           )}
                         </p>
                       </>

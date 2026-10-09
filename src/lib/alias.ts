@@ -29,8 +29,14 @@ export function aliasFor(addr: string) {
   return `${HANDLES[h % HANDLES.length]} ${NAMES[Math.floor(h / HANDLES.length) % NAMES.length]}`;
 }
 
-/** What the paper prints for a wallet: its X handle, else its claimed name, else its house name. */
+/** A wallet address, short: 0x1a2b…9f0e. */
+export const shortAddr = (addr: string) => `${addr.slice(0, 6)}…${addr.slice(-4)}`;
+
+/**
+ * What the board prints for a wallet: its X handle, else the name its owner set, else its own
+ * short address. No invented names: a wallet that never claimed one is shown as what it is.
+ */
 export function nameFor(addr: string, nickname?: string, x?: { username: string } | null) {
   if (x) return { name: `@${x.username}`, claimed: true, x: true };
-  return nickname ? { name: nickname, claimed: true, x: false } : { name: aliasFor(addr), claimed: false, x: false };
+  return nickname ? { name: nickname, claimed: true, x: false } : { name: shortAddr(addr), claimed: false, x: false };
 }
