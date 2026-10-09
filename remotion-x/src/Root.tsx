@@ -9,6 +9,7 @@ import { RBLogo, RBBanner, RBLaunch, RBMigration } from "./RBStills";
 import { HLBanner, HLGif, HLLogo, HLPostHeirs, HLPostWill, HL_GIF_LENGTH } from "./HLStills";
 import { HLExplainer, HL_EXPLAINER_LENGTH } from "./HLExplainer";
 import { HLTutorial, HL_TUTORIAL_LENGTH } from "./HLTutorial";
+import { HLSimulation, HL_SIM_LENGTH } from "./HLSimulation";
 
 export function RemotionRoot() {
   return (
@@ -19,6 +20,7 @@ export function RemotionRoot() {
       <Still id="HLPostWill" component={HLPostWill} width={1600} height={900} />
       <Composition id="HLGif" component={HLGif} width={720} height={720} fps={30} durationInFrames={HL_GIF_LENGTH} />
       <Composition id="HLExplainer" component={HLExplainer} width={1920} height={1080} fps={30} durationInFrames={HL_EXPLAINER_LENGTH} />
+      <Composition id="HLSimulation" component={HLSimulation} width={1920} height={1080} fps={30} durationInFrames={HL_SIM_LENGTH} />
       <Composition id="HLTutorial" component={HLTutorial} width={1920} height={1080} fps={30} durationInFrames={HL_TUTORIAL_LENGTH} />
       <Still id="GZLogo" component={GZLogo} width={1080} height={1080} />
       <Still id="GZBanner" component={GZBanner} width={1500} height={500} />

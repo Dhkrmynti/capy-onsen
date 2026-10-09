@@ -25,7 +25,7 @@ const twice = (k: string) => (k === "keeper" ? 2 : 1);
 /* ───────────── pieces ───────────── */
 
 /** The escrow gauge from the vault door: a dial and a needle, filling to the turn's size. */
-function Gauge({ fill, target, size = 420, label = "ESCROW" }: { fill: number; target: number; size?: number; label?: string }) {
+export function Gauge({ fill, target, size = 420, label = "ESCROW" }: { fill: number; target: number; size?: number; label?: string }) {
   const a = -120 + Math.min(1, fill) * 240;
   const ticks = Array.from({ length: 25 }, (_, i) => -120 + i * 10);
   return (

@@ -9,6 +9,7 @@ npx remotion still build-hl HLLogo "$OUT/logo-x.png"
 npx remotion still build-hl HLBanner "$OUT/banner-x.png"
 npx remotion render build-hl HLExplainer "$OUT/post-1-how-heirloom-works.mp4" --codec=h264 --crf=18 --concurrency=1 --gl=swangle --timeout=120000
 npx remotion render build-hl HLTutorial "$OUT/post-2-tutorial-name-seal-x.mp4" --codec=h264 --crf=18 --concurrency=1 --gl=swangle --timeout=120000
+npx remotion render build-hl HLSimulation "$OUT/post-5-fee-simulation.mp4" --codec=h264 --crf=18 --concurrency=1 --gl=swangle --timeout=120000
 npx remotion still build-hl HLPostHeirs "$OUT/post-3-the-ten-heirs.png"
 npx remotion still build-hl HLPostWill "$OUT/post-4-the-will.png"
 # GIF: a lossless pass, then a palette pass at 20 fps

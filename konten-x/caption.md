@@ -10,6 +10,7 @@ Semua file ada di folder ini:
 | `post-2-tutorial-name-seal-x.mp4` | Post 2: video tutorial nickname + seal (PP) + Connect X |
 | `post-3-the-ten-heirs.png` | Post 3: The Ten Heirs (zona inheritance, tier I & II) |
 | `post-4-the-will.png` | Post 4: The will (aturan) |
+| `post-5-fee-simulation.mp4` | Post 5: simulasi fee berjalan (escrow 0 → 0.02 → bagi → 0, treasury, buyback & burn, treasury, loop) |
 | `gif-written-out.gif` | GIF: rank 10 jual, rank 11 naik ke zona (untuk balasan / quote) |
 
 `[CA]` diganti alamat kontrak setelah launch di Pons. Link situs: **https://heirlooms.fun**
@@ -105,6 +106,23 @@ Pilih salah satu bio:
 
 ---
 
+## Post 5 — simulasi fee
+
+**File:** `post-5-fee-simulation.mp4`
+
+> Watch the fees move.
+>
+> Every trade drops a fee in the escrow. At 0.02 ETH it is claimed and paid to the Ten Heirs. Back to 0.
+> Then 0.025 ETH to the house wallet. 0.01 ETH buys $HEIR back and burns it. 0.025 ETH upkeep again.
+>
+> Round after round, for as long as people trade.
+>
+> heirlooms.fun
+
+**Alt text:** Simulation of the Heirloom engine: an escrow gauge filling from 0 with trade fees, a CLAIM flash, coins flying to the Ten Heirs, then to the house wallet, then to a brazier where $HEIR burns, while totals and a statement update; the second round runs at double speed.
+
+---
+
 ## GIF — balasan / quote
 
 **File:** `gif-written-out.gif`
@@ -121,6 +139,7 @@ Pilih salah satu bio:
 2. Setelah launch: quote Post 1 dengan CA: *"$HEIR is live on Pons. CA: [CA] · heirlooms.fun"*
 3. +2–3 jam: **Post 2** (tutorial).
 4. Hari berikutnya: **Post 3**, lalu **Post 4**.
+5. Setelah putaran pertama sungguhan selesai: **Post 5** (simulasi), quote dengan link tx asli di statement.
 5. Pakai **GIF** sebagai balasan setiap kali ada holder top 10 yang jual.
 
 Catatan: nama holder, saldo, dan jumlah token yang di-burn di video dan gambar adalah ilustrasi dan sudah ditandai begitu. "Inheritance" hanyalah nama di situs untuk fee trading yang dibagikan; $HEIR adalah memecoin tanpa janji nilai.
