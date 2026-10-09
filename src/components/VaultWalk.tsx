@@ -416,7 +416,7 @@ function conditionsPlate() {
       };
       engrave("HEIRLOOM", '700 64px "Cinzel", Georgia, serif', 120);
       engrave("THE LAST WILL OF THE HOUSE", '600 34px "Cinzel", Georgia, serif', 176);
-      ["Hold 100,000 $HEIR to be named", "No. 1–5 share 70%, No. 6–10 share 30%", "A holding ages one hour before it is paid", "One sale writes you out of the will", "Your own wallets may pass it freely", "The house never inherits"].forEach((l, i) =>
+      ["Hold 100,000 $HEIR to be named", "No. 1–5 share 70%, No. 6–10 share 30%", "Buy and you are in the book at once", "One sale writes you out of the will", "Your own wallets may pass it freely", "The house never inherits"].forEach((l, i) =>
         engrave(l, '500 34px "Bodoni Moda", Georgia, serif', 262 + i * 62),
       );
     },

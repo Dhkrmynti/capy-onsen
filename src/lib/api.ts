@@ -310,7 +310,7 @@ export const demoStatus = (): Status => ({
   escrowETH: "0.0063",
   price: { tokenUSD: 0.0000412, ethUSD: 3180, source: "illustration", at: 0 },
   cycle: { index: 0, kind: "feeding", thresholdETH: "0.02", steps: DEFAULT_STEPS },
-  rules: { minBalance: "100000", minHoldHours: 1, topN: 10, tiers: DEFAULT_TIERS },
+  rules: { minBalance: "100000", minHoldHours: 0, topN: 10, tiers: DEFAULT_TIERS },
   counts: { sitters: 87, waiting: 23, hopped: 41, holders: 151 },
   totals: { feesClaimedETH: "0.7224", fedETH: "0.1808", keeperETH: "0.4512", sinkETH: "0.0904", tokensBurned: "4712204.8" },
   rounds: 36,

@@ -158,7 +158,7 @@ export function TheVault({ status }: { status: Status | null }) {
               ))}
             </div>
           ) : (
-            <p className="book__empty">{live ? (data?.waiting?.length ? "The first heirs are in the waiting room above: a holding ages one hour before it is entered in the book." : "No family yet. A wallet is entered once it holds the minimum for an hour.") : "The book opens at launch. The first names are entered the moment trading begins."}</p>
+            <p className="book__empty">{live ? (data?.waiting?.length ? "The first heirs are in the waiting room above, about to be entered in the book." : "No heirs yet. Hold 100,000 $HEIR without selling and you are entered here at once.") : "The book opens at launch. The first names are entered the moment trading begins."}</p>
           )}
         </div>
       </div>
