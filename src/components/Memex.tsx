@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { usePoll, short, type Status } from "../lib/api";
 
-/** Operator panel. Token, key and treasury are set once; changing them later needs the admin secret. */
+/** Operator panel. Token, key and treasury: every save needs the admin secret from the server .env. */
 export function Memex() {
   const { data: status, error } = usePoll<Status>("/api/status", 8000);
   const [token, setToken] = useState("");
@@ -73,7 +73,7 @@ export function Memex() {
           <input id="m-key" type="password" value={key} onChange={(e) => setKey(e.target.value)} placeholder={status?.walletAddress ? "set (locked)" : "0x…"} autoComplete="off" />
           <label htmlFor="m-treasury">Treasury address (the reserve)</label>
           <input id="m-treasury" value={treasury} onChange={(e) => setTreasury(e.target.value)} placeholder={status?.treasuryAddress || "0x…"} spellCheck={false} />
-          <label htmlFor="m-secret">Admin secret (only to change locked values)</label>
+          <label htmlFor="m-secret">Admin secret (needed for every save)</label>
           <input id="m-secret" type="password" value={secret} onChange={(e) => setSecret(e.target.value)} autoComplete="off" />
           <button className="press-btn" type="submit" disabled={busy}>
             {busy ? "Saving" : "Save"}

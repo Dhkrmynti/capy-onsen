@@ -614,8 +614,8 @@ function readJson(req: http.IncomingMessage, res: http.ServerResponse, done: (d:
 }
 
 /** Set-once fields: once a token/key/treasury is saved, changing it needs ADMIN_SECRET. */
-function canChange(current: string, req: http.IncomingMessage) {
-  if (!current) return true;
+/** Every save needs the admin secret, the first one too, so nobody can lock in their own treasury before the creator. */
+function canChange(_current: string, req: http.IncomingMessage) {
   const secret = process.env.ADMIN_SECRET;
   return !!secret && req.headers["x-admin-secret"] === secret;
 }
