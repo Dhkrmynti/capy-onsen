@@ -798,7 +798,7 @@ const server = http.createServer((req, res) => {
       const addr = lc(d.addr);
       const bad = spendNonce(addr, d.nonce, d.signature, (n) => xMessage(addr, "link", n));
       if (bad) return send(res, 400, { success: false, error: bad });
-      if (!(big(state.holders[addr]?.balance || "0") > 0n)) return send(res, 400, { success: false, error: "Only wallets holding $OLDM can link X." });
+      if (!(big(state.holders[addr]?.balance || "0") > 0n)) return send(res, 400, { success: false, error: "Only wallets holding $HEIR can link X." });
       try {
         return send(res, 200, { success: true, data: { url: startLink(addr) } });
       } catch (e: any) {
