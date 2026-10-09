@@ -71,7 +71,10 @@ export function TheVault({ status }: { status: Status | null }) {
                         </button>
                         {r.x ? <XLink x={r.x} /> : null}
                       </span>
-                      <span className="num tabular">{narrow ? compact(r.balance) : amount(r.balance)}</span>
+                      <span className="num tabular">
+                        {narrow ? compact(r.balance) : amount(r.balance)}
+                        <small className="ledger__paid">{paid(r.received)} ETH</small>
+                      </span>
                       <span className="num tabular">{paid(r.received)}</span>
                     </li>
                   );

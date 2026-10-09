@@ -47,6 +47,8 @@ export function App() {
   const live = !!status?.tokenAddress;
   const { data: pond } = usePoll<{ total: number; topN: number; rows: PondRow[] }>(live ? "/api/pond?limit=10" : null, 30000, demoPond);
   const walk = useWalk();
+  const step = status ? status.cycle.steps[status.cycle.index] : null;
+  const pct = live && step ? Math.min(1, parseFloat(status!.escrowETH) / Math.max(1e-9, parseFloat(step.thresholdETH))) : 0;
   // The Ten's names are engraved on their deposit boxes in the scene.
   const names = useMemo(() => (pond?.rows ?? []).slice(0, 10).map((r) => nameFor(r.addr, r.nickname, r.x).name), [pond]);
 
@@ -84,14 +86,14 @@ export function App() {
       <div className="walk" aria-hidden="true">
         {walk ? (
           <Suspense fallback={null}>
-            <VaultWalk names={names} closed={live ? status!.counts.hopped : DEMO ? status?.counts.hopped ?? 0 : 0} still={prefersReducedMotion()} />
+            <VaultWalk names={names} closed={live ? status!.counts.hopped : 0} pct={pct} still={prefersReducedMotion()} />
           </Suspense>
         ) : null}
       </div>
       {DEMO ? (
-        <div className="demo-strip" role="note">
-          Illustration edition: every figure here is made up. Try your account and the seal desk; nothing is saved.
-        </div>
+        <p className="demo-tag" role="note" title="Every figure here is made up. Try your account and the seal desk; nothing is saved.">
+          Illustration: figures are made up
+        </p>
       ) : null}
       <Masthead status={status} />
       <main>
