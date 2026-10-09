@@ -156,3 +156,46 @@ export function KPGif() {
     </AbsoluteFill>
   );
 }
+
+/* ───────── post: right now — the throne is empty, the board is set ───────── */
+export function KPPostEmpty() {
+  const rank = ["rook", "knight", "bishop", "queen", "king", "bishop", "knight", "rook"] as const;
+  return (
+    <AbsoluteFill style={{ background: K.violet, overflow: "hidden" }}>
+      <div style={{ position: "absolute", left: "50%", bottom: -330, transform: "translateX(-50%) perspective(1000px) rotateX(56deg)", transformOrigin: "50% 100%" }}>
+        <BoardField cell={128} />
+      </div>
+      <div style={{ position: "absolute", left: 90, bottom: 80, display: "flex", gap: 8, alignItems: "flex-end" }}>
+        {rank.map((k, i) => (
+          <Piece key={i} kind={k} size={k === "king" ? 104 : 84} fill={k === "king" ? K.crown : K.cream} />
+        ))}
+      </div>
+      <div style={{ position: "absolute", left: 90, top: 70 }}>
+        <Head size={110}>The throne</Head>
+        <Head size={110} color={K.lime}>
+          is empty.
+        </Head>
+        <Token bg={K.grape0} color={K.cream} style={{ display: "inline-block", marginTop: 30, padding: "14px 22px", borderRadius: 14 }}>
+          <Body size={30}>Hold the most $KING and the crown is yours.</Body>
+        </Token>
+      </div>
+      <div style={{ position: "absolute", right: 110, top: 90, display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <Crown size={250} style={{ marginBottom: -26, zIndex: 2, rotate: "-6deg" }} />
+        <Token bg={K.cream} style={{ width: 300, padding: 18, rotate: "-3deg" }}>
+          <div style={{ height: 240, border: `4px dashed ${K.ink}`, borderRadius: 10, background: K.lime, display: "grid", placeItems: "center" }}>
+            <Piece kind="king" size={130} fill={K.violet} />
+          </div>
+          <div style={{ marginTop: 12, fontFamily: KF.display, fontSize: 26, color: K.ink, textAlign: "center" }}>No. 1 · open</div>
+        </Token>
+      </div>
+      <div style={{ position: "absolute", right: 110, bottom: 74, textAlign: "right" }}>
+        <Mono size={26} color={K.cream}>
+          0 / 0.02 ETH to the first Tribute
+        </Mono>
+        <Mono size={22} color={K.lime} style={{ marginTop: 8 }}>
+          kingpins.fun · @kingpins_rh
+        </Mono>
+      </div>
+    </AbsoluteFill>
+  );
+}

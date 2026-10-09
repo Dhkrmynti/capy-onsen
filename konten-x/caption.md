@@ -4,6 +4,7 @@
 |---|---|
 | `logo-x.png` | Foto profil (1080×1080, Raja oranye bermahkota; aman untuk crop bulat X) |
 | `banner-x.png` | Header (1500×500; teks di tengah-kanan, tidak tertutup foto profil) |
+| `post-0-the-throne-is-empty.png` | Post 0: kondisi sekarang — takhta kosong, menunggu Raja pertama |
 | `post-1-how-kingpins-works.mp4` | Post 1: video penjelasan (mahkota, escrow, 4 langkah, captured) |
 | `post-2-tutorial-name-portrait-x.mp4` | Post 2: tutorial nama + portrait + Connect X |
 | `post-3-the-ladder.png` | Post 3: The Ladder (top 10 + tier) |
@@ -25,6 +26,21 @@ Pilih satu bio:
 1. The biggest $KING holder wears the crown. Every trade pays the top 10 in ETH. Sell once and you're captured. Robinhood Chain · Pons
 2. A live board on Robinhood Chain. No. 1–5 share 0.014 ETH, No. 6–10 share 0.006 ETH of every 0.02 in fees. Take the crown.
 3. Most $KING wears the crown. Ten get paid. Sellers get captured.
+
+---
+
+## Post 0 — takhta kosong (teaser / saat launch)
+
+**File:** `post-0-the-throne-is-empty.png`
+
+> The throne is empty. 👑
+>
+> Hold the most $KING and the crown is yours.
+> The first 0.02 ETH Tribute goes to the top 10.
+>
+> kingpins.fun
+
+**Alt text:** A violet poster: "The throne is empty." above a dashed empty No. 1 frame with a crown floating over it, a row of chess pieces with an orange King, and "0 / 0.02 ETH to the first Tribute".
 
 ---
 
