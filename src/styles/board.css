@@ -381,20 +381,6 @@ button {
 .sq.is-throne {
   background: var(--crown);
 }
-.hero__king {
-  position: absolute;
-  z-index: 2;
-  right: 9%;
-  bottom: 9%;
-  width: min(36vw, 460px);
-  aspect-ratio: 1 / 1.08;
-  will-change: transform;
-}
-.king3d,
-.king3d canvas {
-  width: 100% !important;
-  height: 100% !important;
-}
 .hero__copy {
   position: absolute;
   z-index: 3;
@@ -1558,11 +1544,6 @@ button {
   .clock__to {
     font-size: 12px;
   }
-  .hero__king {
-    right: -4%;
-    bottom: 2%;
-    width: 64vw;
-  }
   .hero__board {
     inset: auto -60% -22% -60%;
   }
@@ -1713,22 +1694,12 @@ button {
 .tile.is-king .tile__sub {
   max-width: 62%;
 }
-.hero__king {
-  right: 11%;
-  bottom: 6%;
-  width: min(30vw, 400px);
-}
 .rules__pieces {
   flex-wrap: wrap;
 }
 @media (max-width: 760px) {
   .kp-head__word {
     display: none;
-  }
-  .hero__king {
-    right: -6%;
-    bottom: 1%;
-    width: 54vw;
   }
   .tile.is-king .tile__piece {
     width: 120px;
@@ -1755,24 +1726,6 @@ button {
 .kp-head {
   background: var(--grape-0);
   backdrop-filter: none;
-}
-/* the King stands on his own lit square */
-.hero__throne {
-  position: absolute;
-  left: 50%;
-  bottom: 4%;
-  width: 62%;
-  aspect-ratio: 1;
-  translate: -50% 0;
-  transform: perspective(700px) rotateX(64deg);
-  transform-origin: 50% 100%;
-  background: var(--crown);
-  border: 6px solid var(--ink);
-  border-radius: 6px;
-  box-shadow: 0 10px 0 var(--ink);
-}
-.king3d {
-  position: relative;
 }
 /* printed tiles read on dark ground: a lit edge, a deeper base, square corners */
 :root {
@@ -1889,9 +1842,6 @@ button {
     inset: auto -60% -30% -60%;
     height: 100%;
   }
-  .hero__throne {
-    width: 70%;
-  }
 }
 .tile__rank {
   display: flex;
@@ -1917,120 +1867,6 @@ button {
   .rules__pieces {
     gap: 6px 10px;
   }
-}
-
-/* ───────── hero: check by bomb ───────── */
-.hero__king {
-  right: 4%;
-  bottom: 4%;
-  width: min(50vw, 700px);
-  aspect-ratio: 1.3 / 1;
-}
-.hero__throne {
-  left: 66%;
-  width: 34%;
-}
-/* the square the bomb threatens from */
-.hero__danger {
-  position: absolute;
-  left: 28%;
-  bottom: 9%;
-  width: 26%;
-  aspect-ratio: 1;
-  translate: -50% 0;
-  transform: perspective(700px) rotateX(64deg);
-  transform-origin: 50% 100%;
-  border: 5px solid var(--ink);
-  border-radius: 6px;
-  background: var(--exile);
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-.hero__king.is-check .hero__danger {
-  opacity: 1;
-}
-.hero__check {
-  position: absolute;
-  z-index: 2;
-  left: 34%;
-  top: 6%;
-  padding: 8px 18px;
-  border: 4px solid var(--ink);
-  border-radius: 14px;
-  background: var(--exile);
-  color: var(--cream);
-  font: 400 clamp(26px, 3.2vw, 48px)/1 var(--display);
-  box-shadow: 0 6px 0 var(--ink);
-  rotate: -8deg;
-  scale: 0;
-  transition: scale 0.32s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.hero__king.is-check .hero__check {
-  scale: 1;
-  animation: check-pulse 0.5s ease-in-out infinite alternate;
-}
-@keyframes check-pulse {
-  to {
-    rotate: -4deg;
-  }
-}
-.hero__boom {
-  position: absolute;
-  z-index: 2;
-  left: 12%;
-  top: 22%;
-  width: 46%;
-  height: auto;
-  overflow: visible;
-  scale: 0;
-  opacity: 0;
-  pointer-events: none;
-}
-.hero__king.is-boom .hero__boom {
-  animation: boom 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-@keyframes boom {
-  0% {
-    scale: 0.2;
-    opacity: 1;
-    rotate: -20deg;
-  }
-  45% {
-    scale: 1.1;
-    opacity: 1;
-    rotate: 6deg;
-  }
-  100% {
-    scale: 1.25;
-    opacity: 0;
-    rotate: 10deg;
-  }
-}
-@media (max-width: 760px) {
-  .hero__king {
-    right: -8%;
-    bottom: 2%;
-    width: 92vw;
-  }
-  .hero__check {
-    left: 30%;
-    top: 4%;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .hero__king.is-check .hero__check {
-    animation: none;
-  }
-}
-/* in check, the King's own square turns red */
-.hero__throne {
-  transition: background-color 0.2s ease;
-}
-.hero__king.is-check .hero__throne {
-  background: var(--exile);
-}
-.hero__danger {
-  display: none;
 }
 /* phones: the chess clock folds into a strip under the buttons, clear of the pieces */
 @media (max-width: 760px) {
@@ -2071,5 +1907,198 @@ button {
   .clock__to {
     margin: 0;
     font-size: 12px;
+  }
+}
+
+/* ───────── hero: the crown drops onto the King ───────── */
+.hero__throne {
+  position: absolute;
+  z-index: 2;
+  right: clamp(24px, 8vw, 140px);
+  top: calc(var(--head) + clamp(80px, 13vh, 130px));
+  width: clamp(220px, 25vw, 340px);
+}
+.hero__crown {
+  position: absolute;
+  z-index: 3;
+  left: -22%;
+  width: 144%;
+  bottom: calc(100% - 118px);
+  aspect-ratio: 1.15;
+  pointer-events: none;
+}
+.crown3d,
+.crown3d canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+.hero__frame {
+  position: relative;
+  margin: 0;
+  padding: 14px 14px 12px;
+  border: 4px solid var(--ink);
+  border-radius: 14px;
+  background: var(--cream);
+  color: var(--ink);
+  box-shadow: 0 10px 0 var(--ink);
+  rotate: -3deg;
+}
+.hero__portrait {
+  width: 100% !important;
+  height: auto !important;
+  aspect-ratio: 1;
+  border: 3px solid var(--ink);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--lime);
+}
+.hero__frame.is-empty {
+  display: grid;
+  justify-items: center;
+}
+.hero__frame.is-empty .hero__ghost {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  padding: 18% 14%;
+  border: 3px dashed var(--ink);
+  border-radius: 8px;
+  background: var(--lime);
+  opacity: 0.9;
+}
+.hero__plate {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 10px;
+  min-width: 0;
+  font: 400 19px/1.1 var(--display);
+}
+.hero__plate-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.hero__plate-sq {
+  margin-left: auto;
+  flex: none;
+  font: 600 11px/1 var(--mono);
+  color: #5b4c7a;
+}
+.hero__x {
+  width: 22px;
+  height: 22px;
+}
+.hero__h .is-long {
+  font-size: 0.72em;
+}
+.hero__read {
+  font-size: 18px;
+}
+.hero__copy {
+  max-width: min(720px, 58vw);
+}
+.hero__clock {
+  top: auto;
+  bottom: clamp(28px, 6vh, 64px);
+  left: var(--gutter);
+  right: auto;
+}
+.hero__board {
+  inset: auto -20% -42% -20%;
+}
+@media (max-width: 1080px) {
+  .hero__copy {
+    max-width: 60vw;
+  }
+}
+@media (max-width: 760px) {
+  .hero__copy {
+    max-width: none;
+  }
+  .hero__throne {
+    right: 50%;
+    translate: 50% 0;
+    top: auto;
+    bottom: 26px;
+    width: min(52vw, 210px);
+  }
+  .hero__crown {
+    bottom: calc(100% - 74px);
+  }
+  .hero__plate {
+    font-size: 15px;
+  }
+  .hero__plate-sq {
+    display: none;
+  }
+  .hero__clock {
+    top: calc(var(--head) + 296px);
+    bottom: auto;
+  }
+  .hero__board {
+    inset: auto -60% -30% -60%;
+  }
+}
+.hero__throne {
+  top: calc(var(--head) + clamp(130px, 21vh, 200px));
+  width: clamp(220px, 23vw, 320px);
+}
+.hero__crown {
+  left: -12%;
+  width: 124%;
+  bottom: calc(100% - 96px);
+}
+.hero__h .is-longer {
+  font-size: 0.56em;
+}
+.hero__h .is-long {
+  font-size: 0.7em;
+}
+.hero__escrow {
+  display: none;
+}
+@media (max-width: 760px) {
+  .hero__h {
+    font-size: clamp(40px, 12vw, 60px);
+  }
+  .hero__clock {
+    display: none;
+  }
+  .hero__escrow {
+    display: block;
+    margin: 10px 0 0;
+    font: 600 12px/1.3 var(--mono);
+    color: var(--lime);
+  }
+  .hero__read {
+    font-size: 14px;
+  }
+  .hero__throne {
+    bottom: 22px;
+    width: min(46vw, 190px);
+  }
+  .hero__crown {
+    bottom: calc(100% - 60px);
+  }
+}
+@media (max-width: 760px) {
+  .hero__throne {
+    top: auto;
+    bottom: 28px;
+    right: 50%;
+    translate: 50% 0;
+    width: min(54vw, 220px);
+  }
+  .hero__crown {
+    left: -14%;
+    width: 128%;
+    bottom: calc(100% - 64px);
+  }
+}
+@media (max-width: 760px) {
+  .hero__throne {
+    width: min(64vw, 260px);
   }
 }
