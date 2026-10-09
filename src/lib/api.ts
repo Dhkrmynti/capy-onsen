@@ -184,6 +184,26 @@ export function demoSaveByline(addr: string, patch: { nickname?: string; pp?: nu
   window.dispatchEvent(new Event("rbank:refresh"));
 }
 
+/** The illustration edition's shared test board: X links made by any visitor, read every 3 s. */
+if (typeof window !== "undefined" && DEMO) {
+  let last = "";
+  const pull = () =>
+    fetch("/api/x/demo/board")
+      .then((r) => r.json())
+      .then((j) => {
+        const board = (j?.data ?? {}) as Record<string, XProfile>;
+        const key = JSON.stringify(board);
+        if (key === last) return;
+        last = key;
+        for (const a of Object.keys(demoBylines)) if (demoBylines[a].x && !board[a]) demoBylines[a] = { ...demoBylines[a], x: null };
+        for (const [a, x] of Object.entries(board)) demoBylines[a] = { ...demoBylines[a], x };
+        window.dispatchEvent(new Event("rbank:refresh"));
+      })
+      .catch(() => {});
+  pull();
+  setInterval(() => !document.hidden && pull(), 3000);
+}
+
 async function get<T>(path: string): Promise<T> {
   const r = await fetch(path, { cache: "no-store" });
   const j = await r.json();

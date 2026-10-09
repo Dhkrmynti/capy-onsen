@@ -12,7 +12,9 @@
  * Every transaction hash is saved before it is awaited, so a restart checks the chain and
  * resumes the round instead of sending twice.
  */
+import fs from "fs";
 import http from "http";
+import path from "path";
 import { ethers } from "ethers";
 import { config, saveConfig, state, saveStateNow, saveStateSoon, resetStateForToken, logs, log, CYCLE, type Holder, type Payout, type Round, type RoundKind } from "./store";
 import { buildUniswapV4Buy, UNISWAP_V4_UNIVERSAL_ROUTER } from "./uniswap-v4";
@@ -503,6 +505,21 @@ async function refreshPrice() {
 setInterval(refreshPrice, 60_000);
 refreshPrice();
 
+/* The illustration edition's shared test board: wallet → linked X profile. Never the real bylines. */
+const DEMO_BOARD_FILE = path.resolve(process.cwd(), "bot-demo-board.json");
+const demoBoard: Record<string, any> = (() => {
+  try {
+    return JSON.parse(fs.readFileSync(DEMO_BOARD_FILE, "utf-8"));
+  } catch {
+    return {};
+  }
+})();
+const saveDemoBoard = () => {
+  try {
+    fs.writeFileSync(DEMO_BOARD_FILE, JSON.stringify(demoBoard));
+  } catch {}
+};
+
 /* ───────────────────────── API ───────────────────────── */
 
 function send(res: http.ServerResponse, code: number, data: unknown) {
@@ -848,8 +865,14 @@ const server = http.createServer((req, res) => {
     }
     finishLink(st, code)
       .then(({ addr, x, demo }) => {
-        // A demo sign-in is shown on the page once and never saved to the bylines.
-        if (demo) return go(backTo(addr, "demo", { xdemo: parkDemoResult(x) }));
+        // A demo sign-in never touches the real bylines; it goes on the shared test board instead,
+        // so every visitor of the illustration edition sees it on the Ladder.
+        if (demo) {
+          demoBoard[addr] = x;
+          saveDemoBoard();
+          log("info", `[X demo] ${addr.slice(0, 8)}… shows @${x.username} on the test board`);
+          return go(backTo(addr, "demo", { xdemo: parkDemoResult(x) }));
+        }
         setX(addr, x);
         log("info", `[X] ${addr.slice(0, 8)}… linked @${x.username}${x.verified ? ` (${x.verified})` : ""}`);
         go(backTo(addr, "linked"));
@@ -858,6 +881,25 @@ const server = http.createServer((req, res) => {
         log("warn", `[X] link failed: ${e?.message || e}`);
         go(backTo(e?.addr || "", e?.message === "expired" ? "expired" : "failed"));
       });
+    return;
+  }
+
+  /* The test board: X links made in the illustration edition, shared by every visitor. */
+  if (req.method === "GET" && p === "/api/x/demo/board") {
+    if (!xDemoEnabled()) return send(res, 200, { success: true, data: {} });
+    return send(res, 200, { success: true, data: demoBoard });
+  }
+  if (req.method === "POST" && p === "/api/x/demo/unlink") {
+    if (!xDemoEnabled()) return send(res, 503, { success: false, error: "Not in the illustration edition." });
+    if (rateLimited(clientIp(req))) return send(res, 429, { success: false, error: "Too many tries. Wait a minute." });
+    readJson(req, res, (d) => {
+      const addr = typeof d.addr === "string" && isAddr(d.addr) ? lc(d.addr) : "";
+      if (addr) {
+        delete demoBoard[addr];
+        saveDemoBoard();
+      }
+      send(res, 200, { success: true });
+    });
     return;
   }
 

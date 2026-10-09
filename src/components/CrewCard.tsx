@@ -186,6 +186,8 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
     setNote(null);
     if (DEMO) {
       demoSaveByline(info.addr, { x: null });
+      // take it off the shared test board too
+      fetch("/api/x/demo/unlink", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ addr: info.addr }) }).catch(() => {});
       onSaved({ x: null });
       setTab("name");
       return setNote({ ok: true, text: "X unlinked. The register prints your name and portrait again." });
