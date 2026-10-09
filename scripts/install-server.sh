@@ -7,12 +7,12 @@
 #   sh scripts/install-server.sh update   after `git pull`: rebuild the site, restart the engine
 #   sh scripts/install-server.sh https    once the domain's DNS points at this server
 #
-# Settings (optional): DOMAIN=heirlooms.fun PORT=5041 sh scripts/install-server.sh
+# Settings (optional): DOMAIN=kingpins.fun PORT=5051 NAME=kingpins-engine sh scripts/install-server.sh
 set -e
 DOMAIN="${DOMAIN:-heirlooms.fun}"
 PORT="${PORT:-5041}"
 APP="$(cd "$(dirname "$0")/.." && pwd)"
-NAME=heirlooms-engine
+NAME="${NAME:-heirlooms-engine}"
 RPC=rpc.mainnet.chain.robinhood.com
 say() { printf '\n\033[1;33m== %s\033[0m\n' "$*"; }
 
