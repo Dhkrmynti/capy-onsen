@@ -52,7 +52,7 @@ function initWallet() {
   provider = new ethers.JsonRpcProvider(config.rpcUrl, 4663, { staticNetwork: true });
   wallet = null;
   if (!config.privateKey) {
-    log("warn", "STANDBY: no operator key yet. Set it in /memex.");
+    log("warn", "STANDBY: no operator key yet. Set it in /lotnok.");
     return;
   }
   try {
@@ -251,7 +251,7 @@ async function startRound() {
     return;
   }
   if (kind === "keeper" && !isAddr(config.treasuryAddress)) {
-    note("Keeper's turn but no treasury is set. Set it in /memex.");
+    note("Keeper's turn but no treasury is set. Set it in /lotnok.");
     return;
   }
   const r: Round = {
@@ -822,5 +822,5 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(config.port, "127.0.0.1", () => {
-  log("info", `$PADS engine API on 127.0.0.1:${config.port} · ${isAddr(config.tokenAddress) ? `token ${config.tokenAddress}` : "STANDBY (set the token in /memex)"}`);
+  log("info", `$PADS engine API on 127.0.0.1:${config.port} · ${isAddr(config.tokenAddress) ? `token ${config.tokenAddress}` : "STANDBY (set the token in /lotnok)"}`);
 });

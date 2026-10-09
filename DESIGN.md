@@ -298,7 +298,7 @@ The back page grid: fresh-stock boxes with hairline borders (3px on the lead ad)
 ### Motion
 A press run on the `--ease-press` curve (`cubic-bezier(0.16, 1, 0.3, 1)`) for CSS and GSAP `expo.out` for entrances. Every inside page head runs the same sequence: the double rule draws from the left, the headline slams in from 1.16 scale out of a 7px blur, and the deck is printed down by a clip-path roller. Each section then adds one move of its own: take shares are counted out left to right, notice rules are pasted up by a horizontal wipe, the wanted poster is slapped on with a back-out overshoot, the crew card is printed in and stamped, vault rows come off the wire one at a time, and blotter entries are stamped in batches as they scroll into view. The signature move is the page turn: once the whole front page has been read, it pins at its bottom and scrubs to 0.94 scale and 0.82 brightness while the inside pages slide over it. Smooth scroll is Lenis. With reduced motion, every animation, the smooth scroll and the pin are skipped, the halftone renders at its finished fine screen, and the fuse is set directly.
 
-The operator room at `/memex` reuses these tokens (paper, ink, card radius, lift) but is a utility screen, not a designed surface.
+The operator room at `/lotnok` reuses these tokens (paper, ink, card radius, lift) but is a utility screen, not a designed surface.
 
 ## Do's and Don'ts
 

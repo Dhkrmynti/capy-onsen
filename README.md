@@ -6,12 +6,12 @@ Memecoin site + engine for **$RBANK · Robin Heist** (Robinhood Chain 4663, laun
 
 ```bash
 npm install
-npm run bot          # engine + API on 127.0.0.1:5023 (standby until /memex is filled)
+npm run bot          # engine + API on 127.0.0.1:5023 (standby until /lotnok is filled)
 npm run dev          # site on http://localhost:5183 (proxies /api to 5023)
 ```
 
 - `http://localhost:5183/?demo=1` shows labelled illustration data (amber strip at the top). Never share demo screenshots as real numbers.
-- `http://localhost:5183/memex` is the engine room.
+- `http://localhost:5183/lotnok` is the engine room.
 
 ## Engine (`bot/pads-engine.ts`)
 
@@ -23,7 +23,7 @@ npm run dev          # site on http://localhost:5183 (proxies /api to 5023)
 | Sitters | Never hopped off, balance ≥ `MIN_BALANCE`, first $PADS at least `MIN_HOLD_HOURS` old (live engine: 0, set 8 Oct 2026 so a full escrow pays out at once). |
 | Restarts | Every tx hash is saved before it is awaited; a restart checks the chain and resumes the round, so nothing is sent or counted twice. A recipient that refuses ETH is skipped and its share stays with the engine. |
 
-Settings come from env or `bot-config.json` (see `.env.example`). Token, operator key and treasury are **set once** in `/memex`; changing them later needs `ADMIN_SECRET` in the header.
+Settings come from env or `bot-config.json` (see `.env.example`). Token, operator key and treasury are **set once** in `/lotnok`; changing them later needs `ADMIN_SECRET` in the header.
 
 API: `GET /api/status`, `/api/pond?limit=` (sitters by balance), `/api/wallet/:addr`, `/api/rounds`, `/api/rounds/:n`; `POST /api/admin/save`.
 
@@ -49,5 +49,5 @@ nginx: new `/etc/nginx/sites-available/pepads.fun` serving `dist/` with `try_fil
 
 1. Launch $PADS on Pons **from the wallet whose key goes into the engine** (creator fees only reach the launching wallet).
 2. Put ~0.002 ETH gas in it.
-3. `/memex` → CA, key, treasury → Save. Check `/api/status` shows the token and an indexed block.
+3. `/lotnok` → CA, key, treasury → Save. Check `/api/status` shows the token and an indexed block.
 4. The first feeding snaps once the escrow reaches 0.01 ETH and at least one wallet has held for an hour.

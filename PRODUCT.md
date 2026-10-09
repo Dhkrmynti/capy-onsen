@@ -14,7 +14,7 @@ Delegated (chosen to match the owner's other token sites so the VPS deploy flow 
 
 - **Primary:** memecoin traders on Robinhood Chain arriving from X/Telegram, mostly on phones. Their job: understand in seconds what holding $PADS does for them, copy the CA, buy on Pons.
 - **Secondary:** holders ("sitters") checking their own wallet: still sitting or hopped off, pad days, how many $PADS they've received, what tonight's feeding might bring.
-- **Operator:** the creator, using the hidden `/memex` route to configure the engine.
+- **Operator:** the creator, using the hidden `/lotnok` route to configure the engine.
 
 ## Product Purpose
 
@@ -34,7 +34,7 @@ Every other fee-engine token on the owner's VPS burns. $PADS rewards patience di
 
 ## Capabilities and Constraints
 
-- Engine pieces reused from the existing burn bots: escrow polling/claim, curve buy (pre-graduation) and Uniswap v4 buy (post-graduation), `/api/status`, `/memex` config.
+- Engine pieces reused from the existing burn bots: escrow polling/claim, curve buy (pre-graduation) and Uniswap v4 buy (post-graduation), `/api/status`, `/lotnok` config.
 - New pieces: Transfer-log indexer, sell detection, fee split, daily snapshot + pro-rata distribution (idempotent, resumable), `/api/pond`, `/api/wallet/:addr`, `/api/feedings`.
 - Eligibility (proposed defaults, owner may change): balance ≥ 100,000 $PADS; never sent $PADS to curve/pool; first buy ≥ 24 h before snapshot. Excluded: curve, pool, bot wallet, 0x…dEaD, creator, treasury.
 - Fee cycle (owner decision, 8 Oct 2026): feeding 0.01 ETH → ETH to the 10 biggest sitters by balance, split by balance; keeper 0.02 ETH → treasury; sink 0.01 ETH → buyback and burn; repeat. Over a full cycle that is 25% / 50% / 25%, shown openly.

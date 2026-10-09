@@ -25,6 +25,6 @@ import "./styles/memex.css";
 import { App } from "./App";
 import { Memex } from "./components/Memex";
 
-const isMemex = window.location.pathname.replace(/\/$/, "") === "/memex";
+const isMemex = window.location.pathname.replace(/\/$/, "") === "/lotnok";
 
 createRoot(document.getElementById("root")!).render(<StrictMode>{isMemex ? <Memex /> : <App />}</StrictMode>);

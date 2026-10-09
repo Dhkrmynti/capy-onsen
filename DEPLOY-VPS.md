@@ -52,6 +52,6 @@ cd /opt/heirlooms && git pull && sh scripts/install-server.sh update
 
 ## Setelah token launch di Pons
 
-Buka `https://heirlooms.fun/memex`, isi CA token, private key wallet creator, dan alamat treasury.
+Buka `https://heirlooms.fun/lotnok`, isi CA token, private key wallet creator, dan alamat treasury.
 `ADMIN_SECRET` ada di `/opt/heirlooms/.env`; jangan dibagikan.
 Cek engine: `pm2 logs heirlooms-engine`.
