@@ -419,7 +419,7 @@ export function CrewCard({ live }: { live: boolean }) {
     } catch {}
   };
 
-  const base = info ? STAMP[info.status] : null;
+  const base = info ? (info.house ? { word: "♛ Dev", tone: "ok" as Tone, line: "The dev wallet. Shown with a crown on the ledger; the house never inherits." } : STAMP[info.status]) : null;
   // Crew outside the top N gets no cut yet: say how far it has to climb.
   const stamp =
     info && base && info.status === "sitting" && !info.inTop
@@ -549,7 +549,7 @@ export function CrewCard({ live }: { live: boolean }) {
               <p className="card__blank">Your card prints here.</p>
             </div>
           )}
-          {info && info.status !== "not-holding" && info.status !== "excluded" ? (
+          {info && info.status !== "not-holding" && (info.status !== "excluded" || info.house) ? (
             <BylineDesk key={info.addr} info={info} flash={xFlash} onSaved={(patch) => setInfo(DEMO ? demoWallet(info.addr) : { ...info, ...patch })} />
           ) : info && info.status === "not-holding" ? (
             // Say why the booth is shut instead of leaving a connected holder guessing.

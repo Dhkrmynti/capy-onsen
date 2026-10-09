@@ -729,6 +729,8 @@ const server = http.createServer((req, res) => {
         pp: mugshotOf(addr),
         x: xOf(addr),
         xLogin: xEnabled(),
+        // the dev: the creator wallet the engine runs on (excluded from the book, but may set a name and X)
+        house: !!wallet && lc(wallet.address) === addr,
         lastIndexedBlock: state.lastIndexedBlock,
       },
     });

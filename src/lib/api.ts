@@ -99,6 +99,8 @@ export interface WalletInfo {
   x?: XProfile | null;
   /** Whether the engine has X sign-in switched on. */
   xLogin?: boolean;
+  /** The dev wallet: never ranked or paid, but it may set a name, portrait and X. */
+  house?: boolean;
   lastIndexedBlock: number;
 }
 
