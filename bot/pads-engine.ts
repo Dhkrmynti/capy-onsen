@@ -257,6 +257,7 @@ async function startRound() {
   const r: Round = {
     n: (state.rounds[0]?.n || 0) + 1,
     kind,
+    slot: state.cycle % CYCLE.length,
     at: Math.floor(Date.now() / 1000),
     stage: "claiming",
     claimTx: "",
@@ -420,7 +421,7 @@ async function runCycle() {
   if (!finished) return;
   r.stage = "done";
   r.doneAt = Math.floor(Date.now() / 1000);
-  state.cycle = (CYCLE.indexOf(r.kind) + 1) % CYCLE.length;
+  state.cycle = ((r.slot ?? CYCLE.indexOf(r.kind)) + 1) % CYCLE.length;
   saveStateNow();
   if (r.kind === "feeding") log("success", `Feeding #${r.n} done: ${r.payouts.filter((p) => !p.skipped).length} sitters fed.`);
 }

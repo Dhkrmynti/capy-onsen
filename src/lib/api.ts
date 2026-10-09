@@ -131,14 +131,27 @@ export const DEFAULT_STEPS: Status["cycle"]["steps"] = [
   { kind: "feeding", thresholdETH: "0.02" },
   { kind: "keeper", thresholdETH: "0.025" },
   { kind: "sink", thresholdETH: "0.01" },
+  { kind: "keeper", thresholdETH: "0.025" },
 ];
 
 /** Share of all fees each step gets over one full cycle, in whole percent. */
 export function stepShare(steps: Status["cycle"]["steps"], kind: RoundKind) {
+  const kinds: RoundKind[] = ["feeding", "keeper", "sink"];
   const total = steps.reduce((t, s) => t + parseFloat(s.thresholdETH), 0);
-  const mine = steps.filter((s) => s.kind === kind).reduce((t, s) => t + parseFloat(s.thresholdETH), 0);
-  return total > 0 ? Math.round((mine / total) * 100) : 0;
+  if (!(total > 0)) return 0;
+  // Whole percents that still add up to 100 (largest remainder).
+  const exact = kinds.map((k) => (steps.filter((s) => s.kind === k).reduce((t, s) => t + parseFloat(s.thresholdETH), 0) / total) * 100);
+  const whole = exact.map(Math.floor);
+  let left = 100 - whole.reduce((a, b) => a + b, 0);
+  exact
+    .map((e, i) => [e - whole[i], i] as const)
+    .sort((a, b) => b[0] - a[0])
+    .forEach(([, i]) => left-- > 0 && whole[i]++);
+  return whole[kinds.indexOf(kind)];
 }
+
+/** How many times a step comes round in one cycle. */
+export const stepCount = (steps: Status["cycle"]["steps"], kind: RoundKind) => steps.filter((s) => s.kind === kind).length;
 
 export const EXPLORER = "https://explorer.mainnet.chain.robinhood.com";
 export const ponsUrl = (ca: string) => `https://ponsfamily.com/launchpad/${ca}`;
@@ -297,7 +310,7 @@ export const demoStatus = (): Status => ({
   cycle: { index: 0, kind: "feeding", thresholdETH: "0.02", steps: DEFAULT_STEPS },
   rules: { minBalance: "100000", minHoldHours: 1, topN: 10, tiers: DEFAULT_TIERS },
   counts: { sitters: 87, waiting: 23, hopped: 41, holders: 151 },
-  totals: { feesClaimedETH: "0.6612", fedETH: "0.2408", keeperETH: "0.3012", sinkETH: "0.1192", tokensBurned: "6912204.8" },
+  totals: { feesClaimedETH: "0.7224", fedETH: "0.1808", keeperETH: "0.4512", sinkETH: "0.0904", tokensBurned: "4712204.8" },
   rounds: 36,
   lastIndexedBlock: 82931447,
 });
@@ -367,7 +380,8 @@ const demoHash = (k: number) => `0x${(k * 104729 + 17).toString(16).padStart(8, 
 export const demoRounds = (): RoundRow[] =>
   Array.from({ length: 12 }, (_, k) => {
     const n = 36 - k;
-    const kind = (["sink", "keeper", "feeding"] as const)[k % 3];
+    // newest first: … inheritance, treasury, burn, treasury, inheritance …
+    const kind = (["keeper", "sink", "keeper", "feeding"] as const)[k % 4];
     const claimed = kind === "keeper" ? 0.0251 : kind === "feeding" ? 0.0201 + (k % 4) * 0.0002 : 0.0101 + (k % 4) * 0.0002;
     return {
       n,

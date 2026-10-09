@@ -11,3 +11,5 @@ bot-bylines.json
 .DS_Store
 remotion-x/build2
 remotion-x/build-gz
+remotion-x/build-hl
+remotion-x/out

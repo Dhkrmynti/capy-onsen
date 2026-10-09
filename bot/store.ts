@@ -114,7 +114,8 @@ export interface Holder {
 }
 
 export type RoundKind = "feeding" | "keeper" | "sink";
-export const CYCLE: RoundKind[] = ["feeding", "keeper", "sink"];
+// One round: inheritance → treasury → buyback & burn → treasury, then again from the inheritance.
+export const CYCLE: RoundKind[] = ["feeding", "keeper", "sink", "keeper"];
 
 export interface Payout {
   addr: string;
@@ -133,6 +134,8 @@ export interface Payout {
 export interface Round {
   n: number;
   kind: RoundKind;
+  /** Position in CYCLE this round was started at (the keeper appears twice, so the kind alone is not enough). */
+  slot?: number;
   at: number;
   stage: "claiming" | "claimed" | "done" | "failed";
   claimTx: string;

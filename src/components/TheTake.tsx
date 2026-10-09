@@ -2,13 +2,13 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { DEFAULT_STEPS, DEFAULT_TIERS, STEP, stepShare, type RoundKind, type Status } from "../lib/api";
+import { DEFAULT_STEPS, DEFAULT_TIERS, STEP, stepCount, stepShare, type RoundKind, type Status } from "../lib/api";
 import { prefersReducedMotion } from "../lib/motion";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const ORDER: RoundKind[] = ["feeding", "keeper", "sink"];
-const WHERE: Record<RoundKind, string> = { feeding: "to the ten largest holders", keeper: "to the house wallet", sink: "bought back and burned" };
+const WHERE: Record<RoundKind, string> = { feeding: "to the ten largest holders", keeper: "to the house wallet, twice a round", sink: "bought back and burned" };
 
 /** Station two: the three pedestals. The plaque names what the camera is looking at. */
 export function TheTake({ status }: { status: Status | null }) {
@@ -38,7 +38,9 @@ export function TheTake({ status }: { status: Status | null }) {
             {ORDER.map((k) => (
               <li className={`tags__row is-${k}`} key={k}>
                 <span className="tags__name">{STEP[k].name}</span>
-                <span className="tags__eth tabular">{at(k)} ETH</span>
+                <span className="tags__eth tabular">
+                  {at(k)} ETH{stepCount(steps, k) > 1 ? ` ×${stepCount(steps, k)}` : ""}
+                </span>
                 <span className="tags__where">{where(k)}</span>
               </li>
             ))}
@@ -50,7 +52,7 @@ export function TheTake({ status }: { status: Status | null }) {
               </span>
             ))}
           </div>
-          <p className="plaque__rule">Then the round begins again. Sell once and you are written out of the will.</p>
+          <p className="plaque__rule">In turn: {steps.map((s) => STEP[s.kind].name.replace(/^The /, "").toLowerCase()).join(", ")}. Then again. Sell once and you are written out of the will.</p>
         </div>
       </div>
     </section>
