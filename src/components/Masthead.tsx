@@ -2,7 +2,8 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import type { Status } from "../lib/api";
+import { XLogo } from "@phosphor-icons/react";
+import { X_URL, type Status } from "../lib/api";
 import { BuyButton } from "./Bits";
 import { ConnectButton } from "./Connect";
 import { Monogram } from "./Engrave";
@@ -41,6 +42,9 @@ export function Masthead({ status }: { status: Status | null }) {
           ))}
         </nav>
         <div className="plate__acts">
+          <a className="plate__x" href={X_URL} target="_blank" rel="noreferrer noopener" aria-label="Heirloom on X" title="Heirloom on X">
+            <XLogo weight="bold" aria-hidden="true" />
+          </a>
           <ConnectButton />
           <BuyButton status={status} className="is-small" />
         </div>
