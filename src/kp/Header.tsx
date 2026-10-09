@@ -27,9 +27,11 @@ export function Header({ status }: { status: Status | null }) {
         ))}
       </nav>
       <div className="kp-head__acts">
-        <a className="kp-x" href={X_URL} target="_blank" rel="noreferrer noopener" aria-label="Kingpins on X" title="Kingpins on X">
-          <XLogo weight="bold" aria-hidden="true" />
-        </a>
+        {X_URL ? (
+          <a className="kp-x" href={X_URL} target="_blank" rel="noreferrer noopener" aria-label="Kingpins on X" title="Kingpins on X">
+            <XLogo weight="bold" aria-hidden="true" />
+          </a>
+        ) : null}
         <ConnectButton />
         <BuyButton status={status} className="is-small" />
       </div>

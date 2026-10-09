@@ -40,9 +40,11 @@ export function Close({ status }: { status: Status | null }) {
           <CaCoupon status={status} compact={narrow} />
         </div>
         <nav className="close__links" aria-label="Elsewhere">
-          <a href={X_URL} target="_blank" rel="noreferrer">
-            <XLogo weight="bold" aria-hidden="true" /> Kingpins on X <ArrowUpRight weight="bold" aria-hidden="true" />
-          </a>
+          {X_URL ? (
+            <a href={X_URL} target="_blank" rel="noreferrer">
+              <XLogo weight="bold" aria-hidden="true" /> Kingpins on X <ArrowUpRight weight="bold" aria-hidden="true" />
+            </a>
+          ) : null}
           {ca ? (
             <a href={dexUrl(ca)} target="_blank" rel="noreferrer">
               Chart <ArrowUpRight weight="bold" aria-hidden="true" />

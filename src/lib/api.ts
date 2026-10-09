@@ -158,7 +158,8 @@ export const stepCount = (steps: Status["cycle"]["steps"], kind: RoundKind) => s
 export const EXPLORER = "https://explorer.mainnet.chain.robinhood.com";
 export const ponsUrl = (ca: string) => `https://ponsfamily.com/launchpad/${ca}`;
 export const dexUrl = (ca: string) => `https://dexscreener.com/robinhood/${ca}`;
-export const X_URL = "https://x.com/kingpin_rh";
+// The house account on X; empty hides every link to it until there is one.
+export const X_URL = "";
 export const txUrl = (tx: string) => `${EXPLORER}/tx/${tx}`;
 export const addrUrl = (a: string) => `${EXPLORER}/address/${a}`;
 
