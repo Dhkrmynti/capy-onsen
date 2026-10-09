@@ -2,8 +2,8 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { SealCheck } from "@phosphor-icons/react";
-import { DEFAULT_TIERS, compact, demoPond, splitInheritance, tierOf, usd, usePoll, type PondRow, type Status } from "../lib/api";
+import { Crown, SealCheck } from "@phosphor-icons/react";
+import { DEFAULT_TIERS, compact, demoPond, splitInheritance, tierOf, usd, usePoll, type Pond, type Status } from "../lib/api";
 import { useAccount } from "../lib/wallet";
 import { prefersReducedMotion } from "../lib/motion";
 import { nameFor } from "../lib/alias";
@@ -19,7 +19,7 @@ const PER_COL = 10;
 export function TheVault({ status }: { status: Status | null }) {
   const root = useRef<HTMLElement>(null);
   const live = !!status?.tokenAddress;
-  const { data } = usePoll<{ total: number; topN: number; rows: PondRow[] }>(live ? `/api/pond?limit=${COLS * PER_COL}` : null, 30000, demoPond);
+  const { data } = usePoll<Pond>(live ? `/api/pond?limit=${COLS * PER_COL}` : null, 30000, demoPond);
   const me = useAccount()?.toLowerCase();
   const all = (data?.rows ?? []).slice(0, COLS * PER_COL);
   const top = status?.rules.topN ?? data?.topN ?? 10;
@@ -63,6 +63,29 @@ export function TheVault({ status }: { status: Status | null }) {
               .
             </p>
           </div>
+
+          {/* the dev: shown with a crown above the book, never ranked, never paid */}
+          {data?.house ? (
+            <div className="house-row">
+              <Crown weight="fill" className="house-row__crown" aria-hidden="true" />
+              <span className="house-row__tag">Dev</span>
+              <button type="button" className="heir__face" onClick={() => openCard(data.house!.addr)} tabIndex={-1} aria-hidden="true">
+                <CrewFace addr={data.house.addr} pp={data.house.pp} x={data.house.x} size={30} className="heir__seal" />
+              </button>
+              <span className="house-row__id">
+                <span className="heir__name house-row__name">
+                  {data.house.x ? <XLink x={data.house.x} className="heir__xlink" /> : null}
+                  <button type="button" className="heir__namebtn" onClick={() => openCard(data.house!.addr)} aria-label={`Open the dev's card, ${data.house.addr}`}>
+                    {nameFor(data.house.addr, data.house.nickname, data.house.x).name}
+                  </button>
+                  {data.house.x ? <XCheck x={data.house.x} /> : null}
+                </span>
+                <span className="heir__sub tabular">
+                  {compact(data.house.balance)} $HEIR{worth(data.house.balance)} · the house never inherits
+                </span>
+              </span>
+            </div>
+          ) : null}
 
           {all.length ? (
             <div className="heirs" role="list" aria-label={`The first ${all.length} holders by balance. The top ${top} share the next inheritance.`}>

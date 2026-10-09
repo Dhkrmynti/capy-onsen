@@ -330,7 +330,17 @@ const seedAddrs = [
   "0x0e7b4d1a8f5c2e9b6d3a0f7c4e1b8d5a2f9c6e3b",
 ];
 
-export const demoPond = (): { total: number; topN: number; rows: PondRow[] } => {
+/** The dev's wallet as the pond reports it: shown with a crown, never ranked or paid. */
+export interface HouseRow {
+  addr: string;
+  balance: string;
+  nickname: string;
+  pp: number[] | null;
+  x: XProfile | null;
+}
+export type Pond = { total: number; topN: number; rows: PondRow[]; house?: HouseRow | null };
+
+export const demoPond = (): Pond => {
   const base = seedPond();
   const rows = base.rows.map((row) => ({ ...row, ...demoBylines[row.addr.toLowerCase()] }));
   // A visitor who tries the booth with their own wallet joins the table, inside the top 10.
@@ -340,7 +350,8 @@ export const demoPond = (): { total: number; topN: number; rows: PondRow[] } => 
   }
   rows.sort((a, b) => parseFloat(b.balance) - parseFloat(a.balance));
   rows.forEach((row, i) => ((row.rank = i + 1), (row.inTop = i < 10), (row.tier = tierOf(i + 1))));
-  return { ...base, rows };
+  const house: HouseRow = { addr: "0x5175d9e2b0a4c8e6f1d3b7a9c2e4f6081a3c5e7b", balance: String(12.5e6), nickname: "", pp: null, x: { username: "heirloom_rh", name: "Heirloom", avatar: "/favicon-192.png", verified: "" } };
+  return { ...base, rows, house };
 };
 
 const seedPond = (): { total: number; topN: number; rows: PondRow[] } => {

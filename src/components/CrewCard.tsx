@@ -67,10 +67,10 @@ export function mugOf(addr: string, pp?: number[] | null): Traits {
 }
 
 const SLOTS = [
-  ["fur", "Ink"],
-  ["hat", "Frame"],
-  ["acc", "Emblem"],
-  ["bg", "Paper"],
+  ["fur", "Skin"],
+  ["hat", "Hair"],
+  ["acc", "Tie"],
+  ["bg", "Backdrop"],
 ] as const;
 
 function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patch: Partial<WalletInfo>) => void; flash: { ok: boolean; text: string } | null }) {
@@ -188,7 +188,7 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
       demoSaveByline(info.addr, { x: null });
       onSaved({ x: null });
       setTab("name");
-      return setNote({ ok: true, text: "X unlinked. The register prints your name and seal again." });
+      return setNote({ ok: true, text: "X unlinked. The register prints your name and portrait again." });
     }
     try {
       setBusy(true);
@@ -196,7 +196,7 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
       await unlinkX(info.addr, nonce, await signText(account, text));
       onSaved({ x: null });
       setTab("name");
-      setNote({ ok: true, text: "X unlinked. The register prints your name and seal again." });
+      setNote({ ok: true, text: "X unlinked. The register prints your name and portrait again." });
       window.dispatchEvent(new Event("rbank:refresh"));
     } catch (e: any) {
       failed(e, "Couldn't unlink X.");
@@ -208,7 +208,7 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
   if (!open)
     return (
       <button type="button" className="press-btn is-ink byline__open" onClick={() => setOpen(true)}>
-        <PenNib weight="bold" aria-hidden="true" /> {info.x ? "Manage X link" : info.nickname ? "Edit name & seal" : "Set your name or connect X"}
+        <PenNib weight="bold" aria-hidden="true" /> {info.x ? "Manage X link" : info.nickname ? "Edit name & portrait" : "Set your name or connect X"}
       </button>
     );
 
@@ -226,7 +226,7 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
         <>
           <div className="byline__tabs" role="tablist" aria-label="How the register prints you">
             <button type="button" role="tab" aria-selected={tab === "name"} className="byline__tab" onClick={() => setTab("name")}>
-              <PenNib weight="bold" aria-hidden="true" /> Name & seal
+              <PenNib weight="bold" aria-hidden="true" /> Name & portrait
             </button>
             <button type="button" role="tab" aria-selected={tab === "x"} className="byline__tab" onClick={() => setTab("x")}>
               <XLogo weight="bold" aria-hidden="true" /> Connect X
@@ -274,7 +274,7 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
             </div>
           ) : info.x ? (
             <p className="lookup__help" role="tabpanel">
-              Your X account is showing right now. Unlink X on the other tab to stamp a name and seal instead.
+              Your X account is showing right now. Unlink X on the other tab to set a name and portrait instead.
             </p>
           ) : (
             <form
@@ -289,7 +289,7 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
                   traits={mug}
                   size={132}
                   className="booth__shot"
-                  title={`Your seal: ${PART_NAMES.fur[mug[0]]} ink, ${PART_NAMES.hat[mug[1]]} frame, ${PART_NAMES.acc[mug[2]]}, ${PART_NAMES.bg[mug[3]]} paper`}
+                  title={`Your portrait: ${PART_NAMES.fur[mug[0]]} skin, ${PART_NAMES.hat[mug[1]]} hair, ${PART_NAMES.acc[mug[2]]}, ${PART_NAMES.bg[mug[3]]} backdrop`}
                 />
                 <div className="booth__dials">
                   {SLOTS.map(([key, label], i) => (

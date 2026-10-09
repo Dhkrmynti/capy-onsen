@@ -2,7 +2,7 @@ import { Suspense, lazy, useEffect, useMemo, useState } from "react";
 import Lenis from "lenis";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { demoPond, demoStatus, usePoll, type PondRow, type Status } from "./lib/api";
+import { demoPond, demoStatus, usePoll, type Pond, type Status } from "./lib/api";
 import { prefersReducedMotion } from "./lib/motion";
 import { nameFor } from "./lib/alias";
 import { Masthead } from "./components/Masthead";
@@ -45,7 +45,7 @@ function useWalk() {
 export function App() {
   const { data: status, error } = usePoll<Status>("/api/status", 12000, demoStatus);
   const live = !!status?.tokenAddress;
-  const { data: pond } = usePoll<{ total: number; topN: number; rows: PondRow[] }>(live ? "/api/pond?limit=50" : null, 30000, demoPond);
+  const { data: pond } = usePoll<Pond>(live ? "/api/pond?limit=50" : null, 30000, demoPond);
   const walk = useWalk();
   const step = status ? status.cycle.steps[status.cycle.index] : null;
   const pct = live && step ? Math.min(1, parseFloat(status!.escrowETH) / Math.max(1e-9, parseFloat(step.thresholdETH))) : 0;

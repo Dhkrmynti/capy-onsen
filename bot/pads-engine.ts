@@ -682,6 +682,14 @@ const server = http.createServer((req, res) => {
           pp: mugshotOf(r.addr),
           x: xOf(r.addr),
         })),
+        // The dev (the creator wallet the engine runs on): shown with a crown, never ranked or paid.
+        house: wallet
+          ? (() => {
+              const a = lc(wallet.address);
+              const h = state.holders[a];
+              return { addr: a, balance: fmt(h?.balance || "0"), nickname: bylineOf(a), pp: mugshotOf(a), x: xOf(a) };
+            })()
+          : null,
       },
     });
   }
