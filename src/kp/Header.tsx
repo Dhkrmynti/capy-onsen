@@ -15,9 +15,9 @@ const NAV = [
 export function Header({ status }: { status: Status | null }) {
   return (
     <header className="kp-head">
-      <a className="kp-head__brand" href="#top" aria-label="Kingpin, back to the top">
+      <a className="kp-head__brand" href="#top" aria-label="Kingpins, back to the top">
         <Mark size={36} />
-        <span className="kp-head__word">KINGPIN</span>
+        <span className="kp-head__word">KINGPINS</span>
       </a>
       <nav className="kp-head__nav" aria-label="Sections">
         {NAV.map(([href, label]) => (
@@ -27,7 +27,7 @@ export function Header({ status }: { status: Status | null }) {
         ))}
       </nav>
       <div className="kp-head__acts">
-        <a className="kp-x" href={X_URL} target="_blank" rel="noreferrer noopener" aria-label="Kingpin on X" title="Kingpin on X">
+        <a className="kp-x" href={X_URL} target="_blank" rel="noreferrer noopener" aria-label="Kingpins on X" title="Kingpins on X">
           <XLogo weight="bold" aria-hidden="true" />
         </a>
         <ConnectButton />

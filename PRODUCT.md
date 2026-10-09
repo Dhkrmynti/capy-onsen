@@ -45,9 +45,9 @@ Every other fee-engine token on the owner's VPS burns. $PADS rewards patience di
 
 ## Brand Commitments
 
-- Name **Kingpin**, ticker **$KING** (branch `lore-kingpin`). Supersedes Heirloom ($HEIR). No word "bank" in the name or domain.
+- Name **Kingpins**, ticker **$KING** (branch `lore-kingpin`). Supersedes Heirloom ($HEIR). No word "bank" in the name or domain.
 - **Only the UI and the lore change.** Backend, engine, API, features and tokenomics are exactly the Heirloom build: cycle inheritance 0.02 ETH (No. 1–5 share 0.014, No. 6–10 share 0.006, by balance) → treasury 0.025 → buyback & burn 0.01 → treasury 0.025, repeat; min 100,000 tokens; no hold time; one sale disqualifies forever; dev wallet shown but never ranked or paid; X connect, names, portraits, waiting/sold strips, /lotnok, statement.
-- Lore: a live race for the throne. **#1 holds the crown** (the Kingpin) and anyone can take it by out-holding them. Step 1 (ETH to top 10) → **the Tribute**, paid to **the Court** (No. 1–5) and **the Guard** (No. 6–10); step 2/4 (treasury) → **the War Chest** (shown openly, twice a round); step 3 (buyback + burn) → **the Burn**; sold → **Exiled** (forever); leaderboard → **the Ladder**; wallet check → **your seat**; history → **the Record**; dev wallet → **the Founder** (own mark, never the crown, which belongs to #1).
+- Lore: a live race for the throne. **#1 holds the crown** (the Kingpins) and anyone can take it by out-holding them. Step 1 (ETH to top 10) → **the Tribute**, paid to **the Court** (No. 1–5) and **the Guard** (No. 6–10); step 2/4 (treasury) → **the War Chest** (shown openly, twice a round); step 3 (buyback + burn) → **the Burn**; sold → **Exiled** (forever); leaderboard → **the Ladder**; wallet check → **your seat**; history → **the Record**; dev wallet → **the Founder** (own mark, never the crown, which belongs to #1).
 - Owner's taste for this world: the first viewport must feel like a live fight for #1; one light cartoon 3D object only, the rest 2D + GSAP scroll transitions; must not resemble Heirloom (no navy-and-gold vault, no bank or classical luxury serif); few words; never heavy on phones; not serious or corporate: it is a memecoin.
 - Voice: short, cocky, playful. Never yield, APY, passive income, or promises of value.
 

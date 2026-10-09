@@ -41,7 +41,7 @@ export function Close({ status }: { status: Status | null }) {
         </div>
         <nav className="close__links" aria-label="Elsewhere">
           <a href={X_URL} target="_blank" rel="noreferrer">
-            <XLogo weight="bold" aria-hidden="true" /> Kingpin on X <ArrowUpRight weight="bold" aria-hidden="true" />
+            <XLogo weight="bold" aria-hidden="true" /> Kingpins on X <ArrowUpRight weight="bold" aria-hidden="true" />
           </a>
           {ca ? (
             <a href={dexUrl(ca)} target="_blank" rel="noreferrer">
@@ -52,7 +52,7 @@ export function Close({ status }: { status: Status | null }) {
           <a href="#record">Record</a>
         </nav>
         <p className="close__sig">
-          <Mark size={22} /> Kingpin · $KING · Robinhood Chain
+          <Mark size={22} /> Kingpins · $KING · Robinhood Chain
         </p>
       </div>
     </footer>

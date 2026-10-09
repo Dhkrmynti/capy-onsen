@@ -464,7 +464,7 @@ export function CrewCard({ live }: { live: boolean }) {
           {info && stamp ? (
             <article className={`card is-${stamp.tone}`}>
               <header className="card__top">
-                <span className="card__org"><Mark size={24} /> Kingpin</span>
+                <span className="card__org"><Mark size={24} /> Kingpins</span>
                 <span className="card__kind">Seat card</span>
               </header>
               <div className="card__body">
@@ -543,7 +543,7 @@ export function CrewCard({ live }: { live: boolean }) {
           ) : (
             <div className="card is-blank" aria-hidden="true">
               <header className="card__top">
-                <span className="card__org"><Mark size={24} /> Kingpin</span>
+                <span className="card__org"><Mark size={24} /> Kingpins</span>
                 <span className="card__kind">Seat card</span>
               </header>
               <p className="card__blank">Your seat card appears here.</p>

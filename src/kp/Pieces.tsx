@@ -94,7 +94,7 @@ export function pieceFor(rank: number): PieceKind {
   return "pawn";
 }
 
-/** The Kingpin mark: a crown pierced by a pin. */
+/** The Kingpins mark: a crown pierced by a pin. */
 export function Mark({ size = 34, className = "" }: { size?: number; className?: string }) {
   return (
     <svg className={`mark ${className}`} viewBox="0 0 48 48" width={size} height={size} aria-hidden="true">

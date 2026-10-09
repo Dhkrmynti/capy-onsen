@@ -1,5 +1,5 @@
 ---
-name: Kingpin — The Board
+name: Kingpins — The Board
 description: "$KING as a chessboard in play: the holders are pieces on loud lime and violet squares, the biggest holder is the King, and every fee is a move on the clock."
 colors:
   grape-0: "#170c29"
@@ -109,7 +109,7 @@ components:
     height: "52px"
 ---
 
-# Design System: Kingpin — The Board
+# Design System: Kingpins — The Board
 
 ## Overview
 

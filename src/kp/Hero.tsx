@@ -82,7 +82,7 @@ export function Hero({ status, pond, offline }: { status: Status | null; pond: P
   const lines: [string, string] = offline ? ["The board is", "offline."] : empty ? ["The throne", "is empty."] : ["The King is", `${who!.name}.`];
 
   return (
-    <section className="hero" id="top" ref={root} aria-label="Kingpin: who wears the crown">
+    <section className="hero" id="top" ref={root} aria-label="Kingpins: who wears the crown">
       {gl ? (
         <div className="hero__board3d" aria-hidden="true">
           <Suspense fallback={null}>
