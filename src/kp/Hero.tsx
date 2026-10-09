@@ -13,11 +13,23 @@ import { prefersReducedMotion } from "../lib/motion";
 import { BuyButton } from "../components/Bits";
 import { CrewFace, XCheck, XLink } from "../components/Face";
 import { Clock } from "./Clock";
-import { Piece } from "./Pieces";
+import { Piece, type PieceKind } from "./Pieces";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const Crown3D = lazy(() => import("./Crown3D"));
+
+/** The opening position: back ranks and pawns for both sides, the light side nearest you. */
+const BACK: PieceKind[] = ["rook", "knight", "bishop", "queen", "king", "bishop", "knight", "rook"];
+const setup = (i: number): { kind: PieceKind; side: "dark" | "light" } | null => {
+  const row = Math.floor(i / 8);
+  const col = i % 8;
+  if (row === 0) return { kind: BACK[col], side: "dark" };
+  if (row === 1) return { kind: "pawn", side: "dark" };
+  if (row === 6) return { kind: "pawn", side: "light" };
+  if (row === 7) return { kind: BACK[col], side: "light" };
+  return null;
+};
 
 function canWebGL() {
   try {
@@ -55,6 +67,7 @@ export function Hero({ status, pond, offline }: { status: Status | null; pond: P
         .timeline({ scrollTrigger: { trigger: root.current, start: "top top", end: "+=85%", scrub: 0.6, pin: true, anticipatePin: 1, refreshPriority: 2 } })
         .to(".hero__copy", { y: -140, opacity: 0, ease: "power1.in" }, 0)
         .to(".board3d", { rotateX: 0, scale: 1.45, y: -40, ease: "none" }, 0)
+        .to(".board3d .pc", { "--stand": "0deg", ease: "none" }, 0)
         .to(".hero__throne", { scale: 0.5, y: 120, rotate: -6, opacity: 0, ease: "power1.in" }, 0.1);
     },
     { scope: root },
@@ -67,9 +80,18 @@ export function Hero({ status, pond, offline }: { status: Status | null; pond: P
     <section className="hero" id="top" ref={root} aria-label="Kingpin: who wears the crown">
       <div className="hero__board" aria-hidden="true">
         <div className="board3d">
-          {Array.from({ length: 64 }, (_, i) => (
-            <span key={i} className={`sq ${(Math.floor(i / 8) + i) % 2 ? "is-b" : "is-a"}`} />
-          ))}
+          {Array.from({ length: 64 }, (_, i) => {
+            const p = setup(i);
+            return (
+              <span key={i} className={`sq ${(Math.floor(i / 8) + i) % 2 ? "is-b" : "is-a"}`}>
+                {p ? (
+                  <span className="pc" style={{ animationDelay: `${-((i * 0.37) % 6).toFixed(2)}s` }}>
+                    <Piece kind={p.kind} tone={p.side === "dark" ? "ink" : p.kind === "king" ? "crown" : "cream"} size={64} className="pc__svg" />
+                  </span>
+                ) : null}
+              </span>
+            );
+          })}
         </div>
       </div>
 

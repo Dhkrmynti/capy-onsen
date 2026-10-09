@@ -2102,3 +2102,103 @@ button {
     width: min(64vw, 260px);
   }
 }
+
+/* ───────── the opening position, every piece turning on its square ───────── */
+.board3d {
+  overflow: visible;
+  transform-style: preserve-3d;
+}
+.board3d .sq {
+  position: relative;
+  transform-style: preserve-3d;
+}
+.board3d .sq:nth-child(1) {
+  border-top-left-radius: 4px;
+}
+.pc {
+  --stand: -58deg;
+  position: absolute;
+  left: 50%;
+  bottom: 18%;
+  width: 72%;
+  translate: -50% 0;
+  transform-origin: 50% 100%;
+  transform: rotateX(var(--stand));
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+.pc__svg {
+  width: 100%;
+  height: auto;
+  transform-origin: 50% 100%;
+  animation: pc-turn 6s linear infinite;
+  animation-delay: inherit;
+  filter: drop-shadow(0 3px 0 rgba(23, 12, 41, 0.55));
+  will-change: transform;
+}
+@keyframes pc-turn {
+  to {
+    transform: rotateY(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pc__svg {
+    animation: none;
+  }
+}
+/* the whole board fits the first viewport so both sides of the opening show */
+.hero__board {
+  inset: auto -10% -6% -10%;
+  height: 100%;
+}
+.board3d {
+  width: min(900px, 96vw);
+  transform: rotateX(54deg);
+}
+.pc {
+  --stand: -54deg;
+  width: 78%;
+}
+@media (max-width: 760px) {
+  .hero__board {
+    inset: auto -30% -4% -30%;
+  }
+  .board3d {
+    width: 150vw;
+  }
+}
+.hero__board {
+  inset: auto -10% 3% -10%;
+}
+.board3d {
+  width: min(780px, 92vw);
+}
+@media (max-width: 760px) {
+  .hero__board {
+    inset: auto -20% 2% -20%;
+  }
+  .board3d {
+    width: 132vw;
+  }
+}
+.hero__board {
+  translate: 9vw 0;
+}
+@media (max-width: 760px) {
+  .hero__board {
+    translate: 0 0;
+  }
+  .hero__throne {
+    right: var(--gutter);
+    translate: 0 0;
+    bottom: auto;
+    top: calc(var(--head) + 268px);
+    width: min(40vw, 160px);
+  }
+  .hero__crown {
+    bottom: calc(100% - 50px);
+  }
+  .hero__plate {
+    font-size: 12px;
+  }
+}

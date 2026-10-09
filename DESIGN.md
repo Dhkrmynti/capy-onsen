@@ -139,7 +139,7 @@ Full palette, committed at page scale: each viewport is owned by one field colou
 
 - Fixed header 68px (60px on phones), solid grape; the nav collapses under 1080px and the wordmark under 760px.
 - Content wrap `min(1240px, 100% - 2·gutter)`; sections pad `clamp(72px, 10vw, 128px)` vertically.
-- **Hero**: full-viewport violet field; a tilted 8×8 board fills the lower part; top-left the headline names the King ("The King is @name.", lime second line, shrinking for long names), his balance and lead in an ink pill, the CTAs; at the right the King's portrait in a cream printed frame with a 3D crown resting on it; the chess clock bottom-left (a one-line escrow readout on phones).
+- **Hero**: full-viewport violet field; a tilted 8×8 board set up in the opening position (32 SVG pieces, the dark side far, the light side near, the King in crown orange on e1), each piece standing on its square and turning; top-left the headline names the King ("The King is @name.", lime second line, shrinking for long names), his balance and lead in an ink pill, the CTAs; at the right the King's portrait in a cream printed frame with a 3D crown resting on it; the chess clock bottom-left (a one-line escrow readout on phones).
 - **Ladder**: King tile spanning two rows beside a 2×2 Court; Guard row of five; crowd of 40 on an 8-column grid (5 at 1080px, 2 on phones). Founder, Pending and Captured strips above. Refreshes every 3 seconds.
 - **Round**: pinned; a horizontal track of panels (intro, four moves, tally), each one field colour, separated by 8px ink gaps. Stacks vertically on phones.
 - **Rules**: lime field, five display lines ruled with 3px ink, the captured tray on an ink plate.
@@ -171,6 +171,7 @@ Flat colour with printed-token depth: every tile, button and clock sits on a har
 - **Round**: the section pins and the move track pans sideways with the scroll; on desktop the current move is marked by its full-opacity number.
 - **Ladder**: when ranks change, squares glide from their old positions (FLIP, 0.9s expo.out); a new No. 1 triggers the "New King!" shout.
 - Section entrances stagger once (tiles tip up from -50°, crowd squares pop with back.out). No bounce easing.
+- **Turning pieces**: every piece on the hero board spins on its own square (CSS rotateY, 6 s, staggered); they lie down with the board as the scroll flattens it. GPU-only, no WebGL.
 - **Crown drop**: on load the crown falls onto the King's portrait with an overshoot landing and turns slowly; when No. 1 changes it lifts and drops onto the new King. With no King it hovers over an empty frame.
 - The crown is the only WebGL: toon-shaded with an ink outline, at most 30 fps, paused off screen and while the tab is hidden. Reduced motion stops the pins, the pans and the King's turn.
 
