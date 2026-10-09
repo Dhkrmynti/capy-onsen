@@ -17,9 +17,10 @@ import { Close } from "./kp/Close";
 gsap.registerPlugin(ScrollTrigger);
 
 export function App() {
-  const { data: status, error } = usePoll<Status>("/api/status", 12000, demoStatus);
+  const { data: status, error } = usePoll<Status>("/api/status", 4000, demoStatus);
   const live = !!status?.tokenAddress;
-  const { data: pond } = usePoll<Pond>(live ? "/api/pond?limit=50" : null, 20000, demoPond);
+  // the Ladder is live: a new buyer is on the board within a few seconds
+  const { data: pond } = usePoll<Pond>(live ? "/api/pond?limit=50" : null, 3000, demoPond);
 
   // A wallet that already trusts this site shows as connected without a popup.
   useEffect(restoreWallet, []);

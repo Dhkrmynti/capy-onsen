@@ -1749,3 +1749,172 @@ button {
     padding-top: 46px;
   }
 }
+
+/* ───────── finish review, round 1 ───────── */
+/* no glass: the header is a solid strip */
+.kp-head {
+  background: var(--grape-0);
+  backdrop-filter: none;
+}
+/* the King stands on his own lit square */
+.hero__throne {
+  position: absolute;
+  left: 50%;
+  bottom: 4%;
+  width: 62%;
+  aspect-ratio: 1;
+  translate: -50% 0;
+  transform: perspective(700px) rotateX(64deg);
+  transform-origin: 50% 100%;
+  background: var(--crown);
+  border: 6px solid var(--ink);
+  border-radius: 6px;
+  box-shadow: 0 10px 0 var(--ink);
+}
+.king3d {
+  position: relative;
+}
+/* printed tiles read on dark ground: a lit edge, a deeper base, square corners */
+:root {
+  --edge: #5b3fa8;
+  --base-deep: 0 6px 0 #07030f;
+}
+.ladder {
+  background: #23123f;
+}
+.tile {
+  border-radius: 8px;
+  box-shadow: var(--base-deep);
+}
+.court .tile.is-king {
+  border-radius: 10px;
+}
+.crowd__sq {
+  border-radius: 6px;
+  border-color: var(--edge);
+  box-shadow: 0 4px 0 #07030f;
+}
+.strip {
+  border-radius: 8px;
+  border-color: var(--edge);
+}
+.mv {
+  border-radius: 8px;
+  border-color: var(--edge);
+  box-shadow: 0 4px 0 #07030f;
+}
+.card {
+  border-radius: 12px;
+  box-shadow: var(--base-deep);
+}
+.card.is-blank {
+  border-color: var(--edge);
+}
+.byline {
+  border-radius: 12px;
+}
+.clock {
+  box-shadow: var(--base-deep);
+}
+.tile__sq {
+  position: absolute;
+  top: 14px;
+  left: 50px;
+  font: 600 11px/1 var(--mono);
+  opacity: 0.7;
+}
+.tile.is-king .tile__sq {
+  top: 30px;
+  left: 74px;
+  font-size: 14px;
+}
+.crowd__rank i {
+  font-style: normal;
+  color: var(--cream-2);
+  margin-left: 4px;
+}
+/* the round: headings breathe, the active panel fits its title */
+.move.is-intro .kp-h2 {
+  margin-bottom: 0.5em;
+}
+.move__name {
+  font-size: clamp(36px, 4.6vw, 64px);
+}
+@media (min-width: 761px) {
+  .move {
+    width: min(70vw, 900px);
+    overflow: hidden;
+  }
+  /* the scroll drives the pan: the current move is marked by its number, not a stranded pill */
+  .move__now {
+    display: none;
+  }
+  .move.is-now .move__n {
+    opacity: 1;
+  }
+}
+.rules__tray .piece {
+  filter: drop-shadow(0 3px 0 #07030f);
+}
+@media (max-width: 760px) {
+  .tile.is-king .who__name {
+    white-space: normal;
+    font-size: 21px;
+  }
+  .tile.is-king .who,
+  .tile.is-king .tile__sub {
+    max-width: 70%;
+  }
+  .tile.is-king .tile__piece {
+    width: 96px;
+  }
+  .tile.is-king .tile__sq {
+    left: 62px;
+    top: 24px;
+  }
+  .tile__sq {
+    left: 44px;
+  }
+  .strip.is-founder {
+    flex-wrap: wrap;
+    row-gap: 4px;
+  }
+  .strip.is-founder .strip__sub {
+    flex-basis: 100%;
+  }
+  .hero__copy {
+    top: calc(var(--head) + 14px);
+  }
+  .hero__board {
+    inset: auto -60% -30% -60%;
+    height: 100%;
+  }
+  .hero__throne {
+    width: 70%;
+  }
+}
+.tile__rank {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.tile__sq,
+.tile.is-king .tile__sq {
+  position: static;
+  font-style: normal;
+}
+@media (max-width: 760px) {
+  .hero__board {
+    inset: auto -60% -18% -60%;
+  }
+}
+
+@media (max-width: 760px) {
+  .hero__board {
+    inset: auto -60% -6% -60%;
+    height: 96%;
+  }
+  .rules__pieces {
+    gap: 6px 10px;
+  }
+}

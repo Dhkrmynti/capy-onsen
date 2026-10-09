@@ -203,16 +203,22 @@ export function usePoll<T>(path: string | null, every = 15000, demo?: () => T) {
     if (DEMO || !path) return;
     let alive = true;
     const run = () =>
-      get<T>(path)
+      // a hidden tab asks for nothing; it catches up the moment it is seen again
+      document.hidden
+        ? undefined
+        : get<T>(path)
         .then((d) => alive && (setData(d), setError(null)))
         .catch((e) => alive && setError(e.message));
     run();
     const id = setInterval(run, every);
+    const seen = () => !document.hidden && run();
+    document.addEventListener("visibilitychange", seen);
     // A claimed byline asks every board to reprint right away.
     window.addEventListener("rbank:refresh", run);
     return () => {
       alive = false;
       clearInterval(id);
+      document.removeEventListener("visibilitychange", seen);
       window.removeEventListener("rbank:refresh", run);
     };
   }, [path, every]);

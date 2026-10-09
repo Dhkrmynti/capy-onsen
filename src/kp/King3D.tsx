@@ -58,8 +58,8 @@ function King({ still }: { still: boolean }) {
       ].map(([x, y]) => new THREE.Vector2(x, y)),
       48,
     );
-    const bar = new THREE.BoxGeometry(0.2, 0.62, 0.2);
-    const arm = new THREE.BoxGeometry(0.52, 0.2, 0.2);
+    const bar = new THREE.BoxGeometry(0.2, 0.9, 0.2);
+    const arm = new THREE.BoxGeometry(0.66, 0.2, 0.2);
     const ring = new THREE.TorusGeometry(0.66, 0.08, 10, 48);
     return { body, crown, bar, arm, ring };
   }, []);
@@ -77,8 +77,8 @@ function King({ still }: { still: boolean }) {
       <Inked geometry={parts.body} material={mats.body} ink={1.045} />
       <Inked geometry={parts.ring} material={mats.cream} position={[0, 1.66, 0]} rotation={[Math.PI / 2, 0, 0]} ink={1.12} />
       <Inked geometry={parts.crown} material={mats.body} position={[0, 1.8, 0]} ink={1.07} />
-      <Inked geometry={parts.bar} material={mats.cream} position={[0, 2.7, 0]} ink={1.25} />
-      <Inked geometry={parts.arm} material={mats.cream} position={[0, 2.75, 0]} ink={1.22} />
+      <Inked geometry={parts.bar} material={mats.cream} position={[0, 2.82, 0]} ink={1.22} />
+      <Inked geometry={parts.arm} material={mats.cream} position={[0, 2.95, 0]} ink={1.2} />
     </group>
   );
 }

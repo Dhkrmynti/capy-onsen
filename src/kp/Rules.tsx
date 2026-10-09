@@ -18,7 +18,7 @@ export function Rules({ status }: { status: Status | null }) {
     () => {
       if (prefersReducedMotion()) return;
       gsap.from(".rule", { xPercent: -8, opacity: 0, duration: 0.9, ease: "expo.out", stagger: 0.09, scrollTrigger: { trigger: ".rules__list", start: "top 78%" } });
-      gsap.from(".rules__tray .piece", { y: -60, rotate: -90, opacity: 0, duration: 0.7, ease: "bounce.out", stagger: 0.05, scrollTrigger: { trigger: ".rules__tray", start: "top 90%" } });
+      gsap.from(".rules__tray .piece", { rotate: 0, y: -18, opacity: 0, duration: 0.7, ease: "expo.out", stagger: 0.05, scrollTrigger: { trigger: ".rules__tray", start: "top 90%" } });
     },
     { scope: root },
   );
@@ -47,7 +47,7 @@ export function Rules({ status }: { status: Status | null }) {
         <div className="rules__tray" aria-label={`${closed} wallets captured for selling`}>
           <div className="rules__pieces" aria-hidden="true">
             {Array.from({ length: Math.min(12, Math.max(3, closed)) }, (_, i) => (
-              <Piece key={i} kind={i % 5 === 0 ? "knight" : "pawn"} tone="violet" size={34} lying />
+              <Piece key={i} kind={(["pawn", "rook", "pawn", "knight", "pawn", "bishop", "pawn", "queen"] as const)[i % 8]} tone="cream" size={50} lying />
             ))}
           </div>
           <p>

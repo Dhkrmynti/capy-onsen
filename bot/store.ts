@@ -77,7 +77,7 @@ export const config: Config = {
     .map(([upTo, pct]) => ({ upTo, pct })),
   minBalance: env.MIN_BALANCE || "100000",
   minHoldHours: parseFloat(env.MIN_HOLD_HOURS || "1"),
-  pollIntervalSeconds: parseInt(env.POLL_INTERVAL_SECONDS || "10", 10),
+  pollIntervalSeconds: parseInt(env.POLL_INTERVAL_SECONDS || "3", 10),
   port: parseInt(env.PORT || "5023", 10),
   startBlock: parseInt(env.START_BLOCK || "0", 10),
 };

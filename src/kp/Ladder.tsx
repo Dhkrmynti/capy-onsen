@@ -31,6 +31,10 @@ function Who({ addr, nickname, pp, x, size = 28 }: { addr: string; nickname?: st
   );
 }
 
+/** The square a rank stands on, in board notation: the King on e1, the Court on the back rank, the Guard on rank 2, the crowd from a3. */
+const SQUARES = ["e1", "d1", "a1", "c1", "b1", "a2", "b2", "c2", "d2", "e2"];
+const squareOf = (rank: number) => (rank <= 10 ? SQUARES[rank - 1] : `${"abcdefgh"[(rank - 11) % 8]}${3 + Math.floor((rank - 11) / 8)}`);
+
 export function Ladder({ status, pond }: { status: Status | null; pond: Pond | null }) {
   const root = useRef<HTMLElement>(null);
   const live = !!status?.tokenAddress;
@@ -91,7 +95,10 @@ export function Ladder({ status, pond }: { status: Status | null; pond: Pond | n
     return (
       <div key={r?.addr ?? `open-${rank}`} data-key={r?.addr} className={`tile ${rank === 1 ? "is-king" : rank <= 5 ? "is-court" : "is-guard"} ${r ? "" : "is-open"}`}>
         <Piece kind={kind} tone={tone === "crown" ? "cream" : tone} size={rank === 1 ? 190 : 48} className="tile__piece" />
-        <span className="tile__rank tabular">{rank}</span>
+        <span className="tile__rank tabular">
+          {rank}
+          <i className="tile__sq">{squareOf(rank)}</i>
+        </span>
         {r ? (
           <>
             <Who addr={r.addr} nickname={r.nickname} pp={r.pp} x={r.x} size={rank === 1 ? 34 : 26} />
@@ -155,7 +162,7 @@ export function Ladder({ status, pond }: { status: Status | null; pond: Pond | n
                 <span className="strip__list">
                   {pond.out.map((w) => (
                     <span key={w.addr} className="captured">
-                      <Piece kind="pawn" tone="violet" size={22} lying />
+                      <Piece kind="pawn" tone="cream" size={22} lying />
                       <span className="captured__name">{nameFor(w.addr, w.nickname, w.x).name}</span>
                     </span>
                   ))}
@@ -181,7 +188,9 @@ export function Ladder({ status, pond }: { status: Status | null; pond: Pond | n
                 const gap = bar - parseFloat(r.balance);
                 return (
                   <li key={r.addr} data-key={r.addr} className="crowd__sq">
-                    <span className="crowd__rank tabular">{r.rank}</span>
+                    <span className="crowd__rank tabular">
+                      {r.rank} <i>{squareOf(r.rank)}</i>
+                    </span>
                     <Who addr={r.addr} nickname={r.nickname} pp={r.pp} x={r.x} size={18} />
                     <span className="crowd__sub tabular">
                       {compact(r.balance)} · {gap > 0 ? `+${compact(gap + 1)}` : "at the line"}

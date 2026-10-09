@@ -76,11 +76,12 @@ export function Hero({ status, pond, offline }: { status: Status | null; pond: P
       <div className="hero__board" aria-hidden="true">
         <div className="board3d">
           {Array.from({ length: 64 }, (_, i) => (
-            <span key={i} className={`sq ${(Math.floor(i / 8) + i) % 2 ? "is-b" : "is-a"} ${i === 19 ? "is-throne" : ""}`} />
+            <span key={i} className={`sq ${(Math.floor(i / 8) + i) % 2 ? "is-b" : "is-a"}`} />
           ))}
         </div>
       </div>
       <div className="hero__king" aria-hidden="true">
+        <span className="hero__throne" />
         {canWebGL() ? (
           <Suspense fallback={null}>
             <King3D still={still} />
