@@ -59,7 +59,7 @@ function stations(narrow: boolean): Station[] {
     { pos: [X0 - 3.4 * side, 0.2, 10.5 + 2.5 * (1 - side)], look: [X0 - 1.2 * side, 0, 0] }, // the sealed door
     { pos: [X0, 0.3, 2.4], look: [X0, -0.2, -6] }, // through the doorway
     { pos: [X0 - 2.4 * side + 0.6 * (1 - side), 0.7, -2.6], look: [X0 + 0.3 + 1.6 * (1 - side), -1.0, PED_Z - 0.6] }, // the three pedestals
-    { pos: [X0 + 1.6 * side, 0.3, -12.5], look: [X0 - W, 0.3, -16.5] }, // the conditions plate
+    { pos: [X0 + 3.0 * side, 0.3, -12.5 - 0.9 * side], look: [X0 - W, 0.3, -16.5 + 2.93 * side] }, // the will, engraved on the wall: right of the panel
     { pos: [X0 - 2.4 * side, 0.2, -23.5], look: [X0 + W, 0, -26.5] }, // the deposit-box wall
     { pos: [X0 - 1.8 * side, 0.75, my.z + 2.8 - 0.6 * (1 - side)], look: [my.x - 2.2 + 0.4 * side, my.y - 0.45, my.z - 0.4] }, // your box, drawn out
     { pos: [X0, 1.6, DESK_Z + 5.2], look: [X0, -0.8, DESK_Z] }, // the teller's desk

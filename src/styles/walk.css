@@ -908,3 +908,172 @@ body:has(.house) {
     padding-bottom: 38px;
   }
 }
+
+/* ───────── the first fifty: five columns of ten, the first column is the inheritance zone ───────── */
+.plaque--ledger.plaque--wide {
+  width: min(1180px, 100%);
+}
+.heirs__top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 24px;
+  flex-wrap: wrap;
+}
+.heirs__you {
+  color: var(--brass-2);
+  font-weight: 600;
+}
+.heirs {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: clamp(10px, 2vh, 18px);
+}
+.heirs__col {
+  min-width: 0;
+  padding: 8px 8px 6px;
+  border-radius: 4px;
+  background: rgba(236, 227, 203, 0.94);
+  color: var(--ink);
+}
+.heirs__col.is-zone {
+  background: linear-gradient(180deg, #f3e2b2, #ead39a);
+  box-shadow: 0 0 0 2px var(--brass), 0 0 28px -6px rgba(232, 193, 110, 0.7);
+}
+.heirs__label {
+  margin: 0 0 4px;
+  padding: 0 2px 5px;
+  border-bottom: 1px solid rgba(28, 25, 19, 0.35);
+  font: 600 10px/1.2 var(--caps);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.heirs__col.is-zone .heirs__label {
+  color: #6b4a10;
+  border-bottom-color: #a77d2e;
+}
+.heirs__col.is-zone .heirs__label::before {
+  content: "◆ ";
+  color: #a77d2e;
+}
+.heirs__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.heir {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  align-items: center;
+  gap: 4px;
+  min-height: clamp(32px, 4.6vh, 40px);
+  border-bottom: 1px solid rgba(28, 25, 19, 0.12);
+}
+.heir:last-child {
+  border-bottom: 0;
+}
+.heir.is-me {
+  margin: 0 -4px;
+  padding: 0 4px;
+  border-radius: 3px;
+  background: rgba(36, 66, 122, 0.16);
+  box-shadow: inset 0 0 0 1px rgba(36, 66, 122, 0.6);
+}
+.heir__rank {
+  font: italic 600 14px/1 var(--display);
+  text-align: center;
+  color: var(--ink-2);
+}
+.heir.is-heir .heir__rank {
+  color: #8a5d12;
+}
+.heir__open {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  padding: 2px 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.heir__seal {
+  flex: none;
+}
+.heir__id {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.heir__name {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  overflow: hidden;
+  font: 500 13px/1.2 var(--display);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.heir__name svg {
+  flex: none;
+  width: 11px;
+  height: 11px;
+}
+.heir__sub {
+  overflow: hidden;
+  font: 500 10.5px/1.25 var(--data);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--ink-2);
+}
+.heir.is-heir .heir__sub {
+  color: #6b4a10;
+}
+.heir__open:hover .heir__name,
+.heir__open:focus-visible .heir__name {
+  text-decoration: underline;
+}
+
+@media (max-width: 1080px) and (min-width: 761px) {
+  .heirs {
+    grid-template-columns: repeat(5, minmax(150px, 1fr));
+    overflow-x: auto;
+  }
+}
+@media (max-width: 760px) {
+  /* on a phone the columns sit side by side and swipe to the right */
+  .heirs {
+    display: flex;
+    gap: 10px;
+    margin-right: -16px;
+    padding-right: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+  }
+  .heirs__col {
+    flex: 0 0 82%;
+    scroll-snap-align: start;
+  }
+  .heir {
+    min-height: 37px;
+  }
+  .heir__name {
+    font-size: 15px;
+  }
+  .heir__sub {
+    font-size: 11.5px;
+  }
+  .heirs__label::after {
+    content: "  · swipe →";
+    letter-spacing: 0.08em;
+    color: var(--ink-2);
+  }
+  .heirs__col:last-child .heirs__label::after {
+    content: "";
+  }
+}

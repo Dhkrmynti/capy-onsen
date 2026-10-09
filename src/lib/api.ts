@@ -94,8 +94,8 @@ export const STEP: Record<RoundKind, { name: string; does: string }> = {
 };
 
 export const DEFAULT_STEPS: Status["cycle"]["steps"] = [
-  { kind: "feeding", thresholdETH: "0.01" },
-  { kind: "keeper", thresholdETH: "0.02" },
+  { kind: "feeding", thresholdETH: "0.02" },
+  { kind: "keeper", thresholdETH: "0.025" },
   { kind: "sink", thresholdETH: "0.01" },
 ];
 
@@ -249,10 +249,10 @@ export const demoStatus = (): Status => ({
   curveAddress: "0x3c8e1f5a7b9d2c4e6f8a0b1c3d5e7f9a2b4c6d8e",
   treasuryAddress: "0x7a1c3e5f9b2d4f6a8c0e2b4d6f8a1c3e5b7d9f0a",
   escrowETH: "0.0063",
-  cycle: { index: 0, kind: "feeding", thresholdETH: "0.01", steps: DEFAULT_STEPS },
+  cycle: { index: 0, kind: "feeding", thresholdETH: "0.02", steps: DEFAULT_STEPS },
   rules: { minBalance: "100000", minHoldHours: 1, topN: 10 },
   counts: { sitters: 87, waiting: 23, hopped: 41, holders: 151 },
-  totals: { feesClaimedETH: "0.4817", fedETH: "0.1204", keeperETH: "0.2409", sinkETH: "0.1204", tokensBurned: "6912204.8" },
+  totals: { feesClaimedETH: "0.6612", fedETH: "0.2408", keeperETH: "0.3012", sinkETH: "0.1192", tokensBurned: "6912204.8" },
   rounds: 36,
   lastIndexedBlock: 82931447,
 });
@@ -286,13 +286,23 @@ export const demoPond = (): { total: number; topN: number; rows: PondRow[] } => 
 };
 
 const seedPond = (): { total: number; topN: number; rows: PondRow[] } => {
+  // ranks 13 to 50: smaller balances tapering toward the minimum
+  for (let i = seedAddrs.length; i < 50; i++) {
+    const h = (n: number) => ((i * 2654435761 + n * 40503) >>> 0).toString(16).padStart(8, "0");
+    seedAddrs.push(`0x${h(1)}${h(2)}${h(3)}${h(4)}${h(5)}`);
+  }
   const days = [26, 25, 23, 26, 21, 19, 17, 14, 12, 9, 6, 3];
   const bal = [9.4e6, 6.6e6, 4.8e6, 3.1e6, 2.4e6, 1.7e6, 1.2e6, 0.82e6, 0.56e6, 0.4e6, 0.31e6, 0.24e6];
-  const rec = [0.0391, 0.0262, 0.0207, 0.0141, 0.0098, 0.0071, 0.0049, 0.0031, 0.0022, 0.0014, 0.0006, 0];
+  const rec = [0.0782, 0.0524, 0.0414, 0.0282, 0.0196, 0.0142, 0.0098, 0.0062, 0.0044, 0.0028, 0.0012, 0];
+  for (let i = bal.length; i < 50; i++) {
+    bal.push(Math.round(0.23e6 * Math.pow(0.6, (i - 11) / 38) / 100) * 100);
+    rec.push(0);
+    days.push(Math.max(1, 6 - Math.floor(i / 9)));
+  }
   return {
     total: 87,
     topN: 10,
-    rows: seedAddrs.map((addr, i) => ({
+    rows: seedAddrs.slice(0, 50).map((addr, i) => ({
       rank: i + 1,
       addr,
       inTop: i < 10,
@@ -301,8 +311,8 @@ const seedPond = (): { total: number; topN: number; rows: PondRow[] } => {
       padDays: days[i],
       received: String(rec[i]),
       nickname: ["Sterling Whitmore III", "", "trustfundtony", "", "", "Lady Penelope", "", "", "", "", "", ""][i] || "",
-      pp: [[1, 4, 3, 3], null, [2, 0, 2, 4], null, null, [4, 2, 4, 5], null, null, null, null, null, null][i],
-      x: [null, { username: "heirloomwhale", name: "Heirloom Whale", avatar: "/favicon-192.png", verified: "blue" }, null, null, { username: "margaux_ashford", name: "Margaux Ashford", avatar: "", verified: "" }, null, null, null, null, null, null, null][i],
+      pp: [[1, 4, 3, 3], null, [2, 0, 2, 4], null, null, [4, 2, 4, 5], null, null, null, null, null, null][i] ?? null,
+      x: [null, { username: "heirloomwhale", name: "Heirloom Whale", avatar: "/favicon-192.png", verified: "blue" }, null, null, { username: "margaux_ashford", name: "Margaux Ashford", avatar: "", verified: "" }, null, null, null, null, null, null, null][i] ?? null,
     })),
   };
 };
@@ -313,7 +323,7 @@ export const demoRounds = (): RoundRow[] =>
   Array.from({ length: 12 }, (_, k) => {
     const n = 36 - k;
     const kind = (["sink", "keeper", "feeding"] as const)[k % 3];
-    const claimed = kind === "keeper" ? 0.0207 : 0.0104 + (k % 4) * 0.0003;
+    const claimed = kind === "keeper" ? 0.0251 : kind === "feeding" ? 0.0201 + (k % 4) * 0.0002 : 0.0101 + (k % 4) * 0.0002;
     return {
       n,
       kind,

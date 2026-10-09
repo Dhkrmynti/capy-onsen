@@ -114,7 +114,7 @@ export function Blotter({ status }: { status: Status | null }) {
               </tbody>
             </table>
           ) : (
-            <p className="book__empty">Nothing entered yet. The first line is written when the escrow reaches {status?.cycle.steps[0].thresholdETH ?? "0.01"} ETH and the first inheritance is paid.</p>
+            <p className="book__empty">Nothing entered yet. The first line is written when the escrow reaches {status?.cycle.steps[0].thresholdETH ?? "0.02"} ETH and the first inheritance is paid.</p>
           )}
           {shown.length && all.length > shown.length ? (
             <button type="button" className="h-btn is-ink is-small book__more" onClick={() => setMore(true)}>

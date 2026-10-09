@@ -45,7 +45,7 @@ function useWalk() {
 export function App() {
   const { data: status, error } = usePoll<Status>("/api/status", 12000, demoStatus);
   const live = !!status?.tokenAddress;
-  const { data: pond } = usePoll<{ total: number; topN: number; rows: PondRow[] }>(live ? "/api/pond?limit=10" : null, 30000, demoPond);
+  const { data: pond } = usePoll<{ total: number; topN: number; rows: PondRow[] }>(live ? "/api/pond?limit=50" : null, 30000, demoPond);
   const walk = useWalk();
   const step = status ? status.cycle.steps[status.cycle.index] : null;
   const pct = live && step ? Math.min(1, parseFloat(status!.escrowETH) / Math.max(1e-9, parseFloat(step.thresholdETH))) : 0;
