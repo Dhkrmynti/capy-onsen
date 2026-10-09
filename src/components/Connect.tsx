@@ -16,7 +16,9 @@ export function ConnectButton({ className = "" }: { className?: string }) {
     if (account) return openCard(account);
     // Illustration edition: a real wallet only shares its address; without one, borrow an account card.
     if (DEMO && !hasWallet()) {
-      const a = demoPond().rows[1].addr;
+      // a card with no X link yet, so "Sign & connect X" is right there to try
+      const rows = demoPond().rows;
+      const a = (rows.find((r) => r.inTop && !r.x && !r.nickname) ?? rows[3]).addr;
       pretendAccount(a);
       return openCard(a);
     }
