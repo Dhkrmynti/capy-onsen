@@ -139,7 +139,7 @@ Full palette, committed at page scale: each viewport is owned by one field colou
 
 - Fixed header 68px (60px on phones), solid grape; the nav collapses under 1080px and the wordmark under 760px.
 - Content wrap `min(1240px, 100% - 2·gutter)`; sections pad `clamp(72px, 10vw, 128px)` vertically.
-- **Hero**: full-viewport violet field; a tilted 8×8 board fills the lower part; the 3D King stands on his orange throne square at the right; headline, readout pill and CTAs top-left; the chess clock top-right (bottom-left on phones).
+- **Hero**: full-viewport violet field; a tilted 8×8 board fills the lower part; the 3D King stands on his orange throne square at the right while a cream Rook slides down the rank and puts him in check; headline, readout pill and CTAs top-left; the chess clock top-right (a compact strip under the buttons on phones).
 - **Ladder**: King tile spanning two rows beside a 2×2 Court; Guard row of five; crowd of 40 on an 8-column grid (5 at 1080px, 2 on phones). Founder, Pending and Captured strips above. Refreshes every 3 seconds.
 - **Round**: pinned; a horizontal track of panels (intro, four moves, tally), each one field colour, separated by 8px ink gaps. Stacks vertically on phones.
 - **Rules**: lime field, five display lines ruled with 3px ink, the captured tray on an ink plate.
@@ -171,7 +171,8 @@ Flat colour with printed-token depth: every tile, button and clock sits on a har
 - **Round**: the section pins and the move track pans sideways with the scroll; on desktop the current move is marked by its full-opacity number.
 - **Ladder**: when ranks change, squares glide from their old positions (FLIP, 0.9s expo.out); a new No. 1 triggers the "New King!" shout.
 - Section entrances stagger once (tiles tip up from -50°, crowd squares pop with back.out). No bounce easing.
-- The 3D King is the only WebGL: toon-shaded with an ink outline, at most 30 fps, paused off screen and while the tab is hidden. Reduced motion stops the pins, the pans and the King's turn.
+- **Hero loop (7 s)**: the Rook slides in, the King's square turns red under a CHECK! stamp and the King shakes, the King hops clear, the Rook backs off.
+- The hero scene (King and Rook) is the only WebGL: toon-shaded with an ink outline, at most 30 fps, paused off screen and while the tab is hidden. Reduced motion stops the pins, the pans and the King's turn.
 
 ## Do's and Don'ts
 
@@ -186,4 +187,4 @@ Flat colour with printed-token depth: every tile, button and clock sits on a har
 - Don't use glass, blur, glows, gradient text or soft drop shadows.
 - Don't use Unicode chess glyphs or emoji as icons.
 - Don't add eyebrow labels above headings or section numbers.
-- Don't add a second 3D object; the King is the only one.
+- Don't add another 3D scene; the hero's King-and-Rook check is the only one.

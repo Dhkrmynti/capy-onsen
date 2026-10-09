@@ -2,7 +2,7 @@
  * The opening: the board in play, tilted toward you, the King turning on his square, the chess
  * clock running down to the next move. Scrolling lays the board flat and you walk onto the Ladder.
  */
-import { Suspense, lazy, useRef } from "react";
+import { Suspense, lazy, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -12,6 +12,7 @@ import { prefersReducedMotion } from "../lib/motion";
 import { BuyButton } from "../components/Bits";
 import { CrewFace } from "../components/Face";
 import { Clock } from "./Clock";
+import type { CheckPhase } from "./King3D";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -37,6 +38,8 @@ export function Hero({ status, pond, offline }: { status: Status | null; pond: P
   const lead = king && second ? parseFloat(king.balance) - parseFloat(second.balance) : 0;
   const who = king ? nameFor(king.addr, king.nickname, king.x) : null;
   const still = prefersReducedMotion();
+  // what the 3D scene is doing right now: the CHECK! stamp and the red square follow it
+  const [phase, setPhase] = useState<CheckPhase>(still ? "check" : "calm");
 
   useGSAP(
     () => {
@@ -80,13 +83,14 @@ export function Hero({ status, pond, offline }: { status: Status | null; pond: P
           ))}
         </div>
       </div>
-      <div className="hero__king" aria-hidden="true">
+      <div className={`hero__king is-${phase}`} aria-hidden="true">
         <span className="hero__throne" />
         {canWebGL() ? (
           <Suspense fallback={null}>
-            <King3D still={still} />
+            <King3D still={still} onPhase={setPhase} />
           </Suspense>
         ) : null}
+        <span className="hero__check">Check!</span>
       </div>
       <div className="hero__copy">
         <h1 className="hero__h">

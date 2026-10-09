@@ -1918,3 +1918,158 @@ button {
     gap: 6px 10px;
   }
 }
+
+/* ───────── hero: check by bomb ───────── */
+.hero__king {
+  right: 4%;
+  bottom: 4%;
+  width: min(50vw, 700px);
+  aspect-ratio: 1.3 / 1;
+}
+.hero__throne {
+  left: 66%;
+  width: 34%;
+}
+/* the square the bomb threatens from */
+.hero__danger {
+  position: absolute;
+  left: 28%;
+  bottom: 9%;
+  width: 26%;
+  aspect-ratio: 1;
+  translate: -50% 0;
+  transform: perspective(700px) rotateX(64deg);
+  transform-origin: 50% 100%;
+  border: 5px solid var(--ink);
+  border-radius: 6px;
+  background: var(--exile);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.hero__king.is-check .hero__danger {
+  opacity: 1;
+}
+.hero__check {
+  position: absolute;
+  z-index: 2;
+  left: 34%;
+  top: 6%;
+  padding: 8px 18px;
+  border: 4px solid var(--ink);
+  border-radius: 14px;
+  background: var(--exile);
+  color: var(--cream);
+  font: 400 clamp(26px, 3.2vw, 48px)/1 var(--display);
+  box-shadow: 0 6px 0 var(--ink);
+  rotate: -8deg;
+  scale: 0;
+  transition: scale 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.hero__king.is-check .hero__check {
+  scale: 1;
+  animation: check-pulse 0.5s ease-in-out infinite alternate;
+}
+@keyframes check-pulse {
+  to {
+    rotate: -4deg;
+  }
+}
+.hero__boom {
+  position: absolute;
+  z-index: 2;
+  left: 12%;
+  top: 22%;
+  width: 46%;
+  height: auto;
+  overflow: visible;
+  scale: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+.hero__king.is-boom .hero__boom {
+  animation: boom 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes boom {
+  0% {
+    scale: 0.2;
+    opacity: 1;
+    rotate: -20deg;
+  }
+  45% {
+    scale: 1.1;
+    opacity: 1;
+    rotate: 6deg;
+  }
+  100% {
+    scale: 1.25;
+    opacity: 0;
+    rotate: 10deg;
+  }
+}
+@media (max-width: 760px) {
+  .hero__king {
+    right: -8%;
+    bottom: 2%;
+    width: 92vw;
+  }
+  .hero__check {
+    left: 30%;
+    top: 4%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero__king.is-check .hero__check {
+    animation: none;
+  }
+}
+/* in check, the King's own square turns red */
+.hero__throne {
+  transition: background-color 0.2s ease;
+}
+.hero__king.is-check .hero__throne {
+  background: var(--exile);
+}
+.hero__danger {
+  display: none;
+}
+/* phones: the chess clock folds into a strip under the buttons, clear of the pieces */
+@media (max-width: 760px) {
+  .hero__clock {
+    top: calc(var(--head) + 296px);
+    bottom: auto;
+    left: var(--gutter);
+    right: auto;
+  }
+  .clock {
+    display: grid;
+    grid-template-columns: 52px auto;
+    grid-template-rows: auto auto;
+    column-gap: 10px;
+    align-items: center;
+    width: auto;
+    padding: 6px 14px 6px 8px;
+    border-radius: 14px;
+    text-align: left;
+  }
+  .clock__button {
+    display: none;
+  }
+  .clock__face {
+    grid-row: span 2;
+    width: 52px;
+  }
+  .clock__read {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    margin: 0;
+  }
+  .clock__read b {
+    display: inline;
+    font-size: 18px;
+  }
+  .clock__to {
+    margin: 0;
+    font-size: 12px;
+  }
+}
