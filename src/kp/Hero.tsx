@@ -1,45 +1,17 @@
 /**
- * The opening: the King's portrait in a printed frame, and a crown that drops onto it. When the
- * King changes the crown lifts off and drops onto the new one. Scrolling lays the board flat and
- * carries you onto the Ladder.
+ * The opening, over the cave: who sleeps on the biggest pile right now, and how full the escrow is
+ * on its way to the next Haul. The 3D cave behind does the rest.
  */
-import { Suspense, lazy, useRef } from "react";
+import { useRef } from "react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { DEFAULT_STEPS, compact, usd, type Pond, type Status } from "../lib/api";
+import { DEFAULT_STEPS, STEP, compact, usd, type Pond, type Status } from "../lib/api";
 import { nameFor } from "../lib/alias";
 import { prefersReducedMotion } from "../lib/motion";
 import { BuyButton } from "../components/Bits";
-import { CrewFace, XCheck, XLink } from "../components/Face";
-import { Clock } from "./Clock";
-import { Piece, type PieceKind } from "./Pieces";
+import { CrewFace } from "../components/Face";
 
-gsap.registerPlugin(ScrollTrigger, useGSAP);
-
-const Crown3D = lazy(() => import("./Crown3D"));
-const Board3D = lazy(() => import("./Board3D"));
-
-/** The opening position: back ranks and pawns for both sides, the light side nearest you. */
-const BACK: PieceKind[] = ["rook", "knight", "bishop", "queen", "king", "bishop", "knight", "rook"];
-const setup = (i: number): { kind: PieceKind; side: "dark" | "light" } | null => {
-  const row = Math.floor(i / 8);
-  const col = i % 8;
-  if (row === 0) return { kind: BACK[col], side: "dark" };
-  if (row === 1) return { kind: "pawn", side: "dark" };
-  if (row === 6) return { kind: "pawn", side: "light" };
-  if (row === 7) return { kind: BACK[col], side: "light" };
-  return null;
-};
-
-function canWebGL() {
-  try {
-    const c = document.createElement("canvas");
-    return !!(c.getContext("webgl2") || c.getContext("webgl"));
-  } catch {
-    return false;
-  }
-}
+gsap.registerPlugin(useGSAP);
 
 export function Hero({ status, pond, offline }: { status: Status | null; pond: Pond | null; offline: boolean }) {
   const root = useRef<HTMLElement>(null);
@@ -47,128 +19,66 @@ export function Hero({ status, pond, offline }: { status: Status | null; pond: P
   const steps = status?.cycle.steps ?? DEFAULT_STEPS;
   const next = status ? status.cycle.steps[status.cycle.index] ?? steps[0] : steps[0];
   const escrow = parseFloat(status?.escrowETH ?? "0");
-  const king = live ? pond?.rows[0] : undefined;
-  const second = live ? pond?.rows[1] : undefined;
-  const lead = king && second ? parseFloat(king.balance) - parseFloat(second.balance) : 0;
-  const who = king ? nameFor(king.addr, king.nickname, king.x) : null;
+  const target = parseFloat(next.thresholdETH);
+  const pct = target > 0 ? Math.min(1, escrow / target) : 0;
+  const top = live ? pond?.rows[0] : undefined;
+  const who = top ? nameFor(top.addr, top.nickname, top.x) : null;
   const px = status?.price?.tokenUSD ?? 0;
-  const still = prefersReducedMotion();
-  const gl = canWebGL();
-  // how far the hero has been scrolled (0→1): the 3D board's camera follows it to straight down
-  const progress = useRef(0);
 
   useGSAP(
     () => {
-      if (still) return;
+      if (prefersReducedMotion()) return;
       gsap
         .timeline({ defaults: { ease: "expo.out" } })
-        .from(gl ? ".board3dgl" : ".board3d", { y: 160, opacity: 0, duration: 1.4 })
-        .from(".hero__frame", { y: 80, rotate: 8, opacity: 0, duration: 1 }, "-=1")
-        .from(".hero__h .ln", { yPercent: 110, duration: 1, stagger: 0.08 }, "-=0.8")
-        .from(".hero__read, .hero__acts, .hero__clock", { y: 24, opacity: 0, duration: 0.8, stagger: 0.08 }, "-=0.6");
-      // scroll lays the board flat and carries you onto the Ladder
-      gsap
-        .timeline({
-          scrollTrigger: { trigger: root.current, start: "top top", end: "+=85%", scrub: 0.6, pin: true, anticipatePin: 1, refreshPriority: 2, onUpdate: (st) => (progress.current = st.progress) },
-        })
-        .to(".hero__copy", { y: -140, opacity: 0, ease: "power1.in" }, 0)
-        .to(gl ? ".board3dgl" : ".board3d", gl ? { scale: 1.12, ease: "none" } : { rotateX: 0, scale: 1.45, y: -40, ease: "none" }, 0)
-        .to(".hero__throne", { scale: 0.5, y: 120, rotate: -6, opacity: 0, ease: "power1.in" }, 0.1);
+        .from(".hero__h .ln", { yPercent: 110, duration: 1.1, stagger: 0.09, delay: 0.3 })
+        .from(".hero__panel > *:not(.hero__h)", { y: 22, opacity: 0, duration: 0.8, stagger: 0.07 }, "-=0.7");
     },
     { scope: root },
   );
 
-  const empty = !king || !who;
-  const lines: [string, string] = offline ? ["The board is", "offline."] : empty ? ["The throne", "is empty."] : ["The King is", `${who!.name}.`];
-
   return (
-    <section className="hero" id="top" ref={root} aria-label="Kingpins: who wears the crown">
-      {gl ? (
-        <div className="hero__board3d" aria-hidden="true">
-          <Suspense fallback={null}>
-            <Board3D progress={progress} still={still} />
-          </Suspense>
-        </div>
-      ) : (
-      <div className="hero__board" aria-hidden="true">
-        <div className="board3d">
-          {Array.from({ length: 64 }, (_, i) => {
-            const p = setup(i);
-            return (
-              <span key={i} className={`sq ${(Math.floor(i / 8) + i) % 2 ? "is-b" : "is-a"}`}>
-                {p ? (
-                  <span className="pc" style={{ animationDelay: `${-((i * 0.37) % 6).toFixed(2)}s` }}>
-                    <Piece kind={p.kind} tone={p.side === "dark" ? "ink" : p.kind === "king" ? "crown" : "cream"} size={64} className="pc__svg" />
-                  </span>
-                ) : null}
-              </span>
-            );
-          })}
-        </div>
-      </div>
-      )}
-
-      <div className="hero__copy">
+    <section className="hero stop" id="top" ref={root} aria-label="The Hoard">
+      <div className="hero__panel">
         <h1 className="hero__h">
           <span className="mask">
-            <span className="ln">{lines[0]}</span>
+            <span className="ln">Guard</span>
           </span>
           <span className="mask">
-            <span className={`ln is-crown ${!empty && who!.name.length > 16 ? "is-longer" : !empty && who!.name.length > 11 ? "is-long" : ""}`}>{lines[1]}</span>
+            <span className="ln is-gold">the hoard.</span>
           </span>
         </h1>
         <p className="hero__read" role="status">
-          {offline
-            ? "Back in a moment."
-            : !live
-              ? "Hold the most $KING and the crown is yours."
-              : empty
-                ? "Hold the most $KING and the crown is yours."
-                : `${compact(king!.balance)} $KING${px > 0 ? ` (${usd(parseFloat(king!.balance) * px)})` : ""}${second ? ` · +${compact(lead)} ahead of No. 2` : ""}`}
+          {offline ? (
+            "The cave is quiet for a moment."
+          ) : top && who ? (
+            <>
+              <CrewFace addr={top.addr} pp={top.pp} x={top.x} size={26} className="hero__face" />
+              <span>
+                <b>{who.name}</b> sleeps on the biggest pile · {compact(top.balance)} $HOARD{px > 0 ? ` (${usd(parseFloat(top.balance) * px)})` : ""}
+              </span>
+            </>
+          ) : (
+            "The ten biggest holders guard the gold. Every trade pays them in ETH."
+          )}
         </p>
-        <p className="hero__escrow tabular">
-          {live ? escrow.toFixed(4) : "0.0000"} / {next.thresholdETH} ETH to the next move
-        </p>
+        <div className="hero__meter" role="meter" aria-valuemin={0} aria-valuemax={target} aria-valuenow={escrow} aria-label={`Escrow toward ${STEP[next.kind].name}`}>
+          <span className="hero__meter-bar">
+            <i style={{ width: `${(live ? pct : 0) * 100}%` }} />
+          </span>
+          <span className="hero__meter-read tabular">
+            {live ? escrow.toFixed(4) : "0.0000"} / {next.thresholdETH} ETH to {STEP[next.kind].name.replace(/^The /, "the ")}
+          </span>
+        </div>
         <div className="hero__acts">
           <BuyButton status={status} />
           <a className="kp-btn is-ghost" href="#ladder">
-            See the Ladder
+            See the Keepers
           </a>
         </div>
       </div>
-
-      <div className="hero__throne" aria-hidden={empty}>
-        <div className="hero__crown">
-          {canWebGL() ? (
-            <Suspense fallback={null}>
-              <Crown3D still={still} dropKey={king?.addr ?? "empty"} empty={empty} />
-            </Suspense>
-          ) : null}
-        </div>
-        <figure className={`hero__frame ${empty ? "is-empty" : ""}`}>
-          {empty ? (
-            <Piece kind="king" tone="violet" size={150} className="hero__ghost" />
-          ) : (
-            <CrewFace addr={king!.addr} pp={king!.pp} x={king!.x} size={260} className="hero__portrait" />
-          )}
-          <figcaption className="hero__plate">
-            {empty ? (
-              <span>No. 1 · open</span>
-            ) : (
-              <>
-                {king!.x ? <XLink x={king!.x} className="hero__x" /> : null}
-                <span className="hero__plate-name">{who!.name}</span>
-                {king!.x ? <XCheck x={king!.x} /> : null}
-                <span className="hero__plate-sq tabular">No. 1 · e1</span>
-              </>
-            )}
-          </figcaption>
-        </figure>
-      </div>
-
-      <div className="hero__clock">
-        <Clock value={escrow} target={parseFloat(next.thresholdETH)} kind={next.kind} live={live} />
-      </div>
+      <a className="hero__cue" href="#ladder">
+        Walk into the cave ↓
+      </a>
     </section>
   );
 }

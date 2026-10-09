@@ -1,11 +1,11 @@
 /** The Record: every move the engine played, newest first, each with the transaction that proves it. */
 import { useState } from "react";
-import { ArrowUpRight, Crown, Fire, Vault } from "@phosphor-icons/react";
+import { ArrowUpRight, Coins, Fire, Archive } from "@phosphor-icons/react";
 import { amount, dateWib, demoRounds, eth, txUrl, usePoll, type RoundRow, type Status } from "../lib/api";
 import { useMedia } from "../components/Bits";
 
-const NAME: Record<RoundRow["kind"], string> = { feeding: "Tribute", keeper: "War Chest", sink: "Burn" };
-const ICON = { feeding: Crown, keeper: Vault, sink: Fire };
+const NAME: Record<RoundRow["kind"], string> = { feeding: "Haul", keeper: "Chest", sink: "Dragonfire" };
+const ICON = { feeding: Coins, keeper: Archive, sink: Fire };
 
 export function Record({ status }: { status: Status | null }) {
   const live = !!status?.tokenAddress;
@@ -17,20 +17,20 @@ export function Record({ status }: { status: Status | null }) {
   const t = status?.totals;
 
   return (
-    <section className="kp-section record" id="record" aria-labelledby="record-head">
-      <div className="kp-wrap">
+    <section className="stop" id="record" aria-labelledby="record-head">
+      <div className="panel panel--wide">
         <h2 className="kp-h2" id="record-head">
-          The Record.
+          The Chronicle.
         </h2>
         <p className="record__sum tabular">
           <span>
-            <b>{eth(t?.fedETH ?? "0")}</b> paid in Tribute
+            <b>{eth(t?.fedETH ?? "0")}</b> paid to the Keepers
           </span>
           <span>
-            <b>{eth(t?.keeperETH ?? "0")}</b> to the War Chest
+            <b>{eth(t?.keeperETH ?? "0")}</b> to the Chest
           </span>
           <span>
-            <b>{amount(t?.tokensBurned ?? "0")}</b> $KING burned
+            <b>{amount(t?.tokensBurned ?? "0")}</b> $HOARD burned
           </span>
         </p>
         {shown.length ? (
@@ -38,7 +38,7 @@ export function Record({ status }: { status: Status | null }) {
             {shown.map((r) => {
               const Icon = ICON[r.kind];
               const done = r.stage === "done";
-              const what = r.kind === "feeding" ? `paid to ${r.recipients || 10} on the board` : r.kind === "keeper" ? "to the treasury wallet" : done ? `${amount(r.tokensBurned)} $KING burned` : "buying back";
+              const what = r.kind === "feeding" ? `paid to ${r.recipients || 10} keepers` : r.kind === "keeper" ? "to the treasury wallet" : done ? `${amount(r.tokensBurned)} $HOARD burned` : "buying back";
               const value = r.kind === "feeding" && done ? r.fedETH : r.spentETH;
               const tx = r.kind === "feeding" ? r.claimTx : r.kind === "keeper" ? r.treasuryTx : r.burnTx || r.buyTx;
               return (

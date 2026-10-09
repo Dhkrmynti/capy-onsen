@@ -17,12 +17,12 @@ const VALID = /^0x[0-9a-fA-F]{40}$/;
 
 type Tone = "ok" | "wait" | "stop" | "dim";
 const STAMP: Record<WalletInfo["status"], { word: string; tone: Tone; line: string }> = {
-  sitting: { word: "On the board", tone: "ok", line: "You hold a square on the board." },
-  waiting: { word: "Pending", tone: "wait", line: "Your first $KING are still settling. A moment." },
-  "too-small": { word: "Spectator", tone: "wait", line: "Under 100,000 $KING. Step up to take a square." },
-  hopped: { word: "Captured", tone: "stop", line: "This wallet sold. Captured, for good." },
-  excluded: { word: "Off board", tone: "dim", line: "Engine, curve, war chest or dead address. Never paid." },
-  "not-holding": { word: "No piece", tone: "dim", line: "This wallet holds no $KING." },
+  sitting: { word: "Keeper", tone: "ok", line: "You stand watch over the hoard." },
+  waiting: { word: "Pending", tone: "wait", line: "Your first $HOARD are still settling. A moment." },
+  "too-small": { word: "Scavenger", tone: "wait", line: "Under 100,000 $HOARD. Hold more to stand watch." },
+  hopped: { word: "Burned", tone: "stop", line: "This wallet sold. Burned by the dragon, for good." },
+  excluded: { word: "Not a keeper", tone: "dim", line: "Engine, curve, chest or dead address. Never paid." },
+  "not-holding": { word: "No gold", tone: "dim", line: "This wallet holds no $HOARD." },
 };
 
 /** What X sign-in came back with (?x=…), read once and then cleared from the address bar. */
@@ -216,7 +216,7 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
 
   return (
     <div className="byline">
-      <p className="byline__head">Your piece</p>
+      <p className="byline__head">Your mark</p>
       {!mine ? (
         <>
           <button type="button" className="press-btn is-ink" onClick={connect} disabled={busy}>
@@ -352,7 +352,7 @@ export function CrewCard({ live }: { live: boolean }) {
       url.searchParams.set("w", addr);
       window.history.replaceState(null, "", url);
     } catch (e: any) {
-      setError(e?.message === "Not Found" || !live ? "The board isn't open yet: nothing to check." : "Couldn't reach the engine. Try again in a moment.");
+      setError(e?.message === "Not Found" || !live ? "The cave isn't open yet: nothing to check." : "Couldn't reach the engine. Try again in a moment.");
     } finally {
       setBusy(false);
     }
@@ -421,22 +421,22 @@ export function CrewCard({ live }: { live: boolean }) {
     } catch {}
   };
 
-  const base = info ? (info.house ? { word: "Founder", tone: "ok" as Tone, line: "The founder's wallet. On the board, never ranked, never paid." } : STAMP[info.status]) : null;
+  const base = info ? (info.house ? { word: "Founder", tone: "ok" as Tone, line: "The founder's wallet. Keeps watch, never ranked, never paid." } : STAMP[info.status]) : null;
   // Crew outside the top N gets no cut yet: say how far it has to climb.
   const stamp =
     info && base && info.status === "sitting" && !info.inTop
-      ? { ...base, tone: "wait" as const, line: `Square #${info.rank}. Only the top ${info.topN} share the Tribute: climb ${info.rank! - info.topN} more.` }
+      ? { ...base, tone: "wait" as const, line: `No. ${info.rank}. Only the top ${info.topN} share the Haul: climb ${info.rank! - info.topN} more.` }
       : info && base && info.status === "sitting"
-        ? { ...base, word: info.rank === 1 ? "The King" : base.word, line: info.rank === 1 ? "You hold the crown. The biggest cut of the next Tribute is yours." : `Top ${info.topN}. You share the next Tribute.` }
+        ? { ...base, word: info.rank === 1 ? "The Dragon" : base.word, line: info.rank === 1 ? "You sleep on the biggest pile. The biggest cut of the next Haul is yours." : `Top ${info.topN}. You share the next Haul.` }
         : base;
 
   return (
-    <section className="kp-section seat" id="card" ref={root} aria-labelledby="card-head">
-      <div className="kp-wrap">
+    <section className="stop seat" id="card" ref={root} aria-labelledby="card-head">
+      <div className="panel panel--wide">
       <div className="cardpage__grid">
         <div className="cardpage__ask">
           <h2 className="kp-h2" id="card-head">
-            Your seat.
+            Your hoard.
           </h2>
           <form className="lookup" onSubmit={submit} noValidate>
             <label htmlFor="wallet">Wallet address</label>
@@ -466,8 +466,8 @@ export function CrewCard({ live }: { live: boolean }) {
           {info && stamp ? (
             <article className={`card is-${stamp.tone}`}>
               <header className="card__top">
-                <span className="card__org"><Mark size={24} /> Kingpins</span>
-                <span className="card__kind">Seat card</span>
+                <span className="card__org"><Mark size={24} /> The Hoard</span>
+                <span className="card__kind">Keeper card</span>
               </header>
               <div className="card__body">
                 <div className="card__mug" aria-hidden="true">
@@ -510,7 +510,7 @@ export function CrewCard({ live }: { live: boolean }) {
                       <dd className="tabular">{eth(info.received)}</dd>
                     </div>
                     <div>
-                      <dt>{info.status === "sitting" && info.inTop ? "Next Tribute, est." : info.status === "hopped" ? "Captured" : "Square"}</dt>
+                      <dt>{info.status === "sitting" && info.inTop ? "Next Haul, est." : info.status === "hopped" ? "Burned" : "Rank"}</dt>
                       <dd className="tabular">
                         {info.status === "sitting" && info.inTop ? (
                           eth(info.estNext)
@@ -545,10 +545,10 @@ export function CrewCard({ live }: { live: boolean }) {
           ) : (
             <div className="card is-blank" aria-hidden="true">
               <header className="card__top">
-                <span className="card__org"><Mark size={24} /> Kingpins</span>
-                <span className="card__kind">Seat card</span>
+                <span className="card__org"><Mark size={24} /> The Hoard</span>
+                <span className="card__kind">Keeper card</span>
               </header>
-              <p className="card__blank">Your seat card appears here.</p>
+              <p className="card__blank">Your keeper card appears here.</p>
             </div>
           )}
           {info && info.status !== "not-holding" && (info.status !== "excluded" || info.house) ? (
@@ -557,8 +557,8 @@ export function CrewCard({ live }: { live: boolean }) {
             // Say why the booth is shut instead of leaving a connected holder guessing.
             <p className="byline__shut">
               {live
-                ? "Names, portraits and X links are for wallets holding $KING. Buy in, then come back."
-                : "Opens at launch: once $KING trades, any holder can set a name, a portrait or link X here."}
+                ? "Names, portraits and X links are for wallets holding $HOARD. Buy in, then come back."
+                : "Opens at launch: once $HOARD trades, any holder can set a name, a portrait or link X here."}
             </p>
           ) : null}
         </div>

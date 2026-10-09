@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { Suspense, lazy, useEffect, useMemo, useState } from "react";
 import Lenis from "lenis";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -13,6 +13,27 @@ import { Round } from "./kp/Round";
 import { Rules } from "./kp/Rules";
 import { Record } from "./kp/Record";
 import { Close } from "./kp/Close";
+import { nameFor } from "./lib/alias";
+
+// The cave loads after the page, so the first paint never waits for it.
+const HoardWalk = lazy(() => import("./kp/HoardWalk"));
+
+function useWalk() {
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    try {
+      const c = document.createElement("canvas");
+      if (!(c.getContext("webgl2") || c.getContext("webgl"))) return;
+    } catch {
+      return;
+    }
+    const w = window as unknown as { requestIdleCallback?: (f: () => void) => number };
+    const go = () => setShow(true);
+    if (w.requestIdleCallback) w.requestIdleCallback(go);
+    else setTimeout(go, 300);
+  }, []);
+  return show;
+}
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -21,6 +42,9 @@ export function App() {
   const live = !!status?.tokenAddress;
   // the Ladder is live: a new buyer is on the board within a few seconds
   const { data: pond } = usePoll<Pond>(live ? "/api/pond?limit=50" : null, 3000, demoPond);
+
+  const walk = useWalk();
+  const names = useMemo(() => (pond?.rows ?? []).slice(0, 10).map((r) => nameFor(r.addr, r.nickname, r.x).name), [pond]);
 
   // A wallet that already trusts this site shows as connected without a popup.
   useEffect(restoreWallet, []);
@@ -36,7 +60,7 @@ export function App() {
     };
     document.fonts?.ready.then(again);
     window.addEventListener("load", again);
-    const watched = ["ladder", "rules", "card", "record"].map((id) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
+    const watched = ["ladder", "round", "rules", "card", "record"].map((id) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
     const heights = new Map<Element, number>();
     const ro = new ResizeObserver((entries) => {
       for (const e of entries) {
@@ -82,6 +106,14 @@ export function App() {
 
   return (
     <div className="kp">
+      {/* the cave, fixed behind every section; the page scrolls through it */}
+      <div className="walk" aria-hidden="true">
+        {walk ? (
+          <Suspense fallback={null}>
+            <HoardWalk names={names} still={prefersReducedMotion()} />
+          </Suspense>
+        ) : null}
+      </div>
       <Header status={status} />
       <main>
         <Hero status={status} pond={pond} offline={!!error && !status} />

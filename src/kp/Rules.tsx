@@ -1,4 +1,4 @@
-/** The rules of the board, five lines on one colour, each one a move you can make or lose. */
+/** The Law of the Hoard: four lines, and the count of the burned. */
 import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -12,48 +12,39 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 export function Rules({ status }: { status: Status | null }) {
   const root = useRef<HTMLElement>(null);
   const min = amount(status?.rules.minBalance ?? "100000");
-  const closed = status?.tokenAddress ? status.counts.hopped : 0;
-
+  const burned = status?.tokenAddress ? status.counts.hopped : 0;
   useGSAP(
     () => {
       if (prefersReducedMotion()) return;
-      gsap.from(".rule", { xPercent: -8, opacity: 0, duration: 0.9, ease: "expo.out", stagger: 0.09, scrollTrigger: { trigger: ".rules__list", start: "top 78%" } });
-      gsap.from(".rules__tray .piece", { rotate: 0, y: -18, opacity: 0, duration: 0.7, ease: "expo.out", stagger: 0.05, scrollTrigger: { trigger: ".rules__tray", start: "top 90%" } });
+      gsap.from(".rule", { y: 24, opacity: 0, duration: 0.8, ease: "expo.out", stagger: 0.08, scrollTrigger: { trigger: ".rules__list", start: "top 80%" } });
     },
     { scope: root },
   );
-
   const rules: [string, string][] = [
-    [`${min} $KING`, "puts you on the board."],
-    ["Most $KING", "wears the crown."],
-    ["Top 10", "split every Tribute."],
-    ["One sale", "and you're captured. For good."],
-    ["Founder", "is on the board, never paid."],
+    [`${min} $HOARD`, "lets you stand watch."],
+    ["The biggest pile", "belongs to the dragon."],
+    ["The top ten", "split every Haul."],
+    ["One sale", "and you're burned. For good."],
   ];
-
   return (
-    <section className="kp-section rules" id="rules" ref={root} aria-labelledby="rules-head">
-      <div className="kp-wrap">
-        <h2 className="kp-h2 is-huge" id="rules-head">
-          Rules of the board.
+    <section className="stop" id="rules" ref={root} aria-labelledby="rules-head">
+      <div className="panel panel--left">
+        <h2 className="kp-h2" id="rules-head">
+          The Law of the Hoard.
         </h2>
         <ol className="rules__list">
           {rules.map(([k, v]) => (
             <li key={k} className="rule">
-              <b>{k}</b> <span>{v}</span>
+              <b>{k}</b> {v}
             </li>
           ))}
         </ol>
-        <div className="rules__tray" aria-label={`${closed} wallets captured for selling`}>
-          <div className="rules__pieces" aria-hidden="true">
-            {Array.from({ length: Math.min(12, Math.max(3, closed)) }, (_, i) => (
-              <Piece key={i} kind={(["pawn", "rook", "pawn", "knight", "pawn", "bishop", "pawn", "queen"] as const)[i % 8]} tone="cream" size={50} lying />
-            ))}
-          </div>
-          <p>
-            <b className="tabular">{closed}</b> captured so far. Moving between your own wallets is not a sale.
-          </p>
-        </div>
+        <p className="rules__burned">
+          <Piece kind="pawn" lying size={30} />
+          <span>
+            <b className="tabular">{burned}</b> burned so far. Moving between your own wallets is not a sale.
+          </span>
+        </p>
       </div>
     </section>
   );

@@ -31,10 +31,6 @@ function Who({ addr, nickname, pp, x, size = 28 }: { addr: string; nickname?: st
   );
 }
 
-/** The square a rank stands on, in board notation: the King on e1, the Court on the back rank, the Guard on rank 2, the crowd from a3. */
-const SQUARES = ["e1", "d1", "a1", "c1", "b1", "a2", "b2", "c2", "d2", "e2"];
-const squareOf = (rank: number) => (rank <= 10 ? SQUARES[rank - 1] : `${"abcdefgh"[(rank - 11) % 8]}${3 + Math.floor((rank - 11) / 8)}`);
-
 export function Ladder({ status, pond }: { status: Status | null; pond: Pond | null }) {
   const root = useRef<HTMLElement>(null);
   const live = !!status?.tokenAddress;
@@ -91,13 +87,12 @@ export function Ladder({ status, pond }: { status: Status | null; pond: Pond | n
 
   const tile = (r: PondRow | undefined, rank: number) => {
     const kind = pieceFor(rank);
-    const tone = rank === 1 ? "crown" : rank <= 5 ? "cream" : "cream";
     return (
       <div key={r?.addr ?? `open-${rank}`} data-key={r?.addr} className={`tile ${rank === 1 ? "is-king" : rank <= 5 ? "is-court" : "is-guard"} ${r ? "" : "is-open"}`}>
-        <Piece kind={kind} tone={tone === "crown" ? "cream" : tone} size={rank === 1 ? 190 : 48} className="tile__piece" />
+        <Piece kind={kind} size={rank === 1 ? 170 : 48} className="tile__piece" />
         <span className="tile__rank tabular">
           {rank}
-          <i className="tile__sq">{squareOf(rank)}</i>
+          
         </span>
         {r ? (
           <>
@@ -112,8 +107,8 @@ export function Ladder({ status, pond }: { status: Status | null; pond: Pond | n
           </>
         ) : (
           <>
-            <span className="tile__open">Open square</span>
-            <span className="tile__sub">{rank === 1 ? "the crown is free" : "take it"}</span>
+            <span className="tile__open">Empty spot</span>
+            <span className="tile__sub">{rank === 1 ? "the dragon's pile is free" : "claim it"}</span>
           </>
         )}
       </div>
@@ -121,15 +116,15 @@ export function Ladder({ status, pond }: { status: Status | null; pond: Pond | n
   };
 
   return (
-    <section className="kp-section ladder" id="ladder" ref={root} aria-labelledby="ladder-head">
-      <div className="kp-wrap">
+    <section className="stop ladder" id="ladder" ref={root} aria-labelledby="ladder-head">
+      <div className="panel panel--wide">
         <div className="ladder__head">
           <h2 className="kp-h2" id="ladder-head">
-            The Ladder.
+            The Keepers.
           </h2>
           <p className="ladder__facts tabular">
-            {live ? `${(pond?.total ?? 0).toLocaleString("en-US")} on the board` : "Opens at launch"}
-            {px > 0 ? ` · 1 $KING ≈ $${px < 0.01 ? px.toPrecision(3) : px.toFixed(4)}` : ""}
+            {live ? `${(pond?.total ?? 0).toLocaleString("en-US")} keepers in the cave` : "Opens at launch"}
+            {px > 0 ? ` · 1 $HOARD ≈ $${px < 0.01 ? px.toPrecision(3) : px.toFixed(4)}` : ""}
           </p>
         </div>
 
@@ -158,11 +153,11 @@ export function Ladder({ status, pond }: { status: Status | null; pond: Pond | n
             ) : null}
             {pond?.out?.length ? (
               <div className="strip is-captured">
-                <span className="strip__tag">Captured</span>
+                <span className="strip__tag">Burned</span>
                 <span className="strip__list">
                   {pond.out.map((w) => (
                     <span key={w.addr} className="captured">
-                      <Piece kind="pawn" tone="cream" size={22} lying />
+                      <Piece kind="pawn" size={22} lying />
                       <span className="captured__name">{nameFor(w.addr, w.nickname, w.x).name}</span>
                     </span>
                   ))}
@@ -173,14 +168,14 @@ export function Ladder({ status, pond }: { status: Status | null; pond: Pond | n
         ) : null}
 
         <div className="board">
-          <div className="court" aria-label={`The Court: No. 1–5 share ${tiers[0]?.eth ?? "0.014"} ETH of every Tribute`}>
+          <div className="court" aria-label={`The inner hoard: No. 1–5 share ${tiers[0]?.eth ?? "0.014"} ETH of every Haul`}>
             {court.map((r, i) => tile(r, i + 1))}
           </div>
-          <div className="guard" aria-label={`The Guard: No. 6–10 share ${tiers[1]?.eth ?? "0.006"} ETH of every Tribute`}>
+          <div className="guard" aria-label={`The outer hoard: No. 6–10 share ${tiers[1]?.eth ?? "0.006"} ETH of every Haul`}>
             {guard.map((r, i) => tile(r, i + 6))}
           </div>
           <p className="board__line tabular">
-            <Crown weight="fill" aria-hidden="true" /> No. 1–5 share {tiers[0]?.eth ?? "0.014"} ETH · No. 6–10 share {tiers[1]?.eth ?? "0.006"} ETH · of every {tribute} ETH Tribute
+            <Crown weight="fill" aria-hidden="true" /> No. 1–5 share {tiers[0]?.eth ?? "0.014"} ETH · No. 6–10 share {tiers[1]?.eth ?? "0.006"} ETH · of every {tribute} ETH Haul
           </p>
           {crowd.length ? (
             <ol className="crowd" start={11}>
@@ -189,11 +184,11 @@ export function Ladder({ status, pond }: { status: Status | null; pond: Pond | n
                 return (
                   <li key={r.addr} data-key={r.addr} className="crowd__sq">
                     <span className="crowd__rank tabular">
-                      {r.rank} <i>{squareOf(r.rank)}</i>
+                      {r.rank}
                     </span>
                     <Who addr={r.addr} nickname={r.nickname} pp={r.pp} x={r.x} size={18} />
                     <span className="crowd__sub tabular">
-                      {compact(r.balance)} · {gap > 0 ? `+${compact(gap + 1)}` : "at the line"}
+                      {compact(r.balance)} · {gap > 0 ? `+${compact(gap + 1)} to the ten` : "at the line"}
                     </span>
                   </li>
                 );
@@ -203,7 +198,7 @@ export function Ladder({ status, pond }: { status: Status | null; pond: Pond | n
         </div>
         {shout ? (
           <p className="shout" aria-live="polite">
-            New King!
+            New Dragon!
           </p>
         ) : null}
       </div>

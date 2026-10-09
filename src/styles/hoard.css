@@ -1,0 +1,471 @@
+/*
+ * The Hoard: a dragon's cave walked by scrolling. Basalt and ember, gold for the hoard, jade for
+ * the dragon. Panels are slabs of dark stone with a gold edge, set over the 3D cave.
+ */
+
+:root {
+  --grape-0: #140c14;
+  --grape-1: #201420;
+  --grape-2: #3a2433;
+  --ink: #1a0f0d;
+  --edge: #6b4a3a;
+  --lime: #ffc83d; /* gold */
+  --lime-deep: #d9a21e;
+  --violet: #1f8f55; /* jade */
+  --violet-deep: #146b3f;
+  --violet-soft: #8fe3b6;
+  --crown: #ff6a1f; /* ember */
+  --cream: #f3e9d2;
+  --cream-2: #cdbfa5;
+  --exile: #e2341d;
+  --exile-ink: #a3200f;
+  --display: "Grenze Gotisch", "Georgia", serif;
+  --body: "Manrope", system-ui, sans-serif;
+  --base: 0 6px 0 #07030f;
+  --base-deep: 0 6px 0 #07030f;
+}
+
+body {
+  background: var(--grape-0);
+}
+
+/* the cave behind everything */
+.walk {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 70%, #3a1d14 0%, #140c14 70%);
+}
+.walk__canvas,
+.walk canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+.kp main,
+.kp > footer {
+  position: relative;
+  z-index: 1;
+}
+
+/* every section is a stop on the walk: tall, so the camera has room to move between them */
+.stop {
+  position: relative;
+  min-height: 150svh;
+  padding: calc(var(--head) + 6vh) var(--gutter) 10vh;
+  background: none !important;
+}
+.hero.stop {
+  height: auto;
+  min-height: 130svh;
+  overflow: visible;
+}
+.stop--close {
+  min-height: 120svh;
+  padding-bottom: 60px;
+}
+
+/* the panel: a slab of dark stone with a gold edge */
+.panel {
+  position: sticky;
+  top: calc(var(--head) + 3vh);
+  width: min(560px, 100%);
+  padding: clamp(20px, 3vh, 32px) clamp(20px, 2.4vw, 32px);
+  border: 2px solid rgba(255, 200, 61, 0.55);
+  border-radius: 14px;
+  background: rgba(20, 12, 20, 0.86);
+  box-shadow:
+    0 24px 60px -20px rgba(0, 0, 0, 0.9),
+    inset 0 1px 0 rgba(255, 220, 140, 0.15);
+  color: var(--cream);
+}
+.panel--right {
+  margin-left: auto;
+}
+.panel--wide {
+  width: min(1180px, 100%);
+  margin-inline: auto;
+}
+.panel--close {
+  margin-inline: auto;
+  text-align: center;
+}
+.panel__deck {
+  margin: 10px 0 0;
+  font: 600 16px/1.45 var(--body);
+  color: var(--cream-2);
+}
+.kp-h2 {
+  font-family: var(--display);
+  font-weight: 800;
+  letter-spacing: 0;
+  color: var(--cream);
+  text-shadow: 0 3px 0 #000;
+}
+
+/* header */
+.kp-head {
+  background: rgba(20, 12, 20, 0.92);
+  border-bottom: 1px solid rgba(255, 200, 61, 0.35);
+}
+.kp-head__word {
+  font: 800 24px/1 var(--display);
+  letter-spacing: 0.06em;
+  color: var(--lime);
+}
+
+/* buttons */
+.press-btn {
+  background: var(--crown);
+  color: var(--ink);
+  border-color: var(--ink);
+  font-family: var(--body);
+}
+.press-btn.is-waiting {
+  background: var(--grape-2);
+  color: var(--cream-2);
+}
+.kp-btn.is-ghost {
+  border-color: var(--lime);
+  color: var(--lime);
+}
+.kp-btn.is-ghost:hover {
+  background: var(--lime);
+  color: var(--ink);
+}
+
+/* ───────── hero ───────── */
+.hero__panel {
+  position: sticky;
+  top: calc(var(--head) + 6vh);
+  width: min(520px, 100%);
+  padding: 28px 30px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(20, 12, 20, 0.72), rgba(20, 12, 20, 0.88));
+  border: 2px solid rgba(255, 200, 61, 0.5);
+  box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.9);
+}
+.hero__h {
+  margin: 0;
+  font: 800 clamp(54px, 7vw, 92px) / 0.9 var(--display);
+  color: var(--cream);
+  text-shadow: 0 4px 0 #000;
+}
+.hero__h .is-gold,
+.close__h .is-gold {
+  color: var(--lime);
+}
+.hero__read {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 18px 0 0;
+  font: 600 16px/1.4 var(--body);
+  color: var(--cream);
+}
+.hero__read b {
+  color: var(--lime);
+}
+.hero__face {
+  flex: none;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--lime);
+}
+.hero__meter {
+  margin-top: 18px;
+}
+.hero__meter-bar {
+  display: block;
+  height: 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 200, 61, 0.45);
+  overflow: hidden;
+}
+.hero__meter-bar i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--exile), var(--crown), var(--lime));
+  transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.hero__meter-read {
+  display: block;
+  margin-top: 8px;
+  font: 600 12px/1.3 var(--mono);
+  color: var(--cream-2);
+}
+.hero__acts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+.hero__cue {
+  position: absolute;
+  left: 50%;
+  top: calc(100svh - 70px);
+  translate: -50% 0;
+  font: 700 14px/1 var(--body);
+  color: var(--lime);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  animation: cue 1.8s ease-in-out infinite;
+}
+@keyframes cue {
+  50% {
+    translate: -50% 6px;
+  }
+}
+
+/* ───────── keepers (ladder) ───────── */
+.ladder .panel {
+  position: relative;
+  top: auto;
+}
+.tile {
+  border-color: var(--ink);
+}
+.court .tile.is-king {
+  background: linear-gradient(160deg, #ff8a3d, #e2341d);
+  color: var(--ink);
+}
+.court .tile:not(.is-king):nth-child(even),
+.guard .tile:nth-child(odd) {
+  background: var(--violet);
+  color: var(--cream);
+}
+.court .tile:not(.is-king):nth-child(odd),
+.guard .tile:nth-child(even) {
+  background: var(--lime);
+  color: var(--ink);
+}
+.tile__rank {
+  font-family: var(--display);
+  font-weight: 800;
+}
+.tile__open {
+  font-family: var(--display);
+}
+.crowd__sq,
+.strip,
+.mv {
+  background: rgba(32, 20, 32, 0.9);
+  border-color: var(--edge);
+}
+.crowd__sq:nth-child(16n + 2),
+.crowd__sq:nth-child(16n + 4),
+.crowd__sq:nth-child(16n + 6),
+.crowd__sq:nth-child(16n + 8),
+.crowd__sq:nth-child(16n + 9),
+.crowd__sq:nth-child(16n + 11),
+.crowd__sq:nth-child(16n + 13),
+.crowd__sq:nth-child(16n + 15) {
+  background: rgba(58, 36, 51, 0.9);
+}
+.shout {
+  font-family: var(--display);
+  color: var(--crown);
+}
+
+/* ───────── the haul (four moves) ───────── */
+.moves {
+  display: grid;
+  gap: 8px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+  width: auto;
+  height: auto;
+  background: none;
+}
+.move {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  grid-template-areas:
+    "icon name eth"
+    "icon line line";
+  gap: 2px 12px;
+  align-items: center;
+  width: auto;
+  height: auto;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--edge);
+  background: rgba(32, 20, 32, 0.9);
+  overflow: visible;
+}
+.move.is-now {
+  border-color: var(--lime);
+  box-shadow: 0 0 0 2px rgba(255, 200, 61, 0.35);
+}
+.move__icon {
+  grid-area: icon;
+  width: 30px;
+  height: 30px;
+  margin: 0;
+  filter: none;
+}
+.move.is-haul .move__icon {
+  color: var(--lime);
+}
+.move.is-chest .move__icon {
+  color: var(--violet-soft);
+}
+.move.is-fire .move__icon {
+  color: var(--crown);
+}
+.move__name {
+  grid-area: name;
+  font: 800 22px/1.1 var(--display);
+}
+.move__eth {
+  grid-area: eth;
+  font: 600 14px/1 var(--mono);
+  color: var(--lime);
+}
+.move__line {
+  grid-area: line;
+  font: 500 14px/1.4 var(--body);
+  color: var(--cream-2);
+}
+.tally {
+  height: 46px;
+  margin-top: 14px;
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+}
+.tally__part.is-haul {
+  background: var(--lime);
+  color: var(--ink);
+}
+.tally__part.is-chest {
+  background: var(--violet);
+  color: var(--cream);
+}
+.tally__part.is-fire {
+  background: var(--crown);
+  color: var(--ink);
+}
+
+/* ───────── the law ───────── */
+.rules__list {
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.rule {
+  padding: 10px 0;
+  border-top: 1px solid rgba(255, 200, 61, 0.3);
+  font: 600 clamp(20px, 2vw, 26px) / 1.2 var(--display);
+  color: var(--cream);
+}
+.rule b {
+  color: var(--lime);
+  font-weight: 800;
+}
+.rules__burned {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0 0;
+  font: 600 14px/1.4 var(--body);
+  color: var(--cream-2);
+}
+.rules__burned b {
+  color: var(--exile);
+  font: 600 18px/1 var(--mono);
+}
+
+/* ───────── your hoard, chronicle ───────── */
+.seat .panel,
+#record .panel {
+  position: relative;
+  top: auto;
+}
+.card {
+  background: linear-gradient(160deg, #1f8f55, #146b3f);
+}
+.card__stamp {
+  background: var(--lime);
+}
+.record__sum b {
+  font-family: var(--display);
+  color: var(--lime);
+}
+.mv__what b {
+  font-family: var(--display);
+  font-size: 18px;
+}
+
+/* ───────── close ───────── */
+.stop--close .panel {
+  top: 30vh;
+}
+.close__h {
+  margin: 0;
+  font: 800 clamp(48px, 7vw, 88px) / 0.92 var(--display);
+  color: var(--cream);
+  text-shadow: 0 4px 0 #000;
+}
+.close__acts {
+  justify-content: center;
+}
+.close__links {
+  justify-content: center;
+  border-top-color: rgba(255, 200, 61, 0.35);
+  color: var(--cream);
+}
+.close .press-btn,
+.stop--close .press-btn {
+  background: var(--crown);
+}
+.close__sig {
+  justify-content: center;
+  color: var(--cream-2);
+}
+
+@media (max-width: 760px) {
+  .stop {
+    min-height: 140svh;
+    padding: calc(var(--head) + 2vh) var(--gutter) 8vh;
+  }
+  .panel,
+  .hero__panel {
+    top: auto;
+    position: relative;
+    margin-top: 46svh;
+  }
+  .hero__panel {
+    margin-top: 40svh;
+  }
+  .ladder .panel,
+  .seat .panel,
+  #record .panel {
+    margin-top: 30svh;
+  }
+  .hero__h {
+    font-size: clamp(46px, 13vw, 64px);
+  }
+  .hero__cue {
+    display: none;
+  }
+}
+
+/* the haul rows are compact cards, not the old full-screen pan panels */
+#round .moves .move {
+  width: auto;
+  height: auto;
+  min-height: 0;
+  padding: 10px 14px;
+  background: rgba(32, 20, 32, 0.9);
+  color: var(--cream);
+  overflow: visible;
+}
+#round .move__name {
+  font-size: 22px;
+}
+#round .tally {
+  flex-direction: row;
+  height: 46px;
+}
