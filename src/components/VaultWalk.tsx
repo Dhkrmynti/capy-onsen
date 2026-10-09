@@ -35,6 +35,12 @@ const BOX_DY = 1.05;
 const TEN_ROW = 3; // eye level: the Preferred Ten live here
 const MY_BOX = { col: 5, row: 2 };
 const PED_Z = -9;
+// the three pedestals, stepping away down the right side: dividend, reserve, retired notes
+const PEDS: [number, number][] = [
+  [X0 + 2.4, PED_Z + 0.9],
+  [X0 + 0.4, PED_Z - 1.2],
+  [X0 + 3.4, PED_Z - 2.6],
+];
 const DESK_Z = -40;
 
 const ANCHORS = ["top", "payout", "rules", "register", "card", "blotter", "closing"] as const;
@@ -52,10 +58,10 @@ function stations(narrow: boolean): Station[] {
   return [
     { pos: [X0 - 3.4 * side, 0.2, 10.5 + 2.5 * (1 - side)], look: [X0 - 1.2 * side, 0, 0] }, // the sealed door
     { pos: [X0, 0.3, 2.4], look: [X0, -0.2, -6] }, // through the doorway
-    { pos: [X0 - 1.0 * side, 0.5, -3.4], look: [X0 + 1.0 * side, -1.15, PED_Z] }, // the three pedestals
+    { pos: [X0 - 2.4 * side + 0.6 * (1 - side), 0.7, -2.6], look: [X0 + 0.3 + 1.6 * (1 - side), -1.0, PED_Z - 0.6] }, // the three pedestals
     { pos: [X0 + 1.6 * side, 0.3, -12.5], look: [X0 - W, 0.3, -16.5] }, // the conditions plate
     { pos: [X0 - 2.4 * side, 0.2, -23.5], look: [X0 + W, 0, -26.5] }, // the deposit-box wall
-    { pos: [X0 + 0.4 * side, 0.55, my.z + 1.9], look: [my.x - 2.3, my.y - 0.35, my.z] }, // your box, drawn out
+    { pos: [X0 - 1.8 * side, 0.75, my.z + 2.8 - 0.6 * (1 - side)], look: [my.x - 2.2 + 0.4 * side, my.y - 0.45, my.z - 0.4] }, // your box, drawn out
     { pos: [X0, 1.6, DESK_Z + 5.2], look: [X0, -0.8, DESK_Z] }, // the teller's desk
     { pos: [X0 + 0.7, 0.35, -5.6], look: [X0, 0, 0] }, // turned round: the door shuts behind you
   ];
@@ -296,6 +302,122 @@ function gaugeFace() {
   );
 }
 
+/** A banknote with its edges charring: ivory centre, brown-black rim. */
+function burntNote() {
+  return canvas(
+    256,
+    128,
+    (g) => {
+      g.fillStyle = "#e3d8b8";
+      g.fillRect(0, 0, 256, 128);
+      g.strokeStyle = "rgba(36,66,122,0.6)";
+      g.lineWidth = 3;
+      g.strokeRect(14, 14, 228, 100);
+      g.fillStyle = "rgba(36,66,122,0.55)";
+      g.font = '700 30px "Cinzel", Georgia, serif';
+      g.textAlign = "center";
+      g.fillText("OM", 128, 76);
+      const grd = g.createRadialGradient(128, 64, 30, 128, 64, 150);
+      grd.addColorStop(0, "rgba(0,0,0,0)");
+      grd.addColorStop(0.55, "rgba(90,40,10,0.35)");
+      grd.addColorStop(0.8, "rgba(20,8,2,0.95)");
+      g.fillStyle = grd;
+      g.fillRect(0, 0, 256, 128);
+    },
+    { color: true },
+  );
+}
+
+/** A plane bent along its length, like paper curling in heat. */
+function curled(w: number, h: number) {
+  const geo = new THREE.PlaneGeometry(w, h, 12, 4);
+  const p = geo.getAttribute("position") as THREE.BufferAttribute;
+  for (let i = 0; i < p.count; i++) {
+    const x = p.getX(i);
+    p.setZ(i, Math.pow(x / (w / 2), 2) * 0.06 + Math.sin(p.getY(i) * 9) * 0.008);
+  }
+  geo.computeVertexNormals();
+  return geo;
+}
+
+/** The combination dial: numbered ticks round a knurled knob. */
+function dialFace() {
+  return canvas(
+    512,
+    512,
+    (g) => {
+      g.fillStyle = "#b9c0cc";
+      g.beginPath();
+      g.arc(256, 256, 256, 0, Math.PI * 2);
+      g.fill();
+      g.strokeStyle = "#1c1f26";
+      g.fillStyle = "#1c1f26";
+      g.textAlign = "center";
+      g.textBaseline = "middle";
+      g.font = '600 30px "Cinzel", Georgia, serif';
+      for (let i = 0; i < 100; i++) {
+        const a = (i / 100) * Math.PI * 2 - Math.PI / 2;
+        const long = i % 10 === 0;
+        g.lineWidth = long ? 5 : 2;
+        g.beginPath();
+        g.moveTo(256 + Math.cos(a) * 240, 256 + Math.sin(a) * 240);
+        g.lineTo(256 + Math.cos(a) * (long ? 200 : 220), 256 + Math.sin(a) * (long ? 200 : 220));
+        g.stroke();
+        if (long) g.fillText(String(i), 256 + Math.cos(a) * 172, 256 + Math.sin(a) * 172);
+      }
+      const grd = g.createRadialGradient(240, 230, 10, 256, 256, 130);
+      grd.addColorStop(0, "#e8ecf2");
+      grd.addColorStop(1, "#6d7482");
+      g.fillStyle = grd;
+      g.beginPath();
+      g.arc(256, 256, 130, 0, Math.PI * 2);
+      g.fill();
+    },
+    { color: true },
+  );
+}
+
+/** The conditions, engraved into the brass plate on the wall. */
+function conditionsPlate() {
+  return canvas(
+    1024,
+    680,
+    (g) => {
+      const grd = g.createLinearGradient(0, 0, 1024, 680);
+      grd.addColorStop(0, "#d9b973");
+      grd.addColorStop(0.5, "#b8914a");
+      grd.addColorStop(1, "#d3b06a");
+      g.fillStyle = grd;
+      g.fillRect(0, 0, 1024, 680);
+      for (let i = 0; i < 900; i++) {
+        g.strokeStyle = `rgba(255,240,200,${rand() * 0.08})`;
+        const y = rand() * 680;
+        g.beginPath();
+        g.moveTo(0, y);
+        g.lineTo(1024, y);
+        g.stroke();
+      }
+      g.strokeStyle = "rgba(60,40,10,0.7)";
+      g.lineWidth = 6;
+      g.strokeRect(24, 24, 976, 632);
+      g.textAlign = "center";
+      const engrave = (t: string, font: string, y: number) => {
+        g.font = font;
+        g.fillStyle = "rgba(255,245,215,0.5)";
+        g.fillText(t, 513, y + 2);
+        g.fillStyle = "#2b1d08";
+        g.fillText(t, 512, y);
+      };
+      engrave("OLD MONEY", '700 64px "Cinzel", Georgia, serif', 120);
+      engrave("CONDITIONS OF ACCOUNT", '600 34px "Cinzel", Georgia, serif', 176);
+      ["One account holds 100,000 $OLDM", "The ten largest share every dividend", "A holding ages one hour before it is paid", "One sale closes the account", "Your own wallets may pass it freely", "The house never takes a dividend"].forEach((l, i) =>
+        engrave(l, '500 34px "Bodoni Moda", Georgia, serif', 262 + i * 62),
+      );
+    },
+    { color: true },
+  );
+}
+
 function flameSprite() {
   return canvas(128, 128, (g) => {
     const grd = g.createRadialGradient(64, 64, 0, 64, 64, 64);
@@ -366,6 +488,12 @@ function useMats(narrow: boolean) {
       walnut: new THREE.MeshPhysicalMaterial({ map: walnut(), roughness: 0.42, clearcoat: 0.6, clearcoatRoughness: 0.25 }),
       leather: new THREE.MeshStandardMaterial({ color: "#163626", roughness: 0.72 }),
       glass: new THREE.MeshPhysicalMaterial({ color: "#1d6b47", roughness: 0.15, clearcoat: 1, emissive: new THREE.Color("#0e3a24"), emissiveIntensity: 0.6, side: THREE.DoubleSide }),
+      dial: [
+        new THREE.MeshPhysicalMaterial({ color: "#9aa2b2", metalness: 1, roughness: 0.3, roughnessMap: fine }),
+        new THREE.MeshPhysicalMaterial({ map: dialFace(), metalness: 0.85, roughness: 0.3 }),
+        new THREE.MeshPhysicalMaterial({ color: "#9aa2b2", metalness: 1, roughness: 0.3 }),
+      ],
+      plateFace: new THREE.MeshPhysicalMaterial({ map: conditionsPlate(), metalness: 0.75, roughness: 0.32, clearcoat: 0.4 }),
       lamp: new THREE.MeshStandardMaterial({ color: "#fff1d0", emissive: new THREE.Color("#ffe2a8"), emissiveIntensity: 3.2, toneMapped: false }),
       narrow,
     };
@@ -576,8 +704,11 @@ function Door({ mats, wheelRef, boltsRef, hingeRef }: { mats: Mats; wheelRef: Re
             <mesh geometry={hub} material={mats.brass} rotation={[Math.PI / 2, 0, 0]} castShadow />
           </group>
           {/* the combination dial above the wheel */}
-          <mesh material={mats.bolt} position={[0, 1.95, 0.42]} rotation={[Math.PI / 2, 0, 0]} castShadow>
+          <mesh material={mats.dial} position={[0, 1.95, 0.42]} rotation={[Math.PI / 2, 0, 0]} castShadow>
             <cylinderGeometry args={[0.36, 0.38, 0.12, 64]} />
+          </mesh>
+          <mesh material={mats.bolt} position={[0, 1.95, 0.52]} rotation={[Math.PI / 2, 0, 0]} castShadow>
+            <cylinderGeometry args={[0.12, 0.14, 0.12, 32]} />
           </mesh>
         </group>
       </group>
@@ -588,7 +719,7 @@ function Door({ mats, wheelRef, boltsRef, hingeRef }: { mats: Mats; wheelRef: Re
 /** The escrow gauge, fixed to the frame: the needle climbs toward the next payment. */
 function Gauge({ mats, pct }: { mats: Mats; pct: number }) {
   const needle = useRef<THREE.Group>(null);
-  const face = useMemo(() => new THREE.MeshStandardMaterial({ map: gaugeFace(), roughness: 0.6 }), []);
+  const face = useMemo(() => new THREE.MeshStandardMaterial({ map: gaugeFace(), roughness: 0.6, color: "#d8d2c2" }), []);
   const cur = useRef(0);
   useFrame((_, dt) => {
     cur.current = THREE.MathUtils.damp(cur.current, pct, 2, dt);
@@ -597,7 +728,7 @@ function Gauge({ mats, pct }: { mats: Mats; pct: number }) {
     if (needle.current) needle.current.rotation.z = -((deg + 90) * Math.PI) / 180;
   });
   return (
-    <group position={[X0 - DOOR_R - 0.25, DOOR_R - 0.15, 0.62]}>
+    <group position={[X0 + DOOR_R - 0.05, -DOOR_R + 0.35, 0.66]}>
       <mesh material={mats.brass} rotation={[Math.PI / 2, 0, 0]} castShadow>
         <cylinderGeometry args={[0.62, 0.66, 0.16, 64]} />
       </mesh>
@@ -624,7 +755,7 @@ function Gauge({ mats, pct }: { mats: Mats; pct: number }) {
 
 /** Station two: three marble pedestals, one for each place the fee goes. */
 function Pedestals({ mats, coin, narrow }: { mats: Mats; coin: THREE.Material[]; narrow: boolean }) {
-  const top = useRef<THREE.Mesh>(null);
+  const top = useRef<THREE.Group>(null);
   const fire = useRef<THREE.Points>(null);
   const notes = useRef<THREE.Group>(null);
   const N = narrow ? 40 : 90;
@@ -668,7 +799,7 @@ function Pedestals({ mats, coin, narrow }: { mats: Mats; coin: THREE.Material[];
 
   useFrame((st) => {
     const t = st.clock.elapsedTime;
-    if (top.current) top.current.rotation.y = t * 0.5;
+    if (top.current) top.current.rotation.y = t * 1.1;
     const pos = fireGeo.getAttribute("position") as THREE.BufferAttribute;
     seeds.forEach(([s, a, r], i) => {
       const k = (t * (0.7 + s * 0.6) + s) % 1;
@@ -686,26 +817,32 @@ function Pedestals({ mats, coin, narrow }: { mats: Mats; coin: THREE.Material[];
       m.emissiveIntensity = k * 1.8;
     });
   });
-  const noteMats = useMemo(() => [0, 1, 2].map(() => new THREE.MeshStandardMaterial({ color: "#e6dcc0", roughness: 0.9, transparent: true, emissive: new THREE.Color("#ff7a2a"), side: THREE.DoubleSide })), []);
+  const noteMap = useMemo(() => burntNote(), []);
+  const noteMats = useMemo(() => [0, 1, 2].map(() => new THREE.MeshStandardMaterial({ map: noteMap, roughness: 0.9, transparent: true, emissive: new THREE.Color("#ff7a2a"), emissiveMap: noteMap, side: THREE.DoubleSide })), [noteMap]);
+  const noteGeo = useMemo(() => curled(0.34, 0.17), []);
 
   return (
     <group>
-      {[-2.8, 0, 2.8].map((dx) => (
-        <mesh key={dx} geometry={column} material={mats.pedestalMarble} position={[X0 + dx, -HT, PED_Z]} castShadow receiveShadow />
+      {PEDS.map(([x, z]) => (
+        <mesh key={x} geometry={column} material={mats.pedestalMarble} position={[x, -HT, z]} castShadow receiveShadow />
       ))}
       {/* the dividend: a stack of struck coins, the top one turning */}
-      <group position={[X0 - 2.8, -HT + 2.08, PED_Z]}>
+      <group position={[PEDS[0][0], -HT + 2.08, PEDS[0][1]]}>
         {Array.from({ length: 8 }, (_, i) => (
           <mesh key={i} material={coin} position={[Math.sin(i * 1.7) * 0.025, 0.06 + i * 0.12, Math.cos(i * 1.3) * 0.025]} rotation={[0, i * 0.7, 0]} castShadow>
             <cylinderGeometry args={[0.55, 0.55, 0.11, 96]} />
           </mesh>
         ))}
-        <mesh ref={top} material={coin} position={[0, 1.65, 0]} rotation={[Math.PI / 2, 0, 0]} castShadow>
-          <cylinderGeometry args={[0.6, 0.6, 0.1, 96]} />
-        </mesh>
+        {/* stood on its edge, it spins about the vertical, face then edge then the reverse */}
+        <group ref={top} position={[0, 1.85, 0]}>
+          <mesh material={coin} rotation={[Math.PI / 2, 0, 0]} castShadow>
+            <cylinderGeometry args={[0.72, 0.72, 0.11, 128]} />
+          </mesh>
+        </group>
+        <pointLight color="#ffe2a6" intensity={5} distance={4} decay={1.6} position={[-0.6, 2.4, 1.4]} />
       </group>
       {/* the reserve: a steel strongbox, banded in brass */}
-      <group position={[X0, -HT + 2.08, PED_Z]}>
+      <group position={[PEDS[1][0], -HT + 2.08, PEDS[1][1]]}>
         <mesh material={mats.box} position={[0, 0.5, 0]} castShadow receiveShadow>
           <primitive object={rounded(1.3, 0.95, 0.9, 0.06)} attach="geometry" />
         </mesh>
@@ -719,14 +856,12 @@ function Pedestals({ mats, coin, narrow }: { mats: Mats; coin: THREE.Material[];
         </mesh>
       </group>
       {/* retired notes: a brass brazier, the notes rise into the fire and burn away */}
-      <group position={[X0 + 2.8, -HT + 2.08, PED_Z]}>
+      <group position={[PEDS[2][0], -HT + 2.08, PEDS[2][1]]}>
         <mesh geometry={bowl} material={mats.brass} castShadow />
         <points ref={fire} geometry={fireGeo} material={fireMat} />
         <group ref={notes}>
           {noteMats.map((m, i) => (
-            <mesh key={i} material={m}>
-              <planeGeometry args={[0.42, 0.22]} />
-            </mesh>
+            <mesh key={i} material={m} geometry={noteGeo} />
           ))}
         </group>
         <pointLight color="#ff9a4a" intensity={9} distance={7} decay={1.7} position={[0, 0.9, 0.2]} />
@@ -828,16 +963,16 @@ function DepositWall({ mats, names, closed, drawer }: { mats: Mats; names: strin
           <capsuleGeometry args={[0.035, 0.42, 6, 12]} />
         </mesh>
         {/* inside: a few coins and the account papers */}
-        {[0, 1, 2, 3].map((i) => (
-          <mesh key={i} position={[-0.25 + (i % 2) * 0.12, -0.3 + i * 0.05, -0.7 - (i % 3) * 0.08]} rotation={[0, i, 0]}>
-            <cylinderGeometry args={[0.16, 0.16, 0.04, 48]} />
+        {[0, 1, 2, 3, 4, 5, 6].map((i) => (
+          <mesh key={i} position={[-0.25 + (i % 2) * 0.1, -0.31 + i * 0.045, -0.55 - (i % 3) * 0.05]} rotation={[0, i, 0]} castShadow>
+            <cylinderGeometry args={[0.18, 0.18, 0.045, 48]} />
             <meshPhysicalMaterial {...COIN_GOLD} />
           </mesh>
         ))}
-        <mesh material={mats.slip} position={[0.22, -0.32, -1.25]} rotation={[-Math.PI / 2, 0, 0.25]}>
-          <planeGeometry args={[0.5, 0.7]} />
+        <mesh material={mats.slip} position={[0.2, -0.32, -1.0]} rotation={[-Math.PI / 2, 0, 0.25]}>
+          <planeGeometry args={[0.62, 0.86]} />
         </mesh>
-        <pointLight color="#ffd890" intensity={4} distance={2.5} decay={1.8} position={[0, 0.15, -0.9]} />
+        <pointLight color="#ffd890" intensity={7} distance={3} decay={1.6} position={[0, 0.35, -0.6]} />
       </group>
       <pointLight color="#ffd890" intensity={9} distance={9} decay={1.6} position={[X0 + 1.5, 0.6, -26]} />
     </group>
@@ -887,6 +1022,9 @@ function ConditionsPlate({ mats }: { mats: Mats }) {
     <group position={[X0 - W + 0.08, 0.35, -16.5]} rotation={[0, Math.PI / 2, 0]}>
       <mesh material={mats.brass} castShadow>
         <primitive object={rounded(4.2, 2.8, 0.06, 0.02)} attach="geometry" />
+      </mesh>
+      <mesh material={mats.plateFace} position={[0, 0, 0.032]}>
+        <planeGeometry args={[4.1, 2.72]} />
       </mesh>
       {[
         [-1.95, 1.25],

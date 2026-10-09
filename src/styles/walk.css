@@ -622,3 +622,43 @@
     display: none;
   }
 }
+
+/* the statement's totals read as one ruled line, not a block of tiles */
+.plaque--slip .totals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+  margin-top: 14px;
+  padding: 10px 0;
+  border-top: 1px solid var(--brass-dim);
+  border-bottom: 1px solid var(--brass-dim);
+}
+.plaque--slip .totals__cell {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+.plaque--slip .totals dd {
+  margin: 0;
+  font: 600 16px/1.2 var(--data);
+}
+@media (max-width: 760px) {
+  .demo-tag {
+    top: 62px;
+    bottom: auto;
+    left: 10px;
+  }
+  .cardpage .stop__inner {
+    align-items: flex-end;
+    padding-top: 0;
+  }
+  .stop--close {
+    background: linear-gradient(180deg, transparent 0%, transparent 45%, rgba(11, 20, 36, 0.7) 75%);
+  }
+}
+.stop--close {
+  background: linear-gradient(180deg, transparent 0%, transparent 35%, rgba(11, 20, 36, 0.55) 70%, var(--v0) 100%);
+}
