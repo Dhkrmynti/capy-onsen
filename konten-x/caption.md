@@ -6,6 +6,9 @@
 | `banner-x.png` | Header (1500×500; teks di tengah-kanan, tidak tertutup foto profil) |
 | `post-0-the-throne-is-empty.png` | Post 0: kondisi sekarang — takhta kosong, menunggu Raja pertama |
 | `post-0b-who-will-be-king.png` | Post 0b: "Who will be the first King?" — ajakan untuk putaran pertama |
+| `hook-1-paper-hands-get-captured.png` | Hook: "Paper hands get captured." |
+| `hook-2-out-hold-the-king.png` | Hook: "Out-hold the King. Take his crown." |
+| `hook-3-ten-wallets.png` | Hook: "10 wallets split every Tribute. Are you one?" |
 | `post-1-how-kingpins-works.mp4` | Post 1: video penjelasan (mahkota, escrow, 4 langkah, captured) |
 | `post-2-tutorial-name-portrait-x.mp4` | Post 2: tutorial nama + portrait + Connect X |
 | `post-3-the-ladder.png` | Post 3: The Ladder (top 10 + tier) |
@@ -143,6 +146,27 @@ Pilih satu bio:
 > kingpins.fun
 
 **Alt text:** Simulation of the Kingpins engine: an escrow gauge filling with trade fees, coins flying to the top 10, then to the War Chest, then to the Burn, while totals and a statement update; the second round runs at double speed.
+
+---
+
+## Hook posts (PNG)
+
+**`hook-1-paper-hands-get-captured.png`**
+> Paper hands get captured.
+> One sale and you're off the board. For good.
+> kingpins.fun
+
+**`hook-2-out-hold-the-king.png`**
+> Out-hold the King. Take his crown. 👑
+> The biggest $KING holder wears it, live.
+> kingpins.fun
+
+**`hook-3-ten-wallets.png`**
+> 10 wallets split every Tribute. Are you one?
+> Every 0.02 ETH in fees goes to the top 10. Ranked by balance, live.
+> kingpins.fun
+
+Pakai hook di sela-sela post utama, 1 per hari, atau sebagai quote dari post lain.
 
 ---
 

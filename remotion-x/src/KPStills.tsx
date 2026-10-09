@@ -1,4 +1,5 @@
 /** Kingpins stills for X: avatar, header, two posts, and the "New King" GIF. */
+import type React from "react";
 import { AbsoluteFill, Img, staticFile, useCurrentFrame } from "remotion";
 import { BoardField, Body, Crown, Head, K, KF, Mark, Mono, Piece, Sig, Token, back, easeInOut, ramp } from "./KPTheme";
 
@@ -250,5 +251,94 @@ export function KPPostWho() {
         ))}
       </div>
     </AbsoluteFill>
+  );
+}
+
+/* ───────── hook posts: one line that stops the scroll ───────── */
+function HookFrame({ bg, children, foot = K.cream }: { bg: string; children: React.ReactNode; foot?: string }) {
+  return (
+    <AbsoluteFill style={{ background: bg, overflow: "hidden" }}>
+      {children}
+      <Mono size={24} color={foot} style={{ position: "absolute", left: 90, bottom: 60 }}>
+        $KING · kingpins.fun
+      </Mono>
+      <div style={{ position: "absolute", right: 80, bottom: 46 }}>
+        <Mark size={64} />
+      </div>
+    </AbsoluteFill>
+  );
+}
+
+/** 1. Paper hands get captured. */
+export function KPHookPaper() {
+  return (
+    <HookFrame bg={K.lime} foot={K.ink}>
+      <div style={{ position: "absolute", left: 90, top: 110 }}>
+        <Head size={118} color={K.ink} style={{ textShadow: "none" }}>
+          Paper hands
+        </Head>
+        <Head size={118} color={K.exile} style={{ textShadow: `0 7px 0 ${K.ink}` }}>
+          get captured.
+        </Head>
+        <Body size={36} color={K.ink} style={{ marginTop: 34 }}>
+          One sale and you're off the board. For good.
+        </Body>
+      </div>
+      <div style={{ position: "absolute", right: 120, top: 420, rotate: "90deg" }}>
+        <Piece kind="pawn" size={280} fill={K.cream} />
+      </div>
+      <div style={{ position: "absolute", right: 90, top: 330, rotate: "-10deg" }}>
+        <Token bg={K.exile} color={K.cream} style={{ padding: "12px 24px" }}>
+          <span style={{ fontFamily: KF.display, fontSize: 56 }}>CAPTURED</span>
+        </Token>
+      </div>
+    </HookFrame>
+  );
+}
+
+/** 2. Out-hold the King. */
+export function KPHookOuthold() {
+  return (
+    <HookFrame bg={K.violet}>
+      <div style={{ position: "absolute", left: 90, top: 110 }}>
+        <Head size={120}>Out-hold</Head>
+        <Head size={120}>the King.</Head>
+        <Head size={120} color={K.lime}>
+          Take his crown.
+        </Head>
+      </div>
+      <div style={{ position: "absolute", right: 90, top: 150, display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <Crown size={220} style={{ marginBottom: -26, zIndex: 2, rotate: "12deg", translate: "40px 0" }} />
+        <Piece kind="king" size={260} fill={K.crown} />
+      </div>
+    </HookFrame>
+  );
+}
+
+/** 3. Ten wallets. Are you one? */
+export function KPHookTen() {
+  return (
+    <HookFrame bg={K.grape0}>
+      <div style={{ position: "absolute", left: 90, top: 100, width: 900 }}>
+        <Head size={120}>10 wallets</Head>
+        <Head size={120} color={K.lime}>
+          split every Tribute.
+        </Head>
+        <Head size={120} color={K.crown}>
+          Are you one?
+        </Head>
+        <Body size={32} color={K.cream2} style={{ marginTop: 30 }}>
+          Every 0.02 ETH in trading fees goes to the top 10 holders. Live board, ranked by balance.
+        </Body>
+      </div>
+      <div style={{ position: "absolute", right: 90, top: 140, display: "grid", gridTemplateColumns: "repeat(2, 150px)", gap: 14 }}>
+        {Array.from({ length: 10 }, (_, i) => (
+          <Token key={i} bg={i === 0 ? K.crown : i % 2 ? K.violet : K.lime} color={i === 0 || i % 2 === 0 ? K.ink : K.cream} style={{ height: 96, borderRadius: 12, padding: "10px 14px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0 8px 0 #07030f" }}>
+            <span style={{ fontFamily: KF.display, fontSize: 40 }}>{i + 1}</span>
+            <span style={{ fontFamily: KF.display, fontSize: 40 }}>?</span>
+          </Token>
+        ))}
+      </div>
+    </HookFrame>
   );
 }
