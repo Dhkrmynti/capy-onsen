@@ -8,7 +8,7 @@ import { useAccount } from "../lib/wallet";
 import { prefersReducedMotion } from "../lib/motion";
 import { nameFor } from "../lib/alias";
 import { openCard } from "./CrewCard";
-import { CrewFace, XCheck } from "./Face";
+import { CrewFace, XCheck, XLink } from "./Face";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -84,11 +84,17 @@ export function TheVault({ status }: { status: Status | null }) {
                             </span>
                           ) : null}
                           <span className="heir__rank tabular">{r.rank}</span>
-                          <button type="button" className="heir__open" onClick={() => openCard(r.addr)} aria-label={`Open the card of ${who.name}, number ${r.rank}, ${r.addr}`}>
-                            <CrewFace addr={r.addr} pp={r.pp} x={r.x} size={20} className="heir__seal" />
+                          <span className="heir__open">
+                            <button type="button" className="heir__face" onClick={() => openCard(r.addr)} tabIndex={-1} aria-hidden="true">
+                              <CrewFace addr={r.addr} pp={r.pp} x={r.x} size={20} className="heir__seal" />
+                            </button>
                             <span className="heir__id">
                               <span className="heir__name">
-                                {who.name}
+                                {/* a linked X account: its logo first, opening the holder's X profile */}
+                                {r.x ? <XLink x={r.x} className="heir__xlink" /> : null}
+                                <button type="button" className="heir__namebtn" onClick={() => openCard(r.addr)} aria-label={`Open the card of ${who.name}, number ${r.rank}, ${r.addr}`}>
+                                  {who.name}
+                                </button>
                                 {r.x ? <XCheck x={r.x} /> : who.claimed ? <SealCheck className="ledger__check" weight="fill" aria-hidden="true" /> : null}
                               </span>
                               <span className="heir__sub tabular">
@@ -97,7 +103,7 @@ export function TheVault({ status }: { status: Status | null }) {
                                 {r.inTop ? ` · next ${(share[r.rank - 1] ?? 0).toFixed(4)} ETH` : gap > 0 ? ` · +${compact(gap + 1)} to enter` : " · at the line"}
                               </span>
                             </span>
-                          </button>
+                          </span>
                         </li>
                       );
                     })}

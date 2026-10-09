@@ -1,6 +1,5 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import "@fontsource/alfa-slab-one/400";
 import "@fontsource/bodoni-moda/500";
 import "@fontsource/bodoni-moda/600";
 import "@fontsource/bodoni-moda/500-italic";
@@ -11,10 +10,6 @@ import "@fontsource/cinzel/500";
 import "@fontsource/cinzel/700";
 import "@fontsource/courier-prime/400";
 import "@fontsource/courier-prime/700";
-import "@fontsource/league-gothic/400";
-import "@fontsource/pt-serif/400";
-import "@fontsource/pt-serif/400-italic";
-import "@fontsource/pt-serif/700";
 import "@fontsource/archivo-narrow/500";
 import "@fontsource/archivo-narrow/600";
 import "@fontsource/archivo-narrow/700";

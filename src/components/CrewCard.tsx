@@ -477,6 +477,7 @@ export function CrewCard({ live }: { live: boolean }) {
                     return (
                       <>
                         <p className={`card__who ${info.status === "hopped" ? "is-struck" : ""} ${info.x ? "is-x" : ""}`}>
+                          {info.x ? <XLink x={info.x} className="card__xlead" /> : null}
                           {who.name}
                           {info.x ? <XCheck x={info.x} className="card__xcheck" /> : who.claimed ? <SealCheck className="card__seal" weight="fill" aria-label="claimed name" /> : null}
                         </p>
@@ -485,10 +486,7 @@ export function CrewCard({ live }: { live: boolean }) {
                             {short(info.addr)}
                           </a>
                           {info.x ? (
-                            <>
-                              <span> · </span>
-                              <XLink x={info.x} className="card__xlink" />
-                            </>
+                            <span> · @{info.x.username}</span>
                           ) : who.claimed ? null : (
                             <span> · house name</span>
                           )}

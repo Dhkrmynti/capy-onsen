@@ -11,12 +11,10 @@
  * marble that reflects, soft shadows, ambient occlusion, bloom on the lamps and the fire.
  * Every texture is drawn on a canvas; there are no model or image files.
  */
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { MeshReflectorMaterial } from "@react-three/drei";
-import { Bloom, EffectComposer, N8AO, Noise, Vignette } from "@react-three/postprocessing";
+import { MeshReflectorMaterial, PerformanceMonitor } from "@react-three/drei";
 import * as THREE from "three";
-import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 import { edgeTexture, faceTexture } from "./Coin3D";
 
@@ -67,6 +65,14 @@ function stations(narrow: boolean): Station[] {
   ];
 }
 
+/** Three flat bands of light: shadow, mid, lit. */
+const TOON_STEPS = (() => {
+  const t = new THREE.DataTexture(new Uint8Array([90, 90, 90, 255, 170, 170, 170, 255, 255, 255, 255, 255]), 3, 1, THREE.RGBAFormat);
+  t.minFilter = t.magFilter = THREE.NearestFilter;
+  t.needsUpdate = true;
+  return t;
+})();
+
 /* ───────────────────────── procedural textures ───────────────────────── */
 
 const rand = (() => {
@@ -80,7 +86,7 @@ function canvas(w: number, h: number, draw: (g: CanvasRenderingContext2D) => voi
   c.height = h;
   draw(c.getContext("2d")!);
   const t = new THREE.CanvasTexture(c);
-  t.anisotropy = 8;
+  t.anisotropy = 4;
   if (opts.repeat) {
     t.wrapS = t.wrapT = THREE.RepeatWrapping;
     t.repeat.set(...opts.repeat);
@@ -522,7 +528,7 @@ const rounded = (w: number, h: number, d: number, r = 0.04) => new RoundedBoxGeo
 
 /* ───────────────────────── the scene parts ───────────────────────── */
 
-function Shell({ mats, narrow }: { mats: Mats; narrow: boolean }) {
+function Shell({ mats, narrow, hi }: { mats: Mats; narrow: boolean; hi: boolean }) {
   const frontWall = useMemo(() => {
     const s = new THREE.Shape();
     s.moveTo(-26, -14);
@@ -558,7 +564,7 @@ function Shell({ mats, narrow }: { mats: Mats; narrow: boolean }) {
       {/* floor: polished marble that reflects the lamps and the gold */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[X0, -HT, -DEPTH / 2]} receiveShadow>
         <planeGeometry args={[W * 2, DEPTH]} />
-        {narrow ? (
+        {narrow || !hi ? (
           <meshPhysicalMaterial map={mats.marbleMap} roughness={0.22} metalness={0.1} clearcoat={0.8} clearcoatRoughness={0.12} />
         ) : (
           <MeshReflectorMaterial map={mats.marbleMap} blur={[400, 120]} resolution={512} mixBlur={1} mixStrength={2.2} roughness={0.85} depthScale={0.8} minDepthThreshold={0.4} maxDepthThreshold={1.3} color="#9aa6c2" metalness={0.35} mirror={0.55} />
@@ -582,13 +588,13 @@ function Shell({ mats, narrow }: { mats: Mats; narrow: boolean }) {
           <boxGeometry args={[0.14, 0.5, DEPTH]} />
         </mesh>
       ))}
-      <CeilingLights mats={mats} narrow={narrow} />
+      <CeilingLights mats={mats} narrow={narrow} hi={hi} />
     </group>
   );
 }
 
 /** Ceiling fixtures: a housing, a glowing diffuser, a pool of light, a faint shaft of it. */
-function CeilingLights({ mats, narrow }: { mats: Mats; narrow: boolean }) {
+function CeilingLights({ mats }: { mats: Mats; narrow?: boolean; hi?: boolean }) {
   const zs = [-4.5, -12, -19, -26, -33, -39.5];
   const shaft = useMemo(
     () => new THREE.MeshBasicMaterial({ color: "#ffd9a0", transparent: true, opacity: 0.045, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide }),
@@ -596,7 +602,7 @@ function CeilingLights({ mats, narrow }: { mats: Mats; narrow: boolean }) {
   );
   return (
     <group>
-      {zs.map((z, i) => (
+      {zs.map((z) => (
         <group key={z} position={[X0, HT, z]}>
           <mesh material={mats.frame} position={[0, -0.06, 0]}>
             <primitive object={rounded(2.9, 0.12, 0.5, 0.03)} attach="geometry" />
@@ -607,20 +613,7 @@ function CeilingLights({ mats, narrow }: { mats: Mats; narrow: boolean }) {
           <mesh material={shaft} position={[0, -HT + 0.4, 0]}>
             <cylinderGeometry args={[0.4, 2.2, HT * 2 - 0.8, 32, 1, true]} />
           </mesh>
-          <spotLight
-            position={[0, -0.25, 0]}
-            angle={0.75}
-            penumbra={0.85}
-            intensity={narrow ? 26 : 34}
-            distance={16}
-            decay={1.6}
-            color="#ffe0ad"
-            castShadow={!narrow && i < 4}
-            shadow-mapSize={[1024, 1024]}
-            shadow-bias={-0.0004}
-          >
-            <object3D attach="target" position={[0, -HT * 2, 0]} />
-          </spotLight>
+
         </group>
       ))}
     </group>
@@ -839,7 +832,7 @@ function Pedestals({ mats, coin, narrow }: { mats: Mats; coin: THREE.Material[];
             <cylinderGeometry args={[0.72, 0.72, 0.11, 128]} />
           </mesh>
         </group>
-        <pointLight color="#ffe2a6" intensity={5} distance={4} decay={1.6} position={[-0.6, 2.4, 1.4]} />
+        <pointLight color="#ffe2a6" intensity={1.2} distance={4} decay={1.6} position={[-0.6, 2.4, 1.4]} />
       </group>
       {/* the reserve: a steel strongbox, banded in brass */}
       <group position={[PEDS[1][0], -HT + 2.08, PEDS[1][1]]}>
@@ -1042,7 +1035,7 @@ function ConditionsPlate({ mats }: { mats: Mats }) {
 
 /* ───────────────────────── the walk ───────────────────────── */
 
-function Walk({ narrow, still, names, closed, pct }: { narrow: boolean; still: boolean; names: string[]; closed: number; pct: number }) {
+function Walk({ narrow, still, names, closed, pct, hi }: { narrow: boolean; still: boolean; names: string[]; closed: number; pct: number; hi: boolean }) {
   const mats = useMats(narrow);
   const coin = useCoinMats();
   const wheel = useRef<THREE.Group>(null);
@@ -1054,17 +1047,49 @@ function Walk({ narrow, still, names, closed, pct }: { narrow: boolean; still: b
   const anchors = useRef<number[]>([]);
   const { camera, gl, scene, size } = useThree();
 
-  // A procedural room as the environment: metals get something real to reflect.
+  // The vault is drawn in toon shading: flat colour in three bands, no reflections or clearcoat.
+  // Every lit material in the scene is swapped once for its toon twin (cheap to draw on any GPU).
   useEffect(() => {
-    const pmrem = new THREE.PMREMGenerator(gl);
-    const env = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-    scene.environment = env;
-    scene.environmentIntensity = 0.32;
-    return () => {
-      env.dispose();
-      pmrem.dispose();
+    const swapped = new Map<THREE.Material, THREE.Material>();
+    const toon = (m: THREE.Material): THREE.Material => {
+      if (swapped.has(m)) return swapped.get(m)!;
+      if (!(m instanceof THREE.MeshStandardMaterial) && !(m instanceof THREE.MeshPhongMaterial) && !(m instanceof THREE.MeshLambertMaterial)) return m;
+      const src = m as THREE.MeshStandardMaterial;
+      const t = new THREE.MeshToonMaterial({
+        color: src.color.clone(),
+        map: src.map,
+        emissive: src.emissive?.clone(),
+        emissiveMap: src.emissiveMap,
+        emissiveIntensity: src.emissiveIntensity,
+        transparent: src.transparent,
+        opacity: src.opacity,
+        side: src.side,
+        alphaMap: src.alphaMap,
+        depthWrite: src.depthWrite,
+        gradientMap: TOON_STEPS,
+      });
+      // metals read too dark without their reflections: lift them a little
+      if (src.metalness > 0.5) t.color.multiplyScalar(1.1);
+      // glow stays, but softer: toon bands already make lit things read as lit
+      t.emissiveIntensity = src.emissiveIntensity * 0.6;
+      swapped.set(m, t);
+      return t;
     };
-  }, [gl, scene]);
+    const run = () =>
+      scene.traverse((o) => {
+        const mesh = o as THREE.Mesh;
+        if (!mesh.isMesh || !mesh.material) return;
+        mesh.material = Array.isArray(mesh.material) ? mesh.material.map(toon) : toon(mesh.material);
+      });
+    run();
+    // materials made later (lazy textures, the drawer) are caught by a slow second look
+    const id = setInterval(run, 1500);
+    const stop = setTimeout(() => clearInterval(id), 12000);
+    return () => {
+      clearInterval(id);
+      clearTimeout(stop);
+    };
+  }, [scene, gl]);
 
   // On a phone the plaque sits low, so the picture is framed in the top half of the screen.
   useEffect(() => {
@@ -1150,7 +1175,7 @@ function Walk({ narrow, still, names, closed, pct }: { narrow: boolean; still: b
 
   return (
     <group>
-      <Shell mats={mats} narrow={narrow} />
+      <Shell mats={mats} narrow={narrow} hi={hi} />
       <Door mats={mats} wheelRef={wheel} boltsRef={bolts} hingeRef={hinge} />
       <Gauge mats={mats} pct={pct} />
       <pointLight ref={glow} color="#ffcf7a" intensity={6} distance={16} decay={1.5} position={[X0, 0.5, -2.5]} />
@@ -1162,38 +1187,51 @@ function Walk({ narrow, still, names, closed, pct }: { narrow: boolean; still: b
   );
 }
 
+/**
+ * Draws at most 30 frames a second (the camera moves slowly; 30 is smooth and halves the GPU work
+ * on 60–120 Hz screens), and stops while the tab is hidden.
+ */
+function Pace({ fps = 30 }: { fps?: number }) {
+  const invalidate = useThree((s) => s.invalidate);
+  useEffect(() => {
+    let id = 0;
+    let last = 0;
+    const step = (t: number) => {
+      id = requestAnimationFrame(step);
+      if (document.hidden || t - last < 1000 / fps - 2) return;
+      last = t;
+      invalidate();
+    };
+    id = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(id);
+  }, [invalidate, fps]);
+  return null;
+}
+
 export default function VaultWalk({ names, closed, pct = 0, still = false }: { names: string[]; closed: number; pct?: number; still?: boolean }) {
   const narrow = typeof window !== "undefined" && window.matchMedia("(max-width: 760px)").matches;
+  // The resolution follows the device: down on a struggling GPU, a little up on a strong one.
+  const [dpr, setDpr] = useState(1);
   return (
     <Canvas
       className="walk__canvas"
-      shadows={narrow ? false : "soft"}
-      dpr={narrow ? [1, 1.25] : [1, 1.5]}
+      shadows={false}
+      dpr={dpr}
       camera={{ position: [X0 - 3.4, 0.2, 10.5], fov: narrow ? 56 : 42, near: 0.1, far: 80 }}
-      gl={{ antialias: false, alpha: false, toneMapping: THREE.AgXToneMapping, toneMappingExposure: 1.15, powerPreference: "high-performance" }}
+      gl={{ antialias: true, alpha: false, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 0.95, powerPreference: "default" }}
       onCreated={({ gl, scene }) => {
         gl.setClearColor("#0b1424");
-        scene.fog = new THREE.FogExp2("#0b1424", 0.028);
+        scene.fog = new THREE.Fog("#0b1424", 14, 34);
       }}
-      frameloop={still ? "demand" : "always"}
+      frameloop="demand"
       aria-hidden="true"
     >
-      <hemisphereLight args={["#6b80ad", "#1c1408", 0.35]} />
-      <directionalLight position={[-6, 6, 12]} intensity={0.9} color="#dfe6f5" />
-      <Walk narrow={narrow} still={still} names={names} closed={closed} pct={pct} />
-      {narrow ? (
-        <EffectComposer multisampling={0}>
-          <Bloom intensity={0.55} luminanceThreshold={0.85} mipmapBlur />
-          <Vignette darkness={0.5} offset={0.3} />
-        </EffectComposer>
-      ) : (
-        <EffectComposer multisampling={0}>
-          <N8AO aoRadius={1.1} intensity={2.4} distanceFalloff={1.2} quality="medium" halfRes />
-          <Bloom intensity={0.6} luminanceThreshold={0.85} luminanceSmoothing={0.2} mipmapBlur />
-          <Vignette darkness={0.55} offset={0.28} />
-          <Noise opacity={0.035} premultiply />
-        </EffectComposer>
-      )}
+      {still ? null : <Pace />}
+      <PerformanceMonitor bounds={() => [24, 29]} flipflops={2} onIncline={() => setDpr(narrow ? 1.25 : 1.5)} onDecline={() => setDpr(0.75)} onFallback={() => setDpr(0.75)} />
+      <hemisphereLight args={["#9fb0d6", "#2a2010", 0.9]} />
+      <directionalLight position={[-6, 6, 12]} intensity={1.1} color="#fff1d6" />
+      <directionalLight position={[6, 8, -20]} intensity={0.6} color="#ffe2b0" />
+      <Walk narrow={narrow} still={still} names={names} closed={closed} pct={pct} hi={false} />
     </Canvas>
   );
 }

@@ -1168,3 +1168,52 @@ body:has(.house) {
 .heir.is-tier2 {
   background: linear-gradient(90deg, rgba(255, 250, 235, 0.35), rgba(255, 250, 235, 0));
 }
+
+/* a linked X account: the X logo sits before the name and opens the holder's profile */
+.heir__face {
+  flex: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  line-height: 0;
+}
+.heir__namebtn {
+  min-width: 0;
+  overflow: hidden;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+.heir__namebtn:hover,
+.heir__namebtn:focus-visible {
+  text-decoration: underline;
+}
+.house .heir__xlink {
+  width: 15px;
+  height: 15px;
+  margin-right: 1px;
+  border-width: 1px;
+  font-size: 9px;
+}
+.house .heir__xlink svg {
+  width: 9px;
+  height: 9px;
+}
+.house .card__xlead {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  vertical-align: 0.15em;
+  font-size: 15px;
+}
+.card__who.is-x {
+  display: flex;
+  align-items: center;
+}
