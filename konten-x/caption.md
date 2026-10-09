@@ -17,6 +17,7 @@
 
 ## Nama & bio
 
+**Akun:** `@kingpins_rh` (https://x.com/kingpins_rh)
 **Nama tampilan:** `Kingpins $KING`  **Website:** `kingpins.fun`
 
 Pilih satu bio:
