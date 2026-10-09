@@ -2,7 +2,7 @@ import { Suspense, lazy, useEffect, useMemo, useState } from "react";
 import Lenis from "lenis";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { DEMO, demoPond, demoStatus, usePoll, type PondRow, type Status } from "./lib/api";
+import { demoPond, demoStatus, usePoll, type PondRow, type Status } from "./lib/api";
 import { prefersReducedMotion } from "./lib/motion";
 import { nameFor } from "./lib/alias";
 import { Masthead } from "./components/Masthead";
@@ -60,7 +60,7 @@ export function App() {
     let raf = 0;
     const fit = () => {
       const nav = document.querySelector("header")?.offsetHeight ?? 0;
-      const avail = window.innerHeight - nav - (window.innerWidth <= 760 ? (document.querySelector(".demo-tag") ? 46 : 18) : 40);
+      const avail = window.innerHeight - nav - (window.innerWidth <= 760 ? 18 : 40);
       document.querySelectorAll<HTMLElement>(".stop__inner > .plaque, .stop__inner > .deed, .stop__inner > .cardpage__grid").forEach((el) => {
         el.style.zoom = "";
         const h = el.offsetHeight;
@@ -119,11 +119,6 @@ export function App() {
           </Suspense>
         ) : null}
       </div>
-      {DEMO ? (
-        <p className="demo-tag" role="note" title="Every figure here is made up. Try your account and the seal desk; nothing is saved.">
-          Illustration: figures are made up
-        </p>
-      ) : null}
       <Masthead status={status} />
       <main>
         <FrontPage status={status} offline={!!error && !status} />
