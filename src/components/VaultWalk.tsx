@@ -508,15 +508,54 @@ function useMats(narrow: boolean) {
 type Mats = ReturnType<typeof useMats>;
 
 const COIN_GOLD = { color: "#e2b04f", metalness: 1, roughness: 0.2 };
+/**
+ * The relief map painted in two golds: raised work (the H, the legend, the rim) bright, the field
+ * deep. Toon shading has no bump, so the device is drawn into the colour instead.
+ */
+function goldFrom(relief: THREE.Texture) {
+  const src = relief.image as HTMLCanvasElement;
+  const c = document.createElement("canvas");
+  c.width = src.width;
+  c.height = src.height;
+  const g = c.getContext("2d")!;
+  g.fillStyle = "#7a5414";
+  g.fillRect(0, 0, c.width, c.height);
+  // where the relief is high, lay bright gold over the deep gold
+  const hi = document.createElement("canvas");
+  hi.width = c.width;
+  hi.height = c.height;
+  const h = hi.getContext("2d")!;
+  h.fillStyle = "#ffd77a";
+  h.fillRect(0, 0, c.width, c.height);
+  h.globalCompositeOperation = "destination-in";
+  // the relief's brightness becomes the bright gold's opacity
+  const img = src.getContext("2d")!.getImageData(0, 0, src.width, src.height);
+  for (let i = 0; i < img.data.length; i += 4) {
+    const l = img.data[i];
+    img.data[i + 3] = Math.min(255, Math.max(0, (l - 60) * 1.6));
+  }
+  const mask = document.createElement("canvas");
+  mask.width = c.width;
+  mask.height = c.height;
+  mask.getContext("2d")!.putImageData(img, 0, 0);
+  h.drawImage(mask, 0, 0);
+  g.drawImage(hi, 0, 0);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.anisotropy = 4;
+  t.center.copy(relief.center);
+  t.rotation = relief.rotation;
+  t.repeat.copy(relief.repeat);
+  t.wrapS = relief.wrapS;
+  t.wrapT = relief.wrapT;
+  return t;
+}
+
 function useCoinMats() {
-  return useMemo(
-    () => [
-      new THREE.MeshPhysicalMaterial({ ...COIN_GOLD, bumpMap: edgeTexture(), bumpScale: 3, roughness: 0.3 }),
-      new THREE.MeshPhysicalMaterial({ ...COIN_GOLD, bumpMap: faceTexture("obverse"), bumpScale: 6, clearcoat: 0.4 }),
-      new THREE.MeshPhysicalMaterial({ ...COIN_GOLD, bumpMap: faceTexture("reverse"), bumpScale: 6, clearcoat: 0.4 }),
-    ],
-    [],
-  );
+  return useMemo(() => {
+    const toon = (relief: THREE.Texture) => new THREE.MeshToonMaterial({ color: "#ffffff", map: goldFrom(relief), gradientMap: TOON_STEPS });
+    return [toon(edgeTexture()), toon(faceTexture("obverse")), toon(faceTexture("reverse"))];
+  }, []);
 }
 
 /* ───────────────────────── geometry helpers ───────────────────────── */
