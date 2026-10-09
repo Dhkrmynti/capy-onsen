@@ -199,3 +199,56 @@ export function KPPostEmpty() {
     </AbsoluteFill>
   );
 }
+
+/* ───────── post: who will be the first King? ───────── */
+export function KPPostWho() {
+  const seats: [string, string][] = [
+    ["2", "d1"],
+    ["3", "a1"],
+    ["4", "c1"],
+    ["5", "b1"],
+  ];
+  return (
+    <AbsoluteFill style={{ background: K.grape0, overflow: "hidden" }}>
+      <div style={{ position: "absolute", left: 90, top: 70, width: 760 }}>
+        <Head size={104}>Who will be</Head>
+        <Head size={104} color={K.lime}>
+          the first King?
+        </Head>
+        <Body size={30} style={{ marginTop: 28 }}>
+          Round one. The biggest holder takes the crown. The top 10 split the first 0.02 ETH Tribute.
+        </Body>
+        <Mono size={24} color={K.lime} style={{ marginTop: 34 }}>
+          kingpins.fun · @kingpins_rh
+        </Mono>
+      </div>
+      {/* the empty No. 1 square, a question mark where the King's face goes */}
+      <div style={{ position: "absolute", right: 120, top: 70, display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <Crown size={230} style={{ marginBottom: -24, zIndex: 2, rotate: "6deg" }} />
+        <Token bg={K.crown} style={{ width: 380, padding: 22, rotate: "3deg" }}>
+          <div style={{ height: 300, border: `5px solid ${K.ink}`, borderRadius: 12, background: K.cream, display: "grid", placeItems: "center" }}>
+            <span style={{ fontFamily: KF.display, fontSize: 240, color: K.violet, lineHeight: 1, textShadow: `0 10px 0 ${K.ink}` }}>?</span>
+          </div>
+          <div style={{ marginTop: 14, display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+            <span style={{ fontFamily: KF.display, fontSize: 40, color: K.ink }}>No. 1</span>
+            <Mono size={20} color={K.ink}>
+              e1 · the crown
+            </Mono>
+          </div>
+        </Token>
+      </div>
+      {/* the rest of the court, waiting */}
+      <div style={{ position: "absolute", left: 90, bottom: 70, display: "flex", gap: 16 }}>
+        {seats.map(([n, sq], i) => (
+          <Token key={n} bg={i % 2 ? K.lime : K.violet} color={i % 2 ? K.ink : K.cream} style={{ width: 170, height: 150, padding: "14px 16px", borderRadius: 12, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+            <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
+              <span style={{ fontFamily: KF.display, fontSize: 40 }}>{n}</span>
+              <span style={{ fontFamily: KF.mono, fontWeight: 600, fontSize: 16 }}>{sq}</span>
+            </div>
+            <span style={{ fontFamily: KF.body, fontWeight: 800, fontSize: 20 }}>open</span>
+          </Token>
+        ))}
+      </div>
+    </AbsoluteFill>
+  );
+}

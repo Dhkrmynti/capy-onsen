@@ -5,6 +5,7 @@
 | `logo-x.png` | Foto profil (1080×1080, Raja oranye bermahkota; aman untuk crop bulat X) |
 | `banner-x.png` | Header (1500×500; teks di tengah-kanan, tidak tertutup foto profil) |
 | `post-0-the-throne-is-empty.png` | Post 0: kondisi sekarang — takhta kosong, menunggu Raja pertama |
+| `post-0b-who-will-be-king.png` | Post 0b: "Who will be the first King?" — ajakan untuk putaran pertama |
 | `post-1-how-kingpins-works.mp4` | Post 1: video penjelasan (mahkota, escrow, 4 langkah, captured) |
 | `post-2-tutorial-name-portrait-x.mp4` | Post 2: tutorial nama + portrait + Connect X |
 | `post-3-the-ladder.png` | Post 3: The Ladder (top 10 + tier) |
@@ -41,6 +42,23 @@ Pilih satu bio:
 > kingpins.fun
 
 **Alt text:** A violet poster: "The throne is empty." above a dashed empty No. 1 frame with a crown floating over it, a row of chess pieces with an orange King, and "0 / 0.02 ETH to the first Tribute".
+
+---
+
+## Post 0b — siapa Raja pertama?
+
+**File:** `post-0b-who-will-be-king.png`
+
+> Who will be the first King? 👑
+>
+> Round one is open. The biggest $KING holder takes the crown,
+> and the top 10 split the first 0.02 ETH Tribute.
+>
+> No. 1 is empty. Take it.
+>
+> kingpins.fun
+
+**Alt text:** A dark poster asking "Who will be the first King?" with an orange No. 1 frame holding a big violet question mark under a crown, and four open squares for No. 2 to 5.
 
 ---
 
@@ -141,7 +159,7 @@ Pilih satu bio:
 ## Urutan posting
 
 1. Sebelum launch: pasang foto profil, header, bio, lalu **Post 1** (pin).
-2. Setelah launch: quote Post 1 dengan CA: *"$KING is live on Pons. CA: [CA] · kingpins.fun"*
+2. Saat launch: **Post 0b** dengan CA. Lalu quote Post 1 dengan CA: *"$KING is live on Pons. CA: [CA] · kingpins.fun"*
 3. +2–3 jam: **Post 2** (tutorial).
 4. Hari berikutnya: **Post 3**, lalu **Post 4**.
 5. Setelah Tribute pertama: **Post 5**, quote dengan link tx asli dari the Record.
