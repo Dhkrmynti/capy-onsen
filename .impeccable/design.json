@@ -1,617 +1,128 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-08T14:09:58.319212+00:00",
-  "title": "Design System: The Robin Heist Gazette",
+  "generatedAt": "2026-10-09T19:39:24.383487+00:00",
+  "title": "Design System: Kingpin — The Board",
   "extensions": {
     "colorMeta": {
-      "paper": {
-        "role": "neutral",
-        "displayName": "Newsprint",
-        "canonical": "#dedcd5",
-        "tonalRamp": [
-          "#2b2922",
-          "#4a473a",
-          "#6a6553",
-          "#89836c",
-          "#a39d8a",
-          "#bcb8a9",
-          "#d7d4cc",
-          "#f4f3f1"
-        ],
-        "cssVar": "--paper"
+      "lime": {
+        "displayName": "Electric Lime",
+        "role": "board square, field colour"
       },
-      "paper-deep": {
-        "role": "neutral",
-        "displayName": "Back Stock",
-        "canonical": "#cfccc3",
-        "tonalRamp": [
-          "#2a2822",
-          "#4a463b",
-          "#696454",
-          "#88816d",
-          "#a29c8b",
-          "#bbb7aa",
-          "#d6d4cc",
-          "#f4f3f1"
-        ],
-        "cssVar": "--paper-deep"
+      "violet": {
+        "displayName": "Royal Violet",
+        "role": "board square, field colour"
       },
-      "paper-shade": {
-        "role": "neutral",
-        "displayName": "Shade Stock",
-        "canonical": "#bdb9ae",
-        "tonalRamp": [
-          "#2a2822",
-          "#49453c",
-          "#686355",
-          "#87806e",
-          "#a19b8c",
-          "#bab6ab",
-          "#d6d3cc",
-          "#f4f3f1"
-        ],
-        "cssVar": "--paper-shade"
+      "violet-deep": {
+        "displayName": "Deep Violet",
+        "role": "dark board square"
       },
-      "paper-lift": {
-        "role": "neutral",
-        "displayName": "Fresh Sheet",
-        "canonical": "#e9e7e1",
-        "tonalRamp": [
-          "#2c2920",
-          "#4c4738",
-          "#6d6650",
-          "#8d8468",
-          "#a79e86",
-          "#beb8a7",
-          "#d8d5ca",
-          "#f4f3f0"
-        ],
-        "cssVar": "--paper-lift"
+      "crown": {
+        "displayName": "Crown Orange",
+        "role": "the King, primary action, crown moments"
       },
-      "ink": {
-        "role": "neutral",
-        "displayName": "Carbon Ink",
-        "canonical": "#161514",
-        "tonalRamp": [
-          "#282624",
-          "#45423f",
-          "#635e5a",
-          "#807a75",
-          "#9b9691",
-          "#b6b2af",
-          "#d3d1cf",
-          "#f3f2f2"
-        ],
-        "cssVar": "--ink",
-        "note": "--rule is an alias of the same ink."
+      "grape-0": {
+        "displayName": "Grape Ink",
+        "role": "dark ground and outline ink"
       },
-      "ink-soft": {
-        "role": "neutral",
-        "displayName": "Worn Ink",
-        "canonical": "#3d3b37",
-        "tonalRamp": [
-          "#282724",
-          "#46433f",
-          "#636059",
-          "#817d74",
-          "#9c9891",
-          "#b6b4af",
-          "#d3d2cf",
-          "#f3f2f2"
-        ],
-        "cssVar": "--ink-soft"
+      "edge": {
+        "displayName": "Lit Edge",
+        "role": "outline on dark ground"
       },
-      "ink-faint": {
-        "role": "neutral",
-        "displayName": "Faded Ink",
-        "canonical": "#5d5a54",
-        "tonalRamp": [
-          "#282724",
-          "#46433f",
-          "#63605a",
-          "#817c74",
-          "#9c9891",
-          "#b6b4af",
-          "#d3d2cf",
-          "#f3f2f2"
-        ],
-        "cssVar": "--ink-faint"
+      "exile": {
+        "displayName": "Captured Red",
+        "role": "sellers only"
       },
-      "rule-soft": {
-        "role": "neutral",
-        "displayName": "Ghost Rule",
-        "canonical": "rgba(22, 21, 20, 0.28)",
-        "tonalRamp": [
-          "#282624",
-          "#45423f",
-          "#635e5a",
-          "#807a75",
-          "#9b9691",
-          "#b6b2af",
-          "#d3d1cf",
-          "#f3f2f2"
-        ],
-        "note": "Alpha hairline; ramp shows its base ink.",
-        "cssVar": "--rule-soft"
+      "cream": {
+        "displayName": "Board Cream",
+        "role": "text on dark and violet"
       },
-      "red": {
-        "role": "primary",
-        "displayName": "Tabloid Red",
-        "canonical": "#c8241b",
-        "tonalRamp": [
-          "#430c09",
-          "#751510",
-          "#a61e16",
-          "#d8271d",
-          "#e64f47",
-          "#ed7e78",
-          "#f4b2ae",
-          "#fceae9"
-        ],
-        "cssVar": "--red"
-      },
-      "red-deep": {
-        "role": "primary",
-        "displayName": "Pressed Red",
-        "canonical": "#9e1a13",
-        "tonalRamp": [
-          "#440b08",
-          "#76130e",
-          "#a81c14",
-          "#db241a",
-          "#e94d44",
-          "#ef7c76",
-          "#f5b1ad",
-          "#fce9e8"
-        ],
-        "cssVar": "--red-deep"
-      },
-      "red-ink": {
-        "role": "primary",
-        "displayName": "Red Paper",
-        "canonical": "#fbf3ee",
-        "tonalRamp": [
-          "#3e210f",
-          "#6b3919",
-          "#995124",
-          "#c6692f",
-          "#d78856",
-          "#e2a883",
-          "#eecbb5",
-          "#faf0ea"
-        ],
-        "cssVar": "--red-ink"
-      },
-      "night-paper": {
-        "role": "neutral",
-        "displayName": "Night Stock",
-        "canonical": "#171614",
-        "tonalRamp": [
-          "#292724",
-          "#47443e",
-          "#656158",
-          "#837d72",
-          "#9e998f",
-          "#b8b4ad",
-          "#d4d2ce",
-          "#f3f3f1"
-        ],
-        "scheme": "dark (prefers-color-scheme), redefines the same custom property"
-      },
-      "night-paper-deep": {
-        "role": "neutral",
-        "displayName": "Night Back Stock",
-        "canonical": "#201f1c",
-        "tonalRamp": [
-          "#292824",
-          "#47453e",
-          "#656158",
-          "#837e72",
-          "#9d9a8f",
-          "#b8b5ad",
-          "#d4d3ce",
-          "#f3f3f1"
-        ],
-        "scheme": "dark (prefers-color-scheme), redefines the same custom property"
-      },
-      "night-paper-shade": {
-        "role": "neutral",
-        "displayName": "Night Shade Stock",
-        "canonical": "#2c2a26",
-        "tonalRamp": [
-          "#292723",
-          "#47443d",
-          "#656157",
-          "#837d71",
-          "#9e998f",
-          "#b8b4ad",
-          "#d4d2ce",
-          "#f3f3f1"
-        ],
-        "scheme": "dark (prefers-color-scheme), redefines the same custom property"
-      },
-      "night-paper-lift": {
-        "role": "neutral",
-        "displayName": "Night Fresh Sheet",
-        "canonical": "#23221f",
-        "tonalRamp": [
-          "#292724",
-          "#46443e",
-          "#646159",
-          "#827e73",
-          "#9d9a90",
-          "#b7b5ae",
-          "#d4d2ce",
-          "#f3f3f1"
-        ],
-        "scheme": "dark (prefers-color-scheme), redefines the same custom property"
-      },
-      "night-ink": {
-        "role": "neutral",
-        "displayName": "Night Ink",
-        "canonical": "#e6e3da",
-        "tonalRamp": [
-          "#2e2a1f",
-          "#4f4935",
-          "#71674c",
-          "#928663",
-          "#aba182",
-          "#c1baa4",
-          "#dad6c8",
-          "#f5f3f0"
-        ],
-        "scheme": "dark (prefers-color-scheme), redefines the same custom property"
-      },
-      "night-ink-soft": {
-        "role": "neutral",
-        "displayName": "Night Worn Ink",
-        "canonical": "#c2beb3",
-        "tonalRamp": [
-          "#2a2822",
-          "#4a463b",
-          "#696354",
-          "#88816d",
-          "#a29c8b",
-          "#bbb6aa",
-          "#d6d3cc",
-          "#f4f3f1"
-        ],
-        "scheme": "dark (prefers-color-scheme), redefines the same custom property"
-      },
-      "night-ink-faint": {
-        "role": "neutral",
-        "displayName": "Night Faded Ink",
-        "canonical": "#a29e93",
-        "tonalRamp": [
-          "#292823",
-          "#47453d",
-          "#656257",
-          "#847f71",
-          "#9e9a8f",
-          "#b8b5ad",
-          "#d5d3ce",
-          "#f3f3f1"
-        ],
-        "scheme": "dark (prefers-color-scheme), redefines the same custom property"
-      },
-      "night-rule-soft": {
-        "role": "neutral",
-        "displayName": "Night Ghost Rule",
-        "canonical": "rgba(230, 227, 218, 0.3)",
-        "tonalRamp": [
-          "#2e2a1f",
-          "#4f4935",
-          "#71674c",
-          "#928663",
-          "#aba182",
-          "#c1baa4",
-          "#dad6c8",
-          "#f5f3f0"
-        ],
-        "note": "Alpha hairline; ramp shows its base ink.",
-        "scheme": "dark (prefers-color-scheme), redefines the same custom property"
-      },
-      "night-red": {
-        "role": "primary",
-        "displayName": "Night Final Red",
-        "canonical": "#e2392d",
-        "tonalRamp": [
-          "#430d09",
-          "#751710",
-          "#a62017",
-          "#d72a1e",
-          "#e65247",
-          "#ec8079",
-          "#f4b3ae",
-          "#fceae9"
-        ],
-        "scheme": "dark (prefers-color-scheme), redefines the same custom property"
-      },
-      "night-red-deep": {
-        "role": "primary",
-        "displayName": "Night Pressed Red",
-        "canonical": "#c42b20",
-        "tonalRamp": [
-          "#420e0b",
-          "#721913",
-          "#a2241a",
-          "#d22e22",
-          "#e2554b",
-          "#ea837b",
-          "#f2b5b0",
-          "#fbeae9"
-        ],
-        "scheme": "dark (prefers-color-scheme), redefines the same custom property"
+      "cream-2": {
+        "displayName": "Lavender Cream",
+        "role": "secondary text"
       }
     },
     "typographyMeta": {
-      "masthead": {
-        "displayName": "Masthead",
-        "purpose": "The paper's name in red slab type; also the running-head name and crew-card issuer."
-      },
       "display": {
-        "displayName": "Display",
-        "purpose": "Front-page banner headline, fitted to one full-measure line above 1080px."
+        "role": "toy caps display, max 96px"
       },
-      "headline": {
-        "displayName": "Headline",
-        "purpose": "Inside page heads; the same face sets WANTED, the slogan, the back-page close, drop caps and big numerals."
-      },
-      "title": {
-        "displayName": "Title",
-        "purpose": "Rail heads, column subheads, ad heads."
-      },
-      "deck": {
-        "displayName": "Deck",
-        "purpose": "Italic standfirst under each page head, captions, submast."
-      },
-      "body": {
-        "displayName": "Body",
-        "purpose": "Reading copy and newspaper columns; 17px at 760px and below."
-      },
-      "label": {
-        "displayName": "Label",
-        "purpose": "Datelines, nav, table headers, fact terms; uppercase."
-      },
-      "button": {
-        "displayName": "Button",
-        "purpose": "Uppercase plate text on buttons."
-      },
-      "wire": {
-        "displayName": "Wire",
-        "purpose": "Wire copy and data only: blotter, contract address, folios, bylines, rail readouts."
+      "data": {
+        "role": "numbers, coordinates, clock; tabular"
       }
     },
-    "shadows": [
-      {
-        "name": "lift",
-        "value": "0 14px 30px -18px rgba(40, 36, 28, 0.55), 0 2px 5px -2px rgba(40, 36, 28, 0.35)",
-        "purpose": "The one soft offset shadow: live button, wanted poster, crew card.",
-        "dark": "0 14px 30px -18px rgba(0, 0, 0, 0.8), 0 2px 5px -2px rgba(0, 0, 0, 0.6)"
-      },
-      {
-        "name": "page-edge",
-        "value": "0 -34px 50px -34px rgba(20, 18, 14, 0.55)",
-        "purpose": "Upward shadow of the inside-page stack as it turns over the front page; paired with an 18px crease gradient rgba(20, 18, 14, 0.14) to transparent."
-      }
-    ],
-    "materials": [
-      {
-        "name": "newsprint-grain",
-        "value": "radial-gradient(circle at 1px 1px, var(--ink) 0.55px, transparent 0.9px) / 5px 5px, opacity 0.07, position fixed",
-        "purpose": "Halftone grain over the whole sheet; fixed so scroll never repaints it."
-      },
-      {
-        "name": "halftone-photo",
-        "value": "canvas 45-degree dot screen from Robin's SVG; coarse cell 18px to fine 3.2px; line-art plate mix 0.16",
-        "purpose": "The only photo material; positive (light dots) in night final."
-      }
-    ],
-    "motion": [
-      {
-        "name": "ease-press",
-        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
-        "purpose": "CSS transitions: button hover/press, coupon border, running head drop (0.45s)."
-      },
-      {
-        "name": "state-transition",
-        "value": "0.18s var(--ease-press)",
-        "purpose": "Button and coupon state changes."
-      },
-      {
-        "name": "head-slam",
-        "value": "rule --rule-draw 0 to 1 over 0.9s; headline from scale 1.16, blur 7px, opacity 0 over 0.85s; deck clip-path inset(0 0 100% 0) over 0.8s; expo.out; ScrollTrigger start top 78%",
-        "purpose": "Shared press run on every inside page head."
-      },
-      {
-        "name": "front-press-run",
-        "value": "EXTRA yPercent -110 (0.7s); banner lines scale 1.18 + blur 8px, stagger 0.12; lede, deal and rail clip-path rolled; expo.out",
-        "purpose": "First-viewport entrance on load."
-      },
-      {
-        "name": "page-turn",
-        "value": "pin front at bottom bottom for +=100%, pinSpacing false; .front__sheet scale 0.94, brightness 0.82, scrub",
-        "purpose": "Signature move: inside pages slide over the held front page."
-      },
-      {
-        "name": "section-moves",
-        "value": "take shares scaleX from 0 stagger 0.18; notice rules clip wipe stagger 0.07; wanted slapped on back.out(1.6); crew card y 46 rotate 2.5 to -1 then stamp scale 2.2 power4.in; vault rows x -14 stagger 0.045; blotter entries ScrollTrigger.batch scale 1.06 power4.out; back close slammed like a head",
-        "purpose": "One content-native move per section after the shared head slam."
-      },
-      {
-        "name": "fuse-burn",
-        "value": "--burn tween 1.4s power3.out; flame keyframes 0.42s steps(2) alternate",
-        "purpose": "Escrow progress toward the next heist."
-      },
-      {
-        "name": "reduced-motion",
-        "value": "prefers-reduced-motion: reduce",
-        "purpose": "Skips every GSAP timeline, the pin and Lenis; halftone drawn at fine screen; fuse set directly; CSS durations 0.01ms."
-      }
-    ],
-    "breakpoints": [
-      {
-        "name": "wide",
-        "value": "1081px",
-        "purpose": "Banner fitted to one line"
-      },
-      {
-        "name": "sheet",
-        "value": "1080px"
-      },
-      {
-        "name": "index",
-        "value": "900px",
-        "purpose": "Running-head index hidden"
-      },
-      {
-        "name": "phone",
-        "value": "760px"
-      }
-    ]
+    "shadows": {
+      "base": "0 6px 0 #170c29",
+      "base-deep": "0 6px 0 #07030f",
+      "pressed": "0 2px 0 #170c29",
+      "clock": "0 8px 0 #07030f"
+    },
+    "materials": {
+      "outline": "3px solid #170c29 (2px #5b3fa8 on dark ground)",
+      "piece": "authored SVG, flat fill, 3.2px ink stroke, base plate"
+    },
+    "motion": {
+      "ease": "expo.out",
+      "heroFlatten": "pinned scrub, board rotateX 58deg to 0, scale 1.45, end +=85%",
+      "roundPan": "pinned horizontal track, scrub 0.6",
+      "ladderFlip": "0.9s expo.out from previous rect; New King shout back.out(2)",
+      "press": "translateY 4px, 0.16s cubic-bezier(0.22,1,0.36,1)",
+      "king3d": "toon shading, <=30fps, paused off screen"
+    },
+    "breakpoints": {
+      "phone": "760px",
+      "tablet": "1080px"
+    }
   },
   "components": [
     {
-      "name": "Live Button",
+      "name": "Buy button",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "The one live action (buy on Pons): red plate, inverts to ink when pressed.",
-      "html": "<button class=\"ds-btn\">Join on Pons <svg width=\"18\" height=\"18\" viewBox=\"0 0 256 256\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M204 64v104a12 12 0 0 1-24 0V93L72.49 200.49a12 12 0 0 1-17-17L163 76H88a12 12 0 0 1 0-24h104a12 12 0 0 1 12 12Z\"/></svg></button>",
-      "css": ".ds-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:54px;padding:0 26px;border:2px solid var(--ink,#161514);background:var(--red,#c8241b);color:var(--red-ink,#fbf3ee);font:700 18px/1 'Archivo Narrow','Arial Narrow',sans-serif;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;border-radius:0;box-shadow:var(--lift,0 14px 30px -18px rgba(40,36,28,.55),0 2px 5px -2px rgba(40,36,28,.35));transition:background-color .18s cubic-bezier(.16,1,.3,1),transform .18s cubic-bezier(.16,1,.3,1)}.ds-btn:hover{background:var(--red-deep,#9e1a13);transform:translateY(-1px)}.ds-btn:active{background:var(--ink,#161514);color:var(--paper,#dedcd5);transform:translateY(1px)}.ds-btn:focus-visible{outline:3px solid var(--red,#c8241b);outline-offset:3px}"
+      "description": "Crown pill on its printed base; pressing pushes it down onto the base.",
+      "html": "<a class=\"ds-buy\">Buy $KING</a>",
+      "css": ".ds-buy{display:inline-flex;align-items:center;height:52px;padding:0 24px;border:3px solid #170c29;border-radius:999px;background:#ff7a1a;color:#170c29;font:800 16px/1 Archivo,system-ui,sans-serif;box-shadow:0 6px 0 #170c29;text-decoration:none}"
     },
     {
-      "name": "Ink Button",
-      "kind": "button",
-      "refersTo": "button-ink",
-      "description": "Secondary plate in ink that turns red on hover.",
-      "html": "<button class=\"ds-btn-ink\">Check my card</button>",
-      "css": ".ds-btn-ink{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:54px;padding:0 26px;border:2px solid var(--ink,#161514);background:var(--ink,#161514);color:var(--paper,#dedcd5);font:700 18px/1 'Archivo Narrow','Arial Narrow',sans-serif;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;border-radius:0;box-shadow:var(--lift,0 14px 30px -18px rgba(40,36,28,.55),0 2px 5px -2px rgba(40,36,28,.35));transition:background-color .18s cubic-bezier(.16,1,.3,1),transform .18s cubic-bezier(.16,1,.3,1)}.ds-btn-ink:hover{background:var(--red,#c8241b);color:var(--red-ink,#fbf3ee);transform:translateY(-1px)}.ds-btn-ink:active{background:var(--ink,#161514);color:var(--paper,#dedcd5);transform:translateY(1px)}.ds-btn-ink:focus-visible{outline:3px solid var(--red,#c8241b);outline-offset:3px}"
-    },
-    {
-      "name": "CA Coupon",
-      "kind": "custom",
-      "refersTo": "coupon",
-      "description": "Dashed cut-out holding the contract address in wire type; click to copy.",
-      "html": "<button class=\"ds-coupon\"><span class=\"ds-coupon__k\">CA</span><span class=\"ds-coupon__v\">0x9d2f4c81b7e3a6150c8f2e4d6...</span></button>",
-      "css": ".ds-coupon{display:inline-flex;align-items:center;gap:10px;max-width:100%;height:54px;padding:0 14px;border:2px dashed var(--ink,#161514);background:var(--paper-lift,#e9e7e1);color:var(--ink,#161514);font:600 16px/1 'Archivo Narrow','Arial Narrow',sans-serif;cursor:pointer;transition:border-color .18s cubic-bezier(.16,1,.3,1)}.ds-coupon:hover{border-color:var(--red,#c8241b)}.ds-coupon:active{background:var(--ink,#161514);color:var(--paper,#dedcd5)}.ds-coupon:focus-visible{outline:3px solid var(--red,#c8241b);outline-offset:3px}.ds-coupon__k{padding:4px 8px;background:var(--ink,#161514);color:var(--paper,#dedcd5);font-weight:700;font-size:13px;letter-spacing:.08em}.ds-coupon:active .ds-coupon__k{background:var(--paper,#dedcd5);color:var(--ink,#161514)}.ds-coupon__v{min-width:0;font-family:'Courier Prime','Courier New',monospace;font-weight:400;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}"
-    },
-    {
-      "name": "Wallet Lookup",
-      "kind": "input",
-      "refersTo": "input-lookup",
-      "description": "Square ink-bordered field joined flush to its button.",
-      "html": "<div class=\"ds-lookup\"><label for=\"ds-w\">Your wallet</label><div class=\"ds-lookup__f\"><input id=\"ds-w\" placeholder=\"0x...\"><button>Look up</button></div></div>",
-      "css": ".ds-lookup label{display:block;margin-bottom:8px;font:700 14px/1 'Archivo Narrow','Arial Narrow',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--ink,#161514)}.ds-lookup__f{display:flex}.ds-lookup__f input{flex:1;min-width:0;height:54px;padding:0 16px;border:2px solid var(--ink,#161514);border-right:0;border-radius:0;background:var(--paper-lift,#e9e7e1);color:var(--ink,#161514);font:500 17px/1 'Archivo Narrow','Arial Narrow',sans-serif;font-variant-numeric:tabular-nums;caret-color:var(--red,#c8241b)}.ds-lookup__f input::placeholder{color:var(--ink-faint,#5d5a54)}.ds-lookup__f input:focus-visible{outline:3px solid var(--red,#c8241b);outline-offset:0}.ds-lookup__f button{height:54px;padding:0 26px;border:2px solid var(--ink,#161514);background:var(--red,#c8241b);color:var(--red-ink,#fbf3ee);font:700 18px/1 'Archivo Narrow','Arial Narrow',sans-serif;letter-spacing:.06em;text-transform:uppercase;cursor:pointer}.ds-lookup__f button:hover{background:var(--red-deep,#9e1a13)}.ds-lookup__f button:active{background:var(--ink,#161514);color:var(--paper,#dedcd5)}"
-    },
-    {
-      "name": "Running Head",
-      "kind": "nav",
-      "refersTo": "running-head",
-      "description": "Fixed bar that drops in once the masthead scrolls away; red slab name, label index, live button.",
-      "html": "<nav class=\"ds-runhead\"><a class=\"ds-runhead__name\" href=\"#\">The Robin Heist Gazette</a><span class=\"ds-runhead__index\"><a href=\"#\">The heist</a><a href=\"#\">Rules</a><a href=\"#\">The vault</a><a href=\"#\">Blotter</a></span></nav>",
-      "css": ".ds-runhead{display:flex;align-items:center;gap:24px;height:58px;padding:0 24px;background:var(--paper,#dedcd5);border-bottom:5px double var(--ink,#161514)}.ds-runhead__name{font:400 20px/1 'Alfa Slab One',Rockwell,serif;color:var(--red,#c8241b);text-decoration:none;white-space:nowrap}.ds-runhead__index{flex:1;display:flex;justify-content:center;gap:26px}.ds-runhead__index a{font:600 15px/1 'Archivo Narrow','Arial Narrow',sans-serif;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;color:var(--ink,#161514)}.ds-runhead__index a:hover,.ds-runhead__index a:focus-visible{text-decoration:underline;text-decoration-color:var(--red,#c8241b);text-underline-offset:.2em;outline:none}"
-    },
-    {
-      "name": "EXTRA Bar",
-      "kind": "custom",
-      "refersTo": "extra-bar",
-      "description": "Full-width red banner over the front headline naming the next heist step.",
-      "html": "<p class=\"ds-extra\"><span>Extra</span><span>The split</span><span>Extra</span></p>",
-      "css": ".ds-extra{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:0;padding:7px 16px 5px;background:var(--red,#c8241b);color:var(--red-ink,#fbf3ee);font:400 30px/1 'League Gothic','Arial Narrow',sans-serif;letter-spacing:.1em;text-transform:uppercase}"
-    },
-    {
-      "name": "Crew Card",
+      "name": "Court tile",
       "kind": "card",
-      "refersTo": "crew-card",
-      "description": "The press pass returned by a wallet lookup; the only rounded object, tilted and stamped.",
-      "html": "<div class=\"ds-card\"><div class=\"ds-card__top\"><span class=\"ds-card__org\">Robin Heist</span><span class=\"ds-card__kind\">Crew card</span></div><div class=\"ds-card__who\">0x9d2f...e4d6</div><dl class=\"ds-card__facts\"><div><dt>Bag</dt><dd>412,000</dd></div><div><dt>Rank</dt><dd>#4</dd></div></dl><span class=\"ds-card__stamp\">In</span></div>",
-      "css": ".ds-card{position:relative;max-width:520px;padding:20px 22px 18px;border:2px solid var(--ink,#161514);border-radius:10px;background:var(--paper-lift,#e9e7e1);color:var(--ink,#161514);box-shadow:var(--lift,0 14px 30px -18px rgba(40,36,28,.55),0 2px 5px -2px rgba(40,36,28,.35));rotate:-1deg}.ds-card__top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding-bottom:10px;border-bottom:5px double var(--ink,#161514)}.ds-card__org{font:400 16px/1.1 'Alfa Slab One',Rockwell,serif;color:var(--red,#c8241b)}.ds-card__kind{font:700 13px/1 'Archivo Narrow','Arial Narrow',sans-serif;letter-spacing:.12em;text-transform:uppercase}.ds-card__who{margin-top:16px;font:400 38px/1 'League Gothic','Arial Narrow',sans-serif}.ds-card__facts{display:grid;grid-template-columns:1fr 1fr;gap:10px 16px;margin:12px 0 0}.ds-card__facts dt{font:600 12px/1 'Archivo Narrow','Arial Narrow',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint,#5d5a54)}.ds-card__facts dd{margin:4px 0 0;font:700 21px/1.1 'Archivo Narrow','Arial Narrow',sans-serif;font-variant-numeric:tabular-nums}.ds-card__stamp{position:absolute;top:56px;right:18px;padding:4px 14px 2px;border:4px solid currentColor;font:400 44px/1 'League Gothic','Arial Narrow',sans-serif;text-transform:uppercase;letter-spacing:.04em;rotate:-12deg;opacity:.88;color:var(--ink,#161514)}"
+      "refersTo": "tile-court-light",
+      "description": "A square on the board: rank and coordinate, piece, holder, two mono lines.",
+      "html": "<div class=\"ds-tile\"><b>3 <i>a1</i></b><span>trustfundtony</span><small>4.8M · $198<br>next 0.0026 ETH</small></div>",
+      "css": ".ds-tile{display:flex;flex-direction:column;gap:6px;width:220px;padding:14px 16px;border:3px solid #170c29;border-radius:8px;background:#c6f432;color:#170c29;box-shadow:0 6px 0 #07030f}.ds-tile b{font:400 28px/1 'Dela Gothic One',sans-serif}.ds-tile i{font:600 11px 'Martian Mono',monospace;font-style:normal;opacity:.7}.ds-tile span{font:800 17px Archivo,sans-serif}.ds-tile small{font:600 11.5px/1.35 'Martian Mono',monospace}"
     },
     {
-      "name": "Wanted Poster",
-      "kind": "card",
-      "refersTo": "wanted-poster",
-      "description": "Sticky poster counting snitches in red; square, tilted 2deg, lifted.",
-      "html": "<aside class=\"ds-wanted\"><p class=\"ds-wanted__w\">Wanted</p><p class=\"ds-wanted__n\">41</p><p class=\"ds-wanted__r\">Reward: nothing. Ever.</p></aside>",
-      "css": ".ds-wanted{max-width:320px;padding:30px 26px 28px;border:2px solid var(--ink,#161514);background:var(--paper-lift,#e9e7e1);color:var(--ink,#161514);box-shadow:var(--lift,0 14px 30px -18px rgba(40,36,28,.55),0 2px 5px -2px rgba(40,36,28,.35));text-align:center;rotate:2deg}.ds-wanted p{margin:0}.ds-wanted__w{font:400 84px/.84 'League Gothic','Arial Narrow',sans-serif;letter-spacing:.04em;text-transform:uppercase}.ds-wanted__n{margin-top:6px;font:400 150px/.8 'League Gothic','Arial Narrow',sans-serif;color:var(--red,#c8241b);font-variant-numeric:tabular-nums}.ds-wanted__r{margin-top:18px;padding-top:14px;border-top:5px double var(--ink,#161514);font:400 40px/1 'League Gothic','Arial Narrow',sans-serif;text-transform:uppercase}"
-    },
-    {
-      "name": "Stock Quotations",
-      "kind": "custom",
-      "refersTo": "quotes",
-      "description": "Leaderboard set as market quotations: heavy top and bottom rules, column hairlines, dotted rows.",
-      "html": "<table class=\"ds-quotes\"><thead><tr><th>#</th><th>Wallet</th><th class=\"n\">Bag</th></tr></thead><tbody><tr class=\"top\"><td>1</td><td>0x41a0...92bc</td><td class=\"n\">1,920,400</td></tr><tr><td>2</td><td>0x7e11...03fa</td><td class=\"n\">884,000</td></tr></tbody></table>",
-      "css": ".ds-quotes{width:100%;border-collapse:collapse;border-bottom:4px solid var(--ink,#161514);font-family:'Archivo Narrow','Arial Narrow',sans-serif;color:var(--ink,#161514)}.ds-quotes th+th,.ds-quotes td+td{border-left:1px solid var(--ink,#161514)}.ds-quotes th{padding:8px 10px;border-top:4px solid var(--ink,#161514);border-bottom:2px solid var(--ink,#161514);font:700 13px/1 'Archivo Narrow','Arial Narrow',sans-serif;letter-spacing:.1em;text-transform:uppercase;text-align:left}.ds-quotes td{padding:5px 10px;border-bottom:1px dotted var(--rule-soft,rgba(22,21,20,.28));font-size:16px;font-weight:500;line-height:1.35;font-variant-numeric:tabular-nums}.ds-quotes .n{text-align:right}.ds-quotes tr.top td{font-weight:700}.ds-quotes tbody tr:hover{background:var(--paper-deep,#cfccc3)}"
-    },
-    {
-      "name": "Blotter Entry",
-      "kind": "custom",
-      "refersTo": "blotter-entry",
-      "description": "Police-ledger line for a sell, set in wire type.",
-      "html": "<div class=\"ds-entry\"><div class=\"ds-entry__m\"><span>Block 82,931,447</span><span>14:02</span></div><p class=\"ds-entry__w\"><strong>0x7e11...03fa</strong> sold on the curve. Out of the crew.</p></div>",
-      "css": ".ds-entry{padding:14px 0 16px;border-top:1px solid var(--ink,#161514);color:var(--ink,#161514)}.ds-entry__m{display:flex;gap:16px;font:400 13px/1 'Courier Prime','Courier New',monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint,#5d5a54)}.ds-entry__w{margin:8px 0 0;font:400 16px/1.5 'Courier Prime','Courier New',monospace}.ds-entry__w strong{font-weight:700;text-transform:uppercase}"
+      "name": "Chess clock",
+      "kind": "meter",
+      "refersTo": "",
+      "description": "Escrow toward the next move: crown arc, cream hand, mono readout.",
+      "html": "<div class=\"ds-clock\"><b>0.0182</b><span>/ 0.02 ETH</span></div>",
+      "css": ".ds-clock{width:232px;padding:22px 18px 16px;border:4px solid #170c29;border-radius:26px;background:#170c29;color:#fff6e3;text-align:center;font:600 13px 'Martian Mono',monospace}.ds-clock b{display:block;font-size:30px}"
     }
   ],
   "narrative": {
-    "northStar": "The Late Edition",
-    "overview": "The site is one sheet of cheap 1930s crime tabloid that keeps going to press. The engine's state is the news: the front page headline is set from live data, the heist schedule is a column of copy, the leaderboard is the stock quotations, the sell log is the police blotter, and the back page is the classifieds. Everything is ink on gray newsprint with one red, cut in wood type and laid out on a column grid with drawn rules. No surface pretends to be an app.\n\nDensity is a newspaper's: tight leading on headlines, generous body measure, rules doing the work that cards and boxes do elsewhere. Material is printed: a fixed halftone grain over the whole sheet, photographs printed as halftone screens computed from the mascot's own art, double rules under the masthead and above every page. Motion is a press run: rules are drawn, headlines slam onto the sheet out of a blur, decks are printed down by a roller, and the front page is turned over by the pages beneath it. The late edition (dark scheme) is the same paper printed in light ink on black stock.",
+    "northStar": "The Board in Play",
+    "overview": "The holder ladder as a loud toy chessboard mid-game: the biggest holder is the King, fees are moves on a chess clock, sellers are captured.",
     "keyCharacteristics": [
-      "Cold gray newsprint ground with stepped paper tones; ink, never pure black.",
-      "One red, used for the masthead, the EXTRA bar, snitch counts, the one live action and the fuse flame.",
-      "Five self-hosted faces with strict jobs: slab masthead, condensed wood-type headlines, serif reading copy, narrow sans labels, typewriter wire copy.",
-      "Square newspaper geometry; the crew card is the only rounded object.",
-      "Halftone as the photo material; one soft shadow for paper lying on paper.",
-      "Press-run motion with a pinned front page that the next pages slide over."
+      "one field colour per viewport",
+      "printed board-game tokens with base shadows",
+      "Martian Mono notation for every number and coordinate",
+      "authored SVG pieces",
+      "one toon 3D King"
     ],
     "rules": [
-      {
-        "name": "The One Red Rule",
-        "body": "Red is the only hue on the sheet. It marks the paper's identity (masthead, EXTRA), the danger (snitches) and the one action worth taking (the live buy). A second accent breaks the newspaper.",
-        "section": "colors"
-      },
-      {
-        "name": "The Ink Not Black Rule",
-        "body": "Ink is warm carbon (`ink`), never `#000`; paper is gray stock, never `#fff`.",
-        "section": "colors"
-      },
-      {
-        "name": "The Job Per Face Rule",
-        "body": "Each face has one job. League Gothic never sets body copy; PT Serif never sets labels; Courier Prime is for wire copy and data only, never headings or prose.",
-        "section": "typography"
-      },
-      {
-        "name": "The Tabular Figures Rule",
-        "body": "Every live number uses tabular figures so counts and prices do not jitter as they update.",
-        "section": "typography"
-      },
-      {
-        "name": "The Rules Do The Boxing Rule",
-        "body": "Structure comes from printed rules (hairline, 2px, 4px, and 5 to 6px double), not from cards, fills or gaps.",
-        "section": "layout"
-      },
-      {
-        "name": "The One Lift Rule",
-        "body": "There is one soft shadow. Hard offset shadows, glows and stacked elevations do not belong to newsprint.",
-        "section": "elevation"
-      }
+      "Lime and violet are the board; crown orange is the King's",
+      "Every number in tabular mono",
+      "No glass, glows, gradient text or soft shadows"
     ],
     "dos": [
-      "Do keep red to its jobs: masthead, EXTRA, snitch counts and slogan, the one live action, the fuse flame, the out stamp, focus and selection.",
-      "Do separate content with printed rules (hairline, 2px, 4px, double) before reaching for boxes or fills.",
-      "Do give each face its one job: League Gothic for heads and big numerals, PT Serif for reading, Archivo Narrow for labels, tables and buttons, Courier Prime for wire copy and data.",
-      "Do print images as halftone from the real mascot art, at a fine screen at rest.",
-      "Do invert to ink on paper for pressed states on buttons and the coupon.",
-      "Do open every new inside page with the drawn double rule, folio, slammed headline and rolled deck, then one move native to its content.",
-      "Do define every color as a token and redefine it for night final; nothing hard-codes a light-only value.",
-      "Do collapse all motion to the finished static sheet under reduced motion."
+      "One headline per viewport",
+      "Board coordinates wherever a rank shows",
+      "Captured pieces lie at 90°"
     ],
     "donts": [
-      "Don't add a second accent hue, gradients or tinted panels.",
-      "Don't round corners on anything but the crew card at 10px.",
-      "Don't use any shadow other than the lift and the page-turn edge; no hard offset shadows, glows or blur panels.",
-      "Don't set prose or headings in Courier Prime, or body copy in League Gothic.",
-      "Don't use stock photos or full-color art on the sheet; Robin's palette only reaches the page through halftone or grayscale.",
-      "Don't use pure `#000` ink or pure `#fff` paper."
+      "No navy-gold vault or luxury serif",
+      "No Unicode chess glyphs or emoji icons",
+      "No eyebrows or section numbers",
+      "No second 3D object"
     ]
   }
 }
