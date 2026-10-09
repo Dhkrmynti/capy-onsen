@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-import { ArrowUpRight, Copy, Check, Scissors } from "@phosphor-icons/react";
+import { ArrowUpRight, Copy, Check } from "@phosphor-icons/react";
 import { DEMO, ponsUrl, short, type Status } from "../lib/api";
 import { prefersReducedMotion } from "../lib/motion";
 
@@ -34,13 +34,13 @@ export function BuyButton({ status, className = "" }: { status: Status | null; c
   if (!ca)
     return (
       <span className={`press-btn is-waiting ${className}`} aria-disabled="true">
-        <span className="btn__long">Doors open soon</span>
+        <span className="btn__long">Opens at launch</span>
         <span className="btn__short">Soon</span>
       </span>
     );
   return (
     <a className={`press-btn ${className}`} href={ponsUrl(ca)} target="_blank" rel="noreferrer">
-      <span className="btn__long">Join the family</span>
+      <span className="btn__long">Buy $KING</span>
       <span className="btn__short">Buy</span> <ArrowUpRight weight="bold" aria-hidden="true" />
     </a>
   );
@@ -62,9 +62,9 @@ export function CaCoupon({ status, compact = false }: { status: Status | null; c
   };
   return (
     <button type="button" className={`coupon ${compact ? "is-compact" : ""}`} onClick={copy} disabled={!ca} aria-label={ca ? `Copy contract address ${ca}` : "Contract address not live yet"}>
-      <Scissors className="coupon__cut" weight="bold" aria-hidden="true" />
+      
       <span className="coupon__k">CA</span>
-      <span className="coupon__v tabular">{ca ? (compact ? short(ca) : ca) : "printed at launch"}</span>
+      <span className="coupon__v tabular">{ca ? (compact ? short(ca) : ca) : "at launch"}</span>
       <span className="coupon__a" aria-hidden="true">
         {copied ? <Check weight="bold" /> : <Copy weight="bold" />}
       </span>

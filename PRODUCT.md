@@ -18,7 +18,7 @@ Delegated (chosen to match the owner's other token sites so the VPS deploy flow 
 
 ## Product Purpose
 
-$PADS is a memecoin on Robinhood Chain (chain ID 4663, launched on Pons Family v2) whose creator fees run a loop. A 24/7 bot claims the creator fees (ETH) from the Pons fee escrow whenever it reaches the next step's size and spends it on that step: a **feeding** (ETH straight to the 10 biggest wallets that have **never sold**), the **keeper's cut** (treasury), then the **sink** (buy $PADS back and burn it). Selling (sending $PADS to the Pons curve or the DEX pool) permanently disqualifies a wallet. The website is a read-only tracker and wallet checker plus landing page. Success: a visitor understands "hold big and never snitch → Robin pays you in ETH", checks their crew card, and buys.
+$KING is a memecoin on Robinhood Chain (chain ID 4663, launched on Pons Family v2) whose creator fees run a loop. A 24/7 bot claims the creator fees (ETH) from the Pons fee escrow whenever it reaches the next step's size and spends it on that step: a **feeding** (ETH straight to the 10 biggest wallets that have **never sold**), the **keeper's cut** (treasury), then the **sink** (buy $PADS back and burn it). Selling (sending $PADS to the Pons curve or the DEX pool) permanently disqualifies a wallet. The website is a read-only tracker and wallet checker plus landing page. Success: a visitor understands "hold big and never snitch → Robin pays you in ETH", checks their crew card, and buys.
 
 Full concept: `CONCEPT.md`.
 
@@ -45,11 +45,11 @@ Every other fee-engine token on the owner's VPS burns. $PADS rewards patience di
 
 ## Brand Commitments
 
-- Name **Heirloom**, ticker **$HEIR** (variant branch `lore-banker`; the main branch ships Trapeza/$TRPZ). No word "bank" in the name or domain. No mascot: the house is represented by its OM monogram and the gold OM coin.
-- **Lore, not finance.** The lore names the top-10 payout "the Dividend" by the owner's explicit choice; every page that uses the word also says plainly that it is only this site's name for trading fees, that $HEIR is a memecoin with no promise of value, not a security, deposit or investment, and that Heirloom is not a bank and holds no one's funds.
-- Lore terms: step 1 (ETH to top 10) → **the Dividend**, paid to **the Ten Heirs**; step 2 (treasury) → **the Reserve** (always shown openly); step 3 (buyback + burn) → **Retired Notes**; holders → **accounts**; sold → **account closed**; under minimum → **savings**; leaderboard → **the ledger of holders**; wallet check → **your account**; history → **the statement**; avatar → **account seal**.
-- Palette: midnight navy, gold leaf, ivory paper (owner's choice).
-- Voice: an old private office, dry and brief; few words.
+- Name **Kingpin**, ticker **$KING** (branch `lore-kingpin`). Supersedes Heirloom ($HEIR). No word "bank" in the name or domain.
+- **Only the UI and the lore change.** Backend, engine, API, features and tokenomics are exactly the Heirloom build: cycle inheritance 0.02 ETH (No. 1–5 share 0.014, No. 6–10 share 0.006, by balance) → treasury 0.025 → buyback & burn 0.01 → treasury 0.025, repeat; min 100,000 tokens; no hold time; one sale disqualifies forever; dev wallet shown but never ranked or paid; X connect, names, portraits, waiting/sold strips, /lotnok, statement.
+- Lore: a live race for the throne. **#1 holds the crown** (the Kingpin) and anyone can take it by out-holding them. Step 1 (ETH to top 10) → **the Tribute**, paid to **the Court** (No. 1–5) and **the Guard** (No. 6–10); step 2/4 (treasury) → **the War Chest** (shown openly, twice a round); step 3 (buyback + burn) → **the Burn**; sold → **Exiled** (forever); leaderboard → **the Ladder**; wallet check → **your seat**; history → **the Record**; dev wallet → **the Founder** (own mark, never the crown, which belongs to #1).
+- Owner's taste for this world: the first viewport must feel like a live fight for #1; one light cartoon 3D object only, the rest 2D + GSAP scroll transitions; must not resemble Heirloom (no navy-and-gold vault, no bank or classical luxury serif); few words; never heavy on phones; not serious or corporate: it is a memecoin.
+- Voice: short, cocky, playful. Never yield, APY, passive income, or promises of value.
 
 ## Evidence on Hand
 

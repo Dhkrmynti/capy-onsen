@@ -5,27 +5,22 @@ primary_target: "src/App.tsx"
 related_targets: []
 ---
 
-# Surface: Heirloom landing + tracker (src/App.tsx)
+# Surface: Kingpin landing + ladder (src/App.tsx)
 
-Mode: Persuade (landing) with embedded Operate islands (account check + seal desk, the ledger of holders, the statement).
-
-Audience & job: CT traders on phones from X; understand "hold large, never sell → the Ten Heirs are paid the dividend in ETH", check a wallet, copy CA, open an account on Pons. Holders return to check their rank.
-Proof: live engine API only (status, cycle, rounds with tx, pond rows, wallet). Pre-launch shows honest standby; demo figures labelled illustration.
-Constraints: PRODUCT.md. Backend, API shapes, tokenomics, features unchanged. Keep: name and lore Heirloom / $HEIR, navy and gold palette, every feature, the gold OM coin. User: as little text as possible, more visual. Must have strong 3D.
+Mode: Persuade (landing) with Operate passages (ladder, your seat, record).
+Audience: memecoin traders from X/Telegram, mostly on phones. Job: see who holds the crown right now and how close the next Tribute is, then buy or check their seat.
+Constraints: backend, engine, API, features and tokenomics unchanged; one light cartoon 3D object only; few words; never heavy on phones; nothing that reads as Heirloom (no navy-gold vault, no luxury serif).
 
 ## Direction contract
 
-THESIS: The page is a walk into the house vault. One continuous WebGL scene sits behind the page and scroll is the visitor's feet: the door unlocks and swings, then the corridor shows each mechanism as a physical thing. Refuses the token landing of headline-left, 3D-object-right, feature cards and a table.
+THESIS: The holder ladder is a chessboard in play. #1 is the King on its square, No. 1–5 are the Court (major pieces), No. 6–10 the Guard (pawns), sellers are captured pieces laid on their side in a tray. Refuses the category default of a dark luxury crown page with a glowing Buy button and a table.
 
-OWN-WORLD: Midnight navy steel, machined brass and gold leaf, ivory paper only where a document is handed over; the vault door, deposit-box walls, brass plaques with engraved Cinzel capitals, ledger paper, red wax seals for closed accounts. Copy lives on plaques and slips bolted into the scene, never floating paragraphs.
+OWN-WORLD: A loud two-colour board, electric lime and royal violet squares, near-black grape ink, one crown orange reserved for the King and for CHECK/CROWNED moments, captured red for sellers. Chunky toy-like display caps, algebraic chess notation as the data voice, square tiles with hard 3px ink borders and offset ink shadows like printed board-game pieces. No gradients, no glass, no serif.
 
-STORY: See the sealed door and the escrow gauge; scroll and the door opens; pass three pedestals (dividend coins to the Ten, the reserve strongbox, notes burning); read the six conditions on one plaque; face the deposit-box wall where ten boxes glow with names; your own box slides out with your account card; the teller's slip is the statement; the door closes behind you: "Old money never sells."
+STORY: The visitor sees who is King and by how much, sees the chess clock running down to the next Tribute, learns the four moves of a round (Tribute 0.02 → War Chest 0.025 → Burn 0.01 → War Chest 0.025), learns one sale means capture forever, checks their own seat, and buys.
 
-FIRST VIEWPORT: the vault door full-bleed and square to the viewer, wheel and bolts lit; left of it a brass plaque carrying the headline at display scale, one line of deck, the primary action "Open an account" and "Check your standing"; the escrow as a brass pressure gauge on the frame; a small "turn the wheel" scroll cue.
+FIRST VIEWPORT: Full-bleed tilted board filling the lower two thirds; a cartoon 3D King piece stands on the top-left square, slowly turning. Top left, three words huge: TAKE THE CROWN. Under it, the live readout: KING @name · balance · lead over No. 2. Right: the chess clock showing escrow / 0.02 ETH to the Tribute. Buy pill and Check your seat sit under the headline.
 
-FORM: Inside the Vault, my grounded list #1 (IMPECCABLE'S PICK over assigned #6 Pneumatic Dispatch), seed dafd4b50. Raises: boxes outside the Ten are drawn dark but present, absence designed (seven-segment display); the next payment is announced on the gauge before it fires (algorave floor); long quiet runs of empty steel between stations, a few words each (ikebana ma); every payment slip carries its tx (memory quilt); plaques and drawers behave as pushable brass, pressed states with travel (CD-ROM console). Signature interaction: scroll-driven camera walk with the door unlocking and opening, and the visitor's own deposit box sliding out.
+FORM: Chess board in play, candidate 5 of 7 on the ordered list (timing tower, title fight, arcade high score, king card, chess, holo card pack, heraldry), seed key 354da975. Raises kept from declined challengers: one lit square at a time (neon circuit), fading move trails when ranks change (bioluminescent wake), states as marks not hues: captured on its side, check square, crown (cutting bench), one colour owns each viewport (seedbed lobes), two spot inks only plus crown orange (risograph). Competitive alternate held: pop comic (kept: action lettering on rank changes).
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
-
-## Open
-Domain, X handle, $HEIR CA; whether Heirloom or Trapeza ships.

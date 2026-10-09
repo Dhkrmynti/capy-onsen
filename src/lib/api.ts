@@ -124,9 +124,9 @@ export interface RoundRow {
 
 /** The cycle, in plain names. */
 export const STEP: Record<RoundKind, { name: string; does: string }> = {
-  feeding: { name: "The Inheritance", does: "ETH to the Ten Heirs, the 10 biggest holders" },
-  keeper: { name: "The Upkeep", does: "to the upkeep of the estate" },
-  sink: { name: "The Hearth", does: "buy $HEIR and burn it" },
+  feeding: { name: "The Tribute", does: "ETH to the top 10 holders" },
+  keeper: { name: "The War Chest", does: "to the treasury wallet" },
+  sink: { name: "The Burn", does: "buy $KING back and burn it" },
 };
 
 export const DEFAULT_STEPS: Status["cycle"]["steps"] = [
@@ -158,7 +158,7 @@ export const stepCount = (steps: Status["cycle"]["steps"], kind: RoundKind) => s
 export const EXPLORER = "https://explorer.mainnet.chain.robinhood.com";
 export const ponsUrl = (ca: string) => `https://ponsfamily.com/launchpad/${ca}`;
 export const dexUrl = (ca: string) => `https://dexscreener.com/robinhood/${ca}`;
-export const X_URL = "https://x.com/heirloom_rh";
+export const X_URL = "https://x.com/kingpin_rh";
 export const txUrl = (tx: string) => `${EXPLORER}/tx/${tx}`;
 export const addrUrl = (a: string) => `${EXPLORER}/address/${a}`;
 
@@ -361,7 +361,7 @@ export const demoPond = (): Pond => {
   }
   rows.sort((a, b) => parseFloat(b.balance) - parseFloat(a.balance));
   rows.forEach((row, i) => ((row.rank = i + 1), (row.inTop = i < 10), (row.tier = tierOf(i + 1))));
-  const house: HouseRow = { addr: "0x5175d9e2b0a4c8e6f1d3b7a9c2e4f6081a3c5e7b", balance: String(12.5e6), nickname: "", pp: null, x: { username: "heirloom_rh", name: "Heirloom", avatar: "/favicon-192.png", verified: "" } };
+  const house: HouseRow = { addr: "0x5175d9e2b0a4c8e6f1d3b7a9c2e4f6081a3c5e7b", balance: String(12.5e6), nickname: "", pp: null, x: { username: "kingpin_rh", name: "Kingpin", avatar: "/favicon-192.png", verified: "" } };
   return { ...base, rows, house };
 };
 
@@ -392,7 +392,7 @@ const seedPond = (): { total: number; topN: number; rows: PondRow[] } => {
       received: String(rec[i]),
       nickname: ["Sterling Whitmore III", "", "trustfundtony", "", "", "Lady Penelope", "", "", "", "", "", ""][i] || "",
       pp: [[1, 4, 3, 3], null, [2, 0, 2, 4], null, null, [4, 2, 4, 5], null, null, null, null, null, null][i] ?? null,
-      x: [null, { username: "heirloomwhale", name: "Heirloom Whale", avatar: "/favicon-192.png", verified: "blue" }, null, null, { username: "margaux_ashford", name: "Margaux Ashford", avatar: "", verified: "" }, null, null, null, null, null, null, null][i] ?? null,
+      x: [null, { username: "kingwhale", name: "King Whale", avatar: "/favicon-192.png", verified: "blue" }, null, null, { username: "margaux_ashford", name: "Margaux Ashford", avatar: "", verified: "" }, null, null, null, null, null, null, null][i] ?? null,
     })),
   };
 };

@@ -9,7 +9,7 @@ import { connectWallet, hasWallet, signText, useAccount } from "../lib/wallet";
 import { Mugshot, PARTS, PART_NAMES, traitsFor, validTraits, type Traits } from "./Mugshot";
 import { CaretLeft, CaretRight } from "@phosphor-icons/react";
 import { prefersReducedMotion } from "../lib/motion";
-import { Monogram } from "./Engrave";
+import { Mark } from "../kp/Pieces";
 
 gsap.registerPlugin(useGSAP);
 
@@ -17,12 +17,12 @@ const VALID = /^0x[0-9a-fA-F]{40}$/;
 
 type Tone = "ok" | "wait" | "stop" | "dim";
 const STAMP: Record<WalletInfo["status"], { word: string; tone: Tone; line: string }> = {
-  sitting: { word: "Heir", tone: "ok", line: "In the will. You get a part of the next inheritance." },
-  waiting: { word: "Pending", tone: "wait", line: "In the family, but your first $HEIR are still under the hold time." },
-  "too-small": { word: "Distant kin", tone: "wait", line: "Holding, but under the minimum to be named in the will." },
-  hopped: { word: "Disinherited", tone: "stop", line: "This wallet sold. Written out of the will for good." },
-  excluded: { word: "House", tone: "dim", line: "Engine, curve, reserve or dead address. Never inherits." },
-  "not-holding": { word: "No relation", tone: "dim", line: "This wallet holds no $HEIR." },
+  sitting: { word: "On the board", tone: "ok", line: "You hold a square on the board." },
+  waiting: { word: "Pending", tone: "wait", line: "Your first $KING are still settling. A moment." },
+  "too-small": { word: "Spectator", tone: "wait", line: "Under 100,000 $KING. Step up to take a square." },
+  hopped: { word: "Captured", tone: "stop", line: "This wallet sold. Captured, for good." },
+  excluded: { word: "Off board", tone: "dim", line: "Engine, curve, war chest or dead address. Never paid." },
+  "not-holding": { word: "No piece", tone: "dim", line: "This wallet holds no $KING." },
 };
 
 /** What X sign-in came back with (?x=…), read once and then cleared from the address bar. */
@@ -214,7 +214,7 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
 
   return (
     <div className="byline">
-      <p className="byline__head">The seal desk</p>
+      <p className="byline__head">Your piece</p>
       {!mine ? (
         <>
           <button type="button" className="press-btn is-ink" onClick={connect} disabled={busy}>
@@ -350,7 +350,7 @@ export function CrewCard({ live }: { live: boolean }) {
       url.searchParams.set("w", addr);
       window.history.replaceState(null, "", url);
     } catch (e: any) {
-      setError(e?.message === "Not Found" || !live ? "The doors aren't open yet, so there are no heirs to check." : "Couldn't reach the engine. Try again in a moment.");
+      setError(e?.message === "Not Found" || !live ? "The board isn't open yet: nothing to check." : "Couldn't reach the engine. Try again in a moment.");
     } finally {
       setBusy(false);
     }
@@ -419,22 +419,22 @@ export function CrewCard({ live }: { live: boolean }) {
     } catch {}
   };
 
-  const base = info ? (info.house ? { word: "♛ Dev", tone: "ok" as Tone, line: "The dev wallet. Shown with a crown on the ledger; the house never inherits." } : STAMP[info.status]) : null;
+  const base = info ? (info.house ? { word: "Founder", tone: "ok" as Tone, line: "The founder's wallet. On the board, never ranked, never paid." } : STAMP[info.status]) : null;
   // Crew outside the top N gets no cut yet: say how far it has to climb.
   const stamp =
     info && base && info.status === "sitting" && !info.inTop
-      ? { ...base, tone: "wait" as const, line: `Rank #${info.rank}. Only the Ten Heirs inherit, so climb ${info.rank! - info.topN} more places.` }
+      ? { ...base, tone: "wait" as const, line: `Square #${info.rank}. Only the top ${info.topN} share the Tribute: climb ${info.rank! - info.topN} more.` }
       : info && base && info.status === "sitting"
-        ? { ...base, line: `One of the Ten Heirs. You get a part of the next inheritance.` }
+        ? { ...base, word: info.rank === 1 ? "The King" : base.word, line: info.rank === 1 ? "You hold the crown. The biggest cut of the next Tribute is yours." : `Top ${info.topN}. You share the next Tribute.` }
         : base;
 
   return (
-    <section className="stop stop--tall cardpage" id="card" ref={root} aria-labelledby="card-head">
-      <div className="h-wrap stop__inner">
+    <section className="kp-section seat" id="card" ref={root} aria-labelledby="card-head">
+      <div className="kp-wrap">
       <div className="cardpage__grid">
         <div className="cardpage__ask">
-          <h2 className="plaque__head" id="card-head">
-            Your box.
+          <h2 className="kp-h2" id="card-head">
+            Your seat.
           </h2>
           <form className="lookup" onSubmit={submit} noValidate>
             <label htmlFor="wallet">Wallet address</label>
@@ -464,8 +464,8 @@ export function CrewCard({ live }: { live: boolean }) {
           {info && stamp ? (
             <article className={`card is-${stamp.tone}`}>
               <header className="card__top">
-                <span className="card__org"><Monogram size={26} /> Heirloom</span>
-                <span className="card__kind">Family card</span>
+                <span className="card__org"><Mark size={24} /> Kingpin</span>
+                <span className="card__kind">Seat card</span>
               </header>
               <div className="card__body">
                 <div className="card__mug" aria-hidden="true">
@@ -508,7 +508,7 @@ export function CrewCard({ live }: { live: boolean }) {
                       <dd className="tabular">{eth(info.received)}</dd>
                     </div>
                     <div>
-                      <dt>{info.status === "sitting" && info.inTop ? "Next inheritance, est." : info.status === "hopped" ? "Disinherited" : "Rank"}</dt>
+                      <dt>{info.status === "sitting" && info.inTop ? "Next Tribute, est." : info.status === "hopped" ? "Captured" : "Square"}</dt>
                       <dd className="tabular">
                         {info.status === "sitting" && info.inTop ? (
                           eth(info.estNext)
@@ -543,10 +543,10 @@ export function CrewCard({ live }: { live: boolean }) {
           ) : (
             <div className="card is-blank" aria-hidden="true">
               <header className="card__top">
-                <span className="card__org"><Monogram size={26} /> Heirloom</span>
-                <span className="card__kind">Family card</span>
+                <span className="card__org"><Mark size={24} /> Kingpin</span>
+                <span className="card__kind">Seat card</span>
               </header>
-              <p className="card__blank">Your card prints here.</p>
+              <p className="card__blank">Your seat card appears here.</p>
             </div>
           )}
           {info && info.status !== "not-holding" && (info.status !== "excluded" || info.house) ? (
@@ -555,8 +555,8 @@ export function CrewCard({ live }: { live: boolean }) {
             // Say why the booth is shut instead of leaving a connected holder guessing.
             <p className="byline__shut">
               {live
-                ? "Names, seals and X links are for wallets holding $HEIR. Buy in, then come back to this card."
-                : "The seal desk opens at launch: once $HEIR is trading, any wallet holding it can set a name, stamp a seal or link X here."}
+                ? "Names, portraits and X links are for wallets holding $KING. Buy in, then come back."
+                : "Opens at launch: once $KING trades, any holder can set a name, a portrait or link X here."}
             </p>
           ) : null}
         </div>
