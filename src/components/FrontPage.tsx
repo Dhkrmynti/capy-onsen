@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { Suspense, lazy, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { DEFAULT_STEPS, STEP, amount, eth, type Status } from "../lib/api";
@@ -7,6 +7,31 @@ import { Certificate, Rosette } from "./Engrave";
 import { BuyButton, CaCoupon, useMedia } from "./Bits";
 
 gsap.registerPlugin(useGSAP);
+
+// The 3D coin (three.js) loads after the page, so the first paint never waits for it.
+const Coin3D = lazy(() => import("./Coin3D"));
+
+function canWebGL() {
+  try {
+    const c = document.createElement("canvas");
+    return !!(c.getContext("webgl2") || c.getContext("webgl"));
+  } catch {
+    return false;
+  }
+}
+
+/** Mounts the coin once the browser is idle, and only where WebGL works. */
+function useCoin() {
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    if (!canWebGL()) return;
+    const w = window as unknown as { requestIdleCallback?: (f: () => void) => number };
+    const go = () => setShow(true);
+    if (w.requestIdleCallback) w.requestIdleCallback(go);
+    else setTimeout(go, 300);
+  }, []);
+  return show;
+}
 
 /** The house's opening line is the engine's state, in plain words. */
 function story(status: Status | null, offline: boolean) {
@@ -34,6 +59,7 @@ export function FrontPage({ status, offline }: { status: Status | null; offline:
   const target = parseFloat(next.thresholdETH);
   const live = !!status?.tokenAddress;
   const pct = target > 0 ? Math.min(1, escrow / target) : 0;
+  const coin = useCoin();
 
   useGSAP(
     () => {
@@ -84,7 +110,16 @@ export function FrontPage({ status, offline }: { status: Status | null; offline:
             <CaCoupon status={status} compact={narrow} />
           </div>
         </div>
-        <Certificate no={(status?.rounds ?? 0) + 1} />
+        <div className="hero__art">
+          <Certificate no={(status?.rounds ?? 0) + 1} />
+          {coin ? (
+            <div className="coin3d" aria-hidden="true">
+              <Suspense fallback={null}>
+                <Coin3D still={prefersReducedMotion()} />
+              </Suspense>
+            </div>
+          ) : null}
+        </div>
       </div>
 
       <div className="h-wrap">

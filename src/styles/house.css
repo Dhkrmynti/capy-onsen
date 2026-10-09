@@ -409,6 +409,33 @@ body:has(.house)::before {
   margin-top: 14px;
 }
 
+/* the certificate on the desk, with the house coin standing in front of its corner */
+.hero__art {
+  position: relative;
+  justify-self: end;
+  width: 100%;
+  max-width: 560px;
+}
+.coin3d {
+  position: absolute;
+  left: -22%;
+  bottom: -24%;
+  width: 54%;
+  aspect-ratio: 1;
+  pointer-events: none;
+  filter: drop-shadow(0 30px 30px rgba(0, 0, 0, 0.55));
+  animation: coin-in 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.coin3d__canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+@keyframes coin-in {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+  }
+}
 .cert {
   position: relative;
   justify-self: end;
@@ -1581,9 +1608,16 @@ body:has(.house)::before {
   .cardpage__grid {
     grid-template-columns: minmax(0, 1fr);
   }
-  .cert {
+  .cert,
+  .hero__art {
     justify-self: center;
     max-width: 540px;
+  }
+  .coin3d {
+    left: auto;
+    right: -6%;
+    bottom: -20%;
+    width: 42%;
   }
   .ring {
     max-width: 340px;
@@ -1794,6 +1828,9 @@ body:has(.house)::before {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .coin3d {
+    animation: none;
+  }
   .cert__sheen {
     animation: none;
     display: none;
