@@ -193,12 +193,12 @@ export default function Coin3D({ still = false }: { still?: boolean }) {
     >
       <ambientLight intensity={0.25} />
       <directionalLight position={[3, 4, 5]} intensity={2.2} color="#fff3d6" />
-      <directionalLight position={[-4, -2, 2]} intensity={0.6} color="#9fd2b4" />
+      <directionalLight position={[-4, -2, 2]} intensity={0.6} color="#a8bfe6" />
       <Coin still={still} spin={spin} />
       {/* a small studio of soft light panels: gold reads as gold only with something to reflect */}
       <Environment resolution={256}>
         <Lightformer intensity={3} position={[0, 4, 4]} scale={[8, 2, 1]} color="#fff1cf" />
-        <Lightformer intensity={1.6} position={[-5, 0, 2]} rotation-y={Math.PI / 2} scale={[6, 3, 1]} color="#2c6a45" />
+        <Lightformer intensity={1.6} position={[-5, 0, 2]} rotation-y={Math.PI / 2} scale={[6, 3, 1]} color="#2b4a80" />
         <Lightformer intensity={2} position={[5, -1, 2]} rotation-y={-Math.PI / 2} scale={[6, 3, 1]} color="#ffe2a8" />
         <Lightformer intensity={0.8} position={[0, -4, 2]} rotation-x={-Math.PI / 2} scale={[8, 4, 1]} color="#ffffff" />
         {/* a soft panel behind the camera so a coin seen face-on still glows */}

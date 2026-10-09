@@ -11,14 +11,14 @@ export type Traits = [fur: number, hat: number, acc: number, bg: number];
 
 /** fur = ink, hat = frame, acc = emblem, bg = paper (slot keys kept for the engine). */
 export const PART_NAMES = {
-  fur: ["Racing green", "Navy", "Oxblood", "Black", "Gold leaf"],
+  fur: ["Navy", "Racing green", "Oxblood", "Black", "Gold leaf"],
   hat: ["Plain ring", "Rope", "Scalloped", "Laurel", "Double ring"],
   acc: ["Crossed keys", "Column", "Star", "Crown", "Coin", "Oak leaf"],
-  bg: ["Cream", "Ivory", "Linen", "Money green", "Navy", "Black"],
+  bg: ["Ivory", "Cream", "Linen", "Navy", "Money green", "Black"],
 };
 
-const INKS = ["#24553a", "#24375c", "#6d2128", "#1b1a18", "#b58b2e"];
-const PAPER = ["#efe6cf", "#f4f1e8", "#e2dccb", "#2e5c41", "#26385a", "#1b1a18"];
+const INKS = ["#24375c", "#24553a", "#6d2128", "#1b1a18", "#b58b2e"];
+const PAPER = ["#f4f1e8", "#efe6cf", "#e2dccb", "#1c2d4d", "#2e5c41", "#1b1a18"];
 const DARK_PAPER = [3, 4, 5];
 
 function fnv(s: string) {

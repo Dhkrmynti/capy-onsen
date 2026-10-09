@@ -1,23 +1,23 @@
-/* Old Money, the Private Office. A private bank after hours: vault-green leather, brass,
-   cream statement paper, engraved like a share certificate. */
+/* Old Money, the Private Office. A private bank after hours: midnight navy, gold leaf,
+   ivory statement paper, engraved like a share certificate. */
 
 .house {
-  --v0: #0c1410;
-  --v1: #111c16;
-  --v2: #172720;
-  --v3: #22392d;
+  --v0: #0b1424;
+  --v1: #0f1a2e;
+  --v2: #13213a;
+  --v3: #1c2d4d;
   --brass: #c9a45c;
   --brass-2: #e6cc8f;
   --brass-dim: rgba(201, 164, 92, 0.32);
-  --text: #ebe3cf;
-  --text-2: #b9af96;
-  --paper: #efe6cf;
-  --paper-2: #e4d9bd;
+  --text: #eee8d8;
+  --text-2: #b4b0a4;
+  --paper: #f1ead8;
+  --paper-2: #e6dcc3;
   --ink: #1c1913;
   --ink-2: #4b4436;
-  --green: #2c6a45;
+  --green: #24427a; /* the document ink: navy on ivory */
   --oxblood: #8c2f39;
-  --rose: #e39aa2;
+  --rose: #e2a2a8;
   --serif: "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
   --caps: "Cinzel", "Trajan Pro", Georgia, serif;
   --data: "Archivo Narrow", "Arial Narrow", sans-serif;
@@ -34,8 +34,8 @@
 }
 html:has(.house),
 body:has(.house) {
-  background: #0c1410;
-  scrollbar-color: #c9a45c #0c1410;
+  background: #0b1424;
+  scrollbar-color: #c9a45c #0b1424;
 }
 body:has(.house)::before {
   display: none;
@@ -266,7 +266,7 @@ body:has(.house)::before {
   border-bottom: 1px solid transparent;
 }
 .plate.is-solid {
-  background: rgba(12, 20, 16, 0.93);
+  background: rgba(11, 20, 36, 0.93);
   border-bottom-color: var(--brass-dim);
   backdrop-filter: blur(8px);
 }
@@ -332,7 +332,7 @@ body:has(.house)::before {
   padding: 8px 16px;
   border: 1px solid var(--brass-dim);
   border-radius: 999px;
-  background: rgba(12, 20, 16, 0.92);
+  background: rgba(11, 20, 36, 0.92);
   color: var(--text-2);
   font: 600 12px/1.35 var(--data);
   text-align: center;
@@ -358,8 +358,34 @@ body:has(.house)::before {
   overflow: hidden;
   background:
     radial-gradient(1100px 620px at 74% 18%, rgba(201, 164, 92, 0.13), transparent 62%),
-    radial-gradient(900px 500px at 0% 100%, rgba(44, 106, 69, 0.22), transparent 70%),
+    radial-gradient(900px 500px at 0% 100%, rgba(36, 66, 122, 0.22), transparent 70%),
     linear-gradient(180deg, var(--v1), var(--v0));
+}
+/* the vault door fills the hero behind the copy; a navy wash on the left keeps the words clear */
+.vault3d {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  animation: vault-in 1.6s ease both;
+}
+.vault3d__host,
+.vault3d__canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+.vault3d::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, var(--v0) 0%, rgba(11, 20, 36, 0.86) 34%, rgba(11, 20, 36, 0.25) 62%, rgba(11, 20, 36, 0.35) 100%),
+    linear-gradient(0deg, var(--v0) 0%, transparent 28%);
+}
+@keyframes vault-in {
+  from {
+    opacity: 0;
+  }
 }
 .hero__rosette {
   position: absolute;
@@ -372,6 +398,7 @@ body:has(.house)::before {
 }
 .hero__grid {
   position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
   gap: clamp(32px, 5vw, 80px);
@@ -456,13 +483,13 @@ body:has(.house)::before {
   outline-offset: -8px;
   text-align: center;
   overflow: hidden;
-  background: repeating-linear-gradient(45deg, rgba(44, 106, 69, 0.05) 0 2px, transparent 2px 7px);
+  background: repeating-linear-gradient(45deg, rgba(36, 66, 122, 0.05) 0 2px, transparent 2px 7px);
 }
 .cert__rosette {
   position: absolute;
   top: 50%;
   translate: 0 -50%;
-  color: rgba(44, 106, 69, 0.32);
+  color: rgba(36, 66, 122, 0.32);
   pointer-events: none;
 }
 .cert__rosette.is-left {
@@ -557,11 +584,13 @@ body:has(.house)::before {
 }
 
 .rate {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: 1.6fr 1fr 1fr 1fr;
   margin: clamp(40px, 6vh, 72px) 0 0;
   border: 1px solid var(--brass-dim);
-  background: rgba(12, 20, 16, 0.62);
+  background: rgba(11, 20, 36, 0.62);
   backdrop-filter: blur(3px);
 }
 .rate__cell {
@@ -634,7 +663,7 @@ body:has(.house)::before {
   stroke: #e6cc8f;
 }
 .ring__arc.is-keeper {
-  stroke: #3c8a5c;
+  stroke: #4f74b3;
 }
 .ring__arc.is-sink {
   stroke: #a63e4a;
@@ -690,7 +719,7 @@ body:has(.house)::before {
   color: #f0dba4;
 }
 .terms__item.is-keeper .terms__name {
-  color: #8fcca6;
+  color: #a9c1e8;
 }
 .terms__item.is-sink .terms__name {
   color: #e7a3ab;
@@ -750,7 +779,7 @@ body:has(.house)::before {
   content: "";
   position: absolute;
   inset: 12px;
-  border: 1px solid rgba(44, 106, 69, 0.4);
+  border: 1px solid rgba(36, 66, 122, 0.4);
   pointer-events: none;
 }
 .deed__head {
@@ -934,7 +963,7 @@ body:has(.house)::before {
   border-radius: 18px;
   overflow: hidden;
   color: var(--text);
-  background: radial-gradient(120% 140% at 0% 0%, #2a4436 0%, #13211a 46%, #0b120e 100%);
+  background: radial-gradient(120% 140% at 0% 0%, #26406b 0%, #111d33 46%, #0a1220 100%);
   box-shadow: 0 0 0 1px rgba(201, 164, 92, 0.4), 0 34px 64px -30px rgba(0, 0, 0, 0.95);
 }
 .house .card::before {
@@ -1065,7 +1094,7 @@ body:has(.house)::before {
   padding: 5px 12px 4px;
   border: 2px solid currentColor;
   border-radius: 4px;
-  background: rgba(12, 20, 16, 0.45);
+  background: rgba(11, 20, 36, 0.45);
   color: var(--brass-2);
   font: 700 13px/1 var(--caps);
   letter-spacing: 0.2em;
@@ -1317,7 +1346,7 @@ body:has(.house)::before {
   gap: 12px;
   min-height: 52px;
   padding: 4px 8px;
-  border-bottom: 1px solid rgba(44, 106, 69, 0.22);
+  border-bottom: 1px solid rgba(36, 66, 122, 0.22);
 }
 .ledger__row.is-head {
   min-height: 34px;
@@ -1676,6 +1705,13 @@ body:has(.house)::before {
   }
   .hero {
     padding: 92px 0 28px;
+  }
+  /* on a phone the words run full width, so the vault sits further back */
+  .vault3d {
+    opacity: 0.6;
+  }
+  .vault3d::after {
+    background: linear-gradient(180deg, rgba(11, 20, 36, 0.82) 0%, rgba(11, 20, 36, 0.7) 55%, var(--v0) 100%);
   }
   .hero__head {
     font-size: clamp(44px, 12.5vw, 64px);

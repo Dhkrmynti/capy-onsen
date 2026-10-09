@@ -10,6 +10,7 @@ gsap.registerPlugin(useGSAP);
 
 // The 3D coin (three.js) loads after the page, so the first paint never waits for it.
 const Coin3D = lazy(() => import("./Coin3D"));
+const Vault3D = lazy(() => import("./Vault3D"));
 
 function canWebGL() {
   try {
@@ -74,7 +75,6 @@ export function FrontPage({ status, offline }: { status: Status | null; offline:
         .from(".cert", { opacity: 0, y: 60, rotate: 6, scale: 0.94, duration: 1.3 }, "-=1.1")
         .from(".rate__cell", { opacity: 0, y: 16, duration: 0.6, stagger: 0.07 }, "-=0.8")
         .fromTo(".rate__fill", { scaleX: 0 }, { scaleX: pct, duration: 1.4, ease: "power3.out" }, "-=0.4");
-      gsap.to(".hero__rosette", { rotate: 360, duration: 240, ease: "none", repeat: -1 });
     },
     { scope: root, dependencies: [pct] },
   );
@@ -87,7 +87,16 @@ export function FrontPage({ status, offline }: { status: Status | null; offline:
 
   return (
     <section className="hero" id="top" ref={root} aria-label="Old Money, the Private Office">
-      <Rosette className="hero__rosette" size={980} petals={36} />
+      {/* the vault door behind everything; the engraved rosette stands in where there is no WebGL */}
+      {coin ? (
+        <div className="vault3d" aria-hidden="true">
+          <Suspense fallback={null}>
+            <Vault3D still={prefersReducedMotion()} />
+          </Suspense>
+        </div>
+      ) : (
+        <Rosette className="hero__rosette" size={980} petals={36} />
+      )}
       <div className="h-wrap hero__grid">
         <div className="hero__copy">
           <p className="hero__eyebrow">The Private Office · Robinhood Chain</p>
