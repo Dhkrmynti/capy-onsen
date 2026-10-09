@@ -12,7 +12,7 @@ import { useMedia } from "./Bits";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
-/** The ledger of holders: a leather-bound book, the Preferred Ten edged in gilt. */
+/** The ledger of holders: a leather-bound book, the Ten Heirs edged in gilt. */
 export function TheVault({ status }: { status: Status | null }) {
   const root = useRef<HTMLElement>(null);
   const live = !!status?.tokenAddress;
@@ -39,14 +39,14 @@ export function TheVault({ status }: { status: Status | null }) {
       <div className="h-wrap stop__inner">
         <div className="plaque plaque--ledger">
           <h2 className="plaque__head" id="ledger-head">
-            The Preferred Ten.
+            The Ten Heirs.
           </h2>
-          <p className="plaque__deck">{accounts.toLocaleString("en-US")} accounts, ranked by balance. Their boxes are lit.</p>
+          <p className="plaque__deck">{accounts.toLocaleString("en-US")} in the family, ranked by balance. The heirs' boxes are lit.</p>
 
         <div className="book">
           <div className="book__page">
             {rows.length ? (
-              <ol className="ledger" aria-label={`Accounts ranked by balance. The top ${top} share the next dividend.`}>
+              <ol className="ledger" aria-label={`Accounts ranked by balance. The top ${top} share the next inheritance.`}>
                 <li className="ledger__row is-head" aria-hidden="true">
                   <span>No.</span>
                   <span>Account</span>
@@ -81,7 +81,7 @@ export function TheVault({ status }: { status: Status | null }) {
                 })}
               </ol>
             ) : (
-              <p className="book__empty">{live ? "No accounts yet. The first entry is written the moment a wallet holds the minimum balance." : "The book opens at launch. The first accounts are entered the moment trading begins."}</p>
+              <p className="book__empty">{live ? "No family yet. The first entry is written the moment a wallet holds the minimum balance." : "The book opens at launch. The first names are entered the moment trading begins."}</p>
             )}
             {all.length > rows.length ? (
               <button type="button" className="h-btn is-ink is-small book__more" onClick={() => setMore(true)}>

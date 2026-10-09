@@ -1,6 +1,6 @@
 /**
- * The engraver's kit for the Private Office: guilloche rosettes and bands like the ones on
- * old banknotes and share certificates, the OM monogram, and the Certificate of Holding.
+ * The engraver's kit for the Family Vault: guilloche rosettes and bands like the ones on
+ * old banknotes and share certificates, the H monogram, and the Certificate of Holding.
  * All drawn in currentColor so each surface decides its own ink.
  */
 import type { CSSProperties } from "react";
@@ -45,14 +45,14 @@ export function Band({ className = "", lines = 7, height = 18 }: { className?: s
   );
 }
 
-/** The house monogram: O and M interlaced inside a double ring. */
+/** The house monogram: the H inside a double ring. */
 export function Monogram({ size = 40, className = "" }: { size?: number; className?: string }) {
   return (
     <svg className={className} width={size} height={size} viewBox="0 0 64 64" aria-hidden="true">
       <circle cx="32" cy="32" r="30" fill="none" stroke="currentColor" strokeWidth="1.6" />
       <circle cx="32" cy="32" r="26.5" fill="none" stroke="currentColor" strokeWidth="0.8" />
-      <text x="32" y="41" textAnchor="middle" fontFamily="Cinzel, serif" fontSize="23" fontWeight="700" fill="currentColor" letterSpacing="-2">
-        OM
+      <text x="32" y="41" textAnchor="middle" fontFamily="Cinzel, serif" fontSize="23" fontWeight="700" fill="currentColor" letterSpacing="0">
+        H
       </text>
     </svg>
   );
@@ -61,26 +61,26 @@ export function Monogram({ size = 40, className = "" }: { size?: number; classNa
 /** The Certificate of Holding the hero is built around. */
 export function Certificate({ no }: { no: number }) {
   return (
-    <div className="cert" role="img" aria-label="Certificate of Holding: the bearer receives the dividend as long as the holding is never sold">
+    <div className="cert" role="img" aria-label="Certificate of Holding: the bearer receives the inheritance as long as the holding is never sold">
       <div className="cert__frame">
         <Rosette className="cert__rosette is-left" size={150} petals={22} />
         <Rosette className="cert__rosette is-right" size={150} petals={30} />
         <p className="cert__no tabular">No. {String(no).padStart(6, "0")}</p>
-        <p className="cert__house">Old Money</p>
+        <p className="cert__house">Heirloom</p>
         <p className="cert__kind">Certificate of Holding</p>
         <p className="cert__text">
-          This certifies that the bearer of this wallet is entitled to a part of <em>the Dividend</em>, paid in ETH to the ten largest holders, for as long as the holding is <em>never sold</em>.
+          This certifies that the bearer of this wallet is entitled to a part of <em>the Inheritance</em>, paid in ETH to the ten largest holders, for as long as the holding is <em>never sold</em>.
         </p>
         <div className="cert__foot">
           <span className="cert__sign">
-            <i>The Partners</i>
+            <i>The Executors</i>
             <b>Signed on chain</b>
           </span>
           <span className="cert__seal" aria-hidden="true">
             <Monogram size={64} />
           </span>
           <span className="cert__sign">
-            <i>$OLDM</i>
+            <i>$HEIR</i>
             <b>Robinhood Chain</b>
           </span>
         </div>

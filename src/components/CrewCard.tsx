@@ -17,12 +17,12 @@ const VALID = /^0x[0-9a-fA-F]{40}$/;
 
 type Tone = "ok" | "wait" | "stop" | "dim";
 const STAMP: Record<WalletInfo["status"], { word: string; tone: Tone; line: string }> = {
-  sitting: { word: "Account", tone: "ok", line: "An open account. You get a part of the next dividend." },
-  waiting: { word: "Pending", tone: "wait", line: "Account open, but your first $OLDM are still under the hold time." },
-  "too-small": { word: "Savings", tone: "wait", line: "Holding, but under the minimum for an account." },
-  hopped: { word: "Closed", tone: "stop", line: "This wallet sold. Account closed for good." },
-  excluded: { word: "House", tone: "dim", line: "Engine, curve, reserve or dead address. Never gets a dividend." },
-  "not-holding": { word: "No account", tone: "dim", line: "This wallet holds no $OLDM." },
+  sitting: { word: "Heir", tone: "ok", line: "In the will. You get a part of the next inheritance." },
+  waiting: { word: "Pending", tone: "wait", line: "In the family, but your first $HEIR are still under the hold time." },
+  "too-small": { word: "Distant kin", tone: "wait", line: "Holding, but under the minimum to be named in the will." },
+  hopped: { word: "Disinherited", tone: "stop", line: "This wallet sold. Written out of the will for good." },
+  excluded: { word: "House", tone: "dim", line: "Engine, curve, reserve or dead address. Never inherits." },
+  "not-holding": { word: "No relation", tone: "dim", line: "This wallet holds no $HEIR." },
 };
 
 /** What X sign-in came back with (?x=…), read once and then cleared from the address bar. */
@@ -350,7 +350,7 @@ export function CrewCard({ live }: { live: boolean }) {
       url.searchParams.set("w", addr);
       window.history.replaceState(null, "", url);
     } catch (e: any) {
-      setError(e?.message === "Not Found" || !live ? "The doors aren't open yet, so there are no accounts to check." : "Couldn't reach the engine. Try again in a moment.");
+      setError(e?.message === "Not Found" || !live ? "The doors aren't open yet, so there are no heirs to check." : "Couldn't reach the engine. Try again in a moment.");
     } finally {
       setBusy(false);
     }
@@ -423,9 +423,9 @@ export function CrewCard({ live }: { live: boolean }) {
   // Crew outside the top N gets no cut yet: say how far it has to climb.
   const stamp =
     info && base && info.status === "sitting" && !info.inTop
-      ? { ...base, tone: "wait" as const, line: `Rank #${info.rank}. Only the Preferred Ten get the dividend, so climb ${info.rank! - info.topN} more places.` }
+      ? { ...base, tone: "wait" as const, line: `Rank #${info.rank}. Only the Ten Heirs inherit, so climb ${info.rank! - info.topN} more places.` }
       : info && base && info.status === "sitting"
-        ? { ...base, line: `One of the Preferred Ten. You get a part of the next dividend.` }
+        ? { ...base, line: `One of the Ten Heirs. You get a part of the next inheritance.` }
         : base;
 
   return (
@@ -437,7 +437,7 @@ export function CrewCard({ live }: { live: boolean }) {
             Your box.
           </h2>
           <form className="lookup" onSubmit={submit} noValidate>
-            <label htmlFor="wallet">Account number (wallet address)</label>
+            <label htmlFor="wallet">Wallet address</label>
             <div className="lookup__field">
               <input
                 id="wallet"
@@ -464,8 +464,8 @@ export function CrewCard({ live }: { live: boolean }) {
           {info && stamp ? (
             <article className={`card is-${stamp.tone}`}>
               <header className="card__top">
-                <span className="card__org"><Monogram size={26} /> Old Money</span>
-                <span className="card__kind">Account card</span>
+                <span className="card__org"><Monogram size={26} /> Heirloom</span>
+                <span className="card__kind">Family card</span>
               </header>
               <div className="card__body">
                 <div className="card__mug" aria-hidden="true">
@@ -510,7 +510,7 @@ export function CrewCard({ live }: { live: boolean }) {
                       <dd className="tabular">{eth(info.received)}</dd>
                     </div>
                     <div>
-                      <dt>{info.status === "sitting" && info.inTop ? "Next dividend, est." : info.status === "hopped" ? "Closed" : "Rank"}</dt>
+                      <dt>{info.status === "sitting" && info.inTop ? "Next inheritance, est." : info.status === "hopped" ? "Disinherited" : "Rank"}</dt>
                       <dd className="tabular">
                         {info.status === "sitting" && info.inTop ? (
                           eth(info.estNext)
@@ -545,8 +545,8 @@ export function CrewCard({ live }: { live: boolean }) {
           ) : (
             <div className="card is-blank" aria-hidden="true">
               <header className="card__top">
-                <span className="card__org"><Monogram size={26} /> Old Money</span>
-                <span className="card__kind">Account card</span>
+                <span className="card__org"><Monogram size={26} /> Heirloom</span>
+                <span className="card__kind">Family card</span>
               </header>
               <p className="card__blank">Your card prints here.</p>
             </div>
@@ -557,8 +557,8 @@ export function CrewCard({ live }: { live: boolean }) {
             // Say why the booth is shut instead of leaving a connected holder guessing.
             <p className="byline__shut">
               {live
-                ? "Names, seals and X links are for wallets holding $OLDM. Buy in, then come back to this card."
-                : "The seal desk opens at launch: once $OLDM is trading, any wallet holding it can set a name, stamp a seal or link X here."}
+                ? "Names, seals and X links are for wallets holding $HEIR. Buy in, then come back to this card."
+                : "The seal desk opens at launch: once $HEIR is trading, any wallet holding it can set a name, stamp a seal or link X here."}
             </p>
           ) : null}
         </div>

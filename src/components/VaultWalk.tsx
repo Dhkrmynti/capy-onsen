@@ -3,7 +3,7 @@
  * visitor's feet. Each page section is an anchor; the camera rests at a station, then glides
  * to the next on a Catmull-Rom path while the scene acts out the mechanism: the door unlocks
  * and swings, three pedestals show where the fee goes, the deposit-box wall lights the
- * Preferred Ten, your own box slides out, the teller's desk holds the statement, and the door
+ * Ten Heirs, your own box slides out, the teller's desk holds the statement, and the door
  * closes behind you.
  *
  * Realism comes from physically based materials and light, not from downloads: a procedural
@@ -32,10 +32,10 @@ const BOX_ROWS = 6;
 const BOX_Z0 = -21;
 const BOX_DZ = 1.35;
 const BOX_DY = 1.05;
-const TEN_ROW = 3; // eye level: the Preferred Ten live here
+const TEN_ROW = 3; // eye level: the Ten Heirs live here
 const MY_BOX = { col: 5, row: 2 };
 const PED_Z = -9;
-// the three pedestals, stepping away down the right side: dividend, reserve, retired notes
+// the three pedestals, stepping away down the right side: inheritance, upkeep, the hearth
 const PEDS: [number, number][] = [
   [X0 + 2.4, PED_Z + 0.9],
   [X0 + 0.4, PED_Z - 1.2],
@@ -296,7 +296,7 @@ function gaugeFace() {
       g.font = '700 34px "Cinzel", Georgia, serif';
       g.fillText("ESCROW", 256, 330);
       g.font = '600 26px "Cinzel", Georgia, serif';
-      g.fillText("OLD MONEY", 256, 372);
+      g.fillText("HEIRLOOM", 256, 372);
     },
     { color: true },
   );
@@ -316,7 +316,7 @@ function burntNote() {
       g.fillStyle = "rgba(36,66,122,0.55)";
       g.font = '700 30px "Cinzel", Georgia, serif';
       g.textAlign = "center";
-      g.fillText("OM", 128, 76);
+      g.fillText("H", 128, 76);
       const grd = g.createRadialGradient(128, 64, 30, 128, 64, 150);
       grd.addColorStop(0, "rgba(0,0,0,0)");
       grd.addColorStop(0.55, "rgba(90,40,10,0.35)");
@@ -408,9 +408,9 @@ function conditionsPlate() {
         g.fillStyle = "#2b1d08";
         g.fillText(t, 512, y);
       };
-      engrave("OLD MONEY", '700 64px "Cinzel", Georgia, serif', 120);
-      engrave("CONDITIONS OF ACCOUNT", '600 34px "Cinzel", Georgia, serif', 176);
-      ["One account holds 100,000 $OLDM", "The ten largest share every dividend", "A holding ages one hour before it is paid", "One sale closes the account", "Your own wallets may pass it freely", "The house never takes a dividend"].forEach((l, i) =>
+      engrave("HEIRLOOM", '700 64px "Cinzel", Georgia, serif', 120);
+      engrave("THE LAST WILL OF THE HOUSE", '600 34px "Cinzel", Georgia, serif', 176);
+      ["Hold 100,000 $HEIR to be named", "The ten largest share every inheritance", "A holding ages one hour before it is paid", "One sale writes you out of the will", "Your own wallets may pass it freely", "The house never inherits"].forEach((l, i) =>
         engrave(l, '500 34px "Bodoni Moda", Georgia, serif', 262 + i * 62),
       );
     },
@@ -440,9 +440,9 @@ function slipTexture() {
       g.fillStyle = "#24427a";
       g.font = '700 40px "Cinzel", Georgia, serif';
       g.textAlign = "center";
-      g.fillText("OLD MONEY", 256, 70);
+      g.fillText("HEIRLOOM", 256, 70);
       g.font = '600 22px "Cinzel", Georgia, serif';
-      g.fillText("STATEMENT OF THE HOUSE", 256, 108);
+      g.fillText("STATEMENT OF THE ESTATE", 256, 108);
       g.strokeStyle = "rgba(28,25,19,0.35)";
       for (let y = 160; y < 640; y += 38) {
         g.beginPath();
@@ -826,7 +826,7 @@ function Pedestals({ mats, coin, narrow }: { mats: Mats; coin: THREE.Material[];
       {PEDS.map(([x, z]) => (
         <mesh key={x} geometry={column} material={mats.pedestalMarble} position={[x, -HT, z]} castShadow receiveShadow />
       ))}
-      {/* the dividend: a stack of struck coins, the top one turning */}
+      {/* the inheritance: a stack of struck coins, the top one turning */}
       <group position={[PEDS[0][0], -HT + 2.08, PEDS[0][1]]}>
         {Array.from({ length: 8 }, (_, i) => (
           <mesh key={i} material={coin} position={[Math.sin(i * 1.7) * 0.025, 0.06 + i * 0.12, Math.cos(i * 1.3) * 0.025]} rotation={[0, i * 0.7, 0]} castShadow>
@@ -870,7 +870,7 @@ function Pedestals({ mats, coin, narrow }: { mats: Mats; coin: THREE.Material[];
   );
 }
 
-/** Station four: the deposit-box wall. The Preferred Ten are lit at eye level, by name. */
+/** Station four: the deposit-box wall. The Ten Heirs are lit at eye level, by name. */
 function DepositWall({ mats, names, closed, drawer }: { mats: Mats; names: string[]; closed: number; drawer: React.RefObject<THREE.Group | null> }) {
   const boxes = useRef<THREE.InstancedMesh>(null);
   const locks = useRef<THREE.InstancedMesh>(null);
@@ -885,7 +885,7 @@ function DepositWall({ mats, names, closed, drawer }: { mats: Mats; names: strin
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const plates = useMemo(() => ten.map((_, i) => nameplate(names[i] ?? "Vacant", `No. ${i + 1}`)), [names, ten]);
-  const myPlate = useMemo(() => nameplate("Your box", "Private client"), []);
+  const myPlate = useMemo(() => nameplate("Your box", "Family member"), []);
   const sealed = useMemo(() => {
     const n = Math.min(closed, 14);
     return cells.filter((_, i) => i % 3 === 1).slice(0, n);

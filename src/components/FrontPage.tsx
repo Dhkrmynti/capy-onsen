@@ -11,9 +11,9 @@ gsap.registerPlugin(useGSAP);
 /** The opening line is the engine's state, in plain words. */
 function story(status: Status | null, offline: boolean) {
   if (offline) return { head: "The office is closed for now.", deck: "The engine isn't answering. Nothing is shown rather than old figures." };
-  if (!status || !status.tokenAddress) return { head: "Patient money, paid in ETH.", deck: "Every trade pays a dividend to the ten largest holders. Sell once and the account closes." };
-  if (status.rounds === 0) return { head: "The vault is open.", deck: "Every trade adds to the first dividend. It is paid the moment the escrow fills." };
-  return { head: "The dividend is paid, again.", deck: `${eth(status.totals.fedETH)} paid to the Preferred Ten so far. ${status.counts.hopped} closed accounts got nothing.` };
+  if (!status || !status.tokenAddress) return { head: "Patient money, paid in ETH.", deck: "Every trade pays an inheritance to the ten largest holders. Sell once and you are written out of the will." };
+  if (status.rounds === 0) return { head: "The vault is open.", deck: "Every trade adds to the first inheritance. It is paid the moment the escrow fills." };
+  return { head: "The inheritance is paid, again.", deck: `${eth(status.totals.fedETH)} paid to the Ten Heirs so far. ${status.counts.hopped} disinherited got nothing.` };
 }
 
 export function FrontPage({ status, offline }: { status: Status | null; offline: boolean }) {
@@ -41,7 +41,7 @@ export function FrontPage({ status, offline }: { status: Status | null; offline:
   );
 
   return (
-    <section className="stop stop--door" id="top" ref={root} aria-label="Old Money: the vault door">
+    <section className="stop stop--door" id="top" ref={root} aria-label="Heirloom: the vault door">
       <div className="h-wrap stop__inner">
         <div className="plaque plaque--door">
           <h1 className="door__head">{head}</h1>
@@ -59,7 +59,7 @@ export function FrontPage({ status, offline }: { status: Status | null; offline:
             <span>{offline ? "No signal from the engine" : `Next ${STEP[next.kind].name.toLowerCase().replace(/^the /, "")}: ${live ? `${escrow.toFixed(4)} of ${next.thresholdETH} ETH` : `at ${next.thresholdETH} ETH`}`}</span>
             {pct >= 0.85 ? <b> · about to be paid</b> : null}
             <span className="door__sep"> · </span>
-            <span>{live ? `${amount(status!.counts.sitters)} accounts, ${status!.counts.hopped} closed` : "the gauge on the door shows the escrow"}</span>
+            <span>{live ? `${amount(status!.counts.sitters)} in the family, ${status!.counts.hopped} disinherited` : "the gauge on the door shows the escrow"}</span>
           </p>
         </div>
       </div>

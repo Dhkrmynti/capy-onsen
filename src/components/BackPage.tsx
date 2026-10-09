@@ -32,13 +32,13 @@ export function BackPage({ status }: { status: Status | null }) {
           <Monogram size={84} className="closing__mono" />
           <p className="closing__head">
             <span className="closing__mask">
-              <span className="closing__line">Old money</span>
+              <span className="closing__line">An heirloom</span>
             </span>
             <span className="closing__mask">
-              <span className="closing__line is-gilt">never sells.</span>
+              <span className="closing__line is-gilt">is never sold.</span>
             </span>
           </p>
-          <p className="closing__deck">Open an account with {min} $OLDM. The door closes behind you.</p>
+          <p className="closing__deck">Hold {min} $HEIR and join the family. The door closes behind you.</p>
           <div className="closing__deal">
             <BuyButton status={status} />
             <CaCoupon status={status} compact={narrow} />
@@ -56,12 +56,12 @@ export function BackPage({ status }: { status: Status | null }) {
           <a href={X_URL} target="_blank" rel="noreferrer">
             <XLogo weight="bold" aria-hidden="true" /> The house on X <ArrowUpRight weight="bold" aria-hidden="true" />
           </a>
-          <a href="#rules">Conditions of account</a>
+          <a href="#rules">The will</a>
           <a href="#blotter">Statement</a>
         </nav>
 
         <p className="foot__fine">
-          <strong>Important.</strong> $OLDM is a memecoin with no promise of value. It is not a security, a deposit or an investment, and there is no company behind it. &ldquo;The dividend&rdquo; is only this site&rsquo;s name for trading fees passed to the ten largest holders, and those fees can fall to nothing. The reserve ({keep}% of all fees) goes to the creator&rsquo;s wallet; every transfer is listed on the statement. Old Money is not a bank and holds no one&rsquo;s funds.
+          <strong>Important.</strong> $HEIR is a memecoin with no promise of value. It is not a security, a deposit or an investment, and there is no company behind it. &ldquo;The inheritance&rdquo; and &ldquo;the heirs&rdquo; are only this site&rsquo;s names for trading fees passed to the ten largest holders, and those fees can fall to nothing. The upkeep ({keep}% of all fees) goes to the creator&rsquo;s wallet; every transfer is listed on the statement. Heirloom is not a bank, trust or estate service, and holds no one&rsquo;s funds.
         </p>
       </div>
     </footer>

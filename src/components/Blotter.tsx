@@ -9,18 +9,18 @@ import { useMedia } from "./Bits";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
-const KIND: Record<RoundRow["kind"], string> = { feeding: "Dividend", keeper: "Reserve", sink: "Retired notes" };
+const KIND: Record<RoundRow["kind"], string> = { feeding: "Inheritance", keeper: "Upkeep", sink: "Hearth" };
 
 /** One line of the statement: what moved, where to, and the transaction that proves it. */
 function Line({ r }: { r: RoundRow }) {
   const done = r.stage === "done";
   const what =
     r.kind === "feeding"
-      ? `Paid to ${r.recipients ? `${r.recipients} of the Preferred Ten` : "the Preferred Ten"}`
+      ? `Paid to ${r.recipients ? `${r.recipients} of the Ten Heirs` : "the Ten Heirs"}`
       : r.kind === "keeper"
         ? "Transferred to the reserve"
         : done
-          ? `${amount(r.tokensBurned)} $OLDM bought and retired`
+          ? `${amount(r.tokensBurned)} $HEIR bought and burned`
           : "Buying back";
   const value = r.kind === "sink" ? r.spentETH : done && r.kind === "feeding" ? r.fedETH : r.spentETH;
   return (
@@ -77,7 +77,7 @@ export function Blotter({ status }: { status: Status | null }) {
 
         <dl className="totals">
           <div className="totals__cell">
-            <dt>Dividends paid</dt>
+            <dt>Inherited</dt>
             <dd className="tabular">{eth(t?.fedETH ?? "0")}</dd>
           </div>
           <div className="totals__cell">
@@ -86,7 +86,7 @@ export function Blotter({ status }: { status: Status | null }) {
           </div>
           <div className="totals__cell">
             <dt>Notes retired</dt>
-            <dd className="tabular">{amount(t?.tokensBurned ?? "0")} $OLDM</dd>
+            <dd className="tabular">{amount(t?.tokensBurned ?? "0")} $HEIR</dd>
           </div>
         </dl>
 
@@ -114,7 +114,7 @@ export function Blotter({ status }: { status: Status | null }) {
               </tbody>
             </table>
           ) : (
-            <p className="book__empty">Nothing entered yet. The first line is written when the escrow reaches {status?.cycle.steps[0].thresholdETH ?? "0.01"} ETH and the first dividend is paid.</p>
+            <p className="book__empty">Nothing entered yet. The first line is written when the escrow reaches {status?.cycle.steps[0].thresholdETH ?? "0.01"} ETH and the first inheritance is paid.</p>
           )}
           {shown.length && all.length > shown.length ? (
             <button type="button" className="h-btn is-ink is-small book__more" onClick={() => setMore(true)}>

@@ -5,13 +5,13 @@ primary_target: "src/App.tsx"
 related_targets: []
 ---
 
-# Surface: Old Money landing + tracker (src/App.tsx)
+# Surface: Heirloom landing + tracker (src/App.tsx)
 
 Mode: Persuade (landing) with embedded Operate islands (account check + seal desk, the ledger of holders, the statement).
 
-Audience & job: CT traders on phones from X; understand "hold large, never sell → the Preferred Ten are paid the dividend in ETH", check a wallet, copy CA, open an account on Pons. Holders return to check their rank.
+Audience & job: CT traders on phones from X; understand "hold large, never sell → the Ten Heirs are paid the dividend in ETH", check a wallet, copy CA, open an account on Pons. Holders return to check their rank.
 Proof: live engine API only (status, cycle, rounds with tx, pond rows, wallet). Pre-launch shows honest standby; demo figures labelled illustration.
-Constraints: PRODUCT.md. Backend, API shapes, tokenomics, features unchanged. Keep: name and lore Old Money / $OLDM, navy and gold palette, every feature, the gold OM coin. User: as little text as possible, more visual. Must have strong 3D.
+Constraints: PRODUCT.md. Backend, API shapes, tokenomics, features unchanged. Keep: name and lore Heirloom / $HEIR, navy and gold palette, every feature, the gold OM coin. User: as little text as possible, more visual. Must have strong 3D.
 
 ## Direction contract
 
@@ -28,4 +28,4 @@ FORM: Inside the Vault, my grounded list #1 (IMPECCABLE'S PICK over assigned #6 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
 
 ## Open
-Domain, X handle, $OLDM CA; whether Old Money or Trapeza ships.
+Domain, X handle, $HEIR CA; whether Heirloom or Trapeza ships.

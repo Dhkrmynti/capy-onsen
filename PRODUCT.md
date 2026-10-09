@@ -45,9 +45,9 @@ Every other fee-engine token on the owner's VPS burns. $PADS rewards patience di
 
 ## Brand Commitments
 
-- Name **Old Money**, ticker **$OLDM** (variant branch `lore-banker`; the main branch ships Trapeza/$TRPZ). No word "bank" in the name or domain. No mascot: the house is represented by its OM monogram and the gold OM coin.
-- **Lore, not finance.** The lore names the top-10 payout "the Dividend" by the owner's explicit choice; every page that uses the word also says plainly that it is only this site's name for trading fees, that $OLDM is a memecoin with no promise of value, not a security, deposit or investment, and that Old Money is not a bank and holds no one's funds.
-- Lore terms: step 1 (ETH to top 10) → **the Dividend**, paid to **the Preferred Ten**; step 2 (treasury) → **the Reserve** (always shown openly); step 3 (buyback + burn) → **Retired Notes**; holders → **accounts**; sold → **account closed**; under minimum → **savings**; leaderboard → **the ledger of holders**; wallet check → **your account**; history → **the statement**; avatar → **account seal**.
+- Name **Heirloom**, ticker **$HEIR** (variant branch `lore-banker`; the main branch ships Trapeza/$TRPZ). No word "bank" in the name or domain. No mascot: the house is represented by its OM monogram and the gold OM coin.
+- **Lore, not finance.** The lore names the top-10 payout "the Dividend" by the owner's explicit choice; every page that uses the word also says plainly that it is only this site's name for trading fees, that $HEIR is a memecoin with no promise of value, not a security, deposit or investment, and that Heirloom is not a bank and holds no one's funds.
+- Lore terms: step 1 (ETH to top 10) → **the Dividend**, paid to **the Ten Heirs**; step 2 (treasury) → **the Reserve** (always shown openly); step 3 (buyback + burn) → **Retired Notes**; holders → **accounts**; sold → **account closed**; under minimum → **savings**; leaderboard → **the ledger of holders**; wallet check → **your account**; history → **the statement**; avatar → **account seal**.
 - Palette: midnight navy, gold leaf, ivory paper (owner's choice).
 - Voice: an old private office, dry and brief; few words.
 

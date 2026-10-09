@@ -48,7 +48,7 @@ export function TheTake({ status }: { status: Status | null }) {
               </span>
             ))}
           </div>
-          <p className="plaque__rule">Then the round begins again. Sell once and the account closes.</p>
+          <p className="plaque__rule">Then the round begins again. Sell once and you are written out of the will.</p>
         </div>
       </div>
     </section>

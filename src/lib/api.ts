@@ -88,9 +88,9 @@ export interface RoundRow {
 
 /** The cycle, in plain names. */
 export const STEP: Record<RoundKind, { name: string; does: string }> = {
-  feeding: { name: "The Dividend", does: "ETH to the Preferred Ten, the 10 biggest holders" },
-  keeper: { name: "The Reserve", does: "to the reserve" },
-  sink: { name: "Retired Notes", does: "buy $OLDM and retire it" },
+  feeding: { name: "The Inheritance", does: "ETH to the Ten Heirs, the 10 biggest holders" },
+  keeper: { name: "The Upkeep", does: "to the upkeep of the estate" },
+  sink: { name: "The Hearth", does: "buy $HEIR and burn it" },
 };
 
 export const DEFAULT_STEPS: Status["cycle"]["steps"] = [
@@ -302,7 +302,7 @@ const seedPond = (): { total: number; topN: number; rows: PondRow[] } => {
       received: String(rec[i]),
       nickname: ["Sterling Whitmore III", "", "trustfundtony", "", "", "Lady Penelope", "", "", "", "", "", ""][i] || "",
       pp: [[1, 4, 3, 3], null, [2, 0, 2, 4], null, null, [4, 2, 4, 5], null, null, null, null, null, null][i],
-      x: [null, { username: "oldmoneywhale", name: "Old Money Whale", avatar: "/favicon-192.png", verified: "blue" }, null, null, { username: "margaux_ashford", name: "Margaux Ashford", avatar: "", verified: "" }, null, null, null, null, null, null, null][i],
+      x: [null, { username: "heirloomwhale", name: "Heirloom Whale", avatar: "/favicon-192.png", verified: "blue" }, null, null, { username: "margaux_ashford", name: "Margaux Ashford", avatar: "", verified: "" }, null, null, null, null, null, null, null][i],
     })),
   };
 };

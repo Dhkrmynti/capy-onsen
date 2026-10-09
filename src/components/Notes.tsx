@@ -34,11 +34,11 @@ function Note({ x, y, rot, shade }: { x: number; y: number; rot: number; shade: 
         ONE
       </text>
       <text x="60" y="16" textAnchor="middle" fontFamily="Arial Narrow, sans-serif" fontSize="30" letterSpacing="3" fill={INK}>
-        DIVIDEND
+        INHERITANCE
       </text>
       <path d="M-10 36 H 130" stroke={INK} strokeWidth="2" />
       <text x="60" y="52" textAnchor="middle" fontFamily="Courier New, monospace" fontSize="12" fill={INK}>
-        PAYABLE TO THE PREFERRED TEN
+        PAYABLE TO THE TEN HEIRS
       </text>
       <circle cx="-126" cy="-51" r="7" fill="none" stroke={INK} strokeWidth="2" />
       <circle cx="126" cy="51" r="7" fill="none" stroke={INK} strokeWidth="2" />

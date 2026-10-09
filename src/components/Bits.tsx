@@ -40,7 +40,7 @@ export function BuyButton({ status, className = "" }: { status: Status | null; c
     );
   return (
     <a className={`press-btn ${className}`} href={ponsUrl(ca)} target="_blank" rel="noreferrer">
-      <span className="btn__long">Open an account</span>
+      <span className="btn__long">Join the family</span>
       <span className="btn__short">Buy</span> <ArrowUpRight weight="bold" aria-hidden="true" />
     </a>
   );
@@ -79,7 +79,7 @@ export function CaCoupon({ status, compact = false }: { status: Status | null; c
 export function Folio({ page, label }: { page: number; label: string }) {
   return (
     <p className="folio" aria-hidden="true">
-      <span>The Old Money Gazette</span>
+      <span>Heirloom</span>
       <span>{label}</span>
       <span className="tabular">Page {page}</span>
     </p>

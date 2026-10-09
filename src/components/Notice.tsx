@@ -17,12 +17,12 @@ export function Notice({ status }: { status: Status | null }) {
   const closed = status?.tokenAddress ? status.counts.hopped : 0;
 
   const clauses = [
-    [`${amount(min)} $OLDM`, "opens an account"],
-    [`Top ${top}`, "share every dividend, by balance"],
+    [`${amount(min)} $HEIR`, "names you in the will"],
+    [`Top ${top}`, "share every inheritance, by balance"],
     ...(hold > 0 ? [[hold === 1 ? "1 hour" : `${hold} hours`, "a holding must age before it is paid"]] : []),
-    ["One sale", "closes the account, for good"],
+    ["One sale", "writes you out, for good"],
     ["Your own wallets", "transfers between them are not sales"],
-    ["The house", "never takes a dividend"],
+    ["The house", "never inherits"],
   ];
 
   useGSAP(
@@ -41,7 +41,7 @@ export function Notice({ status }: { status: Status | null }) {
           <header className="deed__head">
             <Monogram size={44} className="deed__mono" />
             <h2 className="deed__title" id="deed-head">
-              Conditions of account
+              The will
             </h2>
           </header>
           <dl className="deed__lines">
@@ -53,11 +53,11 @@ export function Notice({ status }: { status: Status | null }) {
             ))}
           </dl>
           <div className="deed__foot">
-            <span className="seal-count" aria-label={`${closed} accounts closed for selling`}>
+            <span className="seal-count" aria-label={`${closed} wallets disinherited for selling`}>
               <b className="tabular">{closed}</b>
-              <small>closed</small>
+              <small>written out</small>
             </span>
-            <p>Closed accounts are sealed in wax. Their boxes stay in the wall, empty.</p>
+            <p>The disinherited are sealed in wax. Their boxes stay in the wall, empty.</p>
           </div>
         </article>
       </div>

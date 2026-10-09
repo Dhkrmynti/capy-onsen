@@ -10,10 +10,10 @@ import { Monogram } from "./Engrave";
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const PAGES = [
-  ["#payout", "The dividend"],
-  ["#rules", "Conditions"],
+  ["#payout", "The inheritance"],
+  ["#rules", "The will"],
   ["#register", "The ledger"],
-  ["#card", "Your account"],
+  ["#card", "Your share"],
   ["#blotter", "Statement"],
 ] as const;
 
@@ -26,11 +26,11 @@ export function Masthead({ status }: { status: Status | null }) {
   return (
     <header className="plate" ref={root}>
       <div className="h-wrap plate__inner">
-        <a className="plate__name" href="#top" aria-label="Old Money, back to the top">
+        <a className="plate__name" href="#top" aria-label="Heirloom, back to the top">
           <Monogram size={34} className="plate__mono" />
           <span>
-            <b>Old Money</b>
-            <i>Private Office</i>
+            <b>Heirloom</b>
+            <i>The Family Vault</i>
           </span>
         </a>
         <nav className="plate__nav" aria-label="Sections">

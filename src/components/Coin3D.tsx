@@ -1,5 +1,5 @@
 /**
- * The house coin in 3D: a struck gold piece with the OM monogram on the obverse and $OLDM on
+ * The house coin in 3D: a struck gold piece with the H monogram on the obverse and $HEIR on
  * the reverse, a reeded edge, lit by a soft studio of light panels (no HDR download).
  * The relief is a bump map drawn on a canvas, so there are no model or image files to load.
  */
@@ -41,7 +41,7 @@ export function faceTexture(side: "obverse" | "reverse") {
   }
 
   // the legend around the edge, set in the house capitals
-  const legend = side === "obverse" ? "OLD MONEY · PRIVATE OFFICE · EST. BLOCK ONE · " : "THE DIVIDEND · PAID TO THE PREFERRED TEN · ";
+  const legend = side === "obverse" ? "HEIRLOOM · THE FAMILY VAULT · EST. BLOCK ONE · " : "THE INHERITANCE · PAID TO THE TEN HEIRS · ";
   g.font = '600 46px "Cinzel", Georgia, serif';
   g.fillStyle = "#d8d8d8";
   g.textAlign = "center";
@@ -78,12 +78,12 @@ export function faceTexture(side: "obverse" | "reverse") {
   g.fillStyle = "#ffffff";
   if (side === "obverse") {
     g.font = '700 250px "Cinzel", Georgia, serif';
-    g.fillText("OM", mid, mid + 18);
+    g.fillText("H", mid, mid + 18);
   } else {
     g.font = '700 120px "Cinzel", Georgia, serif';
-    g.fillText("$OLDM", mid, mid - 20);
+    g.fillText("$HEIR", mid, mid - 20);
     g.font = '600 52px "Cinzel", Georgia, serif';
-    g.fillText("ONE DIVIDEND", mid, mid + 92);
+    g.fillText("NEVER SOLD", mid, mid + 92);
   }
 
   const t = new THREE.CanvasTexture(c);
