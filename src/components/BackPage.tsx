@@ -3,7 +3,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { ArrowUpRight, XLogo } from "@phosphor-icons/react";
-import { DEFAULT_STEPS, DEMO, X_URL, dexUrl, stepShare, type Status } from "../lib/api";
+import { DEMO, X_URL, dexUrl, type Status } from "../lib/api";
 import { prefersReducedMotion } from "../lib/motion";
 import { BuyButton, CaCoupon, useMedia } from "./Bits";
 import { Band, Monogram } from "./Engrave";
@@ -14,7 +14,6 @@ export function BackPage({ status }: { status: Status | null }) {
   const root = useRef<HTMLElement>(null);
   const ca = DEMO ? "" : status?.tokenAddress;
   const narrow = useMedia("(max-width: 760px)");
-  const keep = stepShare(status?.cycle.steps ?? DEFAULT_STEPS, "keeper");
   const min = Number(status?.rules.minBalance ?? "100000").toLocaleString("en-US");
 
   useGSAP(
@@ -60,9 +59,6 @@ export function BackPage({ status }: { status: Status | null }) {
           <a href="#blotter">Statement</a>
         </nav>
 
-        <p className="foot__fine">
-          <strong>Important.</strong> $HEIR is a memecoin with no promise of value. It is not a security, a deposit or an investment, and there is no company behind it. &ldquo;The inheritance&rdquo; and &ldquo;the heirs&rdquo; are only this site&rsquo;s names for trading fees passed to the ten largest holders, and those fees can fall to nothing. The upkeep ({keep}% of all fees) goes to the creator&rsquo;s wallet; every transfer is listed on the statement. Heirloom is not a bank, trust or estate service, and holds no one&rsquo;s funds.
-        </p>
       </div>
     </footer>
   );
