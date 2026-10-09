@@ -68,7 +68,7 @@ function Step({ n, title, sub, shots, focus, zoom = 1.7, click = 62, ring, dialo
   const ringOn = ramp(f, 30, 44) * (1 - ramp(f, click + 30, click + 44));
   const head = spring({ frame: f, fps, config: { damping: 18 } });
   return (
-    <AbsoluteFill style={{ opacity: 1 - ramp(f, len - 10, len) }}>
+    <AbsoluteFill style={{ opacity: 1 }}>
       <Plate src="hl/plate-drawer.png" dark={0.86} />
       <div style={{ position: "absolute", left: WIN.x, right: 1920 - WIN.x - WIN.w, top: 46, display: "flex", alignItems: "center", gap: 30, opacity: head, transform: `translateY(${(1 - head) * -20}px)` }}>
         <div style={{ flex: "none", width: 112, height: 112, borderRadius: "50%", display: "grid", placeItems: "center", border: `2px solid ${H.gold2}`, boxShadow: `inset 0 0 0 6px ${H.v0}, inset 0 0 0 7px ${H.gold}`, fontFamily: HF.caps, fontWeight: 700, fontSize: 48, color: H.gold2 }}>{n}</div>
@@ -130,7 +130,7 @@ function DialogBody({ title, lines, button }: { title: string; lines: string[]; 
 function Opening({ len }: { len: number }) {
   const f = useCurrentFrame();
   return (
-    <AbsoluteFill style={{ opacity: 1 - ramp(f, len - 10, len) }}>
+    <AbsoluteFill style={{ opacity: 1 }}>
       <Plate src="hl/plate-drawer.png" dark={0.6} />
       <AbsoluteFill style={{ alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 28 }}>
         <Caps size={26} style={{ opacity: ramp(f, 0, 14) }}>Tutorial · two minutes</Caps>
@@ -222,7 +222,15 @@ const STEPS: [number, (p: { len: number }) => React.ReactElement][] = [
   [160, ({ len }) => <Step len={len} n={9} title="Your X is on the card." sub="Handle, picture and badge come from X. The logo opens your profile." shots={[[0, `${T}t10-xlinked.png`]]} focus={box("t10-xlinked", "card")} zoom={1.45} click={999} />],
   [150, Closing as (p: { len: number }) => React.ReactElement],
 ];
-export const HL_TUTORIAL_LENGTH = STEPS.reduce((t, [n]) => t + n, 0);
+// Scenes overlap by XF frames and cross-dissolve, so there is never a dip to black between them.
+const XF = 14;
+export const HL_TUTORIAL_LENGTH = STEPS.reduce((t, [n]) => t + n, 0) - XF * (STEPS.length - 1);
+
+/** Fades a scene in over its first XF frames (its own fade-out covers the end). */
+function FadeScene({ children, first }: { children: React.ReactNode; first: boolean }) {
+  const f = useCurrentFrame();
+  return <AbsoluteFill style={{ opacity: first ? 1 : Math.min(1, f / XF) }}>{children}</AbsoluteFill>;
+}
 
 export function HLTutorial() {
   let at = 0;
@@ -230,10 +238,12 @@ export function HLTutorial() {
     <AbsoluteFill style={{ background: H.v0 }}>
       {STEPS.map(([len, Scene], i) => {
         const from = at;
-        at += len;
+        at += len - XF;
         return (
           <Sequence key={i} from={from} durationInFrames={len} premountFor={30}>
-            <Scene len={len} />
+            <FadeScene first={i === 0}>
+              <Scene len={len} />
+            </FadeScene>
           </Sequence>
         );
       })}

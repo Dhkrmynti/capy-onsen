@@ -97,7 +97,8 @@ function FadeIn({ at, dur = 18, y = 24, children }: { at: number; dur?: number; 
   return <div style={{ opacity: t, transform: `translateY(${(1 - t) * y}px)` }}>{children}</div>;
 }
 
-const out = (f: number, len: number) => 1 - ramp(f, len - 12, len);
+// The next scene dissolves in on top, so a scene never fades itself out.
+const out = (_f: number, _len: number) => 1;
 
 /* ───────────── scenes ───────────── */
 
@@ -480,7 +481,15 @@ const CUT: [number, (p: { len: number }) => React.ReactElement][] = [
   [270, Will],
   [180, End as (p: { len: number }) => React.ReactElement],
 ];
-export const HL_EXPLAINER_LENGTH = CUT.reduce((t, [n]) => t + n, 0);
+// Scenes overlap by XF frames and cross-dissolve, so there is never a dip to black between them.
+const XF = 14;
+export const HL_EXPLAINER_LENGTH = CUT.reduce((t, [n]) => t + n, 0) - XF * (CUT.length - 1);
+
+/** Fades a scene in over its first XF frames (its own fade-out covers the end). */
+function FadeScene({ children, first }: { children: React.ReactNode; first: boolean }) {
+  const f = useCurrentFrame();
+  return <AbsoluteFill style={{ opacity: first ? 1 : Math.min(1, f / XF) }}>{children}</AbsoluteFill>;
+}
 
 export function HLExplainer() {
   let at = 0;
@@ -488,10 +497,12 @@ export function HLExplainer() {
     <AbsoluteFill style={{ background: H.v0 }}>
       {CUT.map(([len, Scene], i) => {
         const from = at;
-        at += len;
+        at += len - XF;
         return (
           <Sequence key={i} from={from} durationInFrames={len} premountFor={30}>
-            <Scene len={len} />
+            <FadeScene first={i === 0}>
+              <Scene len={len} />
+            </FadeScene>
           </Sequence>
         );
       })}
