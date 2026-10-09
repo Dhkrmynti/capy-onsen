@@ -1,190 +1,110 @@
-import { useLayoutEffect, useRef } from "react";
+import { useRef } from "react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { DEFAULT_STEPS, STEP, amount, eth, type Status } from "../lib/api";
 import { prefersReducedMotion } from "../lib/motion";
-import { Halftone } from "./Halftone";
-import { BuyButton, CaCoupon, Fuse, useMedia, useNow } from "./Bits";
-import { ConnectButton } from "./Connect";
+import { Certificate, Rosette } from "./Engrave";
+import { BuyButton, CaCoupon, useMedia } from "./Bits";
 
-gsap.registerPlugin(ScrollTrigger, useGSAP);
+gsap.registerPlugin(useGSAP);
 
-function dateline(now: number) {
-  return new Date(now).toLocaleDateString("en-GB", { timeZone: "Asia/Jakarta", weekday: "long", day: "numeric", month: "long", year: "numeric" });
-}
-
-/** The front page headline is the engine's state, set in wood type. */
+/** The house's opening line is the engine's state, in plain words. */
 function story(status: Status | null, offline: boolean) {
-  if (offline)
-    return {
-      head: ["Wires", "down."],
-      deck: "The engine isn't answering. The Gazette prints nothing rather than yesterday's numbers.",
-    };
+  if (offline) return { head: ["The office is", "closed for now."], deck: "The engine isn't answering. The house shows nothing rather than yesterday's figures." };
   if (!status || !status.tokenAddress)
     return {
-      head: ["The doors", "open soon."],
-      deck: "Every trade pays a dividend in ETH to the Preferred Ten, the 10 biggest holders. Sell once and your account is closed.",
+      head: ["Patient money,", "paid in ETH."],
+      deck: "Old Money pays a dividend to its ten largest holders out of every trade. Sell once and the account is closed, for good.",
     };
-  const rounds = status.rounds;
-  const fed = parseFloat(status.totals.fedETH);
-  if (rounds === 0)
-    return {
-      head: ["The doors", "are open."],
-      deck: "Every trade adds to the next dividend. The first one is paid when the escrow fills. Hold big, never sell.",
-    };
+  if (status.rounds === 0)
+    return { head: ["The doors", "are open."], deck: "Every trade adds to the first dividend. It is paid the moment the escrow fills. Hold large, never sell." };
   return {
-    head: ["The dividend", "is paid again."],
-    deck: `Old Money has paid its Preferred Ten ${eth(fed.toString())} so far. ${status.counts.hopped} closed accounts got nothing.`,
+    head: ["The dividend", "is paid, again."],
+    deck: `Old Money has paid its Preferred Ten ${eth(status.totals.fedETH)} so far. ${status.counts.hopped} closed accounts were paid nothing.`,
   };
 }
 
 export function FrontPage({ status, offline }: { status: Status | null; offline: boolean }) {
   const root = useRef<HTMLElement>(null);
-  const now = useNow(30000);
   const narrow = useMedia("(max-width: 760px)");
   const { head, deck } = story(status, offline);
   const steps = status?.cycle.steps ?? DEFAULT_STEPS;
   const next = status ? status.cycle.steps[status.cycle.index] ?? steps[0] : steps[0];
   const escrow = parseFloat(status?.escrowETH ?? "0");
   const target = parseFloat(next.thresholdETH);
-  const edition = (status?.rounds ?? 0) + 1;
   const live = !!status?.tokenAddress;
-  const headRef = useRef<HTMLHeadingElement>(null);
-  const fitRef = useRef<HTMLSpanElement>(null);
-
-  // Banner headlines are cut to the full measure: on a desktop sheet the line is sized to fill it.
-  useLayoutEffect(() => {
-    const h = headRef.current;
-    const line = fitRef.current;
-    if (!h || !line) return;
-    const fit = () => {
-      if (window.innerWidth <= 1080) {
-        h.style.fontSize = "";
-        return;
-      }
-      h.style.fontSize = "100px";
-      // Cut to the measure, but never taller than the screen can spare above the fold.
-      const size = Math.min(230, window.innerHeight * 0.14, (100 * h.clientWidth) / line.offsetWidth);
-      h.style.fontSize = `${Math.floor(size * 0.995)}px`;
-      ScrollTrigger.refresh();
-    };
-    fit();
-    document.fonts?.ready.then(fit);
-    const ro = new ResizeObserver(fit);
-    ro.observe(h);
-    return () => ro.disconnect();
-  }, [head[0], head[1]]);
+  const pct = target > 0 ? Math.min(1, escrow / target) : 0;
 
   useGSAP(
     () => {
+      gsap.set(".rate__fill", { scaleX: pct });
       if (prefersReducedMotion()) return;
-      // The press run: banner drops, the headline slams onto the page, the lede sets.
+      // The doors open: the line is set, the certificate is laid on the desk, the board lights up.
       gsap
         .timeline({ defaults: { ease: "expo.out" } })
-        .from(".front__extra", { yPercent: -110, duration: 0.7 })
-        .from(".front__line", { scale: 1.18, filter: "blur(8px)", opacity: 0, transformOrigin: "0% 60%", duration: 0.9, stagger: 0.12 }, "-=0.35")
-        .from(".front__lede, .front__deal", { clipPath: "inset(0 0 100% 0)", duration: 0.9, stagger: 0.08 }, "-=0.6")
-        .from(".rail", { clipPath: "inset(0 0 100% 0)", duration: 1 }, "<");
-
-      // The page turn: once the whole front has been read, it holds and the next pages slide over it.
-      // Desktop only: on phones the address bar resizes the screen, the pin starts early and the
-      // front loads already dimmed, so a phone simply scrolls the paper.
-      gsap.matchMedia().add("(min-width: 761px) and (hover: hover)", () => {
-        ScrollTrigger.create({ trigger: root.current, start: "bottom bottom", end: "+=100%", pin: true, pinSpacing: false });
-        gsap.to(".front__sheet", {
-          scale: 0.94,
-          filter: "brightness(0.82)",
-          ease: "none",
-          scrollTrigger: { trigger: root.current, start: "bottom bottom", end: "+=100%", scrub: true },
-        });
-      });
+        .from(".hero__eyebrow", { opacity: 0, y: 14, duration: 0.7 })
+        .from(".hero__line", { yPercent: 105, duration: 1.1, stagger: 0.12 }, "-=0.45")
+        .from(".hero__deck, .hero__deal", { opacity: 0, y: 18, duration: 0.8, stagger: 0.08 }, "-=0.7")
+        .from(".cert", { opacity: 0, y: 60, rotate: 6, scale: 0.94, duration: 1.3 }, "-=1.1")
+        .from(".rate__cell", { opacity: 0, y: 16, duration: 0.6, stagger: 0.07 }, "-=0.8")
+        .fromTo(".rate__fill", { scaleX: 0 }, { scaleX: pct, duration: 1.4, ease: "power3.out" }, "-=0.4");
+      gsap.to(".hero__rosette", { rotate: 360, duration: 240, ease: "none", repeat: -1 });
     },
-    { scope: root },
+    { scope: root, dependencies: [pct] },
   );
 
+  const cells = [
+    { k: "Accounts", v: live ? amount(status!.counts.sitters) : "—" },
+    { k: "Dividends paid", v: live ? String(status!.rounds) : "0" },
+    { k: "Closed accounts", v: live ? String(status!.counts.hopped) : "0", warn: true },
+  ];
+
   return (
-    <section className="front" id="top" ref={root} aria-label="Front page">
-      <div className="front__sheet">
-        <div className="wrap">
-          <div className="dateline">
-            <span className="tabular">Vol. I, No. {edition}</span>
-            <span>{dateline(now)}</span>
-            <span className="dateline__end">
-              <span className="dateline__price">Price: 0.01 ETH</span>
-              <ConnectButton className="is-dateline" />
+    <section className="hero" id="top" ref={root} aria-label="Old Money, the Private Office">
+      <Rosette className="hero__rosette" size={980} petals={36} />
+      <div className="h-wrap hero__grid">
+        <div className="hero__copy">
+          <p className="hero__eyebrow">The Private Office · Robinhood Chain</p>
+          <h1 className="hero__head">
+            <span className="hero__mask">
+              <span className="hero__line">{head[0]}</span>
             </span>
-          </div>
-          <p className="masthead">
-            The Old Money Gazette
-          </p>
-          <div className="submast">
-            <span>Paying the patient since block one</span>
-            <span>Robinhood Chain edition</span>
-          </div>
-
-          <p className="front__extra">
-            <span>Extra</span>
-            <span>{offline ? "No signal" : live ? STEP[next.kind].name : "Before the bell"}</span>
-            <span>Extra</span>
-          </p>
-
-          <h1 className="front__head" ref={headRef}>
-            <span className="front__fit" ref={fitRef}>
-              <span className="front__line">{head[0]}</span>{" "}
-              <span className="front__line">{head[1]}</span>
+            <span className="hero__mask">
+              <span className="hero__line is-gilt">{head[1]}</span>
             </span>
           </h1>
-
-          <div className="front__grid">
-            <figure className="front__photo">
-              <Halftone develop="load" label="A stack of engraved banknotes tied with a paper band, beside a pile of gold coins." />
-              <figcaption>The first dividend, counted and banded. Old money never sells. Photo: Gazette staff.</figcaption>
-            </figure>
-
-            <div className="front__story">
-              <p className="front__lede">{deck}</p>
-              <div className="front__deal">
-                <BuyButton status={status} />
-                <CaCoupon status={status} compact={narrow} />
-              </div>
-            </div>
-
-            <aside className="rail" aria-label="Next dividend">
-              <h2 className="rail__head">The counting room</h2>
-              {offline ? (
-                <p className="rail__note">No signal from the engine. Nothing printed until it answers.</p>
-              ) : (
-                <>
-                  <p className="rail__step">
-                    Next up: <strong>{STEP[next.kind].name}</strong>, {STEP[next.kind].does}.
-                  </p>
-                  <Fuse value={escrow} target={target} label={`Escrow ${escrow} of ${target} ETH toward ${STEP[next.kind].name}`} />
-                  <p className="rail__fuse tabular">
-                    {live ? `Escrow: ${escrow.toFixed(4)} / ${next.thresholdETH} ETH` : `Fires at ${next.thresholdETH} ETH`}
-                  </p>
-                  <dl className="rail__facts">
-                    <div>
-                      <dt>Accounts</dt>
-                      <dd className="tabular">{live ? amount(status!.counts.sitters) : "none yet"}</dd>
-                    </div>
-                    <div>
-                      <dt>Payouts</dt>
-                      <dd className="tabular">{live ? status!.rounds : 0}</dd>
-                    </div>
-                    <div className="is-red">
-                      <dt>Closed</dt>
-                      <dd className="tabular">{live ? status!.counts.hopped : 0}</dd>
-                    </div>
-                  </dl>
-                  <p className="rail__source tabular">
-                    {live ? `Wire: block ${status!.lastIndexedBlock.toLocaleString("en-US")}` : "Goes live when the doors open."}
-                  </p>
-                </>
-              )}
-            </aside>
+          <p className="hero__deck">{deck}</p>
+          <div className="hero__deal">
+            <BuyButton status={status} />
+            <a className="h-btn is-ghost" href="#card">
+              Check your standing
+            </a>
+          </div>
+          <div className="hero__deal">
+            <CaCoupon status={status} compact={narrow} />
           </div>
         </div>
+        <Certificate no={(status?.rounds ?? 0) + 1} />
+      </div>
+
+      <div className="h-wrap">
+        <dl className="rate" aria-label="The counting room">
+          <div className="rate__cell is-next">
+            <dt>Next payment · {offline ? "no signal" : STEP[next.kind].name}</dt>
+            <dd className="tabular">
+              {live ? `${escrow.toFixed(4)} / ${next.thresholdETH} ETH` : `Pays at ${next.thresholdETH} ETH`}
+              <span className="rate__meter" role="meter" aria-valuemin={0} aria-valuemax={target} aria-valuenow={escrow} aria-label={`Escrow toward ${STEP[next.kind].name}`}>
+                <span className="rate__fill" />
+              </span>
+            </dd>
+          </div>
+          {cells.map((c) => (
+            <div key={c.k} className={`rate__cell ${c.warn ? "is-warn" : ""}`}>
+              <dt>{c.k}</dt>
+              <dd className="tabular">{c.v}</dd>
+            </div>
+          ))}
+        </dl>
       </div>
     </section>
   );

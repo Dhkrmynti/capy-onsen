@@ -50,10 +50,10 @@ export function App() {
   const live = !!status?.tokenAddress;
 
   return (
-    <>
+    <div className="house">
       {DEMO ? (
         <div className="demo-strip" role="note">
-          Illustration edition: every number on this page is made up to preview the paper. Try the account card and the seal desk; nothing you set is saved.
+          Illustration edition: every figure on this page is made up to preview the house. Try your account and the seal desk; nothing you set is saved.
         </div>
       ) : null}
       <Masthead status={status} />
@@ -62,12 +62,12 @@ export function App() {
         <div className="pages">
           <TheTake status={status} />
           <Notice status={status} />
-          <CrewCard live={live} />
           <TheVault status={status} />
+          <CrewCard live={live} />
           <Blotter status={status} />
           <BackPage status={status} />
         </div>
       </main>
-    </>
+    </div>
   );
 }

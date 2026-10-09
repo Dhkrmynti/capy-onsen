@@ -9,8 +9,7 @@ import { connectWallet, hasWallet, signText, useAccount } from "../lib/wallet";
 import { Mugshot, PARTS, PART_NAMES, traitsFor, validTraits, type Traits } from "./Mugshot";
 import { CaretLeft, CaretRight } from "@phosphor-icons/react";
 import { prefersReducedMotion } from "../lib/motion";
-import { slamHead } from "../lib/press";
-import { Folio } from "./Bits";
+import { Monogram } from "./Engrave";
 
 gsap.registerPlugin(useGSAP);
 
@@ -393,7 +392,6 @@ export function CrewCard({ live }: { live: boolean }) {
 
   useGSAP(
     () => {
-      slamHead(root.current!);
     },
     { scope: root },
   );
@@ -431,16 +429,16 @@ export function CrewCard({ live }: { live: boolean }) {
         : base;
 
   return (
-    <section className="page cardpage" id="card" ref={root} aria-labelledby="card-head">
+    <section className="h-sec cardpage" id="card" ref={root} aria-labelledby="card-head">
       <div className="wrap cardpage__grid">
-        <Folio page={4} label="Private clients" />
         <div className="cardpage__ask">
-          <h2 className="page__head" id="card-head">
-            Check your account
+          <p className="h-eyebrow">§ IV · Your account</p>
+          <h2 className="h-title" id="card-head">
+            Your standing, <em>at a glance.</em>
           </h2>
-          <p className="page__deck">Paste a wallet. See its rank and its ETH.</p>
+          <p className="h-lede">Enter a wallet to see its standing, its balance and the ETH it has been paid.</p>
           <form className="lookup" onSubmit={submit} noValidate>
-            <label htmlFor="wallet">Wallet address</label>
+            <label htmlFor="wallet">Account number (wallet address)</label>
             <div className="lookup__field">
               <input
                 id="wallet"
@@ -467,7 +465,7 @@ export function CrewCard({ live }: { live: boolean }) {
           {info && stamp ? (
             <article className={`card is-${stamp.tone}`}>
               <header className="card__top">
-                <span className="card__org">The Old Money Gazette</span>
+                <span className="card__org"><Monogram size={26} /> Old Money</span>
                 <span className="card__kind">Account card</span>
               </header>
               <div className="card__body">
@@ -505,7 +503,7 @@ export function CrewCard({ live }: { live: boolean }) {
                       <dd className="tabular">{info.padDays}</dd>
                     </div>
                     <div>
-                      <dt>Bag</dt>
+                      <dt>Balance</dt>
                       <dd className="tabular">{amount(info.balance)}</dd>
                     </div>
                     <div>
@@ -548,7 +546,7 @@ export function CrewCard({ live }: { live: boolean }) {
           ) : (
             <div className="card is-blank" aria-hidden="true">
               <header className="card__top">
-                <span className="card__org">The Old Money Gazette</span>
+                <span className="card__org"><Monogram size={26} /> Old Money</span>
                 <span className="card__kind">Account card</span>
               </header>
               <p className="card__blank">Your card prints here.</p>

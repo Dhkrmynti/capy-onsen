@@ -5,43 +5,43 @@ import { useGSAP } from "@gsap/react";
 import { ArrowUpRight } from "@phosphor-icons/react";
 import { DEFAULT_STEPS, amount, dateWib, demoRounds, eth, stepShare, txUrl, usePoll, type RoundRow, type Status } from "../lib/api";
 import { prefersReducedMotion } from "../lib/motion";
-import { slamHead } from "../lib/press";
-import { Folio, useMedia } from "./Bits";
+import { useMedia } from "./Bits";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
-function Tx({ hash }: { hash: string }) {
-  if (!hash) return null;
-  return (
-    <a className="entry__tx tabular" href={txUrl(hash)} target="_blank" rel="noreferrer">
-      tx {hash.slice(0, 8)}… <ArrowUpRight weight="bold" aria-hidden="true" />
-    </a>
-  );
-}
+const KIND: Record<RoundRow["kind"], string> = { feeding: "Dividend", keeper: "Reserve", sink: "Retired notes" };
 
-/** One payout, entered on the statement the way a clerk would. */
-function Entry({ r }: { r: RoundRow }) {
+/** One line of the statement: what moved, where to, and the transaction that proves it. */
+function Line({ r }: { r: RoundRow }) {
   const done = r.stage === "done";
   const what =
     r.kind === "feeding"
-      ? `${parseFloat(done ? r.fedETH : r.spentETH).toFixed(4)} ETH to ${r.recipients ? `${r.recipients} of the Preferred Ten` : "the Preferred Ten"}`
+      ? `Paid to ${r.recipients ? `${r.recipients} of the Preferred Ten` : "the Preferred Ten"}`
       : r.kind === "keeper"
-        ? `${parseFloat(r.spentETH).toFixed(4)} ETH to the reserve`
+        ? "Transferred to the reserve"
         : done
-          ? `${amount(r.tokensBurned)} $OLDM retired`
-          : `buying back`;
-  const label = r.kind === "feeding" ? "Dividend" : r.kind === "keeper" ? "Reserve" : "Retired notes";
+          ? `${amount(r.tokensBurned)} $OLDM bought and retired`
+          : "Buying back";
+  const value = r.kind === "sink" ? r.spentETH : done && r.kind === "feeding" ? r.fedETH : r.spentETH;
   return (
-    <li className={`entry is-${r.kind} ${done ? "" : "is-open"}`}>
-      <p className="entry__meta tabular">
-        <span>No. {r.n}</span>
-        <span>{dateWib(r.at)} WIB</span>
-      </p>
-      <p className="entry__what">
-        <strong>{label}</strong> {what}
-      </p>
-      {done ? <Tx hash={r.tx} /> : <span className="entry__open">sending</span>}
-    </li>
+    <tr className={`stmt__line is-${r.kind} ${done ? "" : "is-open"}`}>
+      <td className="tabular stmt__date">{dateWib(r.at)}</td>
+      <td className="tabular stmt__ref">No. {r.n}</td>
+      <td>
+        <span className="stmt__kind">{KIND[r.kind]}</span>
+        <span className="stmt__what">{what}</span>
+      </td>
+      <td className="num tabular stmt__amt">{parseFloat(value).toFixed(4)} ETH</td>
+      <td className="num">
+        {done && r.tx ? (
+          <a className="stmt__tx tabular" href={txUrl(r.tx)} target="_blank" rel="noreferrer">
+            {r.tx.slice(0, 8)}… <ArrowUpRight weight="bold" aria-hidden="true" />
+          </a>
+        ) : (
+          <span className="stmt__pending">pending</span>
+        )}
+      </td>
+    </tr>
   );
 }
 
@@ -51,68 +51,79 @@ export function Blotter({ status }: { status: Status | null }) {
   const { data: rounds } = usePoll<RoundRow[]>(live ? "/api/rounds" : null, 30000, demoRounds);
   const t = status?.totals;
   const keep = stepShare(status?.cycle.steps ?? DEFAULT_STEPS, "keeper");
-  // A failed claim is retried as a new round, so it never shows here.
   const narrow = useMedia("(max-width: 760px)");
   const [more, setMore] = useState(false);
+  // A failed claim is retried as a new round, so it never shows here.
   const all = (rounds ?? []).filter((r) => r.stage !== "failed").slice(0, 12);
-  // The book opens on the latest few; the rest are one press away.
   const shown = more ? all : all.slice(0, narrow ? 4 : 6);
 
   useGSAP(
     () => {
-      slamHead(root.current!);
       if (prefersReducedMotion() || !shown.length) return;
-      // Each entry is stamped into the book as it scrolls under the desk lamp.
-      ScrollTrigger.batch(".entry", {
-        start: "top 88%",
-        once: true,
-        onEnter: (els) => gsap.from(els, { opacity: 0, scale: 1.06, rotate: -0.6, duration: 0.45, ease: "power4.out", stagger: 0.06 }),
-      });
+      gsap.from(".stmt__line", { opacity: 0, y: 10, duration: 0.5, ease: "power3.out", stagger: 0.05, scrollTrigger: { trigger: ".stmt", start: "top 82%" } });
+      gsap.from(".totals__cell", { opacity: 0, y: 18, duration: 0.7, ease: "expo.out", stagger: 0.1, scrollTrigger: { trigger: ".totals", start: "top 85%" } });
     },
     { scope: root, dependencies: [shown.length > 0] },
   );
 
   return (
-    <section className="page blotter" id="blotter" ref={root} aria-labelledby="blotter-head">
-      <div className="wrap">
-        <Folio page={6} label="Statement" />
-        <h2 className="page__head" id="blotter-head">
-          The statement
-        </h2>
-        <p className="page__deck">Every payout, entered with its tx. No tx, didn&rsquo;t happen.</p>
+    <section className="h-sec statement" id="blotter" ref={root} aria-labelledby="stmt-head">
+      <div className="h-wrap">
+        <header className="h-sec__head">
+          <p className="h-eyebrow">§ V · Statement of the house</p>
+          <h2 className="h-title" id="stmt-head">
+            Every payment, <em>with its receipt.</em>
+          </h2>
+          <p className="h-lede">Each line carries its transaction on Robinhood Chain. No transaction, no payment.</p>
+        </header>
 
-        <dl className="tally">
-          <div>
+        <dl className="totals">
+          <div className="totals__cell">
             <dt>Dividends paid</dt>
             <dd className="tabular">{eth(t?.fedETH ?? "0")}</dd>
           </div>
-          <div>
-            <dt>Reserve ({keep}%)</dt>
+          <div className="totals__cell">
+            <dt>To the reserve ({keep}%)</dt>
             <dd className="tabular">{eth(t?.keeperETH ?? "0")}</dd>
           </div>
-          <div>
-            <dt>Burned</dt>
+          <div className="totals__cell">
+            <dt>Notes retired</dt>
             <dd className="tabular">{amount(t?.tokensBurned ?? "0")} $OLDM</dd>
           </div>
         </dl>
 
-        {shown.length ? (
-          <ol className="blotter__book" reversed>
-            {shown.map((r) => (
-              <Entry key={r.n} r={r} />
-            ))}
-          </ol>
-        ) : null}
-        {shown.length && all.length > shown.length ? (
-          <button type="button" className="more-btn" onClick={() => setMore(true)}>
-            Show {all.length - shown.length} older entries
-          </button>
-        ) : null}
-        {shown.length ? null : (
-          <p className="blotter__empty">
-            Nothing on the books yet. The first entry is written when the escrow reaches {status?.cycle.steps[0].thresholdETH ?? "0.01"} ETH and the first dividend is paid.
-          </p>
-        )}
+        <div className="stmt-sheet">
+          {shown.length ? (
+            <table className="stmt">
+              <caption className="sr-only">Statement of payments made by the house, newest first</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Date (WIB)</th>
+                  <th scope="col">Ref.</th>
+                  <th scope="col">Description</th>
+                  <th scope="col" className="num">
+                    Amount
+                  </th>
+                  <th scope="col" className="num">
+                    Receipt
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {shown.map((r) => (
+                  <Line key={r.n} r={r} />
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p className="book__empty">Nothing entered yet. The first line is written when the escrow reaches {status?.cycle.steps[0].thresholdETH ?? "0.01"} ETH and the first dividend is paid.</p>
+          )}
+          {shown.length && all.length > shown.length ? (
+            <button type="button" className="h-btn is-ink is-small book__more" onClick={() => setMore(true)}>
+              Show {all.length - shown.length} earlier lines
+            </button>
+          ) : null}
+        </div>
       </div>
     </section>
   );
