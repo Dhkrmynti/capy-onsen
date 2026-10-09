@@ -67,15 +67,13 @@ export function Blotter({ status }: { status: Status | null }) {
   );
 
   return (
-    <section className="h-sec statement" id="blotter" ref={root} aria-labelledby="stmt-head">
-      <div className="h-wrap">
-        <header className="h-sec__head">
-          <p className="h-eyebrow">§ V · Statement of the house</p>
-          <h2 className="h-title" id="stmt-head">
-            Every payment, <em>with its receipt.</em>
+    <section className="stop stop--tall statement" id="blotter" ref={root} aria-labelledby="stmt-head">
+      <div className="h-wrap stop__inner">
+        <div className="plaque plaque--slip">
+          <h2 className="plaque__head" id="stmt-head">
+            The statement.
           </h2>
-          <p className="h-lede">Each line carries its transaction on Robinhood Chain. No transaction, no payment.</p>
-        </header>
+          <p className="plaque__deck">Every payment carries its transaction. No transaction, no payment.</p>
 
         <dl className="totals">
           <div className="totals__cell">
@@ -123,6 +121,7 @@ export function Blotter({ status }: { status: Status | null }) {
               Show {all.length - shown.length} earlier lines
             </button>
           ) : null}
+        </div>
         </div>
       </div>
     </section>

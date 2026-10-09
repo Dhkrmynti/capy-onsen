@@ -5,27 +5,27 @@ primary_target: "src/App.tsx"
 related_targets: []
 ---
 
-# Surface: Robin Heist landing + tracker (src/App.tsx)
+# Surface: Old Money landing + tracker (src/App.tsx)
 
-Mode: Persuade (landing) with embedded Operate islands (crew card wallet check, the vault leaderboard, the ledger).
+Mode: Persuade (landing) with embedded Operate islands (account check + seal desk, the ledger of holders, the statement).
 
-Audience & job: CT traders on phones from X; understand "hold big, never snitch → Robin pays the top 10 in ETH", check a wallet, copy CA, buy on Pons. Holders return to check their rank.
-Proof: live bot API only (status, cycle, rounds with tx, pond rows, wallet). Pre-launch shows honest standby states; demo rows labelled ILLUSTRATION.
-Constraints: PRODUCT.md. Backend, API shapes, tokenomics and features unchanged; UI and lore only. No dividend/yield/APY language; parody, not finance. Robin is an original raccoon, no fox, no Pepe.
+Audience & job: CT traders on phones from X; understand "hold large, never sell → the Preferred Ten are paid the dividend in ETH", check a wallet, copy CA, open an account on Pons. Holders return to check their rank.
+Proof: live engine API only (status, cycle, rounds with tx, pond rows, wallet). Pre-launch shows honest standby; demo figures labelled illustration.
+Constraints: PRODUCT.md. Backend, API shapes, tokenomics, features unchanged. Keep: name and lore Old Money / $OLDM, navy and gold palette, every feature, the gold OM coin. User: as little text as possible, more visual. Must have strong 3D.
 
 ## Direction contract
 
-THESIS: The site is The Robin Heist Gazette, a 1930s crime tabloid whose front page breaks every heist the engine runs. Refuses the memecoin hero (mascot left, ticker right, stat cards) and the old departures board.
+THESIS: The page is a walk into the house vault. One continuous WebGL scene sits behind the page and scroll is the visitor's feet: the door unlocks and swings, then the corridor shows each mechanism as a physical thing. Refuses the token landing of headline-left, 3D-object-right, feature cards and a table.
 
-OWN-WORLD: Newsprint gray paper with halftone grain; black ink at poster weight; one red for the masthead, EXTRA and snitches; condensed wood-type grotesque headlines, a slab for the masthead, a typewriter-ish workhorse for wire copy; column rules, folios, edition numbers, halftone photo boxes; WANTED posters, police blotter, stock-table leaderboard.
+OWN-WORLD: Midnight navy steel, machined brass and gold leaf, ivory paper only where a document is handed over; the vault door, deposit-box walls, brass plaques with engraved Cinzel capitals, ledger paper, red wax seals for closed accounts. Copy lives on plaques and slips bolted into the scene, never floating paragraphs.
 
-STORY: Visitor sees the front page: tonight's heist, the loot meter burning toward 0.01 ETH, who got paid. Understands the three-step loop as three columns of the same story; checks their crew card like a press pass; copies the CA from the classifieds box; buys on Pons.
+STORY: See the sealed door and the escrow gauge; scroll and the door opens; pass three pedestals (dividend coins to the Ten, the reserve strongbox, notes burning); read the six conditions on one plaque; face the deposit-box wall where ten boxes glow with names; your own box slides out with your account card; the teller's slip is the statement; the door closes behind you: "Old money never sells."
 
-FIRST VIEWPORT: Masthead "THE ROBIN HEIST GAZETTE" full width with edition no., date and price "0.01 ETH"; EXTRA headline "ROBIN HITS THE VAULT AGAIN" at architectural scale; halftone Robin photo box captioned; right rail "LATEST HEIST" live figures and fuse meter; buy-on-Pons + CA as the front-page coupon above the fold on mobile.
+FIRST VIEWPORT: the vault door full-bleed and square to the viewer, wheel and bolts lit; left of it a brass plaque carrying the headline at display scale, one line of deck, the primary action "Open an account" and "Check your standing"; the escrow as a brass pressure gauge on the frame; a small "turn the wheel" scroll cue.
 
-FORM: Crime tabloid front page, my grounded list #3, seed 8305b263. Raises: every heist round printed as a numbered edition in strict order (16mm film strip); pressed and selected states invert hard black/white (one-bit desktop); the escrow shown as a fuse that burns down visibly toward the next step (matchbook drawer); the fold governs the page, above-the-fold vs below (curved crease). Signature interaction: scroll turns the paper; sections arrive as pages pressed off the run, headlines slam in, and the halftone resolves from coarse dots to sharp as each story enters.
+FORM: Inside the Vault, my grounded list #1 (IMPECCABLE'S PICK over assigned #6 Pneumatic Dispatch), seed dafd4b50. Raises: boxes outside the Ten are drawn dark but present, absence designed (seven-segment display); the next payment is announced on the gauge before it fires (algorave floor); long quiet runs of empty steel between stations, a few words each (ikebana ma); every payment slip carries its tx (memory quilt); plaques and drawers behave as pushable brass, pressed states with travel (CD-ROM console). Signature interaction: scroll-driven camera walk with the door unlocking and opening, and the visitor's own deposit box sliding out.
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
 
 ## Open
-Domain robinheist.cloud purchase, X handle rename, $RBANK CA.
+Domain, X handle, $OLDM CA; whether Old Money or Trapeza ships.

@@ -35,15 +35,13 @@ export function TheVault({ status }: { status: Status | null }) {
   );
 
   return (
-    <section className="h-sec register" id="register" ref={root} aria-labelledby="ledger-head">
-      <div className="h-wrap">
-        <header className="h-sec__head">
-          <p className="h-eyebrow">§ III · The ledger of holders</p>
-          <h2 className="h-title" id="ledger-head">
-            {accounts.toLocaleString("en-US")} accounts. <em>Ten are preferred.</em>
+    <section className="stop stop--tall register" id="register" ref={root} aria-labelledby="ledger-head">
+      <div className="h-wrap stop__inner">
+        <div className="plaque plaque--ledger">
+          <h2 className="plaque__head" id="ledger-head">
+            The Preferred Ten.
           </h2>
-          <p className="h-lede">Ranked by balance. The ten largest share every dividend; the rest are one good buy away.</p>
-        </header>
+          <p className="plaque__deck">{accounts.toLocaleString("en-US")} accounts, ranked by balance. Their boxes are lit.</p>
 
         <div className="book">
           <div className="book__page">
@@ -53,7 +51,6 @@ export function TheVault({ status }: { status: Status | null }) {
                   <span>No.</span>
                   <span>Account</span>
                   <span className="num">Balance</span>
-                  {narrow ? null : <span className="num">Days</span>}
                   <span className="num">Paid, ETH</span>
                 </li>
                 {rows.map((r) => {
@@ -75,7 +72,6 @@ export function TheVault({ status }: { status: Status | null }) {
                         {r.x ? <XLink x={r.x} /> : null}
                       </span>
                       <span className="num tabular">{narrow ? compact(r.balance) : amount(r.balance)}</span>
-                      {narrow ? null : <span className="num tabular">{r.padDays}</span>}
                       <span className="num tabular">{paid(r.received)}</span>
                     </li>
                   );
@@ -91,7 +87,7 @@ export function TheVault({ status }: { status: Status | null }) {
             ) : null}
           </div>
         </div>
-        <p className="register__foot">Gilt-edged rows are the Preferred Ten. Wallets that haven&rsquo;t chosen a name are entered under a house name; set yours on your account.</p>
+        </div>
       </div>
     </section>
   );

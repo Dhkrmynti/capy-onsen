@@ -18,7 +18,8 @@
   --green: #24427a; /* the document ink: navy on ivory */
   --oxblood: #8c2f39;
   --rose: #e2a2a8;
-  --serif: "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
+  --serif: "Libre Caslon Text", "Iowan Old Style", Georgia, serif;
+  --display: "Bodoni Moda", "Didot", Georgia, serif;
   --caps: "Cinzel", "Trajan Pro", Georgia, serif;
   --data: "Archivo Narrow", "Arial Narrow", sans-serif;
   --mono: "Courier Prime", "Courier New", monospace;
@@ -97,11 +98,7 @@ body:has(.house)::before {
 }
 .is-gilt {
   font-style: italic;
-  background: var(--gilt);
-  background-size: 200% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--brass-2);
 }
 
 /* ───────── buttons, coupon, connect ───────── */
@@ -767,134 +764,6 @@ body:has(.house)::before {
   gap: clamp(28px, 4vw, 56px);
   align-items: start;
 }
-.deed {
-  position: relative;
-  padding: clamp(26px, 4vw, 56px);
-  border-radius: 2px;
-  background: var(--paper);
-  color: var(--ink);
-  box-shadow: 0 34px 64px -34px rgba(0, 0, 0, 0.85);
-}
-.deed::before {
-  content: "";
-  position: absolute;
-  inset: 12px;
-  border: 1px solid rgba(36, 66, 122, 0.4);
-  pointer-events: none;
-}
-.deed__head {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 18px;
-}
-.deed__mono {
-  flex: none;
-  color: var(--green);
-}
-.deed__title {
-  margin: 8px 0 0;
-  font: 500 clamp(36px, 4vw, 58px) / 1 var(--serif);
-}
-.deed__sub {
-  margin: 6px 0 0;
-  font-style: italic;
-  color: var(--ink-2);
-}
-.deed__clauses {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0 36px;
-  margin: 30px 0 0;
-  padding: 0;
-  list-style: none;
-}
-.deed__clause {
-  display: grid;
-  grid-template-columns: 40px minmax(0, 1fr);
-  gap: 10px;
-  padding: 16px 0;
-  border-top: 1px solid rgba(28, 25, 19, 0.18);
-}
-.deed__no {
-  padding-top: 5px;
-  font: 700 14px/1 var(--caps);
-  color: var(--green);
-}
-.deed__clause h3 {
-  margin: 0;
-  font: 600 22px/1.15 var(--serif);
-}
-.deed__clause p {
-  margin: 6px 0 0;
-  font-size: 16.5px;
-  line-height: 1.5;
-  color: var(--ink-2);
-}
-.deed__sig {
-  position: relative;
-  display: flex;
-  justify-content: flex-end;
-  align-items: baseline;
-  gap: 14px;
-  margin: 26px 0 0;
-  font: 500 11px/1 var(--caps);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--ink-2);
-}
-.deed__sig i {
-  padding: 0 18px 4px;
-  border-bottom: 1px solid var(--ink);
-  font: italic 600 28px/1 var(--serif);
-  letter-spacing: 0;
-  text-transform: none;
-  color: var(--ink);
-}
-.plaque {
-  position: sticky;
-  top: 110px;
-  padding: 42px 28px 36px;
-  border-radius: 6px;
-  overflow: hidden;
-  text-align: center;
-  color: #241a08;
-  background: linear-gradient(145deg, #dcb971, #a9803a 50%, #e7cd8f);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 -2px 4px rgba(0, 0, 0, 0.25), 0 30px 50px -24px rgba(0, 0, 0, 0.85);
-}
-.plaque > * {
-  position: relative;
-}
-.plaque .plaque__rosette {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  translate: -50% -50%;
-  color: rgba(36, 26, 8, 0.16);
-}
-.plaque__k {
-  margin: 0;
-  font: 700 13px/1 var(--caps);
-  letter-spacing: 0.26em;
-  text-transform: uppercase;
-}
-.plaque__n {
-  margin: 14px 0 0;
-  font: 600 clamp(84px, 9vw, 128px) / 0.9 var(--serif);
-}
-.plaque__d {
-  margin: 10px 0 0;
-  font: italic 500 19px/1.35 var(--serif);
-}
-.plaque__rule {
-  margin: 18px 0 0;
-  padding-top: 14px;
-  border-top: 2px solid rgba(36, 26, 8, 0.5);
-  font: 700 14px/1 var(--caps);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-}
 
 /* ───────── § IV your account ───────── */
 
@@ -1358,7 +1227,6 @@ body:has(.house)::before {
 }
 .ledger__row.is-preferred {
   background: linear-gradient(90deg, rgba(201, 164, 92, 0.26), rgba(201, 164, 92, 0.04) 70%);
-  box-shadow: inset 3px 0 0 #b8893b;
 }
 .ledger__rank {
   font: italic 600 21px/1 var(--serif);
@@ -1653,10 +1521,6 @@ body:has(.house)::before {
     width: 100%;
     margin: 0 auto;
   }
-  .plaque {
-    position: relative;
-    top: 0;
-  }
   .rate {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -1759,12 +1623,6 @@ body:has(.house)::before {
   }
   .terms__again {
     padding-left: 50px;
-  }
-  .deed__clauses {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .deed__head {
-    align-items: flex-start;
   }
   .house .card {
     padding: 20px 18px 16px;

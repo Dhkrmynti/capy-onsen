@@ -16,7 +16,7 @@ const FACE_TURN = Math.PI / 2;
 const POSE = typeof window === "undefined" ? null : new URLSearchParams(window.location.search).get("coin");
 
 /** Draws one face of the coin as a height map: white is raised, black is sunk. */
-function faceTexture(side: "obverse" | "reverse") {
+export function faceTexture(side: "obverse" | "reverse") {
   const S = 1024;
   const c = document.createElement("canvas");
   c.width = c.height = S;
@@ -96,7 +96,7 @@ function faceTexture(side: "obverse" | "reverse") {
 }
 
 /** Vertical reeding for the edge. */
-function edgeTexture() {
+export function edgeTexture() {
   const c = document.createElement("canvas");
   c.width = 512;
   c.height = 8;

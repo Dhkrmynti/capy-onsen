@@ -1,0 +1,643 @@
+/* The walk into the vault. The WebGL scene is fixed behind the page; each section is a stop
+   along the corridor, tall enough for the camera to travel, with its plaque held in view
+   on the left while the scene does the showing on the right. */
+
+.house {
+  background: var(--v0);
+}
+
+/* the vault itself */
+.walk {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 70% at 70% 45%, rgba(201, 164, 92, 0.12), transparent 70%),
+    linear-gradient(180deg, var(--v1), var(--v0));
+}
+.walk__canvas {
+  width: 100% !important;
+  height: 100% !important;
+  animation: walk-in 1.4s ease both;
+}
+@keyframes walk-in {
+  from {
+    opacity: 0;
+  }
+}
+/* a navy wash on the plaque side keeps every word on solid ground */
+.walk::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(11, 20, 36, 0.78) 0%, rgba(11, 20, 36, 0.35) 38%, transparent 60%);
+}
+.house main {
+  position: relative;
+  z-index: 1;
+}
+
+/* ───────── stops ───────── */
+
+.stop {
+  position: relative;
+  min-height: 100svh;
+}
+.stop--tall {
+  min-height: 165svh;
+}
+/* the plaque meets the visitor at each stop; the rest of the stop is quiet steel for the camera */
+.stop__inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 100svh;
+  padding-top: 88px;
+  padding-bottom: 40px;
+}
+
+/* the plaque: a steel panel framed in brass, screwed to the vault wall */
+.plaque,
+.deed {
+  position: relative;
+  text-align: left;
+  color: var(--text);
+  width: min(520px, 100%);
+  padding: clamp(26px, 3vw, 38px);
+  border-radius: 6px;
+}
+.plaque {
+  background: linear-gradient(180deg, rgba(23, 36, 62, 0.94), rgba(14, 24, 42, 0.95));
+  box-shadow:
+    inset 0 0 0 1px rgba(201, 164, 92, 0.55),
+    inset 0 0 0 6px rgba(11, 20, 36, 0.9),
+    inset 0 0 0 7px rgba(201, 164, 92, 0.22),
+    0 30px 60px -30px rgba(0, 0, 0, 0.9);
+}
+/* four brass screws in the corners */
+.plaque::before,
+.plaque::after,
+.deed::after {
+  content: "";
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #f1d99b, #9c7630 70%);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+}
+.plaque::before {
+  top: 14px;
+  left: 14px;
+}
+.plaque::after {
+  top: 14px;
+  right: 14px;
+}
+.plaque__head,
+.door__head,
+.deed__title {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+.plaque__head {
+  font-size: clamp(38px, 4vw, 58px);
+  line-height: 1.02;
+}
+.plaque__deck {
+  margin: 12px 0 0;
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--text-2);
+}
+.plaque__rule {
+  margin: 22px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--brass-dim);
+  font: italic 400 17px/1.45 var(--serif);
+  color: var(--text-2);
+}
+
+/* brass controls press in, like the real thing */
+.house .press-btn,
+.h-btn,
+.house .connect,
+.booth__turn,
+.byline__tab {
+  transition: transform 0.12s, box-shadow 0.12s, filter 0.2s, background 0.2s, color 0.2s;
+}
+.house .press-btn:active,
+.h-btn:active,
+.house .connect:active,
+.booth__turn:active {
+  transform: translateY(2px);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.35);
+}
+
+/* ───────── the door ───────── */
+
+.stop--door .stop__inner {
+  min-height: 100svh;
+  padding-top: 92px;
+  padding-bottom: 64px;
+}
+.plaque--door {
+  width: min(560px, 100%);
+}
+.door__head {
+  font-size: clamp(44px, 4.6vw, 5rem);
+  line-height: 0.98;
+}
+.door__deck {
+  max-width: 40ch;
+  margin: 18px 0 0;
+  font-size: clamp(17px, 1.3vw, 20px);
+  line-height: 1.5;
+  color: var(--text-2);
+}
+.door__deal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+.door__deal + .door__deal {
+  margin-top: 12px;
+}
+.door__ledger {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 22px;
+  margin-top: 26px;
+  padding-top: 22px;
+  border-top: 1px solid var(--brass-dim);
+}
+.door__facts {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+.door__facts div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px dotted rgba(201, 164, 92, 0.28);
+}
+.door__facts dt {
+  font: 500 11px/1 var(--caps);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+.door__facts dd {
+  margin: 0;
+  font: 500 26px/1 var(--display);
+}
+.door__facts .is-closed dd {
+  color: var(--rose);
+}
+.door__cue {
+  position: absolute;
+  left: 50%;
+  bottom: 22px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transform: translateX(-50%);
+  font: 500 11px/1 var(--caps);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--brass-2);
+}
+
+/* the brass pressure gauge on the door frame */
+.gauge {
+  display: grid;
+  grid-template-columns: 112px;
+  justify-items: center;
+  gap: 8px;
+}
+.gauge svg {
+  width: 112px;
+  height: 112px;
+  overflow: visible;
+}
+.gauge__bezel {
+  fill: #b68b3d;
+  stroke: #f0d595;
+  stroke-width: 1.5;
+}
+.gauge__face {
+  fill: #f1ead8;
+  stroke: #8a6a2c;
+  stroke-width: 1;
+}
+.gauge__ticks line {
+  stroke: #1c1913;
+}
+.gauge__needle {
+  transform-origin: 60px 60px;
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.gauge__needle path {
+  fill: #8c2430;
+}
+.gauge__hub {
+  fill: #1c1913;
+}
+.gauge__read {
+  display: grid;
+  justify-items: center;
+  gap: 3px;
+  text-align: center;
+}
+.gauge__k {
+  font: 500 10px/1.2 var(--caps);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+.gauge__v {
+  font: 600 14px/1 var(--data);
+  color: var(--brass-2);
+}
+.gauge__due {
+  margin-top: 2px;
+  padding: 3px 8px;
+  border: 1px solid var(--brass);
+  border-radius: 999px;
+  font: 700 10px/1 var(--caps);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--brass-2);
+  animation: due 1.4s ease-in-out infinite;
+}
+.gauge.is-due .gauge__bezel {
+  filter: drop-shadow(0 0 8px rgba(241, 217, 155, 0.65));
+}
+@keyframes due {
+  50% {
+    opacity: 0.45;
+  }
+}
+
+/* ───────── where every fee goes ───────── */
+
+.tags {
+  display: grid;
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.tags__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2px 16px;
+  padding: 16px 0;
+  border-top: 1px solid var(--brass-dim);
+}
+.tags__name {
+  font: 500 clamp(24px, 2.2vw, 30px) / 1.1 var(--display);
+}
+.tags__eth {
+  align-self: center;
+  font: 600 16px/1 var(--data);
+  color: var(--brass-2);
+}
+.tags__where {
+  grid-column: 1 / -1;
+  font: italic 400 16px/1.4 var(--serif);
+  color: var(--text-2);
+}
+.tags__row.is-feeding .tags__name {
+  color: #f0dba4;
+}
+.tags__row.is-keeper .tags__name {
+  color: #a9c1e8;
+}
+.tags__row.is-sink .tags__name {
+  color: #e7a3ab;
+}
+.split {
+  display: flex;
+  gap: 3px;
+  height: 34px;
+  margin-top: 18px;
+}
+.split__part {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  border-radius: 2px;
+  color: #10192b;
+}
+.split__part b {
+  font: 700 13px/1 var(--data);
+}
+.split__part.is-feeding {
+  background: #e6cc8f;
+}
+.split__part.is-keeper {
+  background: #4f74b3;
+  color: #eef2fb;
+}
+.split__part.is-sink {
+  background: #a63e4a;
+  color: #fbeef0;
+}
+
+/* ───────── conditions: an ivory deed ───────── */
+
+.house .deed {
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.9);
+}
+.deed::before {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  border: 1px solid rgba(36, 66, 122, 0.45);
+  border-radius: 3px;
+  pointer-events: none;
+}
+.deed::after {
+  top: auto;
+  bottom: 14px;
+  right: 14px;
+}
+.deed__head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.deed__mono {
+  flex: none;
+  color: var(--green);
+}
+.deed__title {
+  font-size: clamp(30px, 3vw, 42px);
+  line-height: 1.05;
+}
+.deed__lines {
+  margin: 22px 0 0;
+}
+.deed__line {
+  display: grid;
+  grid-template-columns: minmax(120px, 0.9fr) minmax(0, 1.4fr);
+  gap: 16px;
+  align-items: baseline;
+  padding: 12px 0;
+  border-top: 1px solid rgba(28, 25, 19, 0.16);
+}
+.deed__line dt {
+  font: 600 20px/1.15 var(--display);
+  color: var(--green);
+}
+.deed__line dd {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.4;
+  color: var(--ink-2);
+}
+.deed__foot {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 2px solid var(--ink);
+}
+.deed__foot p {
+  margin: 0;
+  font: italic 400 15px/1.45 var(--serif);
+  color: var(--ink-2);
+}
+.seal-count {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  color: #f6e7c3;
+  background: radial-gradient(circle at 35% 30%, #b0434d, #6d1f27 72%);
+  box-shadow: inset 0 -3px 6px rgba(0, 0, 0, 0.35), 0 5px 12px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+.seal-count b {
+  font: 600 28px/1 var(--display);
+}
+.seal-count small {
+  margin-top: -14px;
+  font: 700 8px/1 var(--caps);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* ───────── the ledger, held on the plaque ───────── */
+
+.plaque--ledger {
+  width: min(540px, 100%);
+}
+.plaque--ledger .book {
+  margin-top: 20px;
+  padding: 8px;
+}
+.plaque--ledger .book__page {
+  padding: 12px 14px;
+  background-image: none;
+}
+.plaque--ledger .ledger__row {
+  grid-template-columns: 30px minmax(0, 1fr) 70px 70px;
+  gap: 8px;
+  min-height: 44px;
+  padding: 4px 4px;
+}
+.plaque--ledger .ledger__id {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+.plaque--ledger .ledger__name {
+  font-size: 17px;
+}
+.plaque--ledger .ledger__rank {
+  font-size: 17px;
+}
+.plaque--ledger .ledger__row .num {
+  font-size: 14px;
+}
+.plaque--ledger .ledger__who .xlink {
+  display: none;
+}
+.ledger__name,
+.ledger__rank {
+  font-family: var(--display);
+}
+
+/* ───────── your box ───────── */
+
+.cardpage .cardpage__grid {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 18px;
+  width: min(540px, 100%);
+}
+.cardpage__ask {
+  padding: clamp(22px, 2.6vw, 30px);
+  border-radius: 6px;
+  background: linear-gradient(180deg, rgba(23, 36, 62, 0.94), rgba(14, 24, 42, 0.95));
+  box-shadow: inset 0 0 0 1px rgba(201, 164, 92, 0.55), 0 30px 60px -30px rgba(0, 0, 0, 0.9);
+}
+.cardpage__ask .lookup {
+  margin-top: 16px;
+}
+.cardpage .stop__inner {
+  align-items: flex-start;
+  padding-top: 96px;
+}
+.card__who,
+.byline__head {
+  font-family: var(--display);
+}
+
+/* ───────── the statement, a teller's slip ───────── */
+
+.plaque--slip {
+  width: min(560px, 100%);
+}
+.plaque--slip .totals {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 18px;
+}
+.plaque--slip .totals__cell {
+  padding: 12px 12px;
+}
+.plaque--slip .totals dt {
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+}
+.plaque--slip .totals dd {
+  margin-top: 8px;
+  font: 500 clamp(19px, 1.7vw, 24px) / 1 var(--display);
+}
+.plaque--slip .stmt-sheet {
+  margin-top: 12px;
+  padding: 10px 14px;
+}
+.plaque--slip .stmt th:nth-child(2),
+.plaque--slip .stmt td:nth-child(2) {
+  display: none;
+}
+.plaque--slip .stmt td,
+.plaque--slip .stmt th {
+  padding: 9px 5px;
+}
+.plaque--slip .stmt__what {
+  font-size: 15px;
+}
+
+/* ───────── the door closes behind you ───────── */
+
+.stop--close {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 140svh;
+  padding: 40svh 0 48px;
+  border: 0;
+  background: linear-gradient(180deg, transparent 0%, rgba(11, 20, 36, 0.6) 40%, var(--v0) 75%);
+}
+.closing__head {
+  font-family: var(--display);
+  font-size: clamp(52px, 8vw, 6rem);
+}
+
+/* the pre-launch line on the account plaque and the demo note keep their own ground */
+.house .byline__shut {
+  background: rgba(11, 20, 36, 0.85);
+}
+
+/* ───────── without WebGL the page is a plain dark vault ───────── */
+
+.house:not(.has-walk) .walk::after {
+  display: none;
+}
+
+/* ───────── narrower ───────── */
+
+@media (max-width: 1080px) {
+  .walk::after {
+    background: linear-gradient(90deg, rgba(11, 20, 36, 0.82) 0%, rgba(11, 20, 36, 0.45) 55%, rgba(11, 20, 36, 0.25) 100%);
+  }
+}
+
+@media (max-width: 760px) {
+  /* on a phone the plaque takes the width; the vault shows above and below it */
+  .walk::after {
+    background: linear-gradient(180deg, rgba(11, 20, 36, 0.35) 0%, rgba(11, 20, 36, 0.55) 100%);
+  }
+  .stop--tall {
+    min-height: 150svh;
+  }
+  .stop__inner {
+    align-items: flex-end;
+    padding-top: 72px;
+    padding-bottom: 24px;
+  }
+  .stop--door .stop__inner {
+    align-items: flex-end;
+  }
+  .plaque,
+  .deed {
+    padding: 22px 18px;
+  }
+  .door__head {
+    font-size: clamp(40px, 11.5vw, 56px);
+  }
+  .door__ledger {
+    grid-template-columns: 92px minmax(0, 1fr);
+    gap: 14px;
+  }
+  .gauge,
+  .gauge svg {
+    width: 92px;
+  }
+  .gauge svg {
+    height: 92px;
+  }
+  .door__facts dd {
+    font-size: 22px;
+  }
+  .door__cue {
+    display: none;
+  }
+  .plaque__head {
+    font-size: clamp(32px, 9vw, 42px);
+  }
+  .deed__line {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+  }
+  .plaque--ledger .ledger__row {
+    grid-template-columns: 24px minmax(0, 1fr) 62px;
+  }
+  .plaque--ledger .ledger__row > :last-child {
+    display: none;
+  }
+  .cardpage .stop__inner {
+    padding-top: 80px;
+  }
+}

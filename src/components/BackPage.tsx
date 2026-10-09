@@ -26,9 +26,9 @@ export function BackPage({ status }: { status: Status | null }) {
   );
 
   return (
-    <footer className="foot" ref={root} aria-label="Closing">
+    <footer className="stop stop--close foot" ref={root} aria-label="Closing">
       <div className="h-wrap">
-        <div className="closing">
+        <div className="closing" id="closing">
           <Monogram size={84} className="closing__mono" />
           <p className="closing__head">
             <span className="closing__mask">
@@ -38,7 +38,7 @@ export function BackPage({ status }: { status: Status | null }) {
               <span className="closing__line is-gilt">never sells.</span>
             </span>
           </p>
-          <p className="closing__deck">Open an account with {min} $OLDM. Hold it, and the Preferred Ten are paid in ETH, every dividend.</p>
+          <p className="closing__deck">Open an account with {min} $OLDM. The door closes behind you.</p>
           <div className="closing__deal">
             <BuyButton status={status} />
             <CaCoupon status={status} compact={narrow} />

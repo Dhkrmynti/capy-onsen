@@ -45,16 +45,16 @@ Every other fee-engine token on the owner's VPS burns. $PADS rewards patience di
 
 ## Brand Commitments
 
-- Name **Robin Heist**, ticker **$RBANK** (rebrand from Pepads/$PADS, 8 Oct 2026; site domain planned: robinheist.cloud). Mascot **Robin**: an original raccoon in a bowler-hat disguise; natural bandit mask, bowler hat with brass band, red bow tie, gold monocle, ringed tail, sits on a coin pile next to a $ sack. Tagline **"never snitch."**, sub-line "robbing the paper hands since block one."
-- **Parody, not finance.** Never call the split a dividend, holders shareholders, or $RBANK an investment. Keep "memecoin, no promise of value" and "not a security, not a dividend" visible.
-- **No borrowed IP.** Not a fox Robin Hood (Disney), no Pepe, no other project's art.
-- Lore terms: fees → **loot**; claim → **the heist**; step 1 (ETH to top 10) → **the split**; step 2 (treasury) → **hideout fund** (always shown openly); step 3 (buyback + burn) → **burn the ledger**; eligible holders → **the crew**; sold → **snitched**; under minimum → **lookout**; leaderboard → **the vault**; wallet check → **crew card**; history → **the ledger**.
-- Voice: degen CT, calm gang-boss swagger, lowercase ("the heist ran. the crew got paid.").
+- Name **Old Money**, ticker **$OLDM** (variant branch `lore-banker`; the main branch ships Trapeza/$TRPZ). No word "bank" in the name or domain. No mascot: the house is represented by its OM monogram and the gold OM coin.
+- **Lore, not finance.** The lore names the top-10 payout "the Dividend" by the owner's explicit choice; every page that uses the word also says plainly that it is only this site's name for trading fees, that $OLDM is a memecoin with no promise of value, not a security, deposit or investment, and that Old Money is not a bank and holds no one's funds.
+- Lore terms: step 1 (ETH to top 10) → **the Dividend**, paid to **the Preferred Ten**; step 2 (treasury) → **the Reserve** (always shown openly); step 3 (buyback + burn) → **Retired Notes**; holders → **accounts**; sold → **account closed**; under minimum → **savings**; leaderboard → **the ledger of holders**; wallet check → **your account**; history → **the statement**; avatar → **account seal**.
+- Palette: midnight navy, gold leaf, ivory paper (owner's choice).
+- Voice: an old private office, dry and brief; few words.
 
 ## Evidence on Hand
 
 - None yet: no token, CA, holders, feedings, domain, or X account. Pre-launch the site must show empty/standby states honestly; any demo numbers must be labelled as illustration.
-- Do not invent holders, testimonials, partners, yields, APY, or price claims. Never use the words yield, APY, passive income, dividend.
+- Do not invent holders, testimonials, partners, yields, APY, or price claims. Never use yield, APY or passive income; "dividend" only as the lore name with the disclaimer above.
 
 ## Product Principles
 

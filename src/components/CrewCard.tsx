@@ -429,14 +429,13 @@ export function CrewCard({ live }: { live: boolean }) {
         : base;
 
   return (
-    <section className="h-sec cardpage" id="card" ref={root} aria-labelledby="card-head">
-      <div className="wrap cardpage__grid">
+    <section className="stop stop--tall cardpage" id="card" ref={root} aria-labelledby="card-head">
+      <div className="h-wrap stop__inner">
+      <div className="cardpage__grid">
         <div className="cardpage__ask">
-          <p className="h-eyebrow">§ IV · Your account</p>
-          <h2 className="h-title" id="card-head">
-            Your standing, <em>at a glance.</em>
+          <h2 className="plaque__head" id="card-head">
+            Your box.
           </h2>
-          <p className="h-lede">Enter a wallet to see its standing, its balance and the ETH it has been paid.</p>
           <form className="lookup" onSubmit={submit} noValidate>
             <label htmlFor="wallet">Account number (wallet address)</label>
             <div className="lookup__field">
@@ -456,7 +455,7 @@ export function CrewCard({ live }: { live: boolean }) {
               </button>
             </div>
             <p id="wallet-help" className={error ? "lookup__error" : "lookup__help"} role={error ? "alert" : undefined}>
-              {error || (xFlash && !info && !readQuery() ? xFlash.text : "Read only. A wallet is only needed to claim a name, and it only signs a message.")}
+              {error || (xFlash && !info && !readQuery() ? xFlash.text : "Read only. Connect only to claim a name; it signs a message, never a payment.")}
             </p>
           </form>
         </div>
@@ -563,6 +562,7 @@ export function CrewCard({ live }: { live: boolean }) {
             </p>
           ) : null}
         </div>
+      </div>
       </div>
     </section>
   );
