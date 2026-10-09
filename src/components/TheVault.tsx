@@ -110,6 +110,22 @@ export function TheVault({ status }: { status: Status | null }) {
             </div>
           ) : null}
 
+          {/* sold once, still holding: struck out, never paid again */}
+          {data?.out?.length ? (
+            <div className="waitroom is-out">
+              <span className="waitroom__label">Written out · {data.out.length}</span>
+              <div className="waitroom__list">
+                {data.out.map((w) => (
+                  <button type="button" key={w.addr} className="waitroom__one" onClick={() => openCard(w.addr)} title="Sold once: written out of the will for good">
+                    <CrewFace addr={w.addr} pp={w.pp} x={w.x} size={20} className="heir__seal" />
+                    <span className="waitroom__name is-struck">{nameFor(w.addr, w.nickname, w.x).name}</span>
+                    <span className="waitroom__sub tabular">{compact(w.balance)}{worth(w.balance)} · sold</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : null}
+
           {all.length ? (
             <div className="heirs" role="list" aria-label={`The first ${all.length} holders by balance. The top ${top} share the next inheritance.`}>
               {cols.map((col, c) => (

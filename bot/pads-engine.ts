@@ -691,6 +691,15 @@ const server = http.createServer((req, res) => {
             .slice(0, 20)
             .map(([a, h]) => ({ addr: a, balance: fmt(h.balance), eligibleAt: h.firstIn + Math.round(config.minHoldHours * 3600), nickname: bylineOf(a), pp: mugshotOf(a), x: xOf(a) }));
         })(),
+        // Wallets that sold but still hold some: shown struck out, never ranked or paid again.
+        out: (() => {
+          const ex = excluded();
+          return Object.entries(state.holders)
+            .filter(([a, h]) => !ex.has(a) && !h.relay && h.hopped && big(h.balance) > 0n)
+            .sort((a, b) => (big(b[1].balance) > big(a[1].balance) ? 1 : -1))
+            .slice(0, 20)
+            .map(([a, h]) => ({ addr: a, balance: fmt(h.balance), nickname: bylineOf(a), pp: mugshotOf(a), x: xOf(a) }));
+        })(),
         // The dev (the creator wallet the engine runs on): shown with a crown, never ranked or paid.
         house: wallet
           ? (() => {

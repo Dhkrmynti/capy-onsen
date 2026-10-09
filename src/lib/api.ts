@@ -349,7 +349,7 @@ export interface WaitingRow {
   pp: number[] | null;
   x: XProfile | null;
 }
-export type Pond = { total: number; topN: number; rows: PondRow[]; house?: HouseRow | null; waiting?: WaitingRow[] };
+export type Pond = { total: number; topN: number; rows: PondRow[]; house?: HouseRow | null; waiting?: WaitingRow[]; out?: HouseRow[] };
 
 export const demoPond = (): Pond => {
   const base = seedPond();
