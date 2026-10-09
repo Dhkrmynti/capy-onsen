@@ -60,7 +60,7 @@ export function TheVault({ status }: { status: Status | null }) {
                       <span className="ledger__rank tabular">{r.rank}</span>
                       <span className="ledger__who">
                         <button type="button" className={`ledger__open ${who.claimed ? "is-claimed" : ""}`} onClick={() => openCard(r.addr)} aria-label={`Open the account of ${who.name}, ${r.addr}`}>
-                          <CrewFace addr={r.addr} pp={r.pp} x={r.x} size={narrow ? 30 : 36} className="ledger__seal" />
+                          <CrewFace addr={r.addr} pp={r.pp} x={r.x} size={narrow ? 22 : 24} className="ledger__seal" />
                           <span className="ledger__id">
                             <span className="ledger__name">
                               {who.name}

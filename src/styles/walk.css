@@ -662,3 +662,249 @@
 .stop--close {
   background: linear-gradient(180deg, transparent 0%, transparent 35%, rgba(11, 20, 36, 0.55) 70%, var(--v0) 100%);
 }
+
+/* the Ten Heirs fit one screen: thin ruled lines, name and address on one line */
+.plaque--ledger {
+  padding-top: 22px;
+  padding-bottom: 18px;
+}
+.plaque--ledger .plaque__head {
+  font-size: clamp(30px, 3vw, 40px);
+}
+.plaque--ledger .plaque__deck {
+  margin-top: 4px;
+  font-size: 15px;
+}
+.plaque--ledger .book {
+  margin-top: 12px;
+  padding: 4px;
+}
+.plaque--ledger .book__page {
+  padding: 6px 10px;
+}
+.plaque--ledger .ledger__row {
+  min-height: 30px;
+  padding: 2px 4px;
+}
+.plaque--ledger .ledger__row.is-head {
+  min-height: 24px;
+}
+.plaque--ledger .ledger__id {
+  flex-direction: row;
+  align-items: baseline;
+  gap: 8px;
+}
+.plaque--ledger .ledger__name,
+.plaque--ledger .ledger__rank {
+  font-size: 15px;
+}
+.plaque--ledger .ledger__addr {
+  font-size: 11px;
+}
+.plaque--ledger .ledger__row .num {
+  font-size: 13px;
+}
+.plaque--ledger .ledger__seal {
+  flex: none;
+}
+.plaque--ledger .book__more {
+  margin-top: 8px;
+}
+@media (max-width: 760px) {
+  .plaque--ledger .ledger__addr {
+    display: none;
+  }
+  .plaque--ledger .ledger__row {
+    min-height: 34px;
+  }
+  .plaque--ledger .ledger__paid {
+    display: inline;
+    margin: 0 0 0 6px;
+  }
+}
+
+/* ───────── every stop fits one screen: spacing follows the screen's height ───────── */
+.plaque,
+.deed {
+  padding: clamp(18px, 3.4vh, 34px) clamp(20px, 2.6vw, 34px);
+}
+.plaque__head {
+  font-size: clamp(30px, min(3.6vw, 6.4vh), 52px);
+}
+.plaque__deck {
+  margin-top: clamp(4px, 1vh, 10px);
+  font-size: clamp(14px, 2.1vh, 17px);
+}
+.tags {
+  margin-top: clamp(10px, 2vh, 20px);
+}
+.tags__row {
+  padding: clamp(8px, 1.6vh, 14px) 0;
+}
+.tags__name {
+  font-size: clamp(21px, min(2vw, 3.6vh), 28px);
+}
+.tags__where {
+  font-size: clamp(14px, 2vh, 16px);
+}
+.split {
+  height: clamp(26px, 4vh, 32px);
+  margin-top: clamp(10px, 1.8vh, 16px);
+}
+.plaque__rule {
+  margin-top: clamp(10px, 1.8vh, 16px);
+  padding-top: clamp(8px, 1.6vh, 14px);
+  font-size: clamp(14px, 2.1vh, 17px);
+}
+.deed__title {
+  font-size: clamp(28px, min(3vw, 5.4vh), 40px);
+}
+.deed__mono {
+  width: clamp(32px, 5vh, 44px);
+  height: clamp(32px, 5vh, 44px);
+}
+.deed__lines {
+  margin-top: clamp(10px, 2vh, 18px);
+}
+.deed__line {
+  padding: clamp(6px, 1.25vh, 11px) 0;
+}
+.deed__line dt {
+  font-size: clamp(16px, 2.5vh, 19px);
+}
+.deed__line dd {
+  font-size: clamp(14px, 2vh, 16px);
+  line-height: 1.3;
+}
+.deed__foot {
+  margin-top: clamp(10px, 1.8vh, 16px);
+  padding-top: clamp(10px, 1.6vh, 14px);
+}
+.deed__foot .seal-count {
+  transform: scale(0.85);
+  transform-origin: left center;
+}
+.plaque--ledger .ledger__row {
+  min-height: clamp(28px, 4.3vh, 36px);
+}
+.plaque--ledger .ledger__addr {
+  white-space: nowrap;
+}
+.plaque--slip .stmt td,
+.plaque--slip .stmt th {
+  padding: clamp(5px, 1vh, 8px) 5px;
+}
+.plaque--slip .stmt-sheet {
+  margin-top: clamp(8px, 1.4vh, 12px);
+  padding: 6px 12px;
+}
+.plaque--slip .totals {
+  margin-top: clamp(8px, 1.4vh, 14px);
+  padding: clamp(6px, 1.2vh, 10px) 0;
+}
+.cardpage__ask {
+  padding: clamp(16px, 3vh, 28px) clamp(18px, 2.4vw, 28px);
+}
+.cardpage .cardpage__grid {
+  gap: clamp(10px, 2vh, 18px);
+}
+.cardpage .stop__inner {
+  align-items: center;
+  padding-top: 84px;
+}
+.book__more {
+  margin-top: 8px;
+}
+
+@media (max-width: 760px) {
+  /* the slip is never a scroll box: it is sized to the screen instead */
+  .plaque,
+  .house .deed,
+  .cardpage .cardpage__grid {
+    max-height: none;
+    overflow: visible;
+  }
+  .stop__inner {
+    padding-top: 70px;
+    padding-bottom: 12px;
+  }
+  .cardpage .stop__inner {
+    align-items: flex-end;
+    padding-top: 70px;
+  }
+  .plaque,
+  .deed {
+    padding: clamp(14px, 2.4vh, 22px) 16px;
+  }
+  .plaque__head {
+    font-size: clamp(26px, 4.6vh, 38px);
+  }
+  .tags__row {
+    padding: 8px 0;
+  }
+  .deed__line {
+    padding: 6px 0;
+  }
+  .deed__line dt {
+    font-size: 16px;
+  }
+  .deed__line dd {
+    font-size: 14px;
+  }
+  .plaque--ledger .ledger__row {
+    min-height: 32px;
+  }
+}
+
+/* the fit guard shrinks a stop's panel a touch when a short screen still can't hold it */
+.fit-scaled {
+  transform-origin: center center;
+}
+
+/* now that every panel fits, it holds still on screen while the camera finishes its move */
+@media (min-height: 520px) {
+  .stop--tall > .stop__inner {
+    position: sticky;
+    top: 0;
+  }
+}
+@media (max-width: 760px) {
+  /* a statement line is two lines: what happened, then date · amount · receipt */
+  .plaque--slip .stmt tr {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: baseline;
+    gap: 2px 12px;
+    padding: 7px 0;
+  }
+  .plaque--slip .stmt td,
+  .plaque--slip .stmt th {
+    padding: 0;
+  }
+  .plaque--slip .stmt__kind {
+    display: inline;
+    margin-right: 6px;
+  }
+  .plaque--slip .stmt__what {
+    display: inline;
+    font-size: 14px;
+  }
+}
+/* body overflow hidden would make body the scroller and break the sticky panels */
+body:has(.house) {
+  overflow-x: clip;
+}
+.plaque--ledger .ledger__paid {
+  white-space: nowrap;
+}
+@media (max-width: 760px) {
+  /* the illustration tag sits in its own strip at the foot, never over a panel */
+  .demo-tag {
+    top: auto;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .house:has(.demo-tag) .stop__inner {
+    padding-bottom: 38px;
+  }
+}

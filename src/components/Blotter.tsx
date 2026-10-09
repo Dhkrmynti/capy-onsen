@@ -55,7 +55,7 @@ export function Blotter({ status }: { status: Status | null }) {
   const [more, setMore] = useState(false);
   // A failed claim is retried as a new round, so it never shows here.
   const all = (rounds ?? []).filter((r) => r.stage !== "failed").slice(0, 12);
-  const shown = more ? all : all.slice(0, narrow ? 4 : 6);
+  const shown = more ? all : all.slice(0, narrow ? 4 : 5);
 
   useGSAP(
     () => {
@@ -81,11 +81,11 @@ export function Blotter({ status }: { status: Status | null }) {
             <dd className="tabular">{eth(t?.fedETH ?? "0")}</dd>
           </div>
           <div className="totals__cell">
-            <dt>To the reserve ({keep}%)</dt>
+            <dt>To the upkeep ({keep}%)</dt>
             <dd className="tabular">{eth(t?.keeperETH ?? "0")}</dd>
           </div>
           <div className="totals__cell">
-            <dt>Notes retired</dt>
+            <dt>Burned</dt>
             <dd className="tabular">{amount(t?.tokensBurned ?? "0")} $HEIR</dd>
           </div>
         </dl>

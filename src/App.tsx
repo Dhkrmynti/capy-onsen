@@ -55,6 +55,35 @@ export function App() {
   // A wallet that already trusts this site shows as connected without a popup.
   useEffect(restoreWallet, []);
 
+  // Each stop's panel fits one screen: on a short screen it is shrunk a touch rather than cut off.
+  useEffect(() => {
+    let raf = 0;
+    const fit = () => {
+      const nav = document.querySelector("header")?.offsetHeight ?? 0;
+      const avail = window.innerHeight - nav - (window.innerWidth <= 760 ? (document.querySelector(".demo-tag") ? 46 : 18) : 40);
+      document.querySelectorAll<HTMLElement>(".stop__inner > .plaque, .stop__inner > .deed, .stop__inner > .cardpage__grid").forEach((el) => {
+        el.style.zoom = "";
+        const h = el.offsetHeight;
+        if (h > avail) el.style.zoom = String(Math.max(0.72, avail / h));
+      });
+    };
+    const soon = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(fit);
+    };
+    soon();
+    document.fonts?.ready.then(soon);
+    window.addEventListener("resize", soon);
+    const mo = new MutationObserver(soon);
+    const main = document.querySelector("main");
+    if (main) mo.observe(main, { childList: true, subtree: true, characterData: true });
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", soon);
+      mo.disconnect();
+    };
+  }, []);
+
   // Smooth scroll that ScrollTrigger reads from; off for reduced motion.
   useEffect(() => {
     if (prefersReducedMotion()) return;
