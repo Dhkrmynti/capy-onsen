@@ -1,4 +1,8 @@
 import { Composition, Still } from "remotion";
+import { KPBanner, KPGif, KPLogo, KPPostLadder, KPPostRules, KP_GIF_LENGTH } from "./KPStills";
+import { KPExplainer, KP_EXPLAINER_LENGTH } from "./KPExplainer";
+import { KPTutorial, KP_TUTORIAL_LENGTH } from "./KPTutorial";
+import { KPSimulation, KP_SIM_LENGTH } from "./KPSimulation";
 import { GZTutorial, TUTORIAL_LENGTH } from "./Tutorial";
 import { GZBanner, GZDemo, GZGif, GZLogo, GZPostMugshots, GZPostPlan, GZPostWanted, GIF_LENGTH, GZ_DEMO_LENGTH } from "./Gazette";
 import { Logo, Banner } from "./Stills";
@@ -14,6 +18,14 @@ import { HLSimulation, HL_SIM_LENGTH } from "./HLSimulation";
 export function RemotionRoot() {
   return (
     <>
+      <Still id="KPLogo" component={KPLogo} width={1080} height={1080} />
+      <Still id="KPBanner" component={KPBanner} width={1500} height={500} />
+      <Still id="KPPostLadder" component={KPPostLadder} width={1600} height={900} />
+      <Still id="KPPostRules" component={KPPostRules} width={1600} height={900} />
+      <Composition id="KPGif" component={KPGif} width={720} height={720} fps={30} durationInFrames={KP_GIF_LENGTH} />
+      <Composition id="KPExplainer" component={KPExplainer} width={1920} height={1080} fps={30} durationInFrames={KP_EXPLAINER_LENGTH} />
+      <Composition id="KPTutorial" component={KPTutorial} width={1920} height={1080} fps={30} durationInFrames={KP_TUTORIAL_LENGTH} />
+      <Composition id="KPSimulation" component={KPSimulation} width={1920} height={1080} fps={30} durationInFrames={KP_SIM_LENGTH} />
       <Still id="HLLogo" component={HLLogo} width={1080} height={1080} />
       <Still id="HLBanner" component={HLBanner} width={1500} height={500} />
       <Still id="HLPostHeirs" component={HLPostHeirs} width={1600} height={900} />

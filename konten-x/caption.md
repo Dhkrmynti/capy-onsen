@@ -1,109 +1,98 @@
-# Heirloom ($HEIR) — konten X
-
-Semua file ada di folder ini:
+# Kingpins ($KING) — konten X
 
 | File | Untuk |
 |---|---|
-| `logo-x.png` | Foto profil (1080×1080, koin emas H; aman untuk crop bulat X) |
-| `banner-x.png` | Header (1500×500; teks di kanan supaya tidak ketutup foto profil) |
-| `post-1-how-heirloom-works.mp4` | Post 1: video penjelasan proyek, siklus 4 langkah |
-| `post-2-tutorial-name-seal-x.mp4` | Post 2: video tutorial nickname + seal (PP) + Connect X |
-| `post-3-the-ten-heirs.png` | Post 3: The Ten Heirs (zona inheritance, tier I & II) |
-| `post-4-the-will.png` | Post 4: The will (aturan) |
-| `post-5-fee-simulation.mp4` | Post 5: simulasi fee berjalan (escrow 0 → 0.02 → bagi → 0, treasury, buyback & burn, treasury, loop) |
-| `gif-written-out.gif` | GIF: rank 10 jual, rank 11 naik ke zona (untuk balasan / quote) |
+| `logo-x.png` | Foto profil (1080×1080, Raja oranye bermahkota; aman untuk crop bulat X) |
+| `banner-x.png` | Header (1500×500; teks di tengah-kanan, tidak tertutup foto profil) |
+| `post-1-how-kingpins-works.mp4` | Post 1: video penjelasan (mahkota, escrow, 4 langkah, captured) |
+| `post-2-tutorial-name-portrait-x.mp4` | Post 2: tutorial nama + portrait + Connect X |
+| `post-3-the-ladder.png` | Post 3: The Ladder (top 10 + tier) |
+| `post-4-rules-of-the-board.png` | Post 4: aturan papan |
+| `post-5-fee-simulation.mp4` | Post 5: simulasi fee berjalan dan looping |
+| `gif-new-king.gif` | GIF: holder menyalip No. 1, mahkota pindah ("CROWNED!") |
 
-`[CA]` diganti alamat kontrak setelah launch di Pons. Link situs: **https://heirlooms.fun**
+`[CA]` diganti alamat kontrak setelah launch di Pons. Situs: **https://kingpins.fun**
 
 ---
 
 ## Nama & bio
 
-**Akun:** `@heirloom_rh` (https://x.com/heirloom_rh)
-**Nama tampilan:** `Heirloom $HEIR`
-**Lokasi:** `The Family Vault`  **Website:** `heirlooms.fun`
+**Nama tampilan:** `Kingpins $KING`  **Website:** `kingpins.fun`
 
-Pilih salah satu bio:
+Pilih satu bio:
 
-1. An heirloom is never sold. Every $HEIR trade pays the ten largest holders in ETH. Sell once and you are written out of the will. Robinhood Chain · Pons
-2. The family vault on Robinhood Chain. No. 1–5 share 0.014 ETH, No. 6–10 share 0.006 ETH, every 0.02 of fees. One sale and the will forgets you.
-3. Patient money inherits. $HEIR pays its ten biggest holders in ETH, burns part of the fees, and never pays a seller twice.
+1. The biggest $KING holder wears the crown. Every trade pays the top 10 in ETH. Sell once and you're captured. Robinhood Chain · Pons
+2. A live board on Robinhood Chain. No. 1–5 share 0.014 ETH, No. 6–10 share 0.006 ETH of every 0.02 in fees. Take the crown.
+3. Most $KING wears the crown. Ten get paid. Sellers get captured.
 
 ---
 
 ## Post 1 — video penjelasan (pin post ini)
 
-**File:** `post-1-how-heirloom-works.mp4`
+**File:** `post-1-how-kingpins-works.mp4`
 
-> Heirloom ($HEIR) in one minute.
+> Kingpins ($KING) in one minute.
 >
-> Every trade pays a fee into the escrow. The engine pays it out in four turns:
+> The biggest holder wears the crown. Out-hold them and it's yours, live.
 >
-> I. The Inheritance: 0.02 ETH. No. 1–5 share 0.014, No. 6–10 share 0.006, by balance. Straight to their wallets.
-> II. The Upkeep: 0.025 ETH to the house wallet, on the public statement.
-> III. The Hearth: 0.01 ETH buys $HEIR back and burns it.
-> IV. The Upkeep again: 0.025 ETH.
+> Every trade drops a fee in the escrow. The engine plays four moves:
+> 1. The Tribute: 0.02 ETH to the top 10 (No. 1–5 split 0.014, No. 6–10 split 0.006)
+> 2. The War Chest: 0.025 ETH to the treasury
+> 3. The Burn: 0.01 ETH buys $KING back and burns it
+> 4. The War Chest again: 0.025 ETH
 >
-> Then it starts again. Sell once and you are written out of the will.
+> One sale and you're captured. For good.
 >
-> heirlooms.fun
+> kingpins.fun
 
-**Alt text:** Animated explainer. A gold H coin, an escrow gauge filling, ten holders receiving ETH in two tiers, a transfer to the house wallet, $HEIR burning in a brazier, and a wax seal striking out a seller.
+**Alt text:** Animated explainer: a crown drops onto an orange King piece, holders race as bars for No. 1, an escrow gauge fills, four colored panels show the Tribute, War Chest, Burn and War Chest moves, and a pawn falls under a CAPTURED stamp.
 
 ---
 
 ## Post 2 — video tutorial
 
-**File:** `post-2-tutorial-name-seal-x.mp4`
+**File:** `post-2-tutorial-name-portrait-x.mp4`
 
-> Put your name in the vault.
+> Put your name on the board.
 >
-> 1. heirlooms.fun → Connect
-> 2. Your card → "Set your name or connect X"
-> 3. Pick your seal, type a name, Sign & stamp
+> 1. kingpins.fun → Connect
+> 2. Your seat → "Set your name or connect X"
+> 3. Pick your portrait, type a name, Sign & stamp
 >
-> Or link your X: your handle, picture and badge go on the card and in the Ten Heirs.
+> Or link your X: your handle, picture and badge on your seat and on the Ladder.
 >
 > Free to sign. Moves no funds.
 
-**Alt text:** Screen recording of heirlooms.fun: connecting a wallet, choosing a seal with four dials, typing the name "Silver Spoon", signing, and seeing it on the card and in the ledger; then linking an X account.
+**Alt text:** Screen recording of kingpins.fun: connecting a wallet, choosing a cartoon portrait with four dials, typing the name "Rook Raider", signing, seeing it on the seat card and the Ladder, then linking an X account.
 
 ---
 
-## Post 3 — The Ten Heirs
+## Post 3 — The Ladder
 
-**File:** `post-3-the-ten-heirs.png`
+**File:** `post-3-the-ladder.png`
 
-> Ten inherit. Fifty are watching.
+> Ten get paid. One wears the crown.
 >
-> The ledger shows the top 50 by balance, live, with each holder's worth in dollars. The first ten are the inheritance zone:
-> ◆ No. 1–5 share 0.014 ETH
-> ◆ No. 6–10 share 0.006 ETH
-> of every 0.02 ETH in fees.
+> The Ladder is live: buy and you're on it in seconds, ranked by balance.
+> No. 1–5 split 0.014 ETH, No. 6–10 split 0.006 ETH, every 0.02 ETH of fees.
 >
-> Everyone else sees exactly how much $HEIR puts them in.
->
-> heirlooms.fun
+> kingpins.fun
 
-**Alt text:** The Ten Heirs ledger from heirlooms.fun: five columns of ten holders. The first column, the inheritance zone, is gold and split into tier I (No. 1–5) and tier II (No. 6–10); the others show how much more each holder needs to enter.
+**Alt text:** The Ladder from kingpins.fun: an orange No. 1 tile with the King piece, a 2×2 court of lime and violet tiles, a row of five guard tiles, and smaller squares for ranks 11 onward.
 
 ---
 
-## Post 4 — The will
+## Post 4 — aturan
 
-**File:** `post-4-the-will.png`
+**File:** `post-4-rules-of-the-board.png`
 
-> The will of the house:
->
-> 100,000 $HEIR names you in it.
-> No. 1–5 share 0.014 ETH, No. 6–10 share 0.006 ETH.
-> A holding ages one hour before it is paid.
-> One sale writes you out, for good.
-> Moving between your own wallets is not a sale.
->
-> Patient money inherits.
+> Rules of the board:
+> 100,000 $KING puts you on the board.
+> Most $KING wears the crown.
+> Top 10 split every Tribute.
+> One sale and you're captured. For good.
 
-**Alt text:** An ivory deed titled "The will" listing the rules of $HEIR, sealed with red wax, in front of a brass plate engraved with the same rules in the 3D vault.
+**Alt text:** A lime poster titled "Rules of the board." with four ruled lines of rules and three cream pieces lying on their side.
 
 ---
 
@@ -113,34 +102,32 @@ Pilih salah satu bio:
 
 > Watch the fees move.
 >
-> Every trade drops a fee in the escrow. At 0.02 ETH it is claimed and paid to the Ten Heirs. Back to 0.
-> Then 0.025 ETH to the house wallet. 0.01 ETH buys $HEIR back and burns it. 0.025 ETH upkeep again.
+> Escrow fills from 0 → at 0.02 ETH it's paid to the top 10 → back to 0.
+> Then 0.025 to the War Chest, 0.01 bought back and burned, 0.025 again. And again.
 >
-> Round after round, for as long as people trade.
->
-> heirlooms.fun
+> kingpins.fun
 
-**Alt text:** Simulation of the Heirloom engine: an escrow gauge filling from 0 with trade fees, a CLAIM flash, coins flying to the Ten Heirs, then to the house wallet, then to a brazier where $HEIR burns, while totals and a statement update; the second round runs at double speed.
+**Alt text:** Simulation of the Kingpins engine: an escrow gauge filling with trade fees, coins flying to the top 10, then to the War Chest, then to the Burn, while totals and a statement update; the second round runs at double speed.
 
 ---
 
 ## GIF — balasan / quote
 
-**File:** `gif-written-out.gif`
+**File:** `gif-new-king.gif`
 
-> Rank 10 sold. Rank 11 inherits.
+> New King. 👑
 
-**Alt text:** A ledger around the inheritance line: rank 10 sells, a wax seal stamps "written out", the row slides away, and rank 11 moves up into the gold zone.
+**Alt text:** Two holder bars race; the green one grows past the orange one, the crown hops across, and a CROWNED! stamp lands.
 
 ---
 
 ## Urutan posting
 
-1. Sebelum launch: pasang foto profil + header + bio, lalu **Post 1** (pin).
-2. Setelah launch: quote Post 1 dengan CA: *"$HEIR is live on Pons. CA: [CA] · heirlooms.fun"*
+1. Sebelum launch: pasang foto profil, header, bio, lalu **Post 1** (pin).
+2. Setelah launch: quote Post 1 dengan CA: *"$KING is live on Pons. CA: [CA] · kingpins.fun"*
 3. +2–3 jam: **Post 2** (tutorial).
 4. Hari berikutnya: **Post 3**, lalu **Post 4**.
-5. Setelah putaran pertama sungguhan selesai: **Post 5** (simulasi), quote dengan link tx asli di statement.
-5. Pakai **GIF** sebagai balasan setiap kali ada holder top 10 yang jual.
+5. Setelah Tribute pertama: **Post 5**, quote dengan link tx asli dari the Record.
+6. Pakai **GIF** setiap kali No. 1 berganti.
 
-Catatan: nama holder, saldo, dan jumlah token yang di-burn di video dan gambar adalah ilustrasi dan sudah ditandai begitu. "Inheritance" hanyalah nama di situs untuk fee trading yang dibagikan; $HEIR adalah memecoin tanpa janji nilai.
+Catatan: nama holder, saldo dan angka di video/gambar adalah ilustrasi. $KING adalah memecoin tanpa janji nilai.
