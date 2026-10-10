@@ -1,4 +1,8 @@
 import { Composition, Still } from "remotion";
+import { HKBanner, HKGif, HKLogo, HKPostBoard, HKPostEmpty, HKPostRules, HKPostWho, HKHookPaper, HKHookCore, HKHookTen, HK_GIF_LENGTH } from "./HKStills";
+import { HKExplainer, HK_EXPLAINER_LENGTH } from "./HKExplainer";
+import { HKTutorial, HK_TUTORIAL_LENGTH } from "./HKTutorial";
+import { HKSimulation, HK_SIM_LENGTH } from "./HKSimulation";
 import { HZNowCharge, HZNowOpen, HZNowOut } from "./HZNow";
 import { HZBanner, HZGif, HZLogo, HZPostEmpty, HZPostOrbit, HZPostWho, HZHookPaper, HZHookOutmass, HZHookTen, HZPostLaws, HZ_GIF_LENGTH } from "./HZStills";
 import { HZExplainer, HZ_EXPLAINER_LENGTH } from "./HZExplainer";
@@ -23,6 +27,19 @@ import { HLSimulation, HL_SIM_LENGTH } from "./HLSimulation";
 export function RemotionRoot() {
   return (
     <>
+      <Still id="HKLogo" component={HKLogo} width={1080} height={1080} />
+      <Still id="HKBanner" component={HKBanner} width={1500} height={500} />
+      <Still id="HKPostEmpty" component={HKPostEmpty} width={1600} height={900} />
+      <Still id="HKPostWho" component={HKPostWho} width={1600} height={900} />
+      <Still id="HKPostBoard" component={HKPostBoard} width={1600} height={900} />
+      <Still id="HKPostRules" component={HKPostRules} width={1600} height={900} />
+      <Still id="HKHookPaper" component={HKHookPaper} width={1600} height={900} />
+      <Still id="HKHookCore" component={HKHookCore} width={1600} height={900} />
+      <Still id="HKHookTen" component={HKHookTen} width={1600} height={900} />
+      <Composition id="HKGif" component={HKGif} width={720} height={720} fps={30} durationInFrames={HK_GIF_LENGTH} />
+      <Composition id="HKExplainer" component={HKExplainer} width={1920} height={1080} fps={30} durationInFrames={HK_EXPLAINER_LENGTH} />
+      <Composition id="HKTutorial" component={HKTutorial} width={1920} height={1080} fps={30} durationInFrames={HK_TUTORIAL_LENGTH} />
+      <Composition id="HKSimulation" component={HKSimulation} width={1920} height={1080} fps={30} durationInFrames={HK_SIM_LENGTH} />
       <Still id="HZNowOpen" component={HZNowOpen} width={1600} height={900} />
       <Still id="HZNowCharge" component={HZNowCharge} width={1600} height={900} />
       <Still id="HZNowOut" component={HZNowOut} width={1600} height={900} />
