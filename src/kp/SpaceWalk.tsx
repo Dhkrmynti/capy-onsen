@@ -8,6 +8,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { Canvas, useFrame, useThree, type ThreeElements } from "@react-three/fiber";
+import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
+import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 
 const INK = "#161616";
 const C = { red: "#d6372b", cream: "#f1e4c8", blue: "#1f2f8a", night: "#0e1433", burn: "#ff7a1a", ground: "#e6d3ad", crater: "#cdb78e" };
@@ -17,8 +19,9 @@ const CENTER = new THREE.Vector3(0, -R, 0);
 
 /* ───────── shared toon kit ───────── */
 const STEPS = (() => {
-  const t = new THREE.DataTexture(new Uint8Array([95, 95, 95, 255, 180, 180, 180, 255, 255, 255, 255, 255]), 3, 1, THREE.RGBAFormat);
-  t.minFilter = t.magFilter = THREE.NearestFilter;
+  const t = new THREE.DataTexture(new Uint8Array([88, 88, 88, 255, 132, 132, 132, 255, 176, 176, 176, 255, 218, 218, 218, 255, 255, 255, 255, 255]), 5, 1, THREE.RGBAFormat);
+  t.minFilter = THREE.NearestFilter;
+  t.magFilter = THREE.LinearFilter;
   t.needsUpdate = true;
   return t;
 })();
@@ -637,30 +640,44 @@ function Astronauts({ narrow }: { narrow: boolean }) {
   }, [narrow]);
   const refs = useRef<(THREE.Group | null)[]>([]);
   const arms = useRef<(THREE.Group | null)[]>([]);
+  const fore = useRef<(THREE.Group | null)[]>([]);
+  // physically lit, unlike the toon world around them: matte suit fabric, a glossy shell, a gold visor
   const m = useMemo(
     () => ({
-      suit: toon("#f6f1e6"),
-      shade: toon("#d9d2c4"),
-      visor: toon(C.blue),
-      gold: toon("#ffb43a"),
-      red: toon(C.red),
-      boot: toon("#3a3f5c"),
-      shine: new THREE.MeshBasicMaterial({ color: "#ffffff" }),
+      suit: new THREE.MeshStandardMaterial({ color: "#eeebe4", roughness: 0.85, metalness: 0 }),
+      fold: new THREE.MeshStandardMaterial({ color: "#d4d0c7", roughness: 0.9 }),
+      shell: new THREE.MeshPhysicalMaterial({ color: "#f7f6f2", roughness: 0.25, clearcoat: 0.8, clearcoatRoughness: 0.15 }),
+      visor: new THREE.MeshPhysicalMaterial({ color: "#d9a441", metalness: 1, roughness: 0.08, clearcoat: 1, clearcoatRoughness: 0.05 }),
+      metal: new THREE.MeshStandardMaterial({ color: "#9aa0ab", metalness: 0.85, roughness: 0.35 }),
+      box: new THREE.MeshStandardMaterial({ color: "#c9c6bf", roughness: 0.6 }),
+      dark: new THREE.MeshStandardMaterial({ color: "#3b3f4a", roughness: 0.7 }),
+      red: new THREE.MeshStandardMaterial({ color: C.red, roughness: 0.6 }),
+      blue: new THREE.MeshStandardMaterial({ color: C.blue, roughness: 0.6 }),
+      lamp: new THREE.MeshBasicMaterial({ color: "#fff6d8" }),
     }),
     [],
   );
   const g = useMemo(
     () => ({
-      helmet: new THREE.SphereGeometry(0.62, 28, 20),
-      visor: new THREE.SphereGeometry(0.5, 24, 16, -Math.PI * 0.42, Math.PI * 0.84, Math.PI * 0.26, Math.PI * 0.42),
-      ring: new THREE.TorusGeometry(0.44, 0.08, 10, 28).rotateX(Math.PI / 2),
-      torso: new THREE.CapsuleGeometry(0.42, 0.45, 6, 16),
-      pack: new THREE.BoxGeometry(0.62, 0.72, 0.28),
-      limb: new THREE.CapsuleGeometry(0.15, 0.42, 4, 10),
-      glove: new THREE.SphereGeometry(0.17, 12, 10),
-      boot: new THREE.CapsuleGeometry(0.17, 0.16, 4, 10),
-      patch: new THREE.CircleGeometry(0.12, 16),
-      glint: new THREE.CircleGeometry(0.07, 10),
+      shell: new THREE.SphereGeometry(0.34, 32, 24),
+      visor: new THREE.SphereGeometry(0.352, 32, 20, -Math.PI * 0.4, Math.PI * 0.8, Math.PI * 0.22, Math.PI * 0.44),
+      collar: new THREE.TorusGeometry(0.25, 0.055, 12, 32).rotateX(Math.PI / 2),
+      light: new RoundedBoxGeometry(0.09, 0.07, 0.12, 2, 0.02),
+      torso: new RoundedBoxGeometry(0.62, 0.66, 0.4, 4, 0.15),
+      waist: new THREE.CylinderGeometry(0.26, 0.24, 0.12, 24),
+      hips: new RoundedBoxGeometry(0.54, 0.3, 0.36, 4, 0.12),
+      plss: new RoundedBoxGeometry(0.64, 0.8, 0.3, 4, 0.07),
+      dcm: new RoundedBoxGeometry(0.34, 0.16, 0.12, 2, 0.03),
+      knob: new THREE.CylinderGeometry(0.025, 0.025, 0.03, 10).rotateX(Math.PI / 2),
+      upper: new THREE.CapsuleGeometry(0.095, 0.22, 6, 14),
+      lower: new THREE.CapsuleGeometry(0.085, 0.2, 6, 14),
+      ring: new THREE.TorusGeometry(0.1, 0.025, 8, 20).rotateX(Math.PI / 2),
+      glove: new THREE.CapsuleGeometry(0.075, 0.08, 6, 12),
+      thigh: new THREE.CapsuleGeometry(0.12, 0.26, 6, 14),
+      shin: new THREE.CapsuleGeometry(0.105, 0.24, 6, 14),
+      boot: new RoundedBoxGeometry(0.2, 0.14, 0.3, 3, 0.05),
+      patch: new THREE.CircleGeometry(0.055, 18),
+      stripe: new THREE.CylinderGeometry(0.124, 0.124, 0.05, 18, 1, true),
     }),
     [],
   );
@@ -669,45 +686,71 @@ function Astronauts({ narrow }: { narrow: boolean }) {
     list.forEach((d, i) => {
       const a = refs.current[i];
       if (a) {
-        const k = t * 0.32 + d.phase;
-        // drift on a slow loop and sway, mostly facing the camera
+        const k = t * 0.3 + d.phase;
+        // weightless: a slow loop, a lazy turn, mostly facing the camera
         a.position.set(d.at.x + Math.sin(k) * 0.45, d.at.y + Math.sin(k * 1.3 + 1) * 0.35, d.at.z + Math.cos(k * 0.8) * 0.3);
-        a.rotation.set(Math.sin(t * 0.5 + d.phase) * 0.35, Math.sin(t * 0.3 + d.phase) * 0.6, Math.sin(t * 0.4 + d.phase) * 0.5 + d.wave * 0.25);
+        a.rotation.set(Math.sin(t * 0.35 + d.phase) * 0.3, Math.sin(t * 0.22 + d.phase) * 0.55, Math.sin(t * 0.3 + d.phase) * 0.35 + d.wave * 0.2);
       }
       const w = arms.current[i];
-      if (w) w.rotation.z = d.wave * (1.9 + Math.sin(t * 2.2 + d.phase) * 0.35); // one arm waves
+      if (w) w.rotation.z = d.wave * (2.3 + Math.sin(t * 1.8 + d.phase) * 0.25); // a slow wave
+      const f = fore.current[i];
+      if (f) f.rotation.z = d.wave * (0.5 + Math.sin(t * 1.8 + d.phase + 0.6) * 0.3);
     });
   });
+  const limb = (side: number, i: number, waving: boolean) => (
+    <group
+      ref={waving ? (el) => void (arms.current[i] = el) : undefined}
+      position={[side * 0.36, 0.42, 0]}
+      rotation={waving ? undefined : [0.25, 0, side * 0.45]}
+    >
+      <mesh geometry={g.upper} material={m.suit} position={[0, -0.2, 0]} />
+      <mesh geometry={g.patch} material={side > 0 ? m.red : m.blue} position={[0, -0.08, 0.1]} />
+      <group ref={waving ? (el) => void (fore.current[i] = el) : undefined} position={[0, -0.42, 0]} rotation={waving ? undefined : [0, 0, side * 0.35]}>
+        <mesh geometry={g.ring} material={m.fold} />
+        <mesh geometry={g.lower} material={m.suit} position={[0, -0.19, 0]} />
+        <mesh geometry={g.ring} material={m.metal} position={[0, -0.38, 0]} scale={0.85} />
+        <mesh geometry={g.glove} material={m.suit} position={[0, -0.5, 0]} />
+      </group>
+    </group>
+  );
   return (
     <group>
       {list.map((d, i) => (
-        <group key={i} ref={(el) => void (refs.current[i] = el)} scale={d.scale}>
-          {/* helmet, visor with a glint, neck ring */}
-          <Inked geometry={g.helmet} material={m.suit} position={[0, 1.02, 0]} ink={1.05} />
-          <mesh geometry={g.visor} material={m.visor} position={[0, 1.02, 0.14]} />
-          <mesh geometry={g.glint} material={m.shine} position={[-0.18, 1.2, 0.6]} rotation={[-0.3, -0.3, 0]} />
-          <mesh geometry={g.ring} material={m.shade} position={[0, 0.5, 0]} />
-          {/* suit, backpack, patch */}
-          <Inked geometry={g.torso} material={m.suit} position={[0, 0, 0]} ink={1.06} />
-          <Inked geometry={g.pack} material={m.shade} position={[0, 0.08, -0.4]} ink={1.05} />
-          <mesh geometry={g.patch} material={m.red} position={[0.2, 0.18, 0.425]} />
-          <mesh material={m.gold} position={[-0.17, 0.2, 0.42]}>
-            <boxGeometry args={[0.16, 0.08, 0.02]} />
-          </mesh>
-          {/* arms: the left one waves */}
-          <group ref={(el) => void (arms.current[i] = el)} position={[-0.46, 0.3, 0]}>
-            <mesh geometry={g.limb} material={m.suit} position={[0, -0.32, 0]} />
-            <mesh geometry={g.glove} material={m.shade} position={[0, -0.68, 0]} />
-          </group>
-          <group position={[0.46, 0.3, 0]} rotation={[0.3, 0, 0.5]}>
-            <mesh geometry={g.limb} material={m.suit} position={[0, -0.32, 0]} />
-            <mesh geometry={g.glove} material={m.shade} position={[0, -0.68, 0]} />
-          </group>
-          {/* legs, splayed like floating */}
+        <group key={i} ref={(el) => void (refs.current[i] = el)} scale={d.scale * 1.15}>
+          {/* helmet: glossy shell, gold visor, lights, collar */}
+          <mesh geometry={g.shell} material={m.shell} position={[0, 1.02, 0]} />
+          <mesh geometry={g.visor} material={m.visor} position={[0, 1.0, 0.03]} />
           {[-1, 1].map((sd) => (
-            <group key={sd} position={[sd * 0.2, -0.55, 0]} rotation={[sd * 0.25, 0, sd * 0.28]}>
-              <mesh geometry={g.limb} material={m.suit} position={[0, -0.3, 0]} />
-              <mesh geometry={g.boot} material={m.boot} position={[0, -0.68, 0.05]} />
+            <group key={sd} position={[sd * 0.3, 1.1, 0.12]}>
+              <mesh geometry={g.light} material={m.box} />
+              <mesh material={m.lamp} position={[0, 0, 0.065]}>
+                <circleGeometry args={[0.025, 10]} />
+              </mesh>
+            </group>
+          ))}
+          <mesh geometry={g.collar} material={m.metal} position={[0, 0.72, 0]} />
+          {/* hard upper torso, waist bearing, hips, life-support pack */}
+          <mesh geometry={g.torso} material={m.suit} position={[0, 0.38, 0]} />
+          <mesh geometry={g.plss} material={m.box} position={[0, 0.42, -0.34]} />
+          <mesh geometry={g.dcm} material={m.box} position={[0, 0.3, 0.25]} />
+          {[-0.08, 0, 0.08].map((x, j) => (
+            <mesh key={x} geometry={g.knob} material={j === 1 ? m.red : m.dark} position={[x, 0.3, 0.32]} />
+          ))}
+          <mesh geometry={g.waist} material={m.metal} position={[0, 0.0, 0]} />
+          <mesh geometry={g.hips} material={m.suit} position={[0, -0.16, 0]} />
+          {/* arms: the left one waves */}
+          {limb(-1, i, true)}
+          {limb(1, i, false)}
+          {/* legs, knees loose like floating; the commander's red stripes */}
+          {[-1, 1].map((sd) => (
+            <group key={sd} position={[sd * 0.15, -0.3, 0]} rotation={[sd * 0.18 - 0.15, 0, sd * 0.12]}>
+              <mesh geometry={g.thigh} material={m.suit} position={[0, -0.22, 0]} />
+              <mesh geometry={g.stripe} material={m.red} position={[0, -0.2, 0]} />
+              <group position={[0, -0.46, 0]} rotation={[0.45, 0, 0]}>
+                <mesh geometry={g.ring} material={m.fold} scale={1.15} />
+                <mesh geometry={g.shin} material={m.suit} position={[0, -0.22, 0]} />
+                <mesh geometry={g.boot} material={m.fold} position={[0, -0.46, 0.04]} />
+              </group>
             </group>
           ))}
         </group>
@@ -868,6 +911,10 @@ export default function SpaceWalk({ names, still = false }: { names: string[]; s
       gl={{ antialias: !narrow, alpha: false, powerPreference: "default" }}
       onCreated={({ gl, scene }) => {
         gl.setClearColor(C.night);
+        // a soft studio reflection for the astronauts' visors and shells; toon materials ignore it
+        const pmrem = new THREE.PMREMGenerator(gl);
+        scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+        pmrem.dispose();
         scene.fog = new THREE.Fog("#1a2878", 60, 160);
       }}
     >
