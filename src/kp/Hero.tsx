@@ -1,6 +1,6 @@
 /**
- * The opening: the black hole behind, and in front the figure that matters: who sits closest to
- * the singularity right now, and the escrow falling down a 1/r curve toward the next Pull.
+ * The opening: the contained black hole behind, and in front the facility's warning placard: who
+ * sits at the core right now, and the radiation level climbing toward the next emission.
  */
 import { useRef } from "react";
 import gsap from "gsap";
@@ -11,62 +11,37 @@ import { nameFor } from "../lib/alias";
 import { prefersReducedMotion } from "../lib/motion";
 import { BuyButton } from "../components/Bits";
 import { CrewFace } from "../components/Face";
+import { Warn } from "./Signs";
 
 gsap.registerPlugin(useGSAP);
 
-const PW = 360;
-const PH = 170;
-const X0 = 34;
-const Y0 = 150;
-/** The well's profile: steep near the horizon (left), flat far away (right). */
-const curveY = (r: number) => Y0 - Math.min(132, 9 / (r + 0.06));
-const pt = (r: number) => [X0 + r * (PW - X0 - 10), curveY(r)] as const;
+const SEGS = 24;
 
-/** The escrow as a body falling in: the closer to the next step, the closer to the horizon. */
-function Fall({ value, target, label }: { value: number; target: number; label: string }) {
-  const root = useRef<SVGSVGElement>(null);
+/** A Geiger bar: lit segments climb toward the next emission, yellow into red near the top. */
+function Level({ value, target, label }: { value: number; target: number; label: string }) {
+  const root = useRef<HTMLDivElement>(null);
   const pct = target > 0 ? Math.max(0, Math.min(1, value / target)) : 0;
-  const d = Array.from({ length: 80 }, (_, i) => {
-    const r = 0.02 + (i / 79) * 0.98;
-    const [x, y] = pt(r);
-    return `${i ? "L" : "M"}${x.toFixed(1)} ${y.toFixed(1)}`;
-  }).join("");
   useGSAP(
     () => {
-      const dot = root.current?.querySelector<SVGGElement>(".fall__body");
-      if (!dot) return;
-      const st = { r: 1 };
-      const place = () => {
-        const [x, y] = pt(st.r);
-        dot.setAttribute("transform", `translate(${x} ${y})`);
-      };
-      const to = 1 - pct * 0.94;
-      if (prefersReducedMotion()) {
-        st.r = to;
-        return place();
-      }
-      gsap.to(st, { r: to, duration: 2.2, ease: "back.out(1.6)", delay: 0.6, onUpdate: place });
-      place();
+      const lit = Math.round(pct * SEGS);
+      const segs = root.current?.querySelectorAll<HTMLElement>(".level__seg");
+      if (!segs) return;
+      if (prefersReducedMotion()) return segs.forEach((s, i) => s.classList.toggle("is-lit", i < lit));
+      // the needle overshoots like a real counter, then settles on the reading
+      const st = { n: 0 };
+      gsap
+        .timeline({ delay: 0.6 })
+        .to(st, { n: Math.min(SEGS, lit + 3), duration: 0.9, ease: "power2.out", onUpdate: () => segs.forEach((s, i) => s.classList.toggle("is-lit", i < Math.round(st.n))) })
+        .to(st, { n: lit, duration: 0.6, ease: "power2.inOut", onUpdate: () => segs.forEach((s, i) => s.classList.toggle("is-lit", i < Math.round(st.n))) });
     },
     { scope: root, dependencies: [pct] },
   );
   return (
-    <svg className="fall" ref={root} viewBox={`0 0 ${PW} ${PH + 26}`} role="meter" aria-valuemin={0} aria-valuemax={target} aria-valuenow={value} aria-label={label}>
-      <line className="fall__axis" x1={X0} y1={Y0} x2={PW - 6} y2={Y0} />
-      <line className="fall__axis" x1={X0} y1={Y0} x2={X0} y2={10} />
-      <line className="fall__horizon" x1={X0 + 6} y1={Y0} x2={X0 + 6} y2={14} />
-      <path className="fall__curve" d={d} />
-      <text className="fall__t" x={X0 + 10} y={22}>
-        r = rₛ
-      </text>
-      <text className="fall__t" x={PW - 8} y={Y0 + 20} textAnchor="end">
-        distance to The Pull
-      </text>
-      <g className="fall__body">
-        <circle r="9" className="fall__halo" />
-        <circle r="4.5" className="fall__dot" />
-      </g>
-    </svg>
+    <div className="level" ref={root} role="meter" aria-valuemin={0} aria-valuemax={target} aria-valuenow={value} aria-label={label}>
+      {Array.from({ length: SEGS }, (_, i) => (
+        <i key={i} className={`level__seg ${i >= SEGS * 0.75 ? "is-hot" : ""}`} />
+      ))}
+    </div>
   );
 }
 
@@ -87,64 +62,67 @@ export function Hero({ status, pond, offline }: { status: Status | null; pond: P
       if (prefersReducedMotion()) return;
       gsap
         .timeline({ defaults: { ease: "expo.out" } })
-        .from(".hero__h .ln", { yPercent: 105, duration: 1.3, stagger: 0.1, delay: 0.25 })
-        .from(".sing", { opacity: 0, y: 16, duration: 0.9 }, "-=0.8")
-        .from(".fall__curve", { strokeDasharray: 900, strokeDashoffset: 900, duration: 1.6, ease: "power3.out" }, "-=0.7")
-        .from(".hero__fig, .hero__acts", { opacity: 0, y: 14, duration: 0.8, stagger: 0.08 }, "-=1.2");
+        .from(".hero__h .ln", { yPercent: 105, duration: 1.1, stagger: 0.09, delay: 0.2 })
+        .from(".placard", { clipPath: "inset(0 0 100% 0)", duration: 0.9, ease: "power4.inOut" }, "-=0.7")
+        .from(".placard .sign", { rotate: -25, scale: 0.6, duration: 1, ease: "back.out(2.2)" }, "-=0.5")
+        .from(".hero__acts", { y: 16, opacity: 0, duration: 0.7 }, "-=0.6");
     },
     { scope: root },
   );
 
   return (
-    <section className="hero" id="top" ref={root} aria-label="Horizon">
+    <section className="hero" id="top" ref={root} aria-label="Hawking">
       <div className="hero__copy">
         <h1 className="hero__h">
           <span className="mask">
-            <span className="ln">Fall</span>
+            <span className="ln">Hold</span>
           </span>
           <span className="mask">
             <span className="ln">closer.</span>
           </span>
         </h1>
-        <div className="sing" role="status">
-          {offline ? (
-            <p className="sing__line">The observatory is quiet for a moment. Back shortly.</p>
-          ) : top && who ? (
-            <p className="sing__line">
-              <span className="sing__k">The Singularity</span>
-              <span className="sing__who">
-                <CrewFace addr={top.addr} pp={top.pp} x={top.x} size={30} className="sing__face" />
-                <b>{who.name}</b>
-              </span>
-              <span className="sing__bal tabular">
-                m = {compact(top.balance)} $VOID{px > 0 ? ` · ${usd(parseFloat(top.balance) * px)}` : ""}
-              </span>
+        <div className="placard" role="status">
+          <p className="placard__band">
+            <Warn kind="hole" size={30} /> Warning
+          </p>
+          <div className="placard__body">
+            <p className="placard__lead">Hawking radiation. The ten holders nearest the core are paid in ETH.</p>
+            <p className="placard__core">
+              <span className="placard__k">At the core</span>
+              {offline ? (
+                <span>Facility offline for a moment.</span>
+              ) : top && who ? (
+                <span className="placard__who">
+                  <CrewFace addr={top.addr} pp={top.pp} x={top.x} size={28} className="placard__face" />
+                  <b>{who.name}</b>
+                  <em className="tabular">
+                    {compact(top.balance)} $HAWK{px > 0 ? ` · ${usd(parseFloat(top.balance) * px)}` : ""}
+                  </em>
+                </span>
+              ) : (
+                <span className="placard__who">
+                  <b>Nobody yet.</b> The biggest holder takes the core.
+                </span>
+              )}
             </p>
-          ) : (
-            <p className="sing__line">
-              <span className="sing__k">The Singularity</span>
-              <span className="sing__who">
-                <b>Nobody yet.</b>
+            <div className="placard__level">
+              <span className="placard__k">Radiation level</span>
+              <Level value={escrow} target={target} label={`Fees toward ${stepName}`} />
+              <span className="placard__read tabular">
+                <b>{escrow.toFixed(4)}</b> / {next.thresholdETH} ETH to {stepName}
               </span>
-              <span className="sing__bal">The biggest holder orbits closest. The ten closest are paid in ETH.</span>
-            </p>
-          )}
+            </div>
+          </div>
         </div>
-        <figure className="hero__plot">
-          <Fall value={escrow} target={target} label={`Escrow toward ${stepName}`} />
-          <figcaption className="hero__fig">
-            <i>Fig. 1.</i> Escrow at <b className="tabular">{escrow.toFixed(4)}</b> of {next.thresholdETH} ETH, falling toward {stepName}.
-          </figcaption>
-        </figure>
         <div className="hero__acts">
           <BuyButton status={status} />
-          <a className="vd-btn" href="#ladder">
-            See the orbit
+          <a className="hz-btn" href="#ladder">
+            Exposure board
           </a>
         </div>
       </div>
       <a className="hero__cue" href="#ladder">
-        Fall in <ArrowDown weight="bold" aria-hidden="true" />
+        Enter the facility <ArrowDown weight="bold" aria-hidden="true" />
       </a>
     </section>
   );

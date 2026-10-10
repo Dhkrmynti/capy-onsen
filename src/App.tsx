@@ -15,9 +15,8 @@ import { Record } from "./kp/Record";
 import { Close } from "./kp/Close";
 import { nameFor } from "./lib/alias";
 import { Band } from "./kp/Band";
-import { Well } from "./kp/Well";
 
-// The black hole loads after the page, so the first paint never waits for it.
+// The contained black hole loads after the page, so the first paint never waits for it.
 const VoidWalk = lazy(() => import("./kp/VoidWalk"));
 
 function useWalk() {
@@ -107,7 +106,7 @@ export function App() {
   }, []);
 
   return (
-    <div className="kp vd">
+    <div className="kp hz">
       {/* the black hole, fixed behind every section; the page scrolls through it */}
       <div className="walk" aria-hidden="true">
         {walk ? (
@@ -116,19 +115,18 @@ export function App() {
           </Suspense>
         ) : null}
       </div>
-      <Well />
       <Header status={status} />
       <main>
         <Hero status={status} pond={pond} offline={!!error && !status} />
-        <Band fig={2} label="The orbit" />
+        <Band label="Exposure board" />
         <Ladder status={status} pond={pond} />
-        <Band fig={3} label="The cycle" />
+        <Band label="Emission cycle" tone="red" />
         <Round status={status} />
-        <Band fig={4} label="The laws" />
+        <Band label="Safety rules" />
         <Rules status={status} />
-        <Band fig={5} label="Your orbit" />
+        <Band label="Your dosimeter" tone="red" />
         <CrewCard live={live} />
-        <Band fig={6} label="Observations" />
+        <Band label="Incident log" />
         <Record status={status} />
       </main>
       <Close status={status} />

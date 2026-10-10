@@ -1,13 +1,13 @@
 /**
- * Horizon ($VOID) engine · Robinhood Chain (4663) · Pons Family v2
+ * Hawking ($HAWK) engine · Robinhood Chain (4663) · Pons Family v2
  *
- * 1. Indexer: follows every $VOID Transfer, keeps balances and first-buy time, and marks a
- *    wallet "hopped off" forever once it sends $VOID to the curve / a DEX contract.
+ * 1. Indexer: follows every $HAWK Transfer, keeps balances and first-buy time, and marks a
+ *    wallet "hopped off" forever once it sends $HAWK to the curve / a DEX contract.
  * 2. The cycle. Each time the Pons fee escrow reaches the step's size, the engine claims it
  *    (a tongue snap) and spends all of it on that step, then moves to the next:
  *      feeding  (0.01 ETH) → ETH straight to the 10 biggest sitters, split by balance
  *      keeper   (0.02 ETH) → the treasury
- *      sink     (0.01 ETH) → buys $VOID (curve, or Uniswap v4 after graduation) and burns what it bought
+ *      sink     (0.01 ETH) → buys $HAWK (curve, or Uniswap v4 after graduation) and burns what it bought
  *    then back to feeding.
  * Every transaction hash is saved before it is awaited, so a restart checks the chain and
  * resumes the round instead of sending twice.
@@ -390,7 +390,7 @@ async function sink(r: Round) {
     const before = big(r.heldBefore);
     r.tokensBought = (after > before ? after - before : 0n).toString();
     saveStateNow();
-    log("info", `Sink #${r.n}: bought ${ethers.formatUnits(big(r.tokensBought), decimals)} $VOID.`);
+    log("info", `Sink #${r.n}: bought ${ethers.formatUnits(big(r.tokensBought), decimals)} $HAWK.`);
   }
   count(r, "buy", () => (state.totals.sinkWei = add(state.totals.sinkWei, pay)));
   // Burn exactly what this round bought, never the rest of the wallet.
@@ -400,8 +400,8 @@ async function sink(r: Round) {
     const ok = await once(() => r.burnTx, (h) => (r.burnTx = h), () => token.transfer(DEAD, burn));
     if (!ok) throw new Error(`Round #${r.n}: burn reverted`);
     count(r, "burn", () => (state.totals.tokensBurned = add(state.totals.tokensBurned, burn)));
-    log("success", `Sink #${r.n}: burned ${ethers.formatUnits(burn, decimals)} $VOID (${r.burnTx})`);
-  } else log("warn", `Sink #${r.n}: the buy added no $VOID, nothing to burn.`);
+    log("success", `Sink #${r.n}: burned ${ethers.formatUnits(burn, decimals)} $HAWK (${r.burnTx})`);
+  } else log("warn", `Sink #${r.n}: the buy added no $HAWK, nothing to burn.`);
   return true;
 }
 
@@ -870,7 +870,7 @@ const server = http.createServer((req, res) => {
       const addr = lc(d.addr);
       const bad = spendNonce(addr, d.nonce, d.signature, (n) => xMessage(addr, "link", n));
       if (bad) return send(res, 400, { success: false, error: bad });
-      if (!(big(state.holders[addr]?.balance || "0") > 0n)) return send(res, 400, { success: false, error: "Only wallets holding $VOID can link X." });
+      if (!(big(state.holders[addr]?.balance || "0") > 0n)) return send(res, 400, { success: false, error: "Only wallets holding $HAWK can link X." });
       try {
         return send(res, 200, { success: true, data: { url: startLink(addr) } });
       } catch (e: any) {
@@ -997,5 +997,5 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(config.port, "127.0.0.1", () => {
-  log("info", `$VOID engine API on 127.0.0.1:${config.port} · ${isAddr(config.tokenAddress) ? `token ${config.tokenAddress}` : "STANDBY (set the token in /lotnok)"}`);
+  log("info", `$HAWK engine API on 127.0.0.1:${config.port} · ${isAddr(config.tokenAddress) ? `token ${config.tokenAddress}` : "STANDBY (set the token in /lotnok)"}`);
 });

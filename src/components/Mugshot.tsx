@@ -1,27 +1,35 @@
 /**
- * A client's portrait: a cartoon head and shoulders in a white shirt and tie, the way a
- * private client sits for the house. Every wallet gets one generated from its address;
- * holders can pick their own at the desk. Drawn flat in SVG, so it costs nothing to show.
+ * A crew portrait: a cartoon astronaut, head and shoulders, face behind the visor. Every
+ * wallet gets one generated from its address; holders can pick their own at the desk.
+ * Drawn flat in SVG, so it costs nothing to show.
  * Part counts must match MUGSHOT_PARTS in bot/byline.ts (the slot keys are kept for the engine).
  */
-import type { CSSProperties, ReactNode } from "react";
+import { useId, type CSSProperties, type ReactNode } from "react";
 
 export const PARTS = { fur: 5, hat: 5, acc: 6, bg: 6 } as const;
 export type Traits = [fur: number, hat: number, acc: number, bg: number];
 
-/** fur = skin, hat = hair, acc = tie, bg = backdrop. */
+/** fur = skin, hat = suit, acc = kit (patch, antenna, lamps or visor), bg = backdrop. */
 export const PART_NAMES = {
   fur: ["Porcelain", "Peach", "Honey", "Bronze", "Umber"],
-  hat: ["Side part", "Slicked back", "Curls", "Bob", "Bun"],
-  acc: ["Navy tie", "Claret tie", "Gold tie", "Green tie", "Bow tie", "Striped tie"],
-  bg: ["Ivory", "Cream", "Linen", "Navy", "Money green", "Black"],
+  hat: ["White suit", "Rescue orange", "Silver suit", "Hazard yellow", "Black suit"],
+  acc: ["Hazard patch", "Orbit patch", "Star patch", "Antenna", "Headlamps", "Gold visor"],
+  bg: ["Deep space", "Hazard yellow", "Signal red", "Mission blue", "Pad green", "Steel"],
 };
 
-const INK = "#1c1913";
+const INK = "#121212";
 const SKIN = ["#f6dcc8", "#efc2a0", "#d9a274", "#b07a4f", "#7a4f32"];
-const HAIR = ["#2a1d14", "#5a3a22", "#8a5a2b", "#c9a45c", "#3b3b3f"];
-const TIE = ["#24375c", "#7a1f2b", "#c9a045", "#24553a", "#1b1a18", "#24375c"];
-const PAPER = ["#f4f1e8", "#efe6cf", "#e2dccb", "#1c2d4d", "#2e5c41", "#1b1a18"];
+const SUIT = ["#f4f4f0", "#ff7a1a", "#c4c8cc", "#ffd100", "#4a4f57"];
+const BACK = ["#121212", "#ffd100", "#d52b1e", "#0057b8", "#00843d", "#3a3e44"];
+const STARS = [
+  [12, 14, 1.1],
+  [86, 10, 0.9],
+  [90, 34, 1.3],
+  [8, 40, 0.8],
+  [18, 64, 1],
+  [84, 60, 0.8],
+  [70, 6, 0.7],
+];
 
 function fnv(s: string) {
   let h = 0x811c9dc5;
@@ -45,105 +53,105 @@ export function validTraits(t: unknown): t is Traits {
 
 const line = { stroke: INK, strokeWidth: 2.2, strokeLinejoin: "round" as const, strokeLinecap: "round" as const };
 
-/** Hair drawn over the head; the bob also falls behind the ears. */
-function Hair({ kind, c }: { kind: number; c: string }): ReactNode {
+/** The chest patch on the left shoulder; kits 3-5 sit on the helmet instead. */
+function Patch({ kind, id }: { kind: number; id: string }): ReactNode {
+  if (kind === 0)
+    return (
+      <g>
+        <clipPath id={`${id}-p`}>
+          <rect x="23" y="84" width="11" height="11" />
+        </clipPath>
+        <g clipPath={`url(#${id}-p)`}>
+          <rect x="23" y="84" width="11" height="11" fill="#ffd100" />
+          {[0, 5, 10, 15].map((o) => (
+            <path key={o} d={`M${19 + o} 95 L ${25 + o} 84`} stroke={INK} strokeWidth="2.4" />
+          ))}
+        </g>
+        <rect x="23" y="84" width="11" height="11" fill="none" {...line} strokeWidth={1.6} />
+      </g>
+    );
   if (kind === 1)
     return (
       <g>
-        <path d="M29.5 41 C 29 24, 41 16.5, 52 17.5 C 64 18.5, 71 27, 70.5 41 C 66 31.5, 58 28, 49 28.5 C 40 29, 33 33, 29.5 41 Z" fill={c} {...line} />
-        <path d="M40 23 C 46 21, 54 21, 60 23.5" fill="none" stroke="#fff" strokeOpacity="0.35" strokeWidth="1.6" strokeLinecap="round" />
+        <circle cx="28.5" cy="89.5" r="6" fill="#0057b8" {...line} strokeWidth={1.6} />
+        <circle cx="28.5" cy="89.5" r="2.2" fill="#121212" />
+        <ellipse cx="28.5" cy="89.5" rx="5" ry="1.8" fill="none" stroke="#ff9e1b" strokeWidth="1.2" transform="rotate(-20 28.5 89.5)" />
       </g>
     );
   if (kind === 2)
     return (
-      <g fill={c} {...line}>
-        {[
-          [34, 34],
-          [39, 26],
-          [47, 22],
-          [55, 22],
-          [62, 26],
-          [67, 34],
-          [43, 30],
-          [52, 28],
-          [60, 31],
-        ].map(([x, y], i) => (
-          <circle key={i} cx={x} cy={y} r={7} />
-        ))}
-      </g>
-    );
-  if (kind === 3)
-    return <path d="M27.5 56 C 23.5 30, 36 17, 50 17 C 64 17, 76.5 30, 72.5 56 L 66 56 C 67.5 40, 61 31, 50 31 C 39 31, 32.5 40, 34 56 Z" fill={c} {...line} />;
-  if (kind === 4)
-    return (
       <g>
-        <circle cx="50" cy="15" r="7.5" fill={c} {...line} />
-        <path d="M29.5 43 C 28.5 26, 39 19, 50 19 C 61 19, 71.5 26, 70.5 43 C 66 33, 58 29, 50 29 C 42 29, 34 33, 29.5 43 Z" fill={c} {...line} />
+        <circle cx="28.5" cy="89.5" r="6" fill="#d52b1e" {...line} strokeWidth={1.6} />
+        <path d="M28.5 85.4 L 29.7 88.3 L 32.6 88.4 L 30.3 90.2 L 31.1 93.2 L 28.5 91.4 L 25.9 93.2 L 26.7 90.2 L 24.4 88.4 L 27.3 88.3 Z" fill="#f4f4f0" />
       </g>
     );
-  // side part
-  return (
-    <g>
-      <path d="M29.5 42 C 28.5 25, 40 17.5, 51 18 C 63 18.5, 72 26, 70.5 42 C 67 33, 61 29, 53 29 L 44 29.5 C 37.5 31, 32.5 35, 29.5 42 Z" fill={c} {...line} />
-      <path d="M44 20 C 42 24, 42 27, 44 29.5" fill="none" stroke={INK} strokeWidth="1.4" strokeLinecap="round" />
-    </g>
-  );
-}
-
-function Tie({ kind, c }: { kind: number; c: string }): ReactNode {
-  if (kind === 4)
-    return (
-      <g fill={c} {...line} strokeWidth={1.8}>
-        <path d="M50 84 L 40 79 L 40 89 Z" />
-        <path d="M50 84 L 60 79 L 60 89 Z" />
-        <circle cx="50" cy="84" r="2.6" />
-      </g>
-    );
-  return (
-    <g>
-      <path d="M46 80.5 L 54 80.5 L 52.6 86.5 L 47.4 86.5 Z" fill={c} {...line} strokeWidth={1.8} />
-      <path d="M47.4 86.5 L 52.6 86.5 L 56.5 101 L 43.5 101 Z" fill={c} {...line} strokeWidth={1.8} />
-      {kind === 5 ? <path d="M45 92 L 55 89.5 M44.4 97 L 55.8 94" stroke="#e8c16e" strokeWidth="1.8" /> : null}
-    </g>
-  );
+  return <rect x="24" y="86" width="9" height="6" rx="1" fill="#d52b1e" {...line} strokeWidth={1.4} />;
 }
 
 export function Mugshot({ traits, size = 40, className = "", title, style }: { traits: Traits; size?: number; className?: string; title?: string; style?: CSSProperties }) {
-  const [skin, hair, tie, paper] = traits;
+  const id = useId().replace(/:/g, "");
+  const [skin, suit, kit, back] = traits;
   const s = SKIN[skin] ?? SKIN[0];
-  const h = HAIR[(hair + skin) % HAIR.length];
-  const t = TIE[tie] ?? TIE[0];
+  const c = SUIT[suit] ?? SUIT[0];
+  const dark = back === 0 || back === 5;
   return (
     <svg className={`mugshot ${className}`} viewBox="0 0 100 100" width={size} height={size} role={title ? "img" : undefined} aria-label={title} aria-hidden={title ? undefined : true} style={style}>
-      <rect width="100" height="100" fill={PAPER[paper] ?? PAPER[0]} />
-      {/* a soft halo behind the sitter */}
-      <circle cx="50" cy="48" r="36" fill="#ffffff" fillOpacity={paper >= 3 ? 0.08 : 0.35} />
-      {hair === 3 ? <path d="M27.5 56 C 26 62, 30 66, 34 66 L 66 66 C 70 66, 74 62, 72.5 56 Z" fill={h} {...line} /> : null}
-      {/* shoulders: a white shirt */}
-      <path d="M8 101 C 10 84, 23 75.5, 38 73 L 62 73 C 77 75.5, 90 84, 92 101 Z" fill="#f8f6f0" {...line} />
-      <path d="M31 87 C 30 92, 30 96, 31 101 M69 87 C 70 92, 70 96, 69 101" fill="none" stroke={INK} strokeOpacity="0.25" strokeWidth="1.4" />
-      {/* neck */}
-      <path d="M42.5 60 L 57.5 60 L 57.5 73 L 50 80 L 42.5 73 Z" fill={s} {...line} />
-      <path d="M43 68 C 47 71, 53 71, 57 68" fill="none" stroke={INK} strokeOpacity="0.18" strokeWidth="1.6" />
-      {/* the tie, then the collar points over its knot */}
-      <Tie kind={tie} c={t} />
-      <path d="M39.5 71.5 L 50 81 L 43.5 88 L 35.5 76 Z" fill="#ffffff" {...line} strokeWidth={1.8} />
-      <path d="M60.5 71.5 L 50 81 L 56.5 88 L 64.5 76 Z" fill="#ffffff" {...line} strokeWidth={1.8} />
-      {/* ears, then the head */}
-      <circle cx="30" cy="46" r="4.6" fill={s} {...line} />
-      <circle cx="70" cy="46" r="4.6" fill={s} {...line} />
-      <ellipse cx="50" cy="43" rx="20.5" ry="22.5" fill={s} {...line} />
-      <Hair kind={hair} c={h} />
-      {/* face */}
-      <path d="M38.5 38 L 45 37 M55 37 L 61.5 38" stroke={INK} strokeWidth="2" strokeLinecap="round" />
-      <circle cx="42.5" cy="44" r="2.3" fill={INK} />
-      <circle cx="57.5" cy="44" r="2.3" fill={INK} />
-      <circle cx="43.2" cy="43.2" r="0.7" fill="#fff" />
-      <circle cx="58.2" cy="43.2" r="0.7" fill="#fff" />
-      <ellipse cx="38" cy="51" rx="3.4" ry="2" fill="#e8806b" fillOpacity="0.28" />
-      <ellipse cx="62" cy="51" rx="3.4" ry="2" fill="#e8806b" fillOpacity="0.28" />
-      <path d="M48.5 46.5 C 47.5 49, 48 50.5, 50.5 50.5" fill="none" stroke={INK} strokeOpacity="0.45" strokeWidth="1.4" strokeLinecap="round" />
-      <path d="M43.5 54.5 C 46.5 58, 53.5 58, 56.5 54.5" fill="none" stroke={INK} strokeWidth="2" strokeLinecap="round" />
+      <rect width="100" height="100" fill={BACK[back] ?? BACK[0]} />
+      {STARS.map(([x, y, r], i) => (
+        <circle key={i} cx={x} cy={y} r={r} fill="#fff" fillOpacity={dark ? 0.85 : 0.45} />
+      ))}
+      {/* the suit: shoulders, the neck ring, the chest unit */}
+      <path d="M6 101 C 8 84, 21 74, 37 71 L 63 71 C 79 74, 92 84, 94 101 Z" fill={c} {...line} />
+      <path d="M22 84 C 20 90, 19 95, 19 101 M78 84 C 80 90, 81 95, 81 101" fill="none" stroke={INK} strokeOpacity="0.25" strokeWidth="1.4" />
+      <rect x="40" y="81" width="20" height="13" rx="2" fill="#3a3e44" {...line} strokeWidth={1.8} />
+      <circle cx="45" cy="87.5" r="2" fill="#d52b1e" />
+      <circle cx="50.5" cy="87.5" r="2" fill="#ffd100" />
+      <rect x="54" y="85.5" width="3.5" height="4" fill="#9cc3f0" />
+      <Patch kind={kit} id={id} />
+      <rect x="66" y="85" width="12" height="4" fill="none" stroke={INK} strokeOpacity="0.35" strokeWidth="1.3" />
+      <path d="M34 73 C 40 78, 60 78, 66 73 L 64 68 C 58 72, 42 72, 36 68 Z" fill="#a3a6ab" {...line} strokeWidth={1.8} />
+      {/* kit on the helmet, behind it */}
+      {kit === 3 ? (
+        <g>
+          <path d="M69 25 L 77 9" {...line} fill="none" />
+          <circle cx="77.5" cy="8" r="2.6" fill="#d52b1e" {...line} strokeWidth={1.6} />
+        </g>
+      ) : null}
+      {/* the helmet */}
+      <circle cx="50" cy="44" r="28" fill={c} {...line} />
+      <circle cx="23.5" cy="47" r="4" fill="#a3a6ab" {...line} strokeWidth={1.8} />
+      <circle cx="76.5" cy="47" r="4" fill="#a3a6ab" {...line} strokeWidth={1.8} />
+      {kit === 4 ? (
+        <g>
+          <rect x="27" y="22" width="9" height="6" rx="1.5" fill="#3a3e44" {...line} strokeWidth={1.6} transform="rotate(-35 31.5 25)" />
+          <rect x="64" y="22" width="9" height="6" rx="1.5" fill="#3a3e44" {...line} strokeWidth={1.6} transform="rotate(35 68.5 25)" />
+          <circle cx="31.5" cy="25" r="2" fill="#ffd100" />
+          <circle cx="68.5" cy="25" r="2" fill="#ffd100" />
+        </g>
+      ) : null}
+      {/* the visor and the face behind it */}
+      <clipPath id={`${id}-v`}>
+        <ellipse cx="50" cy="46" rx="20" ry="19" />
+      </clipPath>
+      <ellipse cx="50" cy="46" rx="20" ry="19" fill="#1f2a38" />
+      <g clipPath={`url(#${id}-v)`}>
+        <ellipse cx="50" cy="49" rx="15.5" ry="17" fill={s} {...line} strokeWidth={1.8} />
+        <path d="M41 42 L 46 41.2 M54 41.2 L 59 42" stroke={INK} strokeWidth="1.8" strokeLinecap="round" />
+        <circle cx="44" cy="47" r="2" fill={INK} />
+        <circle cx="56" cy="47" r="2" fill={INK} />
+        <circle cx="44.6" cy="46.3" r="0.6" fill="#fff" />
+        <circle cx="56.6" cy="46.3" r="0.6" fill="#fff" />
+        <ellipse cx="40.5" cy="53" rx="2.8" ry="1.7" fill="#e8806b" fillOpacity="0.3" />
+        <ellipse cx="59.5" cy="53" rx="2.8" ry="1.7" fill="#e8806b" fillOpacity="0.3" />
+        <path d="M45.5 55.5 C 48 58.5, 52 58.5, 54.5 55.5" fill="none" stroke={INK} strokeWidth="1.8" strokeLinecap="round" />
+        {kit === 5 ? <rect x="28" y="20" width="44" height="31" fill="#d9a63a" fillOpacity="0.92" /> : null}
+        {kit === 5 ? <path d="M30 51 L 70 51" stroke={INK} strokeWidth="1.6" /> : null}
+        {/* glass: a tint and a highlight */}
+        <ellipse cx="50" cy="46" rx="20" ry="19" fill="#9cc3f0" fillOpacity="0.12" />
+        <path d="M36 36 C 39 30, 45 28, 50 28" fill="none" stroke="#fff" strokeOpacity="0.75" strokeWidth="2.6" strokeLinecap="round" />
+        <circle cx="62" cy="33" r="1.6" fill="#fff" fillOpacity="0.6" />
+      </g>
+      <ellipse cx="50" cy="46" rx="20" ry="19" fill="none" {...line} />
       <rect x="1" y="1" width="98" height="98" fill="none" stroke={INK} strokeWidth="2" />
     </svg>
   );

@@ -5,7 +5,7 @@ primary_target: "src/App.tsx"
 related_targets: []
 ---
 
-# Surface: Horizon landing + orbit table (src/App.tsx)
+# Surface: Hawking landing + orbit table (src/App.tsx)
 
 Mode: Persuade (landing) with Operate passages (the orbit table, your orbit, observations).
 Audience: memecoin traders from X/Telegram, mostly on phones. Job: see who orbits closest and how near the escrow is to the next Pull, then buy or check their orbit.

@@ -1,6 +1,6 @@
 /**
- * Between figures, the next section's name is pulled in: it starts spread wide and small at the
- * edge of the frame and is drawn tight toward the centre as you scroll, under its figure number.
+ * Between areas, two strips of caution tape are pulled taut across the screen on crossing
+ * diagonals, each printed with the next area's name, while the 3D camera moves behind them.
  */
 import { useRef } from "react";
 import gsap from "gsap";
@@ -10,24 +10,23 @@ import { prefersReducedMotion } from "../lib/motion";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
-export function Band({ fig, label }: { fig: number; label: string }) {
+export function Band({ label, tone = "yellow" }: { label: string; tone?: "yellow" | "red" }) {
   const root = useRef<HTMLDivElement>(null);
+  const text = Array.from({ length: 8 }, () => label).join(" ✕ ");
   useGSAP(
     () => {
       if (prefersReducedMotion()) return;
       gsap
-        .timeline({ scrollTrigger: { trigger: root.current, start: "top bottom", end: "bottom top", scrub: 0.6 } })
-        .fromTo(".band__word", { scale: 0.45, letterSpacing: "0.6em", opacity: 0.2 }, { scale: 1, letterSpacing: "-0.04em", opacity: 1, ease: "power2.in", duration: 0.55 }, 0)
-        .to(".band__word", { scale: 0.2, opacity: 0, filter: "blur(6px)", ease: "power3.in", duration: 0.45 }, 0.55)
-        .fromTo(".band__rule", { scaleX: 0 }, { scaleX: 1, ease: "none", duration: 0.5 }, 0);
+        .timeline({ scrollTrigger: { trigger: root.current, start: "top bottom", end: "bottom top", scrub: 0.5 } })
+        .fromTo(".tape.is-a", { xPercent: -30, rotate: -9 }, { xPercent: 10, rotate: -5, ease: "none" }, 0)
+        .fromTo(".tape.is-b", { xPercent: 20, rotate: 7 }, { xPercent: -15, rotate: 4, ease: "none" }, 0);
     },
     { scope: root },
   );
   return (
-    <div className="band" ref={root} aria-hidden="true">
-      <span className="band__rule" />
-      <p className="band__fig">Fig. {fig}</p>
-      <p className="band__word">{label}</p>
+    <div className={`band is-${tone}`} ref={root} aria-hidden="true">
+      <p className="tape is-a">{text}</p>
+      <p className="tape is-b">Do not sell ✕ {text}</p>
     </div>
   );
 }

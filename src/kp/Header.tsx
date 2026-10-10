@@ -1,4 +1,4 @@
-/** The masthead: the mark, the name, the five figures of the page, and the way in. */
+/** The masthead: black bar on a strip of hazard tape, the facility's name, its five areas, the way in. */
 import { useEffect, useState } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { XLogo } from "@phosphor-icons/react";
@@ -8,11 +8,11 @@ import { ConnectButton } from "../components/Connect";
 import { Mark } from "./Pieces";
 
 export const NAV: [string, string][] = [
-  ["ladder", "The orbit"],
-  ["round", "The cycle"],
-  ["rules", "The laws"],
-  ["card", "Your orbit"],
-  ["record", "Observations"],
+  ["ladder", "Exposure"],
+  ["round", "Emission"],
+  ["rules", "Safety"],
+  ["card", "Dosimeter"],
+  ["record", "Incidents"],
 ];
 
 export function Header({ status }: { status: Status | null }) {
@@ -23,22 +23,22 @@ export function Header({ status }: { status: Status | null }) {
     return () => [...st, top].forEach((s) => s.kill());
   }, []);
   return (
-    <header className="vd-head">
-      <a className="vd-head__brand" href="#top" aria-label="Horizon, back to the top">
+    <header className="hz-head">
+      <a className="hz-head__brand" href="#top" aria-label="Hawking, back to the top">
         <Mark size={34} />
-        <span className="vd-head__word">Horizon</span>
+        <span className="hz-head__word">Hawking</span>
+        <span className="hz-head__tick">$HAWK</span>
       </a>
-      <nav className="vd-nav" aria-label="Sections">
-        {NAV.map(([id, label], i) => (
+      <nav className="hz-nav" aria-label="Sections">
+        {NAV.map(([id, label]) => (
           <a key={id} href={`#${id}`} className={on === id ? "is-on" : ""} aria-current={on === id ? "location" : undefined}>
-            <span className="vd-nav__n tabular">{i + 2}</span>
             {label}
           </a>
         ))}
       </nav>
-      <div className="vd-head__acts">
+      <div className="hz-head__acts">
         {X_URL ? (
-          <a className="vd-x" href={X_URL} target="_blank" rel="noreferrer noopener" aria-label="Horizon on X" title="Horizon on X">
+          <a className="hz-x" href={X_URL} target="_blank" rel="noreferrer noopener" aria-label="Hawking on X" title="Hawking on X">
             <XLogo weight="bold" aria-hidden="true" />
           </a>
         ) : null}

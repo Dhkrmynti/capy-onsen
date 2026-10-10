@@ -17,12 +17,12 @@ const VALID = /^0x[0-9a-fA-F]{40}$/;
 
 type Tone = "ok" | "wait" | "stop" | "dim";
 const STAMP: Record<WalletInfo["status"], { word: string; tone: Tone; line: string }> = {
-  sitting: { word: "In orbit", tone: "ok", line: "You are in orbit. Hold and feel The Pull." },
-  waiting: { word: "Pending", tone: "wait", line: "Your first $VOID are still settling. A moment." },
-  "too-small": { word: "Drifting", tone: "wait", line: "Under 100,000 $VOID. Too light to be pulled in. Hold more." },
-  hopped: { word: "Spaghettified", tone: "stop", line: "This wallet sold. Stretched into the void, for good." },
+  sitting: { word: "On site", tone: "ok", line: "You are on site. Hold and take your dose of each emission." },
+  waiting: { word: "Pending", tone: "wait", line: "Your first $HAWK are still settling. A moment." },
+  "too-small": { word: "Visitor", tone: "wait", line: "Under 100,000 $HAWK. Not enough to enter the site. Hold more." },
+  hopped: { word: "Spaghettified", tone: "stop", line: "This wallet sold. Spaghettified, for good." },
   excluded: { word: "Not crew", tone: "dim", line: "Engine, curve, chest or dead address. Never paid." },
-  "not-holding": { word: "No mass", tone: "dim", line: "This wallet holds no $VOID." },
+  "not-holding": { word: "No exposure", tone: "dim", line: "This wallet holds no $HAWK." },
 };
 
 /** What X sign-in came back with (?x=…), read once and then cleared from the address bar. */
@@ -68,8 +68,8 @@ export function mugOf(addr: string, pp?: number[] | null): Traits {
 
 const SLOTS = [
   ["fur", "Skin"],
-  ["hat", "Hair"],
-  ["acc", "Tie"],
+  ["hat", "Suit"],
+  ["acc", "Kit"],
   ["bg", "Backdrop"],
 ] as const;
 
@@ -291,7 +291,7 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
                   traits={mug}
                   size={132}
                   className="booth__shot"
-                  title={`Your portrait: ${PART_NAMES.fur[mug[0]]} skin, ${PART_NAMES.hat[mug[1]]} hair, ${PART_NAMES.acc[mug[2]]}, ${PART_NAMES.bg[mug[3]]} backdrop`}
+                  title={`Your portrait: ${PART_NAMES.fur[mug[0]]} skin, ${PART_NAMES.hat[mug[1]]}, ${PART_NAMES.acc[mug[2]]}, ${PART_NAMES.bg[mug[3]]} backdrop`}
                 />
                 <div className="booth__dials">
                   {SLOTS.map(([key, label], i) => (
@@ -352,7 +352,7 @@ export function CrewCard({ live }: { live: boolean }) {
       url.searchParams.set("w", addr);
       window.history.replaceState(null, "", url);
     } catch (e: any) {
-      setError(e?.message === "Not Found" || !live ? "Nothing has crossed the horizon yet: nothing to check." : "Couldn't reach the engine. Try again in a moment.");
+      setError(e?.message === "Not Found" || !live ? "The facility isn't open yet: nothing to check." : "Couldn't reach the engine. Try again in a moment.");
     } finally {
       setBusy(false);
     }
@@ -421,22 +421,22 @@ export function CrewCard({ live }: { live: boolean }) {
     } catch {}
   };
 
-  const base = info ? (info.house ? { word: "Observer", tone: "ok" as Tone, line: "The founder's wallet. Watches from outside, never ranked, never paid." } : STAMP[info.status]) : null;
+  const base = info ? (info.house ? { word: "Safety officer", tone: "ok" as Tone, line: "The founder's wallet. Watches the site, never ranked, never paid." } : STAMP[info.status]) : null;
   // Crew outside the top N gets no cut yet: say how far it has to climb.
   const stamp =
     info && base && info.status === "sitting" && !info.inTop
-      ? { ...base, tone: "wait" as const, line: `No. ${info.rank}. Only the top ${info.topN} feel The Pull: climb ${info.rank! - info.topN} more.` }
+      ? { ...base, tone: "wait" as const, line: `No. ${info.rank}. Only the top ${info.topN} share the emission: climb ${info.rank! - info.topN} more.` }
       : info && base && info.status === "sitting"
-        ? { ...base, word: info.rank === 1 ? "The Singularity" : base.word, line: info.rank === 1 ? "You hold the most mass. The biggest share of the next Pull is yours." : `Top ${info.topN}. You share the next Haul.` }
+        ? { ...base, word: info.rank === 1 ? "At the core" : base.word, line: info.rank === 1 ? "You hold the most. The biggest dose of the next emission is yours." : `Top ${info.topN}. You share the next emission.` }
         : base;
 
   return (
     <section className="share" id="card" ref={root} aria-labelledby="card-head">
-      <div className="frame">
+      <div className="slab">
       <div className="cardpage__grid">
         <div className="cardpage__ask">
-          <h2 className="vd-h2" id="card-head">
-            Your orbit.
+          <h2 className="hz-h2" id="card-head">
+            Your dosimeter
           </h2>
           <form className="lookup" onSubmit={submit} noValidate>
             <label htmlFor="wallet">Wallet address</label>
@@ -466,8 +466,8 @@ export function CrewCard({ live }: { live: boolean }) {
           {info && stamp ? (
             <article className={`card is-${stamp.tone}`}>
               <header className="card__top">
-                <span className="card__org"><Mark size={24} /> Horizon</span>
-                <span className="card__kind">Orbit card</span>
+                <span className="card__org"><Mark size={24} /> Hawking</span>
+                <span className="card__kind">Dosimeter</span>
               </header>
               <div className="card__body">
                 <div className="card__mug" aria-hidden="true">
@@ -510,7 +510,7 @@ export function CrewCard({ live }: { live: boolean }) {
                       <dd className="tabular">{eth(info.received)}</dd>
                     </div>
                     <div>
-                      <dt>{info.status === "sitting" && info.inTop ? "Next Pull, est." : info.status === "hopped" ? "Spaghettified" : "Rank"}</dt>
+                      <dt>{info.status === "sitting" && info.inTop ? "Next emission, est." : info.status === "hopped" ? "Spaghettified" : "Rank"}</dt>
                       <dd className="tabular">
                         {info.status === "sitting" && info.inTop ? (
                           eth(info.estNext)
@@ -545,10 +545,10 @@ export function CrewCard({ live }: { live: boolean }) {
           ) : (
             <div className="card is-blank" aria-hidden="true">
               <header className="card__top">
-                <span className="card__org"><Mark size={24} /> Horizon</span>
-                <span className="card__kind">Orbit card</span>
+                <span className="card__org"><Mark size={24} /> Hawking</span>
+                <span className="card__kind">Dosimeter</span>
               </header>
-              <p className="card__blank">Your orbit card appears here.</p>
+              <p className="card__blank">Your dosimeter reading appears here.</p>
             </div>
           )}
           {info && info.status !== "not-holding" && (info.status !== "excluded" || info.house) ? (
@@ -557,8 +557,8 @@ export function CrewCard({ live }: { live: boolean }) {
             // Say why the booth is shut instead of leaving a connected holder guessing.
             <p className="byline__shut">
               {live
-                ? "Names, portraits and X links are for wallets holding $VOID. Buy in, then come back."
-                : "Opens at launch: once $VOID trades, any holder can set a name, a portrait or link X here."}
+                ? "Names, portraits and X links are for wallets holding $HAWK. Buy in, then come back."
+                : "Opens at launch: once $HAWK trades, any holder can set a name, a portrait or link X here."}
             </p>
           ) : null}
         </div>

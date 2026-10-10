@@ -1,6 +1,6 @@
 /**
- * The Cycle: one round drawn as a closed orbit. Each arc is as long as its share of the fees and
- * is traced in order as you scroll; the step the engine is on burns in the hot colour.
+ * The Emission Cycle: one round as four placards posted in a row, the way a plant posts its
+ * procedure. Each placard's width is its share of the fees; the step running now has its beacon on.
  */
 import { useRef } from "react";
 import gsap from "gsap";
@@ -8,18 +8,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { DEFAULT_STEPS, DEFAULT_TIERS, stepShare, type Status } from "../lib/api";
 import { prefersReducedMotion } from "../lib/motion";
+import { Mandatory, Prohibit, Warn, type Pict } from "./Signs";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
-
-const S = 440;
-const C = S / 2;
-const RR = 150;
-const polar = (a: number, r = RR) => [C + Math.cos(a) * r, C + Math.sin(a) * r] as const;
-function arc(a0: number, a1: number) {
-  const [x0, y0] = polar(a0);
-  const [x1, y1] = polar(a1);
-  return `M${x0.toFixed(1)} ${y0.toFixed(1)} A ${RR} ${RR} 0 ${a1 - a0 > Math.PI ? 1 : 0} 1 ${x1.toFixed(1)} ${y1.toFixed(1)}`;
-}
 
 export function Round({ status }: { status: Status | null }) {
   const root = useRef<HTMLElement>(null);
@@ -27,80 +18,52 @@ export function Round({ status }: { status: Status | null }) {
   const tiers = status?.rules.tiers ?? DEFAULT_TIERS;
   const at = status?.tokenAddress ? status.cycle.index : -1;
   const total = steps.reduce((a, s) => a + parseFloat(s.thresholdETH), 0) || 1;
-  const look: Record<string, { name: string; line: string }> = {
-    feeding: { name: "The Pull", line: `ETH to the ten closest. No. 1-5 split ${tiers[0]?.eth ?? "0.014"}, No. 6-10 split ${tiers[1]?.eth ?? "0.006"}, by mass.` },
-    keeper: { name: "Dark Matter", line: "To the treasury wallet. Every transfer is in the observations." },
-    sink: { name: "Into the Void", line: "Buys $VOID back, then burns exactly what it bought." },
-  };
-  let a = -Math.PI / 2;
-  const segs = steps.map((s, i) => {
-    const span = (parseFloat(s.thresholdETH) / total) * Math.PI * 2;
-    const a0 = a + 0.035;
-    const a1 = a + span - 0.035;
-    a += span;
-    return { s, i, a0, a1, mid: (a0 + a1) / 2 };
-  });
   useGSAP(
     () => {
       if (prefersReducedMotion()) return;
-      // the orbit is traced step by step as you scroll, then the notes appear
-      const tl = gsap.timeline({ scrollTrigger: { trigger: ".cycle__fig", start: "top 80%", end: "center 50%", scrub: 0.8 } });
-      root.current?.querySelectorAll<SVGPathElement>(".cycle__arc").forEach((p) => {
-        const len = p.getTotalLength();
-        tl.fromTo(p, { strokeDasharray: len, strokeDashoffset: len }, { strokeDashoffset: 0, ease: "none" });
-      });
-      gsap.from(".step", { opacity: 0, y: 16, duration: 0.7, ease: "expo.out", stagger: 0.08, scrollTrigger: { trigger: ".steps", start: "top 85%" } });
+      // placards are posted one after another as you scroll, swinging on their top screws
+      gsap
+        .timeline({ scrollTrigger: { trigger: ".placards", start: "top 85%", end: "center 55%", scrub: 0.7 } })
+        .from(".post", { rotate: -12, y: 60, opacity: 0, transformOrigin: "50% 0%", ease: "back.out(1.6)", stagger: 0.25 });
     },
     { scope: root },
   );
+  const look: Record<string, { name: string; line: string; sign: "warn" | "mand" | "proh"; pict: Pict }> = {
+    feeding: { name: "The Emission", line: `ETH to the ten nearest the core. No. 1-5 split ${tiers[0]?.eth ?? "0.014"}, No. 6-10 split ${tiers[1]?.eth ?? "0.006"}, by balance.`, sign: "warn", pict: "core" },
+    keeper: { name: "Containment Fund", line: "To the treasury wallet. Every transfer is in the incident log.", sign: "mand", pict: "vault" },
+    sink: { name: "Evaporation", line: "Buys $HAWK back on Pons, then burns exactly what it bought.", sign: "proh", pict: "flame" },
+  };
   return (
     <section className="cycle" id="round" ref={root} aria-labelledby="round-head">
-      <div className="frame">
-        <div className="frame__head">
-          <h2 className="vd-h2" id="round-head">
-            Every trade feeds the well.
+      <div className="slab is-wide">
+        <div className="slab__head">
+          <h2 className="hz-h2" id="round-head">
+            Every trade charges the core.
           </h2>
-          <p className="frame__deck">Each fee falls into the escrow. When it holds the next step's mass, the engine fires that step and pays it out. Then the next, and the orbit closes and starts again.</p>
+          <p className="slab__deck">Each trade's creator fee builds up in the Pons fee escrow. When it reaches the next step's level, the engine collects it and runs that step. Then the next, then the cycle starts over.</p>
         </div>
-        <div className="cycle__grid">
-          <figure className="cycle__fig">
-            <svg viewBox={`0 0 ${S} ${S}`} role="img" aria-label="One round of four steps, each arc sized by its share of the fees">
-              <circle className="cycle__guide" cx={C} cy={C} r={RR} />
-              <circle className="cycle__hole" cx={C} cy={C} r={54} />
-              {segs.map(({ s, i, a0, a1, mid }) => {
-                const [lx, ly] = polar(mid, RR + 34);
-                return (
-                  <g key={i} className={`cycle__seg is-${s.kind} ${at === i ? "is-now" : ""}`}>
-                    <path className="cycle__arc" d={arc(a0, a1)} />
-                    <text className="cycle__n" x={lx} y={ly + 5} textAnchor="middle">
-                      {i + 1}
-                    </text>
-                  </g>
-                );
-              })}
-              <text className="cycle__c" x={C} y={C - 4} textAnchor="middle">
-                one round
-              </text>
-              <text className="cycle__c is-sub" x={C} y={C + 16} textAnchor="middle">
-                {total.toFixed(2)} ETH
-              </text>
-            </svg>
-            <figcaption className="caption">
-              <i>Fig. 3.</i> One round of the engine. Arc length is each step's share: {stepShare(steps, "feeding")}% pulled to the ten, {stepShare(steps, "keeper")}% dark matter, {stepShare(steps, "sink")}% into the void.
-            </figcaption>
-          </figure>
-          <ol className="steps">
-            {steps.map((s, i) => (
-              <li key={i} className={`step is-${s.kind} ${at === i ? "is-now" : ""}`}>
-                <span className="step__n tabular">{i + 1}</span>
-                <span className="step__name">{look[s.kind].name}</span>
-                <span className="step__eth tabular">{s.thresholdETH} ETH</span>
-                <span className="step__line">{i === 3 ? "Treasury again. Then the orbit closes and starts over." : look[s.kind].line}</span>
-                {at === i ? <span className="step__now">firing now</span> : null}
+        <ol className="placards">
+          {steps.map((s, i) => {
+            const l = look[s.kind];
+            const Sign = l.sign === "warn" ? Warn : l.sign === "mand" ? Mandatory : Prohibit;
+            return (
+              <li key={i} className={`post is-${s.kind} ${at === i ? "is-now" : ""}`} style={{ flexGrow: parseFloat(s.thresholdETH) / total, flexBasis: 0 }}>
+                <span className="post__screws" aria-hidden="true" />
+                <span className="post__head">
+                  <span className="post__n tabular">Step {i + 1}</span>
+                  {at === i ? <span className="post__beacon">Running</span> : null}
+                </span>
+                <Sign kind={l.pict} size={86} />
+                <span className="post__name">{l.name}</span>
+                <span className="post__sol tabular">{s.thresholdETH} ETH</span>
+                <span className="post__line">{i === 3 ? "Treasury again. Then the cycle starts over." : l.line}</span>
               </li>
-            ))}
-          </ol>
-        </div>
+            );
+          })}
+        </ol>
+        <p className="cycle__sum tabular">
+          Over a full cycle: <b>{stepShare(steps, "feeding")}%</b> emitted to the ten, <b>{stepShare(steps, "keeper")}%</b> to containment, <b>{stepShare(steps, "sink")}%</b> evaporated.
+        </p>
       </div>
     </section>
   );

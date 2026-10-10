@@ -54,7 +54,7 @@ const nonces = new Map<string, { nonce: string; exp: number }>();
 
 /** Words a byline may not contain: impersonation of staff, and the obvious abuse. */
 const BANNED = [
-  "admin", "official", "oldmoney", "gazette", "oldm", "bank", "support", "moderator", "team", "staff", "dev", "owner", "pons", "airdrop", "claim", "giveaway",
+  "admin", "official", "hawking", "hawk", "bank", "support", "moderator", "team", "staff", "dev", "owner", "pons", "airdrop", "claim", "giveaway",
   "fuck", "shit", "cunt", "nigg", "fag", "rape", "nazi", "hitler", "porn", "whore", "bitch", "retard",
 ];
 
@@ -168,7 +168,7 @@ export function claimByline(input: { addr?: unknown; name?: unknown; pp?: unknow
   const bad = spendNonce(addr, input.nonce, input.signature, (n) => bylineMessage(addr, name, pp.join("-"), n));
   if (bad) return { error: bad };
   const now = Math.floor(Date.now() / 1000);
-  if (!isHolder(addr)) return { error: "Only wallets holding $VOID can claim a name." };
+  if (!isHolder(addr)) return { error: "Only wallets holding $HAWK can claim a name." };
   const prev = book[addr];
   if (prev?.x) return { error: "This wallet shows its X account. Unlink X first to use a nickname." };
   const changed = !prev || prev.name !== name || (prev.pp ?? []).join("-") !== pp.join("-");

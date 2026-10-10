@@ -124,9 +124,9 @@ export interface RoundRow {
 
 /** The cycle, in plain names. */
 export const STEP: Record<RoundKind, { name: string; does: string }> = {
-  feeding: { name: "The Pull", does: "ETH to the ten in orbit" },
-  keeper: { name: "Dark Matter", does: "to the treasury wallet" },
-  sink: { name: "Into the Void", does: "buy $VOID back and burn it" },
+  feeding: { name: "The Emission", does: "ETH to the ten nearest the core" },
+  keeper: { name: "Containment Fund", does: "to the treasury wallet" },
+  sink: { name: "Evaporation", does: "buy $HAWK back and burn it" },
 };
 
 export const DEFAULT_STEPS: Status["cycle"]["steps"] = [
@@ -159,7 +159,7 @@ export const EXPLORER = "https://explorer.mainnet.chain.robinhood.com";
 export const ponsUrl = (ca: string) => `https://ponsfamily.com/launchpad/${ca}`;
 export const dexUrl = (ca: string) => `https://dexscreener.com/robinhood/${ca}`;
 // The house account on X; empty hides every link to it until there is one.
-export const X_URL = "https://x.com/thehorizonrh";
+export const X_URL = "";
 export const txUrl = (tx: string) => `${EXPLORER}/tx/${tx}`;
 export const addrUrl = (a: string) => `${EXPLORER}/address/${a}`;
 
@@ -433,7 +433,7 @@ const seedPond = (): { total: number; topN: number; rows: PondRow[] } => {
       received: String(rec[i]),
       nickname: ["Sterling Whitmore III", "", "trustfundtony", "", "", "Lady Penelope", "", "", "", "", "", ""][i] || "",
       pp: [[1, 4, 3, 3], null, [2, 0, 2, 4], null, null, [4, 2, 4, 5], null, null, null, null, null, null][i] ?? null,
-      x: [null, { username: "goldwyrm", name: "Gold Wyrm", avatar: "/favicon-192.png", verified: "blue" }, null, null, { username: "margaux_ashford", name: "Margaux Ashford", avatar: "", verified: "" }, null, null, null, null, null, null, null][i] ?? null,
+      x: [null, { username: "hawkingdose", name: "Hawking Dose", avatar: "/favicon-192.png", verified: "blue" }, null, null, { username: "margaux_ashford", name: "Margaux Ashford", avatar: "", verified: "" }, null, null, null, null, null, null, null][i] ?? null,
     })),
   };
 };

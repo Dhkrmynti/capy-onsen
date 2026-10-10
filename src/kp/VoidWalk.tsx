@@ -1,8 +1,8 @@
 /**
- * Horizon: one black hole, walked by scrolling. A turbulent accretion disk with its lensed halo
- * bending over and under the event horizon, a photon ring, the gravity well drawn as a grid
- * funnel below, the ten closest holders as rocky bodies in Keplerian orbit with their names,
- * matter spiralling in, and at the end the camera crosses the horizon. Shaders and procedural
+ * Hawking: one black hole held in a containment facility, walked by scrolling. A turbulent
+ * accretion disk with its lensed halo, a photon ring, a hazard-striped containment ring on
+ * struts with rotating beacons, the ten closest holders as rocky bodies in orbit with their
+ * names, matter spiralling in, and at the end the camera crosses the horizon. Shaders and procedural
  * textures only (no image downloads), at most 30 fps, nothing while the tab is hidden.
  */
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -219,40 +219,68 @@ function BlackHole() {
   );
 }
 
-/* ───────── the gravity well: the rubber-sheet funnel as a grid of lines ───────── */
-function Well({ narrow }: { narrow: boolean }) {
-  const geo = useMemo(() => {
-    const depth = (r: number) => -2.4 - 46 / (r + 1.2) + 46 / 34;
-    const pts: number[] = [];
-    const rings = narrow ? 12 : 18;
-    const spokes = narrow ? 24 : 40;
-    const r0 = RS * 1.4;
-    const r1 = 32;
-    const rr = (i: number) => r0 + Math.pow(i / rings, 1.6) * (r1 - r0);
-    for (let i = 0; i <= rings; i++) {
-      const r = rr(i);
-      for (let j = 0; j < 96; j++) {
-        const a0 = (j / 96) * Math.PI * 2;
-        const a1 = ((j + 1) / 96) * Math.PI * 2;
-        pts.push(Math.cos(a0) * r, depth(r), Math.sin(a0) * r, Math.cos(a1) * r, depth(r), Math.sin(a1) * r);
+/* ───────── the containment: a hazard-striped ring on struts, beacons turning ───────── */
+function Containment({ narrow }: { narrow: boolean }) {
+  const beacons = useRef<THREE.Group>(null);
+  const R = RS * 5.6;
+  const stripes = useMemo(() => {
+    const t = canvasTex(1024, 64, (g) => {
+      g.fillStyle = "#ffd100";
+      g.fillRect(0, 0, 1024, 64);
+      g.fillStyle = "#121212";
+      for (let x = -64; x < 1024 + 64; x += 64) {
+        g.beginPath();
+        g.moveTo(x, 64);
+        g.lineTo(x + 32, 64);
+        g.lineTo(x + 64, 0);
+        g.lineTo(x + 32, 0);
+        g.fill();
       }
-    }
-    for (let j = 0; j < spokes; j++) {
-      const a = (j / spokes) * Math.PI * 2;
-      for (let i = 0; i < 40; i++) {
-        const ra = r0 + Math.pow(i / 40, 1.6) * (r1 - r0);
-        const rb = r0 + Math.pow((i + 1) / 40, 1.6) * (r1 - r0);
-        pts.push(Math.cos(a) * ra, depth(ra), Math.sin(a) * ra, Math.cos(a) * rb, depth(rb), Math.sin(a) * rb);
-      }
-    }
-    const g = new THREE.BufferGeometry();
-    g.setAttribute("position", new THREE.Float32BufferAttribute(pts, 3));
-    return g;
+    });
+    t.wrapS = THREE.RepeatWrapping;
+    t.repeat.set(narrow ? 6 : 10, 1);
+    return t;
   }, [narrow]);
+  const posts = narrow ? 6 : 8;
+  useFrame((s) => {
+    const g = beacons.current;
+    if (!g) return;
+    g.children.forEach((b, i) => {
+      b.rotation.y = s.clock.elapsedTime * 3 + i;
+    });
+  });
   return (
-    <lineSegments geometry={geo} rotation={[TILT, 0, 0]}>
-      <lineBasicMaterial color="#d8d8d2" transparent opacity={0.13} depthWrite={false} />
-    </lineSegments>
+    <group rotation={[TILT, 0, 0]}>
+      <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, -1.6, 0]}>
+        <torusGeometry args={[R, 0.32, 16, 160]} />
+        <meshStandardMaterial map={stripes} roughness={0.55} metalness={0.2} />
+      </mesh>
+      <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, -2.1, 0]}>
+        <torusGeometry args={[R * 1.03, 0.12, 8, 160]} />
+        <meshStandardMaterial color="#2a2d32" roughness={0.4} metalness={0.8} />
+      </mesh>
+      <group ref={beacons}>
+        {Array.from({ length: posts }, (_, i) => {
+          const a = (i / posts) * Math.PI * 2;
+          return (
+            <group key={i} position={[Math.cos(a) * R, 0, Math.sin(a) * R]}>
+              <mesh position={[0, -4.6, 0]}>
+                <boxGeometry args={[0.34, 6, 0.34]} />
+                <meshStandardMaterial color="#3a3e44" roughness={0.5} metalness={0.7} />
+              </mesh>
+              <mesh position={[0, -1.05, 0]}>
+                <cylinderGeometry args={[0.2, 0.24, 0.5, 16]} />
+                <meshBasicMaterial color={i % 2 ? "#ff9e1b" : "#d52b1e"} toneMapped={false} />
+              </mesh>
+              <mesh position={[0.32, -1.05, 0]} rotation={[0, 0, -Math.PI / 2]}>
+                <coneGeometry args={[0.3, 1.1, 16, 1, true]} />
+                <meshBasicMaterial color={i % 2 ? "#ff9e1b" : "#d52b1e"} transparent opacity={0.22} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} side={THREE.DoubleSide} />
+              </mesh>
+            </group>
+          );
+        })}
+      </group>
+    </group>
   );
 }
 
@@ -463,7 +491,7 @@ function Walk({ narrow, names, still }: { narrow: boolean; names: string[]; stil
   return (
     <>
       <Sky narrow={narrow} />
-      <Well narrow={narrow} />
+      <Containment narrow={narrow} />
       <BlackHole />
       <Bodies names={names} fonts={fonts} show={labels} />
       <Infall narrow={narrow} />

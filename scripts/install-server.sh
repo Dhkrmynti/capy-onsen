@@ -1,5 +1,5 @@
 #!/bin/sh
-# Installs Horizon ($VOID) on a VPS, run ON the server as root from inside the cloned repo.
+# Installs Hawking ($HAWK) on a VPS, run ON the server as root from inside the cloned repo.
 # It only ADDS things: one nginx site for $DOMAIN and one pm2 process. Other sites and apps
 # already on the server are never edited.
 #
