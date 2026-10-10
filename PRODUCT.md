@@ -8,23 +8,23 @@ web
 
 ## Stack
 
-Delegated (chosen to match the owner's other token sites so the VPS deploy flow stays identical): Vite + React + TypeScript static site, GSAP + ScrollTrigger for scroll motion, served by nginx from `/var/www/thehoard.fun/dist`. Bot: Node + `tsx` + ethers v6 under pm2, HTTP API on its own port, proxied at `/api/`.
+Delegated (chosen to match the owner's other token sites so the VPS deploy flow stays identical): Vite + React + TypeScript static site, GSAP + ScrollTrigger for scroll motion, served by nginx from `/var/www/plunders.fun/dist`. Bot: Node + `tsx` + ethers v6 under pm2, HTTP API on its own port, proxied at `/api/`.
 
 ## Users
 
-- **Primary:** memecoin traders on Robinhood Chain arriving from X/Telegram, mostly on phones. Their job: understand in seconds what holding $HOARD does for them, copy the CA, buy on Pons.
-- **Secondary:** holders ("sitters") checking their own wallet: still sitting or hopped off, pad days, how many $HOARD they've received, what tonight's feeding might bring.
+- **Primary:** memecoin traders on Robinhood Chain arriving from X/Telegram, mostly on phones. Their job: understand in seconds what holding $LOOT does for them, copy the CA, buy on Pons.
+- **Secondary:** holders ("sitters") checking their own wallet: still sitting or hopped off, pad days, how many $LOOT they've received, what tonight's feeding might bring.
 - **Operator:** the creator, using the hidden `/lotnok` route to configure the engine.
 
 ## Product Purpose
 
-$HOARD is a memecoin on Robinhood Chain (chain ID 4663, launched on Pons Family v2) whose creator fees run a loop. A 24/7 bot claims the creator fees (ETH) from the Pons fee escrow whenever it reaches the next step's size and spends it on that step: a **Haul** (feeding) (ETH straight to the 10 biggest wallets that have **never sold**), the **Chest** (treasury), then **Dragonfire** (sink) (buy $HOARD back and burn it). Selling (sending $HOARD to the Pons curve or the DEX pool) permanently disqualifies a wallet. The website is a read-only tracker and wallet checker plus landing page. Success: a visitor understands "hold big and never snitch → Robin pays you in ETH", checks their crew card, and buys.
+$LOOT is a memecoin on Robinhood Chain (chain ID 4663, launched on Pons Family v2) whose creator fees run a loop. A 24/7 bot claims the creator fees (ETH) from the Pons fee escrow whenever it reaches the next step's size and spends it on that step: a **Plunder** (feeding) (ETH straight to the 10 biggest wallets that have **never sold**), the **Chest** (treasury), then **Cannonfire** (sink) (buy $LOOT back and burn it). Selling (sending $LOOT to the Pons curve or the DEX pool) permanently disqualifies a wallet. The website is a read-only tracker and wallet checker plus landing page. Success: a visitor understands "hold big and never snitch → Robin pays you in ETH", checks their crew card, and buys.
 
 Full concept: `CONCEPT.md`.
 
 ## Positioning
 
-Every other fee-engine token on the owner's VPS burns. $HOARD rewards patience directly and visibly: the leaderboard, the per-wallet checker and the daily feeding log (with tx hashes) prove it, on-chain, every day.
+Every other fee-engine token on the owner's VPS burns. $LOOT rewards patience directly and visibly: the leaderboard, the per-wallet checker and the daily feeding log (with tx hashes) prove it, on-chain, every day.
 
 ## Operating Context
 
@@ -36,19 +36,19 @@ Every other fee-engine token on the owner's VPS burns. $HOARD rewards patience d
 
 - Engine pieces reused from the existing burn bots: escrow polling/claim, curve buy (pre-graduation) and Uniswap v4 buy (post-graduation), `/api/status`, `/lotnok` config.
 - New pieces: Transfer-log indexer, sell detection, fee split, daily snapshot + pro-rata distribution (idempotent, resumable), `/api/pond`, `/api/wallet/:addr`, `/api/feedings`.
-- Eligibility (proposed defaults, owner may change): balance ≥ 100,000 $HOARD; never sent $HOARD to curve/pool; first buy ≥ 24 h before snapshot. Excluded: curve, pool, bot wallet, 0x…dEaD, creator, treasury.
+- Eligibility (proposed defaults, owner may change): balance ≥ 100,000 $LOOT; never sent $LOOT to curve/pool; first buy ≥ 24 h before snapshot. Excluded: curve, pool, bot wallet, 0x…dEaD, creator, treasury.
 - Fee cycle (owner decision, 8 Oct 2026): feeding 0.01 ETH → ETH to the 10 biggest sitters by balance, split by balance; keeper 0.02 ETH → treasury; sink 0.01 ETH → buyback and burn; repeat. Over a full cycle that is 25% / 50% / 25%, shown openly.
-- Sitters: never sold, ≥ 100,000 $HOARD, first $HOARD ≥ 1 hour old. Wallet-to-wallet transfers are not sells; the receiving wallet starts at 0 pad days.
+- Sitters: never sold, ≥ 100,000 $LOOT, first $LOOT ≥ 1 hour old. Wallet-to-wallet transfers are not sells; the receiving wallet starts at 0 pad days.
 - The token must be launched from the same wallet whose private key goes into the bot.
 - X: **@pepadsrh** (x.com/pepadsrh).
 - Open decisions: minimum balance, hold time.
 
 ## Brand Commitments
 
-- Name **Kingpins**, ticker **$HOARD** (branch `lore-kingpin`). Supersedes Heirloom ($HEIR). No word "bank" in the name or domain.
-- **Only the UI and the lore change.** Backend, engine, API, features and tokenomics are exactly the Heirloom build: cycle inheritance 0.02 ETH (No. 1–5 share 0.014, No. 6–10 share 0.006, by balance) → treasury 0.025 → buyback & burn 0.01 → treasury 0.025, repeat; min 100,000 tokens; no hold time; one sale disqualifies forever; dev wallet shown but never ranked or paid; X connect, names, portraits, waiting/sold strips, /lotnok, statement.
-- Lore: a live race for the throne. **#1 holds the crown** (the Kingpins) and anyone can take it by out-holding them. Step 1 (ETH to top 10) → **the Tribute**, paid to **the Court** (No. 1–5) and **the Guard** (No. 6–10); step 2/4 (treasury) → **the War Chest** (shown openly, twice a round); step 3 (buyback + burn) → **the Burn**; sold → **Exiled** (forever); leaderboard → **the Ladder**; wallet check → **your seat**; history → **the Record**; dev wallet → **the Founder** (own mark, never the crown, which belongs to #1).
-- Owner's taste for this world: the first viewport must feel like a live fight for #1; one light cartoon 3D object only, the rest 2D + GSAP scroll transitions; must not resemble Heirloom (no navy-and-gold vault, no bank or classical luxury serif); few words; never heavy on phones; not serious or corporate: it is a memecoin.
+- Name **Plunders**, ticker **$LOOT** (branch `lore-pirate`, domain plunders.fun suggested, not yet confirmed). Supersedes The Hoard ($HOARD) and Kingpins' lore for this build. No word "bank" in the name or domain.
+- **Only the UI and the lore change.** Backend, engine, API, features and tokenomics are exactly the Heirloom build: 0.02 ETH to the top 10 (No. 1-5 share 0.014, No. 6-10 share 0.006, by balance) → treasury 0.025 → buyback & burn 0.01 → treasury 0.025, repeat; min 100,000 tokens; no hold time; one sale disqualifies forever; dev wallet shown but never ranked or paid; X connect, names, portraits, waiting/sold strips, /lotnok, statement.
+- Lore: a pirate crew. **No. 1 is the Captain** (flies the black flag) and anyone can take the helm by out-holding them. Step 1 → **the Plunder**, paid to **the Crew** (officers No. 1-5, deckhands No. 6-10); steps 2/4 → **the Chest** (treasury, shown openly); step 3 → **Cannonfire** (buyback + burn); sold → **Overboard** (walked the plank, forever); leaderboard → **the Crew**; wallet check → **your share**; history → **the Captain's Log**; dev wallet → **the Founder**.
+- Owner's taste for this world: full 3D light-cartoon pirate cove (ship, island, chest, cannon) with scroll-driven camera and GSAP scroll transitions; UI must be fresh and not identical to Kingpins or The Hoard; never heavy on phones; not serious or corporate: it is a memecoin.
 - Voice: short, cocky, playful. Never yield, APY, passive income, or promises of value.
 
 ## Evidence on Hand

@@ -14,9 +14,10 @@ import { Rules } from "./kp/Rules";
 import { Record } from "./kp/Record";
 import { Close } from "./kp/Close";
 import { nameFor } from "./lib/alias";
+import { Wipe } from "./kp/Wipe";
 
-// The cave loads after the page, so the first paint never waits for it.
-const HoardWalk = lazy(() => import("./kp/HoardWalk"));
+// The island loads after the page, so the first paint never waits for it.
+const HoardWalk = lazy(() => import("./kp/PirateWalk"));
 
 function useWalk() {
   const [show, setShow] = useState(false);
@@ -105,8 +106,8 @@ export function App() {
   }, []);
 
   return (
-    <div className="kp">
-      {/* the cave, fixed behind every section; the page scrolls through it */}
+    <div className="kp sig">
+      {/* the island, fixed behind every section; the page scrolls through it */}
       <div className="walk" aria-hidden="true">
         {walk ? (
           <Suspense fallback={null}>
@@ -117,10 +118,15 @@ export function App() {
       <Header status={status} />
       <main>
         <Hero status={status} pond={pond} offline={!!error && !status} />
+        <Wipe code="C" label="The Crew" />
         <Ladder status={status} pond={pond} />
+        <Wipe code="P" label="The Plunder" />
         <Round status={status} />
+        <Wipe code="K" label="The Code" />
         <Rules status={status} />
+        <Wipe code="S" label="Your share" />
         <CrewCard live={live} />
+        <Wipe code="L" label="The Log" />
         <Record status={status} />
       </main>
       <Close status={status} />

@@ -40,7 +40,7 @@ export function BuyButton({ status, className = "" }: { status: Status | null; c
     );
   return (
     <a className={`press-btn ${className}`} href={ponsUrl(ca)} target="_blank" rel="noreferrer">
-      <span className="btn__long">Buy $HOARD</span>
+      <span className="btn__long">Buy $LOOT</span>
       <span className="btn__short">Buy</span> <ArrowUpRight weight="bold" aria-hidden="true" />
     </a>
   );

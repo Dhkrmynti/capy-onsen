@@ -1,128 +1,96 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-09T19:39:24.383487+00:00",
-  "title": "Design System: Kingpin — The Board",
+  "generatedAt": "2026-10-10T07:30:00+07:00",
+  "title": "Design System: Plunders",
   "extensions": {
     "colorMeta": {
-      "lime": {
-        "displayName": "Electric Lime",
-        "role": "board square, field colour"
-      },
-      "violet": {
-        "displayName": "Royal Violet",
-        "role": "board square, field colour"
-      },
-      "violet-deep": {
-        "displayName": "Deep Violet",
-        "role": "dark board square"
-      },
-      "crown": {
-        "displayName": "Crown Orange",
-        "role": "the King, primary action, crown moments"
-      },
-      "grape-0": {
-        "displayName": "Grape Ink",
-        "role": "dark ground and outline ink"
-      },
-      "edge": {
-        "displayName": "Lit Edge",
-        "role": "outline on dark ground"
-      },
-      "exile": {
-        "displayName": "Captured Red",
-        "role": "sellers only"
-      },
-      "cream": {
-        "displayName": "Board Cream",
-        "role": "text on dark and violet"
-      },
-      "cream-2": {
-        "displayName": "Lavender Cream",
-        "role": "secondary text"
-      }
+      "signal-red": { "role": "primary", "displayName": "Signal Red", "canonical": "#d7263d", "tonalRamp": ["#3d0a11", "#6b111e", "#9a1424", "#b81d31", "#d7263d", "#e3596b", "#ee97a2", "#f8d5da"] },
+      "signal-blue": { "role": "secondary", "displayName": "Signal Blue", "canonical": "#1b4dbf", "tonalRamp": ["#08173a", "#0f2864", "#143a92", "#1b4dbf", "#4370d6", "#7896e2", "#adc0ee", "#e1e8f9"] },
+      "signal-yellow": { "role": "tertiary", "displayName": "Signal Yellow", "canonical": "#f9c80e", "tonalRamp": ["#3d3002", "#6e5704", "#a37f05", "#d9a900", "#f9c80e", "#fbd84f", "#fde790", "#fef6d4"] },
+      "flag-black": { "role": "neutral", "displayName": "Flag Black", "canonical": "#16181d" },
+      "bunting-white": { "role": "neutral", "displayName": "Bunting White", "canonical": "#f8f4ea" },
+      "bunting-shade": { "role": "neutral", "displayName": "Bunting Shade", "canonical": "#ece4d0" },
+      "ink-soft": { "role": "neutral", "displayName": "Ink Soft", "canonical": "#464b57" },
+      "sky-horizon": { "role": "neutral", "displayName": "Sky Horizon", "canonical": "#ffd9a8" }
     },
     "typographyMeta": {
-      "display": {
-        "role": "toy caps display, max 96px"
-      },
-      "data": {
-        "role": "numbers, coordinates, clock; tabular"
-      }
+      "display": { "displayName": "Display", "purpose": "Hero and close headlines, uppercase stencil." },
+      "headline": { "displayName": "Headline", "purpose": "Section titles." },
+      "title": { "displayName": "Title", "purpose": "Hoist names, ranks, log kinds." },
+      "body": { "displayName": "Body", "purpose": "Explanations and lines." },
+      "label": { "displayName": "Label", "purpose": "Buttons and the halyard, uppercase." },
+      "data": { "displayName": "Data", "purpose": "Every number: balances, ETH, dates, hashes." }
     },
-    "shadows": {
-      "base": "0 6px 0 #170c29",
-      "base-deep": "0 6px 0 #07030f",
-      "pressed": "0 2px 0 #170c29",
-      "clock": "0 8px 0 #07030f"
-    },
-    "materials": {
-      "outline": "3px solid #170c29 (2px #5b3fa8 on dark ground)",
-      "piece": "authored SVG, flat fill, 3.2px ink stroke, base plate"
-    },
-    "motion": {
-      "ease": "expo.out",
-      "heroFlatten": "pinned scrub, board rotateX 58deg to 0, scale 1.45, end +=85%",
-      "roundPan": "pinned horizontal track, scrub 0.6",
-      "ladderFlip": "0.9s expo.out from previous rect; New King shout back.out(2)",
-      "press": "translateY 4px, 0.16s cubic-bezier(0.22,1,0.36,1)",
-      "king3d": "toon shading, <=30fps, paused off screen"
-    },
-    "breakpoints": {
-      "phone": "760px",
-      "tablet": "1080px"
-    }
+    "shadows": [
+      { "name": "lift", "value": "0 14px 30px -16px rgba(22,24,29,0.55)", "purpose": "Sheets and the Captain strip over the 3D scene." },
+      { "name": "flag-drop", "value": "drop-shadow(0 10px 14px rgba(22,24,29,0.28))", "purpose": "The clipped Buy flag." }
+    ],
+    "motion": [
+      { "name": "ease-out", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Halyard hoist and CSS state changes." },
+      { "name": "flag-swing", "value": "elastic.out(1, 0.38)", "purpose": "GSAP: pennants swinging onto the line, the meter's ballistic settle." },
+      { "name": "wipe-scrub", "value": "scrub 0.6", "purpose": "GSAP ScrollTrigger: the letter flag hauled across between sections." }
+    ],
+    "breakpoints": [
+      { "name": "phone", "value": "760px" },
+      { "name": "halyard-hidden", "value": "860px" },
+      { "name": "halyard-flags-only", "value": "1240px" }
+    ]
   },
   "components": [
     {
-      "name": "Buy button",
+      "name": "Buy flag",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "Crown pill on its printed base; pressing pushes it down onto the base.",
-      "html": "<a class=\"ds-buy\">Buy $KING</a>",
-      "css": ".ds-buy{display:inline-flex;align-items:center;height:52px;padding:0 24px;border:3px solid #170c29;border-radius:999px;background:#ff7a1a;color:#170c29;font:800 16px/1 Archivo,system-ui,sans-serif;box-shadow:0 6px 0 #170c29;text-decoration:none}"
+      "description": "The one primary action, a red swallowtail.",
+      "html": "<a class=\"ds-buy\" href=\"#\">Buy $LOOT</a>",
+      "css": ".ds-buy{display:inline-flex;align-items:center;height:54px;padding:0 40px 0 24px;background:#d7263d;color:#f8f4ea;font:800 15px/1 Archivo,system-ui,sans-serif;text-transform:uppercase;letter-spacing:.06em;text-decoration:none;clip-path:polygon(0 0,100% 0,calc(100% - 16px) 50%,100% 100%,0 100%);filter:drop-shadow(0 10px 14px rgba(22,24,29,.28));transition:transform .25s cubic-bezier(.16,1,.3,1),background-color .2s}.ds-buy:hover{transform:translateY(-3px);background:#b81d31}.ds-buy:focus-visible{outline:3px solid #1b4dbf;outline-offset:3px}"
     },
     {
-      "name": "Court tile",
-      "kind": "card",
-      "refersTo": "tile-court-light",
-      "description": "A square on the board: rank and coordinate, piece, holder, two mono lines.",
-      "html": "<div class=\"ds-tile\"><b>3 <i>a1</i></b><span>trustfundtony</span><small>4.8M · $198<br>next 0.0026 ETH</small></div>",
-      "css": ".ds-tile{display:flex;flex-direction:column;gap:6px;width:220px;padding:14px 16px;border:3px solid #170c29;border-radius:8px;background:#c6f432;color:#170c29;box-shadow:0 6px 0 #07030f}.ds-tile b{font:400 28px/1 'Dela Gothic One',sans-serif}.ds-tile i{font:600 11px 'Martian Mono',monospace;font-style:normal;opacity:.7}.ds-tile span{font:800 17px Archivo,sans-serif}.ds-tile small{font:600 11.5px/1.35 'Martian Mono',monospace}"
+      "name": "White flag button",
+      "kind": "button",
+      "refersTo": "button-flag-white",
+      "description": "Secondary action.",
+      "html": "<a class=\"ds-white\" href=\"#\">See the Crew</a>",
+      "css": ".ds-white{display:inline-flex;align-items:center;height:54px;padding:0 24px;border:3px solid #16181d;background:#f8f4ea;color:#16181d;font:800 15px/1 Archivo,system-ui,sans-serif;text-transform:uppercase;letter-spacing:.06em;text-decoration:none;transition:background-color .2s,color .2s}.ds-white:hover{background:#16181d;color:#f8f4ea}.ds-white:focus-visible{outline:3px solid #1b4dbf;outline-offset:3px}"
     },
     {
-      "name": "Chess clock",
-      "kind": "meter",
-      "refersTo": "",
-      "description": "Escrow toward the next move: crown arc, cream hand, mono readout.",
-      "html": "<div class=\"ds-clock\"><b>0.0182</b><span>/ 0.02 ETH</span></div>",
-      "css": ".ds-clock{width:232px;padding:22px 18px 16px;border:4px solid #170c29;border-radius:26px;background:#170c29;color:#fff6e3;text-align:center;font:600 13px 'Martian Mono',monospace}.ds-clock b{display:block;font-size:30px}"
+      "name": "Halyard",
+      "kind": "nav",
+      "description": "Section flags hanging from one line; the current one is hoisted.",
+      "html": "<nav class=\"ds-hal\"><a class=\"is-up\" href=\"#\"><i style=\"background:linear-gradient(#1b4dbf 20%,#f8f4ea 20% 40%,#d7263d 40% 60%,#f8f4ea 60% 80%,#1b4dbf 80%)\"></i>Crew</a><a href=\"#\"><i style=\"background:#1b4dbf;box-shadow:inset 0 0 0 5px #1b4dbf,inset 0 0 0 9px #f8f4ea\"></i>Plunder</a></nav>",
+      "css": ".ds-hal{position:relative;display:flex;gap:4px;padding-top:4px}.ds-hal:before{content:'';position:absolute;inset:0 -8px auto;height:2px;background:#16181d}.ds-hal a{display:inline-flex;align-items:center;gap:7px;padding:6px 9px 4px;font:700 13px/1 Archivo,sans-serif;text-transform:uppercase;letter-spacing:.05em;text-decoration:none;color:#464b57;transform:translateY(5px);transition:transform .5s cubic-bezier(.16,1,.3,1)}.ds-hal a i{display:block;width:26px;height:17px;border:1.5px solid #16181d}.ds-hal a.is-up,.ds-hal a:hover{color:#16181d;transform:translateY(-1px)}"
+    },
+    {
+      "name": "Hoist row",
+      "kind": "custom",
+      "description": "One rank on the Crew hoist: pennant, rank, holder, balance, next ETH.",
+      "html": "<div class=\"ds-hang\"><svg width=\"58\" height=\"28\" viewBox=\"0 0 60 28\"><polygon points=\"0,0 60,11 60,17 0,28\" fill=\"#1b4dbf\" stroke=\"#16181d\" stroke-width=\"2.4\"/><circle cx=\"15\" cy=\"14\" r=\"6\" fill=\"#f8f4ea\"/></svg><b>No. 2</b><span>@saltbeard<small>6.6M · $272</small></span><em>next 0.0035 ETH</em></div>",
+      "css": ".ds-hang{display:grid;grid-template-columns:auto 74px 1fr auto;align-items:center;gap:14px;padding:6px 12px 6px 0;border-left:3px solid #16181d;background:#f8f4ea;font:800 16px/1.2 Archivo,sans-serif;color:#16181d}.ds-hang b{font:900 22px/1 'Big Shoulders Stencil Display',sans-serif;text-transform:uppercase}.ds-hang small{display:block;font:600 12px/1.3 'Martian Mono',monospace;color:#464b57}.ds-hang em{font:600 13px/1.2 'Martian Mono',monospace;font-style:normal;padding:4px 6px;background:#f9c80e}"
+    },
+    {
+      "name": "Escrow meter",
+      "kind": "custom",
+      "description": "Ten flag cells filling toward the next hoist.",
+      "html": "<div class=\"ds-meter\" style=\"--fill:.32\"><i style=\"--i:0\"></i><i style=\"--i:1\"></i><i style=\"--i:2\"></i><i style=\"--i:3\"></i><i style=\"--i:4\"></i><i style=\"--i:5\"></i><i style=\"--i:6\"></i><i style=\"--i:7\"></i><i style=\"--i:8\"></i><i style=\"--i:9\"></i></div>",
+      "css": ".ds-meter{display:flex;gap:5px}.ds-meter i{position:relative;width:30px;height:22px;border:2.5px solid #16181d;background:#f8f4ea}.ds-meter i:after{content:'';position:absolute;inset:0;background:#f9c80e;transform-origin:0 50%;transform:scaleX(clamp(0,calc(var(--fill)*10 - var(--i)),1))}.ds-meter i:nth-child(5n):after{background:#d7263d}"
+    },
+    {
+      "name": "Wallet field",
+      "kind": "input",
+      "description": "The wallet lookup input.",
+      "html": "<input class=\"ds-input\" placeholder=\"0x…\">",
+      "css": ".ds-input{height:48px;padding:0 14px;border:3px solid #16181d;border-radius:0;background:#fff;color:#16181d;font:600 14px/1 'Martian Mono',monospace}.ds-input:focus-visible{outline:3px solid #1b4dbf;outline-offset:3px}"
     }
   ],
   "narrative": {
-    "northStar": "The Board in Play",
-    "overview": "The holder ladder as a loud toy chessboard mid-game: the biggest holder is the King, fees are moves on a chess clock, sellers are captured.",
-    "keyCharacteristics": [
-      "one field colour per viewport",
-      "printed board-game tokens with base shadows",
-      "Martian Mono notation for every number and coordinate",
-      "authored SVG pieces",
-      "one toon 3D King"
-    ],
+    "northStar": "Dressed Overall",
+    "overview": "A pirate ship dressed overall in signal flags. The page speaks the International Code of Signals: five flag colours at full strength, rectangles, swallowtails and pennants, one black halyard everything hangs from, over a light-cartoon 3D cove.",
+    "keyCharacteristics": ["Flag fields own whole regions", "Zero radius; shapes come from flags", "Stencil display, Archivo body, Martian Mono numbers", "A letter flag hauled across between sections"],
     "rules": [
-      "Lime and violet are the board; crown orange is the King's",
-      "Every number in tabular mono",
-      "No glass, glows, gradient text or soft shadows"
+      { "name": "The Real Signal Rule", "body": "A flag means what it means in the Code where the Code fits: O overboard, B explosives, numeral pennants for ranks.", "section": "colors" },
+      { "name": "The Stencil Is For Shouting Rule", "body": "Stencil only at 18px and up, uppercase; never names, sentences or numbers.", "section": "typography" }
     ],
-    "dos": [
-      "One headline per viewport",
-      "Board coordinates wherever a rank shows",
-      "Captured pieces lie at 90°"
-    ],
-    "donts": [
-      "No navy-gold vault or luxury serif",
-      "No Unicode chess glyphs or emoji icons",
-      "No eyebrows or section numbers",
-      "No second 3D object"
-    ]
+    "dos": ["Do draw every flag from src/lib/flags.ts", "Do keep every number in Martian Mono", "Do give each section its own composition"],
+    "donts": ["Don't put translucent dark panels over the 3D", "Don't round corners or soften the signal colours", "Don't add a kicker above a headline", "Don't put a CSS transition on a GSAP-animated element"]
   }
 }

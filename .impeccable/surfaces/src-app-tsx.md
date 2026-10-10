@@ -5,22 +5,22 @@ primary_target: "src/App.tsx"
 related_targets: []
 ---
 
-# Surface: Kingpin landing + ladder (src/App.tsx)
+# Surface: Plunders landing + crew board (src/App.tsx)
 
-Mode: Persuade (landing) with Operate passages (ladder, your seat, record).
-Audience: memecoin traders from X/Telegram, mostly on phones. Job: see who holds the crown right now and how close the next Tribute is, then buy or check their seat.
-Constraints: backend, engine, API, features and tokenomics unchanged; one light cartoon 3D object only; few words; never heavy on phones; nothing that reads as Heirloom (no navy-gold vault, no luxury serif).
+Mode: Persuade (landing) with Operate passages (crew board, your share, captain's log).
+Audience: memecoin traders from X/Telegram, mostly on phones. Job: see who is Captain and how close the next Plunder is, then buy or check their share.
+Constraints: backend, engine, API, features and tokenomics unchanged; world pinned by the owner: full 3D light-cartoon pirate cove (ship, island, chest, cannon); UI must share nothing with the dragon/Kingpins builds (no dark translucent slabs, no gothic or toy display face).
 
 ## Direction contract
 
-THESIS: The holder ladder is a chessboard in play. #1 is the King on its square, No. 1–5 are the Court (major pieces), No. 6–10 the Guard (pawns), sellers are captured pieces laid on their side in a tray. Refuses the category default of a dark luxury crown page with a glowing Buy button and a table.
+THESIS: The ship is dressed overall in signal flags and the page speaks the International Code of Signals. Every rank is a numeral pennant on one hoist, every section arrives as its own letter flag hauled across the screen. Refuses the dark-glass panel floating over a 3D scene and the leaderboard table.
 
-OWN-WORLD: A loud two-colour board, electric lime and royal violet squares, near-black grape ink, one crown orange reserved for the King and for CHECK/CROWNED moments, captured red for sellers. Chunky toy-like display caps, algebraic chess notation as the data voice, square tiles with hard 3px ink borders and offset ink shadows like printed board-game pieces. No gradients, no glass, no serif.
+OWN-WORLD: Flag fields at full commitment: signal red, signal yellow, signal blue, flag black, bunting white. Hard rectangular fields, swallowtails and tapered pennants, a black halyard line that things hang from, square corners, stencil hull lettering for display, Archivo for reading, Martian Mono for numbers. No gradients, no glass, no rounded slabs.
 
-STORY: The visitor sees who is King and by how much, sees the chess clock running down to the next Tribute, learns the four moves of a round (Tribute 0.02 → War Chest 0.025 → Burn 0.01 → War Chest 0.025), learns one sale means capture forever, checks their own seat, and buys.
+STORY: See the Captain and the escrow filling toward the next Plunder; meet the Crew on the hoist (1-5 officers, 6-10 deckhands); learn the four hoists of a round; read the Code (one sale = overboard); check your share; read the log with tx links; raise the black flag and buy.
 
-FIRST VIEWPORT: Full-bleed tilted board filling the lower two thirds; a cartoon 3D King piece stands on the top-left square, slowly turning. Top left, three words huge: TAKE THE CROWN. Under it, the live readout: KING @name · balance · lead over No. 2. Right: the chess clock showing escrow / 0.02 ETH to the Tribute. Buy pill and Check your seat sit under the headline.
+FIRST VIEWPORT: Full-bleed 3D ship dressed in bunting under a warm sky. Left, stencil TAKE THE HELM. at display scale; below it the Captain flying the black swallowtail with face, name, balance; a meter of ten flag cells filling toward the next hoist; red Buy flag and white See the Crew flag.
 
-FORM: Chess board in play, candidate 5 of 7 on the ordered list (timing tower, title fight, arcade high score, king card, chess, holo card pack, heraldry), seed key 354da975. Raises kept from declined challengers: one lit square at a time (neon circuit), fading move trails when ranks change (bioluminescent wake), states as marks not hues: captured on its side, check square, crown (cutting bench), one colour owns each viewport (seedbed lobes), two spot inks only plus crown orange (risograph). Competitive alternate held: pop comic (kept: action lettering on rank changes).
+FORM: signal-flag code (grounded list position 5), seed cfaa02b1. Raises: VU bridge (escrow reading has ballistic mass and overshoot, never jumps); Fletcher poster (each section leads with one flag that is its label, words only confirm); coptic binding (the header halyard shows every section as a flag, the hoisted one is where you are).
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
