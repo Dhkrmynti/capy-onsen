@@ -22,7 +22,7 @@
 
 ## Nama & bio
 
-**Akun:** `@[handle]` (belum ada, isi setelah dibuat)
+**Akun:** `@thehorizonrh` (https://x.com/thehorizonrh)
 **Nama tampilan:** `Horizon $VOID`  **Website:** `thehorizon.fun`
 
 Pilih satu bio:
