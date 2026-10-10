@@ -871,7 +871,7 @@ const server = http.createServer((req, res) => {
           demoBoard[addr] = x;
           saveDemoBoard();
           log("info", `[X demo] ${addr.slice(0, 8)}… shows @${x.username} on the test board`);
-          return go(backTo(addr, "demo", { xdemo: parkDemoResult(x) }));
+          return go(backTo(addr, "demo", { demo: "1", xdemo: parkDemoResult(x) }));
         }
         setX(addr, x);
         log("info", `[X] ${addr.slice(0, 8)}… linked @${x.username}${x.verified ? ` (${x.verified})` : ""}`);
