@@ -433,7 +433,7 @@ const seedPond = (): { total: number; topN: number; rows: PondRow[] } => {
       received: String(rec[i]),
       nickname: ["Sterling Whitmore III", "", "trustfundtony", "", "", "Lady Penelope", "", "", "", "", "", ""][i] || "",
       pp: [[1, 4, 3, 3], null, [2, 0, 2, 4], null, null, [4, 2, 4, 5], null, null, null, null, null, null][i] ?? null,
-      x: [null, { username: "hawkingdose", name: "Hawking Dose", avatar: "/favicon-192.png", verified: "blue" }, null, null, { username: "margaux_ashford", name: "Margaux Ashford", avatar: "", verified: "" }, null, null, null, null, null, null, null][i] ?? null,
+      x: null,
     })),
   };
 };

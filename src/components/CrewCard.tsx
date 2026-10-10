@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-import { LinkSimple, Check, MagnifyingGlass, SealCheck, PenNib, Wallet, XLogo } from "@phosphor-icons/react";
-import { DEMO, demoSaveByline, demoWallet, startXDemo, takeXDemo, addrUrl, amount, bylineNonce, claimByline, dateWib, eth, fetchWallet, short, startXLink, txUrl, unlinkX, type WalletInfo } from "../lib/api";
+import { LinkSimple, Check, MagnifyingGlass, SealCheck, PenNib, Wallet } from "@phosphor-icons/react";
+import { DEMO, demoSaveByline, demoWallet, addrUrl, amount, bylineNonce, claimByline, dateWib, eth, fetchWallet, short, txUrl, type WalletInfo } from "../lib/api";
 import { CrewFace, XCheck, XLink } from "./Face";
 import { nameFor } from "../lib/alias";
 import { connectWallet, hasWallet, signText, useAccount } from "../lib/wallet";
@@ -24,23 +24,6 @@ const STAMP: Record<WalletInfo["status"], { word: string; tone: Tone; line: stri
   excluded: { word: "Not crew", tone: "dim", line: "Engine, curve, chest or dead address. Never paid." },
   "not-holding": { word: "No exposure", tone: "dim", line: "This wallet holds no $HAWK." },
 };
-
-/** What X sign-in came back with (?x=…), read once and then cleared from the address bar. */
-const X_RESULT: Record<string, { ok: boolean; text: string }> = {
-  linked: { ok: true, text: "X linked. The register now prints your X handle, picture and badge." },
-  demo: { ok: true, text: "X linked for real: that's your handle, picture and badge. Illustration edition, so nothing was saved." },
-  cancelled: { ok: false, text: "X sign-in cancelled. Nothing changed." },
-  expired: { ok: false, text: "The X sign-in took too long. Try again." },
-  failed: { ok: false, text: "X didn't confirm the account. Try again in a minute." },
-};
-function takeXResult() {
-  const url = new URL(window.location.href);
-  const r = url.searchParams.get("x");
-  if (!r) return null;
-  url.searchParams.delete("x");
-  window.history.replaceState(null, "", url);
-  return X_RESULT[r] ?? X_RESULT.failed;
-}
 
 export const NO_WALLET = `No wallet in this browser. Open ${typeof window === "undefined" ? "this site" : window.location.host} inside your wallet app (MetaMask, Rabby, OKX) to connect. GMGN's built-in wallet can't sign here yet.`;
 
@@ -76,16 +59,10 @@ const SLOTS = [
 function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patch: Partial<WalletInfo>) => void; flash: { ok: boolean; text: string } | null }) {
   // The header's Connect button and this desk share one account.
   const shared = useAccount();
-  // Back from a demo X sign-in, the booth reopens already "connected".
+  // The illustration edition opens the booth without a wallet.
   const [demoAccount, setDemoAccount] = useState(DEMO && flash ? info.addr : "");
   const account = demoAccount || shared;
   const [open, setOpen] = useState(!!flash || (!!shared && shared.toLowerCase() === info.addr.toLowerCase()));
-  const [tab, setTab] = useState<"name" | "x">(info.x ? "x" : "name");
-  // A freshly linked X account opens on its own tab.
-  const hasX = !!info.x;
-  useEffect(() => {
-    if (hasX) setTab("x");
-  }, [hasX]);
   const [name, setName] = useState(info.nickname || "");
   const [mug, setMug] = useState<Traits>(mugOf(info.addr, info.pp));
   const turn = (slot: number, by: number) => {
@@ -143,74 +120,10 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
     }
   };
 
-  const failed = (e: any, what: string) => setNote({ ok: false, text: e?.code === 4001 ? "You cancelled the signature. Nothing changed." : e?.message || what });
-
-  // Link X: the wallet signs, then the browser goes to X and comes back to this card.
-  const linkX = async () => {
-    setNote(null);
-    if (DEMO) {
-      // A real X sign-in (shown once, never saved). Without X keys on the engine, say so plainly;
-      // a pretend account is only used if the visitor asks for one.
-      try {
-        setBusy(true);
-        const { url } = await startXDemo(info.addr);
-        return window.location.assign(url);
-      } catch (e: any) {
-        setBusy(false);
-        setPretend(true);
-        return setNote({ ok: false, text: `Real X sign-in isn't switched on yet (${e?.message || "no X app keys on the server"}). You can preview with a pretend account instead.` });
-      }
-    }
-    try {
-      setBusy(true);
-      const { nonce, linkX: text } = await bylineNonce(info.addr);
-      const signature = await signText(account, text);
-      const { url } = await startXLink(info.addr, nonce, signature);
-      window.location.assign(url);
-    } catch (e: any) {
-      failed(e, "Couldn't start X sign-in.");
-      setBusy(false);
-    }
-  };
-
-  const [pretend, setPretend] = useState(false);
-  const usePretend = () => {
-    const x = { username: "your_x_handle", name: "Your X name", avatar: "/favicon-192.png", verified: "blue" };
-    demoSaveByline(info.addr, { x });
-    onSaved({ x });
-    setPretend(false);
-    setNote({ ok: true, text: "Pretend X account linked. With X sign-in switched on, this is your real handle, picture and badge." });
-  };
-
-  const dropX = async () => {
-    setNote(null);
-    if (DEMO) {
-      demoSaveByline(info.addr, { x: null });
-      // take it off the shared test board too
-      fetch("/api/x/demo/unlink", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ addr: info.addr }) }).catch(() => {});
-      onSaved({ x: null });
-      setTab("name");
-      return setNote({ ok: true, text: "X unlinked. The register prints your name and portrait again." });
-    }
-    try {
-      setBusy(true);
-      const { nonce, unlinkX: text } = await bylineNonce(info.addr);
-      await unlinkX(info.addr, nonce, await signText(account, text));
-      onSaved({ x: null });
-      setTab("name");
-      setNote({ ok: true, text: "X unlinked. The register prints your name and portrait again." });
-      window.dispatchEvent(new Event("rbank:refresh"));
-    } catch (e: any) {
-      failed(e, "Couldn't unlink X.");
-    } finally {
-      setBusy(false);
-    }
-  };
-
   if (!open)
     return (
       <button type="button" className="press-btn is-ink byline__open" onClick={() => setOpen(true)}>
-        <PenNib weight="bold" aria-hidden="true" /> {info.x ? "Manage X link" : info.nickname ? "Edit name & portrait" : "Set your name or connect X"}
+        <PenNib weight="bold" aria-hidden="true" /> {info.nickname ? "Edit name & astronaut" : "Set your name & astronaut"}
       </button>
     );
 
@@ -226,59 +139,6 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
         </>
       ) : (
         <>
-          <div className="byline__tabs" role="tablist" aria-label="How the register prints you">
-            <button type="button" role="tab" aria-selected={tab === "name"} className="byline__tab" onClick={() => setTab("name")}>
-              <PenNib weight="bold" aria-hidden="true" /> Name & portrait
-            </button>
-            <button type="button" role="tab" aria-selected={tab === "x"} className="byline__tab" onClick={() => setTab("x")}>
-              <XLogo weight="bold" aria-hidden="true" /> Connect X
-            </button>
-          </div>
-          {tab === "x" ? (
-            <div className="xdesk" role="tabpanel">
-              {info.x ? (
-                <>
-                  <div className="xdesk__who">
-                    <CrewFace addr={info.addr} pp={info.pp} x={info.x} size={64} className="xdesk__face" />
-                    <div>
-                      <p className="xdesk__name">
-                        {info.x.name} <XCheck x={info.x} />
-                      </p>
-                      <a className="xdesk__handle" href={`https://x.com/${info.x.username}`} target="_blank" rel="noreferrer noopener">
-                        @{info.x.username}
-                      </a>
-                    </div>
-                  </div>
-                  <p className="lookup__help">Handle, picture and badge come from X and can't be edited here. Changed them on X? Link again to reprint.</p>
-                  <div className="xdesk__actions">
-                    <button type="button" className="press-btn is-ink" onClick={linkX} disabled={busy}>
-                      <XLogo weight="bold" aria-hidden="true" /> Link again
-                    </button>
-                    <button type="button" className="press-btn" onClick={dropX} disabled={busy}>
-                      Unlink X
-                    </button>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <p className="xdesk__pitch">Print your X account instead: your handle, your picture, and your badge if X gave you one. A logo next to your name opens your profile.</p>
-                  <button type="button" className="press-btn is-ink" onClick={linkX} disabled={busy || !info.xLogin}>
-                    <XLogo weight="bold" aria-hidden="true" /> {busy ? "Opening X" : "Sign & connect X"}
-                  </button>
-                  {DEMO && pretend ? (
-                    <button type="button" className="press-btn" onClick={usePretend}>
-                      Use a pretend account
-                    </button>
-                  ) : null}
-                  <p className="lookup__help">{info.xLogin ? "Read-only: we never post or see your DMs. Your picture and handle then can't be edited here." : "X sign-in opens at launch."}</p>
-                </>
-              )}
-            </div>
-          ) : info.x ? (
-            <p className="lookup__help" role="tabpanel">
-              Your X account is showing right now. Unlink X on the other tab to set a name and portrait instead.
-            </p>
-          ) : (
             <form
               className="byline__form"
               onSubmit={(e) => {
@@ -317,7 +177,6 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
               </div>
               <p className="lookup__help">3 to 18 letters or numbers. Free to sign, moves no funds, once a day.</p>
             </form>
-          )}
         </>
       )}
       {note ? (
@@ -336,7 +195,6 @@ export function CrewCard({ live }: { live: boolean }) {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [linked, setLinked] = useState(false);
-  const [xFlash] = useState(takeXResult);
 
   const lookup = async (addr: string) => {
     if (!VALID.test(addr)) {
@@ -360,16 +218,7 @@ export function CrewCard({ live }: { live: boolean }) {
 
   useEffect(() => {
     const q = readQuery();
-    const code = new URLSearchParams(window.location.search).get("xdemo");
-    if (DEMO && code && q) {
-      const url = new URL(window.location.href);
-      url.searchParams.delete("xdemo");
-      window.history.replaceState(null, "", url);
-      takeXDemo(code)
-        .then((x) => demoSaveByline(q, { x }))
-        .catch(() => {})
-        .finally(() => lookup(q));
-    } else if (q) lookup(q);
+    if (q) lookup(q);
     const open = (e: Event) => {
       const addr = (e as CustomEvent<string>).detail;
       setInput(addr);
@@ -457,7 +306,7 @@ export function CrewCard({ live }: { live: boolean }) {
               </button>
             </div>
             <p id="wallet-help" className={error ? "lookup__error" : "lookup__help"} role={error ? "alert" : undefined}>
-              {error || (xFlash && !info && !readQuery() ? xFlash.text : "Read only. Connect only to claim a name; it signs a message, never a payment.")}
+              {error || "Read only. Connect only to claim a name; it signs a message, never a payment."}
             </p>
           </form>
         </div>
@@ -552,13 +401,13 @@ export function CrewCard({ live }: { live: boolean }) {
             </div>
           )}
           {info && info.status !== "not-holding" && (info.status !== "excluded" || info.house) ? (
-            <BylineDesk key={info.addr} info={info} flash={xFlash} onSaved={(patch) => setInfo(DEMO ? demoWallet(info.addr) : { ...info, ...patch })} />
+            <BylineDesk key={info.addr} info={info} flash={null} onSaved={(patch) => setInfo(DEMO ? demoWallet(info.addr) : { ...info, ...patch })} />
           ) : info && info.status === "not-holding" ? (
             // Say why the booth is shut instead of leaving a connected holder guessing.
             <p className="byline__shut">
               {live
-                ? "Names, portraits and X links are for wallets holding $HAWK. Buy in, then come back."
-                : "Opens at launch: once $HAWK trades, any holder can set a name, a portrait or link X here."}
+                ? "Names and astronaut portraits are for wallets holding $HAWK. Buy in, then come back."
+                : "Opens at launch: once $HAWK trades, any holder can set a name and an astronaut here."}
             </p>
           ) : null}
         </div>
