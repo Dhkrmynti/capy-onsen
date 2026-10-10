@@ -85,7 +85,7 @@ components:
 
 **Creative North Star: "Space Race Poster"**
 
-Orbiters reads like a 1960s space-race poster that you scroll through. Flat fields of signal red, paper cream and ultramarine sit on night blue, cut on the diagonal; big circles carry the people; heavy wide capitals carry the claims. Behind it all is a light-cartoon 3D planet (`src/kp/SpaceWalk.tsx`): a rocket on its pad atop a tiny cream world, crew pods in orbit with names on them, a fuel line, a flight-rules billboard, a landed capsule, a radar dish, and a red ringed planet far off. At the end of the page the rocket lifts off.
+Orbiters reads like a 1960s space-race poster that you scroll through. Flat fields of signal red, paper cream and ultramarine sit on night blue, cut on the diagonal; big circles carry the people; heavy wide capitals carry the claims. Behind it all is a light-cartoon 3D planet (`src/kp/SpaceWalk.tsx`): a rocket on its pad atop a tiny cream world, crew pods in orbit with names on them, a fuel line, a flight-rules billboard, a landed capsule, a radar dish, a red ringed planet far off, and a crowd of cartoon astronauts in full suits drifting around the rocket in the opening (placed by screen position so they never sit behind the headline). At the end of the page the rocket lifts off.
 
 One orbit arc (`src/kp/Orbit.tsx`) crosses the whole page and is drawn as you scroll, with a small rocket riding its head. It is the page's only governing curve. Between sections a diagonal band slides across carrying the next section's name (`src/kp/Band.tsx`), while the 3D camera moves to the next subject behind it.
 

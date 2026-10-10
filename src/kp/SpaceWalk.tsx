@@ -592,6 +592,130 @@ function Radar() {
   );
 }
 
+/* ───────── astronauts drifting around the pad in their suits ───────── */
+type Drift = { at: THREE.Vector3; scale: number; phase: number; wave: number };
+/**
+ * Placed by where they should land in the opening's frame (sx, sy in -1..1, depth d), so they
+ * float beside and above the rocket and never behind the headline.
+ */
+function inView(pos: V3, look: V3, fov: number, aspect: number, spots: [number, number, number, number][]): Drift[] {
+  const p = new THREE.Vector3(...pos);
+  const f = new THREE.Vector3(...look).sub(p).normalize();
+  const right = new THREE.Vector3().crossVectors(f, new THREE.Vector3(0, 1, 0)).normalize();
+  const up = new THREE.Vector3().crossVectors(right, f);
+  const tv = Math.tan(THREE.MathUtils.degToRad(fov / 2));
+  return spots.map(([sx, sy, d, scale], i) => ({
+    at: p.clone().addScaledVector(f, d).addScaledVector(right, sx * tv * aspect * d).addScaledVector(up, sy * tv * d),
+    scale,
+    phase: i * 1.37,
+    wave: i % 2 ? -1 : 1,
+  }));
+}
+
+function Astronauts({ narrow }: { narrow: boolean }) {
+  const list = useMemo(() => {
+    const st = stations(narrow)[0];
+    return narrow
+      ? inView(st.pos, st.look, 60, 0.46, [
+          [-0.55, 0.74, 10, 0.62],
+          [0.5, 0.58, 9, 0.6],
+          [0.02, 0.88, 13, 0.56],
+          [0.72, 0.86, 14, 0.5],
+          [-0.3, 0.42, 8, 0.5],
+        ])
+      : inView(st.pos, st.look, 46, 1.6, [
+          [0.12, 0.6, 10, 0.72],
+          [0.4, 0.42, 9, 0.66],
+          [0.8, 0.32, 11, 0.6],
+          [0.62, -0.36, 8, 0.56],
+          [0.94, -0.12, 13, 0.6],
+          [-0.32, 0.82, 12, 0.56],
+          [-0.78, 0.8, 14, 0.52],
+          [0.26, -0.68, 7, 0.46],
+          [0.7, 0.76, 7, 0.5],
+        ]);
+  }, [narrow]);
+  const refs = useRef<(THREE.Group | null)[]>([]);
+  const arms = useRef<(THREE.Group | null)[]>([]);
+  const m = useMemo(
+    () => ({
+      suit: toon("#f6f1e6"),
+      shade: toon("#d9d2c4"),
+      visor: toon(C.blue),
+      gold: toon("#ffb43a"),
+      red: toon(C.red),
+      boot: toon("#3a3f5c"),
+      shine: new THREE.MeshBasicMaterial({ color: "#ffffff" }),
+    }),
+    [],
+  );
+  const g = useMemo(
+    () => ({
+      helmet: new THREE.SphereGeometry(0.62, 28, 20),
+      visor: new THREE.SphereGeometry(0.5, 24, 16, -Math.PI * 0.42, Math.PI * 0.84, Math.PI * 0.26, Math.PI * 0.42),
+      ring: new THREE.TorusGeometry(0.44, 0.08, 10, 28).rotateX(Math.PI / 2),
+      torso: new THREE.CapsuleGeometry(0.42, 0.45, 6, 16),
+      pack: new THREE.BoxGeometry(0.62, 0.72, 0.28),
+      limb: new THREE.CapsuleGeometry(0.15, 0.42, 4, 10),
+      glove: new THREE.SphereGeometry(0.17, 12, 10),
+      boot: new THREE.CapsuleGeometry(0.17, 0.16, 4, 10),
+      patch: new THREE.CircleGeometry(0.12, 16),
+      glint: new THREE.CircleGeometry(0.07, 10),
+    }),
+    [],
+  );
+  useFrame((s) => {
+    const t = s.clock.elapsedTime;
+    list.forEach((d, i) => {
+      const a = refs.current[i];
+      if (a) {
+        const k = t * 0.32 + d.phase;
+        // drift on a slow loop and sway, mostly facing the camera
+        a.position.set(d.at.x + Math.sin(k) * 0.45, d.at.y + Math.sin(k * 1.3 + 1) * 0.35, d.at.z + Math.cos(k * 0.8) * 0.3);
+        a.rotation.set(Math.sin(t * 0.5 + d.phase) * 0.35, Math.sin(t * 0.3 + d.phase) * 0.6, Math.sin(t * 0.4 + d.phase) * 0.5 + d.wave * 0.25);
+      }
+      const w = arms.current[i];
+      if (w) w.rotation.z = d.wave * (1.9 + Math.sin(t * 2.2 + d.phase) * 0.35); // one arm waves
+    });
+  });
+  return (
+    <group>
+      {list.map((d, i) => (
+        <group key={i} ref={(el) => void (refs.current[i] = el)} scale={d.scale}>
+          {/* helmet, visor with a glint, neck ring */}
+          <Inked geometry={g.helmet} material={m.suit} position={[0, 1.02, 0]} ink={1.05} />
+          <mesh geometry={g.visor} material={m.visor} position={[0, 1.02, 0.14]} />
+          <mesh geometry={g.glint} material={m.shine} position={[-0.18, 1.2, 0.6]} rotation={[-0.3, -0.3, 0]} />
+          <mesh geometry={g.ring} material={m.shade} position={[0, 0.5, 0]} />
+          {/* suit, backpack, patch */}
+          <Inked geometry={g.torso} material={m.suit} position={[0, 0, 0]} ink={1.06} />
+          <Inked geometry={g.pack} material={m.shade} position={[0, 0.08, -0.4]} ink={1.05} />
+          <mesh geometry={g.patch} material={m.red} position={[0.2, 0.18, 0.425]} />
+          <mesh material={m.gold} position={[-0.17, 0.2, 0.42]}>
+            <boxGeometry args={[0.16, 0.08, 0.02]} />
+          </mesh>
+          {/* arms: the left one waves */}
+          <group ref={(el) => void (arms.current[i] = el)} position={[-0.46, 0.3, 0]}>
+            <mesh geometry={g.limb} material={m.suit} position={[0, -0.32, 0]} />
+            <mesh geometry={g.glove} material={m.shade} position={[0, -0.68, 0]} />
+          </group>
+          <group position={[0.46, 0.3, 0]} rotation={[0.3, 0, 0.5]}>
+            <mesh geometry={g.limb} material={m.suit} position={[0, -0.32, 0]} />
+            <mesh geometry={g.glove} material={m.shade} position={[0, -0.68, 0]} />
+          </group>
+          {/* legs, splayed like floating */}
+          {[-1, 1].map((sd) => (
+            <group key={sd} position={[sd * 0.2, -0.55, 0]} rotation={[sd * 0.25, 0, sd * 0.28]}>
+              <mesh geometry={g.limb} material={m.suit} position={[0, -0.3, 0]} />
+              <mesh geometry={g.boot} material={m.boot} position={[0, -0.68, 0.05]} />
+            </group>
+          ))}
+        </group>
+      ))}
+    </group>
+  );
+}
+
 /* ───────── a satellite crossing the sky ───────── */
 function Satellite() {
   const ref = useRef<THREE.Group>(null);
@@ -694,6 +818,7 @@ function Walk({ narrow, names, still }: { narrow: boolean; names: string[]; stil
       <Capsule open={hatch} />
       <Radar />
       <Satellite />
+      <Astronauts narrow={narrow} />
     </>
   );
 }
