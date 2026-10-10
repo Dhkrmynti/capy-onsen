@@ -1,4 +1,5 @@
 import { Composition, Still } from "remotion";
+import { HZNowCharge, HZNowOpen, HZNowOut } from "./HZNow";
 import { HZBanner, HZGif, HZLogo, HZPostEmpty, HZPostOrbit, HZPostWho, HZHookPaper, HZHookOutmass, HZHookTen, HZPostLaws, HZ_GIF_LENGTH } from "./HZStills";
 import { HZExplainer, HZ_EXPLAINER_LENGTH } from "./HZExplainer";
 import { HZTutorial, HZ_TUTORIAL_LENGTH } from "./HZTutorial";
@@ -22,6 +23,9 @@ import { HLSimulation, HL_SIM_LENGTH } from "./HLSimulation";
 export function RemotionRoot() {
   return (
     <>
+      <Still id="HZNowOpen" component={HZNowOpen} width={1600} height={900} />
+      <Still id="HZNowCharge" component={HZNowCharge} width={1600} height={900} />
+      <Still id="HZNowOut" component={HZNowOut} width={1600} height={900} />
       <Still id="HZLogo" component={HZLogo} width={1080} height={1080} />
       <Still id="HZBanner" component={HZBanner} width={1500} height={500} />
       <Still id="HZPostOrbit" component={HZPostOrbit} width={1600} height={900} />
