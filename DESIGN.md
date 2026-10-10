@@ -1,192 +1,200 @@
 ---
-name: Plunders — Dressed Overall
-description: "$LOOT as a pirate ship dressed overall in signal flags: every rank flies its numeral pennant, every section is hauled in as its own letter flag, over a light-cartoon 3D cove."
+name: Orbiters — Space Race Poster
+description: "$ORBIT as a 1960s space-race poster you scroll through: flat red, paper and ultramarine fields cut on the diagonal, one orbit arc drawn across the page, over a light-cartoon 3D planet with a rocket on its pad."
 colors:
-  signal-red: "#d7263d"
-  signal-yellow: "#f9c80e"
-  signal-blue: "#1b4dbf"
-  flag-black: "#16181d"
-  bunting-white: "#f8f4ea"
-  bunting-shade: "#ece4d0"
-  ink-soft: "#464b57"
-  sky-horizon: "#ffd9a8"
+  signal-red: "#d6372b"
+  red-deep: "#b02a20"
+  paper: "#f1e4c8"
+  paper-shade: "#e6d3ad"
+  ultramarine: "#1f2f8a"
+  ultramarine-light: "#3b55d6"
+  night: "#0e1433"
+  ink: "#161616"
+  ink-soft: "#4b4a52"
+  burn: "#ff7a1a"
 typography:
   display:
-    fontFamily: "Big Shoulders Stencil Display, Archivo, sans-serif"
-    fontSize: "clamp(66px, 9vw, 96px)"
+    fontFamily: "Unbounded, Golos Text, sans-serif"
+    fontSize: "clamp(40px, 5.2vw, 76px)"
     fontWeight: 900
-    lineHeight: 0.84
-    letterSpacing: "-0.01em"
+    lineHeight: 0.94
+    letterSpacing: "-0.03em"
   headline:
-    fontFamily: "Big Shoulders Stencil Display, Archivo, sans-serif"
-    fontSize: "clamp(46px, 6.4vw, 88px)"
+    fontFamily: "Unbounded, Golos Text, sans-serif"
+    fontSize: "clamp(40px, 5.6vw, 80px)"
     fontWeight: 900
-    lineHeight: 0.86
+    lineHeight: 0.94
+    letterSpacing: "-0.02em"
   title:
-    fontFamily: "Big Shoulders Stencil Display, Archivo, sans-serif"
-    fontSize: "clamp(24px, 2.4vw, 34px)"
+    fontFamily: "Unbounded, Golos Text, sans-serif"
+    fontSize: "clamp(18px, 1.8vw, 24px)"
     fontWeight: 900
-    lineHeight: 0.95
+    lineHeight: 1.05
   body:
-    fontFamily: "Archivo, system-ui, sans-serif"
+    fontFamily: "Golos Text, system-ui, sans-serif"
     fontSize: "15px"
     fontWeight: 500
     lineHeight: 1.45
   label:
-    fontFamily: "Archivo, system-ui, sans-serif"
+    fontFamily: "Golos Text, system-ui, sans-serif"
     fontSize: "13px"
     fontWeight: 800
-    letterSpacing: "0.06em"
+    letterSpacing: "0.08em"
   data:
-    fontFamily: "Martian Mono, ui-monospace, monospace"
+    fontFamily: "Spline Sans Mono, ui-monospace, monospace"
     fontSize: "12px"
-    fontWeight: 600
+    fontWeight: 500
     lineHeight: 1.3
 rounded:
   none: "0px"
+  disc: "50%"
 spacing:
   gutter: "clamp(16px, 4vw, 48px)"
-  sheet: "clamp(22px, 3vw, 36px)"
+  sheet: "clamp(24px, 3vw, 40px)"
+  cut: "44px"
   head: "64px"
 components:
   button-primary:
     backgroundColor: "{colors.signal-red}"
-    textColor: "{colors.bunting-white}"
+    textColor: "{colors.paper}"
     rounded: "{rounded.none}"
     height: "54px"
-    padding: "0 40px 0 24px"
+    padding: "0 28px"
   button-primary-waiting:
-    backgroundColor: "{colors.bunting-shade}"
-    textColor: "{colors.ink-soft}"
-  button-flag-white:
-    backgroundColor: "{colors.bunting-white}"
-    textColor: "{colors.flag-black}"
+    backgroundColor: "{colors.ultramarine}"
+    textColor: "{colors.paper}"
+  button-line:
+    textColor: "{colors.paper}"
     rounded: "{rounded.none}"
     height: "54px"
     padding: "0 24px"
   sheet:
-    backgroundColor: "{colors.bunting-white}"
-    textColor: "{colors.flag-black}"
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ink}"
     rounded: "{rounded.none}"
     padding: "{spacing.sheet}"
-  next-pill:
-    backgroundColor: "{colors.signal-yellow}"
-    textColor: "{colors.flag-black}"
-    typography: "{typography.data}"
-    padding: "4px 6px"
+  masthead:
+    backgroundColor: "{colors.signal-red}"
+    textColor: "{colors.paper}"
+    height: "{spacing.head}"
 ---
 
-# Design System: Plunders
+# Design System: Orbiters
 
 ## Overview
 
-**Creative North Star: "Dressed Overall"**
+**Creative North Star: "Space Race Poster"**
 
-On a feast day a ship runs every signal flag it owns from bow to masthead to stern. Plunders is that ship. The page speaks the International Code of Signals: five flag colours at full strength, rectangles, swallowtails and tapered pennants, and one black halyard line that everything hangs from. The 3D cove (`src/kp/PirateWalk.tsx`) is the stage, a light-cartoon ship and island under a warm sky, and the UI is laid over it like flags, not like glass.
+Orbiters reads like a 1960s space-race poster that you scroll through. Flat fields of signal red, paper cream and ultramarine sit on night blue, cut on the diagonal; big circles carry the people; heavy wide capitals carry the claims. Behind it all is a light-cartoon 3D planet (`src/kp/SpaceWalk.tsx`): a rocket on its pad atop a tiny cream world, crew pods in orbit with names on them, a fuel line, a flight-rules billboard, a landed capsule, a radar dish, and a red ringed planet far off. At the end of the page the rocket lifts off.
 
-The flags are functional. Each section flies its own letter flag (C Crew, P Plunder, K Code, S Your share, L Log), and the header halyard hoists the flag of the section you are in. Each rank flies its real numeral pennant (1 to 9, and 0 for No. 10); No. 1 flies the black swallowtail with skull and crossbones. Overboard (sold) uses the O flag, the real signal for man overboard. Cannonfire (buyback and burn) uses B, the explosives flag. One geometry file (`src/lib/flags.ts`) draws every flag as SVG on the page and on canvas for the 3D bunting, so the two never drift.
+One orbit arc (`src/kp/Orbit.tsx`) crosses the whole page and is drawn as you scroll, with a small rocket riding its head. It is the page's only governing curve. Between sections a diagonal band slides across carrying the next section's name (`src/kp/Band.tsx`), while the 3D camera moves to the next subject behind it.
 
-The page refuses the dark translucent slab floating over a 3D scene, and it refuses the leaderboard table.
+The page refuses the dark starfield with neon telemetry and glowing edges that space and crypto pages default to.
 
 **Key Characteristics:**
-- Flag fields own whole regions: the Plunder section is the Blue Peter (blue field, white inset), the Code is the K flag's yellow half, the close is the black flag.
-- Square corners everywhere. Shapes come from flags: rectangle, swallowtail, pennant.
-- Stencil hull lettering for display, Archivo for reading, Martian Mono for every number.
-- Between sections a full-bleed letter flag is hauled across the screen (the wipe) while the 3D camera moves behind it.
+- Fields own whole regions: the masthead is red, the flight plan is ultramarine, the flight rules are a red diagonal, the close is ultramarine cut on a slant.
+- Square corners, with one corner clipped on every sheet and button.
+- Circles only for people and planets: the Commander disc under poster rays, crew faces, log icons.
+- Burn orange is reserved for what is firing now: the stage burning, the fuel in the gauge, the rocket flame.
 
 ## Colors
 
-Full palette: five signal colours, each with a job, never tinted down.
+Full palette: four poster inks on night, plus one reserved accent.
 
 ### Primary
-- **Signal Red** (#d7263d): the primary action (Buy flag), the "flying now" tag, Cannonfire, the O flag, every fifth meter cell.
+- **Signal Red** (#d6372b): masthead, the Buy block, the Commander strip, the flight rules field, flight crew numerals, The Burn.
 
 ### Secondary
-- **Signal Blue** (#1b4dbf): the Blue Peter field behind the Plunder section, the crew card, tx links, the focus ring.
+- **Ultramarine** (#1f2f8a): the flight plan field, the close field, the Commander disc, the crew badge, waiting buttons, backup crew numerals.
+- **Ultramarine Light** (#3b55d6): Mission Fund stages, pod panels.
 
 ### Tertiary
-- **Signal Yellow** (#f9c80e): the Captain's row, the Code field, the escrow meter fill, the "next ETH" pills, text selection.
+- **Burn** (#ff7a1a): only what is firing now.
 
 ### Neutral
-- **Flag Black** (#16181d): all text, the halyard and every flag outline, the close field.
-- **Bunting White** (#f8f4ea): header, sheets, the white inset of the Blue Peter.
-- **Bunting Shade** (#ece4d0): tag rows, waiting buttons, the empty card.
-- **Ink Soft** (#464b57): secondary text on white.
-- **Sky Horizon** (#ffd9a8): page ground and 3D fog, seen only around the scene.
+- **Paper** (#f1e4c8): sheets, display type on dark fields, the orbit line.
+- **Paper Shade** (#e6d3ad): tag rows, "next ETH" chips, the empty badge.
+- **Night** (#0e1433): page ground behind the 3D.
+- **Ink** (#161616) and **Ink Soft** (#4b4a52): text on paper.
 
 ### Named Rules
-**The Real Signal Rule.** A flag on the page means what it means in the Code wherever the Code has a meaning that fits (O overboard, B explosives, P about to sail, numeral pennants for ranks). Never recolour a flag to match a section.
+**The One Burn Rule.** Burn orange marks one thing at a time: the stage firing now, the fuel already in the tank, the flame. Never decoration.
+
+**The Ejected Is Final Rule.** Ejected wallets are struck through in red and never softened or greyed into neutrality.
 
 ## Typography
 
-**Display Font:** Big Shoulders Stencil Display 900 (fallback Archivo)
-**Body Font:** Archivo 500/700/800
-**Data Font:** Martian Mono 400/600
+**Display Font:** Unbounded 900 (fallback Golos Text)
+**Body Font:** Golos Text 500/700/800
+**Data Font:** Spline Sans Mono 500/600
 
-**Character:** stencilled hull markings and crate lettering, uppercase and condensed, against a sturdy grotesque that reads well small on phones.
+**Character:** wide geometric poster capitals against a plain grotesque that stays legible on phones; every number in mono.
 
 ### Hierarchy
-- **Display** (900, clamp(66px, 9vw, 96px), 0.84): the hero and the close, uppercase.
-- **Headline** (900, clamp(46px, 6.4vw, 88px), 0.86): section titles, uppercase, balanced.
-- **Title** (900, clamp(24px, 2.4vw, 34px), 0.95): hoist names, rank labels, log entry kinds.
-- **Body** (500, 15-17px, 1.45-1.5): explanations, max 46ch in the Plunder deck.
-- **Label** (800, 13px, 0.06em, uppercase): buttons and the halyard.
-- **Data** (600, 12-13px): balances, ETH, dates, tx hashes. Always Martian Mono, tabular.
+- **Display** (900, clamp(40px, 5.2vw, 76px), 0.94, uppercase): hero and close.
+- **Headline** (900, clamp(40px, 5.6vw, 80px), 0.94, uppercase): section titles.
+- **Title** (900, 18-24px, uppercase): stage names, log kinds, labels in sheets.
+- **Body** (500, 15-17px, 1.45-1.5): explanations, max 44-52ch.
+- **Label** (800, 12-15px, 0.08em, uppercase): buttons, nav, tags.
+- **Data** (500-600, 11-15px, mono): balances, ETH, dates, hashes; the fuel reading at 30px.
 
 ### Named Rules
-**The Stencil Is For Shouting Rule.** Stencil only at 18px and up, always uppercase. Names, sentences and numbers are never set in stencil.
+**The Wide Caps Rule.** Unbounded only at 15px and up, uppercase except holder names in the Commander disc. Never for sentences.
 
 ## Layout
 
-Each section has its own composition, chosen by what the flag would do:
-
 | Section | Composition |
 |---|---|
-| Hero | copy column (max 600px) left, ship right, `min-height: 100svh` |
-| Crew | white sheet (max 780px) on the right, 3D signposts on the left |
-| Plunder | full-width blue field; four hoists on one line inside a white inset, each as wide as its share of the fees (min 190px) |
-| Code | two halves: yellow half with the articles, the other half open to the 3D board |
-| Your share, Log | white sheet (max 1040px) on the left, the chest or cannon on the right |
-| Close | 46svh open to the black flag on the mainmast, then the black field |
+| Hero | copy column (max 720px) left over the 3D, rocket right; on phones the copy sits on an ultramarine block cut on a slant |
+| Crew | paper sheet (max 900px) on the right; Commander disc with rays (260px column) beside flight and backup crew; roster grid below; pods in 3D on the left |
+| Flight plan | full ultramarine field; the four-stage rocket stack with stages as tall as their share of the fees, leader lines to the stage text |
+| Flight rules | red field (64% wide) with a diagonal right edge; billboard in 3D on the right |
+| Your seat, Mission log | paper sheet (max 1040px) on the left; capsule or radar on the right |
+| Close | 48svh open to the liftoff, then the ultramarine field |
 
-Wipes are 64vh (44vh on phones). On phones every sheet drops below a 30svh window onto the 3D, hoists stack vertically with the line on the left, hero buttons go full width, and the header keeps only brand, Connect and Buy.
+Bands are 58vh (40vh on phones). Under 760px every sheet drops below a 30svh window onto the 3D, stage bodies narrow to 92px, and the nav hides (under 1080px).
 
 ## Elevation & Depth
 
-Flat fields with one soft lift: sheets and the Captain strip use `0 14px 30px -16px rgba(22,24,29,.55)`. The Buy flag casts a drop-shadow filter instead, because its swallowtail is clipped. No hard offset shadows, no glows.
+Flat. No shadows on UI; depth comes from the fields overlapping the 3D and from diagonal cuts. The 3D carries the only shading, toon-stepped with ink outlines.
 
 ## Shapes
 
-Zero radius. The only non-rectangles are the flag shapes: swallowtail (`polygon(0 0, 100% 0, calc(100% - 16px) 50%, 100% 100%, 0 100%)` on the Buy button) and pennants. Structural lines are 3px black (the hoist line, sheet borders, article rules); hairlines are 1px black at 14-16% opacity.
+Zero radius, except circles for people, planets and log icons. Every sheet clips its top-left corner (`--cut`, 44px; 28px on phones); buttons clip their top-right corner by 16px. The Commander strip, the flight rules field and the close field are parallelograms. Structural rules are 3px ink on paper, 2px paper at half strength on red.
 
 ## Components
 
 ### Buttons
-- **Primary (Buy flag):** signal red, white label, swallowtail cut, 54px (42px small). Hover lifts 3px and darkens to #b81d31. Waiting state: bunting shade, ink-soft label, no shadow.
-- **White flag:** bunting white, 3px black border, black label; hover inverts to black.
+- **Primary (Buy):** signal red block, paper label, top-right corner clipped, 54px (40px in the masthead, where it turns paper on red).
+- **Waiting:** ultramarine with paper at 75%.
+- **Line:** 2px currentColor border, transparent; hover fills paper with ink text.
 
-### Halyard (navigation)
-A 2px black line with five letter flags hanging from it. The current section's flag tilts -6deg and grows 12%. Labels hide under 1240px; the halyard hides under 860px.
+### Masthead
+Red bar, mark and wide caps wordmark, five sections in uppercase Golos; the current one brightens and a paper dot appears under it.
 
-### The hoist (Crew)
-A 3px black line down the left; each rank hangs its pennant from it. Rows: rank in stencil, holder (face, name, X badge), balance in mono, "next ETH" in a yellow pill. The Captain row is a yellow strip with the black swallowtail at 112px. Ranks 11-50 sit in the signal book, a dense grid under a 3px rule.
+### Fuel gauge
+A semicircle dial: paper track at 22%, burn arc for the fuel held, eleven ticks, a paper needle with a red hub that swings with elastic mass and settles.
 
-### The escrow meter
-Ten bordered cells filled through `--fill` (0..1); the value moves with elastic mass so the reading overshoots and settles, like a needle.
+### Commander disc
+A 200px ultramarine circle with a 6px ink ring holding the portrait, under red poster rays that turn in on reveal.
 
-### The wipe
-A section's letter flag stretched full-bleed, sliding right to left with scroll (scrub 0.6) while its name in white stencil with a black stroke runs the other way; the field opens from a band to full height and closes again.
+### The stage stack
+Nose cone, four stages, fins. Stage bodies are paper (Supply Drop), ultramarine light (Mission Fund) or red (The Burn); the stage firing now turns burn orange and carries a "burning now" chip.
+
+### Band
+A diagonal field (red, paper or ultramarine) sliding across with scroll, its name repeated in wide caps, crossed by a thin stripe moving the other way.
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** draw every flag from `src/lib/flags.ts`, on the page and in 3D.
-- **Do** give each section its own composition; let colour fields own whole regions.
-- **Do** keep every number in Martian Mono with tabular figures.
+- **Do** keep every number in Spline Sans Mono with tabular figures.
+- **Do** cut sheets and buttons on one corner; keep everything else square.
 - **Do** use hyphens for ranges ("No. 1-5"), never en or em dashes.
+- **Do** keep 3D subjects clear of the sheet they sit beside.
 
 ### Don't:
-- **Don't** put translucent dark panels over the 3D scene.
-- **Don't** round corners or soften the five signal colours.
-- **Don't** add a kicker or eyebrow label above a section headline.
-- **Don't** put a CSS `transition` on an element GSAP animates (under React StrictMode it corrupts the recorded end state).
+- **Don't** add glows, neon, or gradients to UI fields.
+- **Don't** use burn orange for anything that is not firing now.
+- **Don't** add a kicker above a section headline.
+- **Don't** put a CSS `transition` on an element GSAP animates.
+- **Don't** use political symbols; the poster world is the space race's graphics, not its propaganda.

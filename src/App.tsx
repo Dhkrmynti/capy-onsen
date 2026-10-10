@@ -14,10 +14,11 @@ import { Rules } from "./kp/Rules";
 import { Record } from "./kp/Record";
 import { Close } from "./kp/Close";
 import { nameFor } from "./lib/alias";
-import { Wipe } from "./kp/Wipe";
+import { Band } from "./kp/Band";
+import { Orbit } from "./kp/Orbit";
 
-// The island loads after the page, so the first paint never waits for it.
-const HoardWalk = lazy(() => import("./kp/PirateWalk"));
+// The planet loads after the page, so the first paint never waits for it.
+const SpaceWalk = lazy(() => import("./kp/SpaceWalk"));
 
 function useWalk() {
   const [show, setShow] = useState(false);
@@ -106,27 +107,28 @@ export function App() {
   }, []);
 
   return (
-    <div className="kp sig">
-      {/* the island, fixed behind every section; the page scrolls through it */}
+    <div className="kp sr">
+      {/* the planet, fixed behind every section; the page scrolls through it */}
       <div className="walk" aria-hidden="true">
         {walk ? (
           <Suspense fallback={null}>
-            <HoardWalk names={names} still={prefersReducedMotion()} />
+            <SpaceWalk names={names} still={prefersReducedMotion()} />
           </Suspense>
         ) : null}
       </div>
+      <Orbit />
       <Header status={status} />
       <main>
         <Hero status={status} pond={pond} offline={!!error && !status} />
-        <Wipe code="C" label="The Crew" />
+        <Band tone="red" label="The crew" />
         <Ladder status={status} pond={pond} />
-        <Wipe code="P" label="The Plunder" />
+        <Band tone="cream" label="Flight plan" />
         <Round status={status} />
-        <Wipe code="K" label="The Code" />
+        <Band tone="blue" label="Flight rules" />
         <Rules status={status} />
-        <Wipe code="S" label="Your share" />
+        <Band tone="cream" label="Your seat" />
         <CrewCard live={live} />
-        <Wipe code="L" label="The Log" />
+        <Band tone="red" label="Mission log" />
         <Record status={status} />
       </main>
       <Close status={status} />

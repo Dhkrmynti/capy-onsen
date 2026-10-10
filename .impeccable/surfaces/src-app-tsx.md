@@ -5,22 +5,22 @@ primary_target: "src/App.tsx"
 related_targets: []
 ---
 
-# Surface: Plunders landing + crew board (src/App.tsx)
+# Surface: Orbiters landing + crew roster (src/App.tsx)
 
-Mode: Persuade (landing) with Operate passages (crew board, your share, captain's log).
-Audience: memecoin traders from X/Telegram, mostly on phones. Job: see who is Captain and how close the next Plunder is, then buy or check their share.
-Constraints: backend, engine, API, features and tokenomics unchanged; world pinned by the owner: full 3D light-cartoon pirate cove (ship, island, chest, cannon); UI must share nothing with the dragon/Kingpins builds (no dark translucent slabs, no gothic or toy display face).
+Mode: Persuade (landing) with Operate passages (crew roster, your seat, mission log).
+Audience: memecoin traders from X/Telegram, mostly on phones. Job: see who commands the mission and how much fuel the escrow holds toward the next stage, then buy or check their seat.
+Constraints: backend, engine, API, features and tokenomics unchanged; world pinned by the owner: full 3D light-cartoon space (a tiny planet, rocket on its pad, crew pods in orbit, fuel line, capsule, radar, liftoff); UI must share nothing with Kingpins, The Hoard or Plunders.
 
 ## Direction contract
 
-THESIS: The ship is dressed overall in signal flags and the page speaks the International Code of Signals. Every rank is a numeral pennant on one hoist, every section arrives as its own letter flag hauled across the screen. Refuses the dark-glass panel floating over a 3D scene and the leaderboard table.
+THESIS: A 1960s space-race poster that you scroll through. The page is cut on the diagonal into flat fields of red, paper and ultramarine, and one orbit arc crosses the whole page, drawn as you go, with the rocket riding its head. Refuses the dark starfield with neon telemetry that every space or crypto page ships.
 
-OWN-WORLD: Flag fields at full commitment: signal red, signal yellow, signal blue, flag black, bunting white. Hard rectangular fields, swallowtails and tapered pennants, a black halyard line that things hang from, square corners, stencil hull lettering for display, Archivo for reading, Martian Mono for numbers. No gradients, no glass, no rounded slabs.
+OWN-WORLD: Signal red #d6372b, paper cream #f1e4c8, ultramarine #1f2f8a on night #0e1433, ink #161616; burn orange #ff7a1a only for what is firing now. Flat fields, diagonal cuts, one corner clipped on every sheet and button, big circles with poster rays, Unbounded 900 caps, Golos Text for reading, Spline Sans Mono for numbers. No gradients on UI, no glass, no glow.
 
-STORY: See the Captain and the escrow filling toward the next Plunder; meet the Crew on the hoist (1-5 officers, 6-10 deckhands); learn the four hoists of a round; read the Code (one sale = overboard); check your share; read the log with tx links; raise the black flag and buy.
+STORY: See the Commander and the fuel gauge; meet the crew (Commander in the rayed circle, flight crew 2-5, backup crew 6-10); read the flight plan as a four-stage rocket; learn the flight rules (one sale = ejected); check your seat; read the mission log; liftoff and buy.
 
-FIRST VIEWPORT: Full-bleed 3D ship dressed in bunting under a warm sky. Left, stencil TAKE THE HELM. at display scale; below it the Captain flying the black swallowtail with face, name, balance; a meter of ten flag cells filling toward the next hoist; red Buy flag and white See the Crew flag.
+FIRST VIEWPORT: Full-bleed 3D: the rocket on its pad atop a tiny cream planet, a red ringed planet behind. Left: TAKE COMMAND. in wide cream caps, a red diagonal strip with the Commander, a poster fuel dial with a needle that swings and settles, red Buy block and a cream outline button.
 
-FORM: signal-flag code (grounded list position 5), seed cfaa02b1. Raises: VU bridge (escrow reading has ballistic mass and overshoot, never jumps); Fletcher poster (each section leads with one flag that is its label, words only confirm); coptic binding (the header halyard shows every section as a flag, the hoisted one is where you are).
+FORM: 1960s space-race poster (grounded list position 3), seed 77d773da. Raises: curved-crease shell (one arc governs the page: the scroll-drawn orbit); raku firing (burn orange is reserved for the stage firing now); darkroom bay (ejection is an irreversible marked point, shown struck and red, never softened).
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance

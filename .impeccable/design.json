@@ -1,96 +1,218 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-10T07:30:00+07:00",
-  "title": "Design System: Plunders",
+  "generatedAt": "2026-10-10T09:00:00+07:00",
+  "title": "Design System: Orbiters",
   "extensions": {
     "colorMeta": {
-      "signal-red": { "role": "primary", "displayName": "Signal Red", "canonical": "#d7263d", "tonalRamp": ["#3d0a11", "#6b111e", "#9a1424", "#b81d31", "#d7263d", "#e3596b", "#ee97a2", "#f8d5da"] },
-      "signal-blue": { "role": "secondary", "displayName": "Signal Blue", "canonical": "#1b4dbf", "tonalRamp": ["#08173a", "#0f2864", "#143a92", "#1b4dbf", "#4370d6", "#7896e2", "#adc0ee", "#e1e8f9"] },
-      "signal-yellow": { "role": "tertiary", "displayName": "Signal Yellow", "canonical": "#f9c80e", "tonalRamp": ["#3d3002", "#6e5704", "#a37f05", "#d9a900", "#f9c80e", "#fbd84f", "#fde790", "#fef6d4"] },
-      "flag-black": { "role": "neutral", "displayName": "Flag Black", "canonical": "#16181d" },
-      "bunting-white": { "role": "neutral", "displayName": "Bunting White", "canonical": "#f8f4ea" },
-      "bunting-shade": { "role": "neutral", "displayName": "Bunting Shade", "canonical": "#ece4d0" },
-      "ink-soft": { "role": "neutral", "displayName": "Ink Soft", "canonical": "#464b57" },
-      "sky-horizon": { "role": "neutral", "displayName": "Sky Horizon", "canonical": "#ffd9a8" }
+      "signal-red": {
+        "role": "primary",
+        "displayName": "Signal Red",
+        "canonical": "#d6372b",
+        "tonalRamp": [
+          "#3a0d09",
+          "#6b1811",
+          "#9a2318",
+          "#b02a20",
+          "#d6372b",
+          "#e2685f",
+          "#ee9f99",
+          "#f9d9d6"
+        ]
+      },
+      "ultramarine": {
+        "role": "secondary",
+        "displayName": "Ultramarine",
+        "canonical": "#1f2f8a",
+        "tonalRamp": [
+          "#080d2a",
+          "#0e1433",
+          "#16226a",
+          "#1f2f8a",
+          "#3b55d6",
+          "#7086e2",
+          "#a9b6ee",
+          "#e0e5f9"
+        ]
+      },
+      "burn": {
+        "role": "tertiary",
+        "displayName": "Burn",
+        "canonical": "#ff7a1a",
+        "tonalRamp": [
+          "#3d1a02",
+          "#6e3005",
+          "#a34708",
+          "#d9600d",
+          "#ff7a1a",
+          "#ff9d55",
+          "#ffc194",
+          "#ffe7d4"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "canonical": "#f1e4c8"
+      },
+      "paper-shade": {
+        "role": "neutral",
+        "displayName": "Paper Shade",
+        "canonical": "#e6d3ad"
+      },
+      "night": {
+        "role": "neutral",
+        "displayName": "Night",
+        "canonical": "#0e1433"
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#161616"
+      },
+      "ink-soft": {
+        "role": "neutral",
+        "displayName": "Ink Soft",
+        "canonical": "#4b4a52"
+      }
     },
     "typographyMeta": {
-      "display": { "displayName": "Display", "purpose": "Hero and close headlines, uppercase stencil." },
-      "headline": { "displayName": "Headline", "purpose": "Section titles." },
-      "title": { "displayName": "Title", "purpose": "Hoist names, ranks, log kinds." },
-      "body": { "displayName": "Body", "purpose": "Explanations and lines." },
-      "label": { "displayName": "Label", "purpose": "Buttons and the halyard, uppercase." },
-      "data": { "displayName": "Data", "purpose": "Every number: balances, ETH, dates, hashes." }
+      "display": {
+        "displayName": "Display",
+        "purpose": "Hero and close, wide uppercase caps."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section titles."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Stage names, log kinds."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Explanations."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Buttons, nav, tags."
+      },
+      "data": {
+        "displayName": "Data",
+        "purpose": "Every number."
+      }
     },
-    "shadows": [
-      { "name": "lift", "value": "0 14px 30px -16px rgba(22,24,29,0.55)", "purpose": "Sheets and the Captain strip over the 3D scene." },
-      { "name": "flag-drop", "value": "drop-shadow(0 10px 14px rgba(22,24,29,0.28))", "purpose": "The clipped Buy flag." }
-    ],
+    "shadows": [],
     "motion": [
-      { "name": "ease-out", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Halyard hoist and CSS state changes." },
-      { "name": "flag-swing", "value": "elastic.out(1, 0.38)", "purpose": "GSAP: pennants swinging onto the line, the meter's ballistic settle." },
-      { "name": "wipe-scrub", "value": "scrub 0.6", "purpose": "GSAP ScrollTrigger: the letter flag hauled across between sections." }
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Nav dot and CSS state changes."
+      },
+      {
+        "name": "needle",
+        "value": "elastic.out(1, 0.45)",
+        "purpose": "GSAP: the fuel needle swings past and settles."
+      },
+      {
+        "name": "band-scrub",
+        "value": "scrub 0.6",
+        "purpose": "GSAP ScrollTrigger: the diagonal band between sections."
+      },
+      {
+        "name": "orbit",
+        "value": "ScrollTrigger progress, 0.5s power2.out follow",
+        "purpose": "The page-long orbit arc drawn as you scroll."
+      }
     ],
     "breakpoints": [
-      { "name": "phone", "value": "760px" },
-      { "name": "halyard-hidden", "value": "860px" },
-      { "name": "halyard-flags-only", "value": "1240px" }
+      {
+        "name": "phone",
+        "value": "760px"
+      },
+      {
+        "name": "nav-hidden",
+        "value": "1080px"
+      }
     ]
   },
   "components": [
     {
-      "name": "Buy flag",
+      "name": "Buy block",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "The one primary action, a red swallowtail.",
-      "html": "<a class=\"ds-buy\" href=\"#\">Buy $LOOT</a>",
-      "css": ".ds-buy{display:inline-flex;align-items:center;height:54px;padding:0 40px 0 24px;background:#d7263d;color:#f8f4ea;font:800 15px/1 Archivo,system-ui,sans-serif;text-transform:uppercase;letter-spacing:.06em;text-decoration:none;clip-path:polygon(0 0,100% 0,calc(100% - 16px) 50%,100% 100%,0 100%);filter:drop-shadow(0 10px 14px rgba(22,24,29,.28));transition:transform .25s cubic-bezier(.16,1,.3,1),background-color .2s}.ds-buy:hover{transform:translateY(-3px);background:#b81d31}.ds-buy:focus-visible{outline:3px solid #1b4dbf;outline-offset:3px}"
+      "description": "The one primary action.",
+      "html": "<a class=\"ds-buy\" href=\"#\">Buy $ORBIT</a>",
+      "css": ".ds-buy{display:inline-flex;align-items:center;height:54px;padding:0 28px;background:#d6372b;color:#f1e4c8;font:800 15px/1 'Golos Text',sans-serif;text-transform:uppercase;letter-spacing:.08em;text-decoration:none;clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,0 100%);transition:background-color .2s}.ds-buy:hover{background:#b02a20}.ds-buy:focus-visible{outline:3px solid #f1e4c8;outline-offset:3px}"
     },
     {
-      "name": "White flag button",
+      "name": "Line button",
       "kind": "button",
-      "refersTo": "button-flag-white",
-      "description": "Secondary action.",
-      "html": "<a class=\"ds-white\" href=\"#\">See the Crew</a>",
-      "css": ".ds-white{display:inline-flex;align-items:center;height:54px;padding:0 24px;border:3px solid #16181d;background:#f8f4ea;color:#16181d;font:800 15px/1 Archivo,system-ui,sans-serif;text-transform:uppercase;letter-spacing:.06em;text-decoration:none;transition:background-color .2s,color .2s}.ds-white:hover{background:#16181d;color:#f8f4ea}.ds-white:focus-visible{outline:3px solid #1b4dbf;outline-offset:3px}"
+      "refersTo": "button-line",
+      "description": "Secondary action on dark fields.",
+      "html": "<a class=\"ds-line\" href=\"#\">Meet the crew</a>",
+      "css": ".ds-line{display:inline-flex;align-items:center;height:54px;padding:0 24px;border:2px solid #f1e4c8;color:#f1e4c8;background:#1f2f8a;font:800 15px/1 'Golos Text',sans-serif;text-transform:uppercase;letter-spacing:.08em;text-decoration:none;transition:background-color .2s,color .2s}.ds-line:hover{background:#f1e4c8;color:#161616}"
     },
     {
-      "name": "Halyard",
+      "name": "Masthead nav",
       "kind": "nav",
-      "description": "Section flags hanging from one line; the current one is hoisted.",
-      "html": "<nav class=\"ds-hal\"><a class=\"is-up\" href=\"#\"><i style=\"background:linear-gradient(#1b4dbf 20%,#f8f4ea 20% 40%,#d7263d 40% 60%,#f8f4ea 60% 80%,#1b4dbf 80%)\"></i>Crew</a><a href=\"#\"><i style=\"background:#1b4dbf;box-shadow:inset 0 0 0 5px #1b4dbf,inset 0 0 0 9px #f8f4ea\"></i>Plunder</a></nav>",
-      "css": ".ds-hal{position:relative;display:flex;gap:4px;padding-top:4px}.ds-hal:before{content:'';position:absolute;inset:0 -8px auto;height:2px;background:#16181d}.ds-hal a{display:inline-flex;align-items:center;gap:7px;padding:6px 9px 4px;font:700 13px/1 Archivo,sans-serif;text-transform:uppercase;letter-spacing:.05em;text-decoration:none;color:#464b57;transform:translateY(5px);transition:transform .5s cubic-bezier(.16,1,.3,1)}.ds-hal a i{display:block;width:26px;height:17px;border:1.5px solid #16181d}.ds-hal a.is-up,.ds-hal a:hover{color:#16181d;transform:translateY(-1px)}"
+      "description": "Red bar, current section brightens with a dot.",
+      "html": "<nav class=\"ds-nav\"><a class=\"is-on\" href=\"#\">Crew</a><a href=\"#\">Flight plan</a><a href=\"#\">Mission log</a></nav>",
+      "css": ".ds-nav{display:flex;gap:2px;padding:16px;background:#d6372b}.ds-nav a{position:relative;padding:8px 12px;font:700 13px/1 'Golos Text',sans-serif;text-transform:uppercase;letter-spacing:.08em;text-decoration:none;color:rgba(241,228,200,.78)}.ds-nav a.is-on,.ds-nav a:hover{color:#f1e4c8}.ds-nav a.is-on:after{content:'';position:absolute;left:50%;bottom:-6px;width:8px;height:8px;margin-left:-4px;border-radius:50%;background:#f1e4c8}"
     },
     {
-      "name": "Hoist row",
+      "name": "Crew row",
       "kind": "custom",
-      "description": "One rank on the Crew hoist: pennant, rank, holder, balance, next ETH.",
-      "html": "<div class=\"ds-hang\"><svg width=\"58\" height=\"28\" viewBox=\"0 0 60 28\"><polygon points=\"0,0 60,11 60,17 0,28\" fill=\"#1b4dbf\" stroke=\"#16181d\" stroke-width=\"2.4\"/><circle cx=\"15\" cy=\"14\" r=\"6\" fill=\"#f8f4ea\"/></svg><b>No. 2</b><span>@saltbeard<small>6.6M · $272</small></span><em>next 0.0035 ETH</em></div>",
-      "css": ".ds-hang{display:grid;grid-template-columns:auto 74px 1fr auto;align-items:center;gap:14px;padding:6px 12px 6px 0;border-left:3px solid #16181d;background:#f8f4ea;font:800 16px/1.2 Archivo,sans-serif;color:#16181d}.ds-hang b{font:900 22px/1 'Big Shoulders Stencil Display',sans-serif;text-transform:uppercase}.ds-hang small{display:block;font:600 12px/1.3 'Martian Mono',monospace;color:#464b57}.ds-hang em{font:600 13px/1.2 'Martian Mono',monospace;font-style:normal;padding:4px 6px;background:#f9c80e}"
+      "description": "A seat on the roster.",
+      "html": "<div class=\"ds-seat\"><b>02</b><span>@moonwalker<small>6.6M \u00b7 $272</small></span><em>0.0035 ETH</em></div>",
+      "css": ".ds-seat{display:grid;grid-template-columns:52px 1fr auto;align-items:center;gap:14px;padding:10px 12px;background:#f1e4c8;border-bottom:1px solid rgba(22,22,22,.16);font:800 16px/1.2 'Golos Text',sans-serif;color:#161616}.ds-seat b{font:900 26px/1 Unbounded,sans-serif;color:#d6372b}.ds-seat small{display:block;font:500 12px/1.3 'Spline Sans Mono',monospace;color:#4b4a52}.ds-seat em{font:600 13px/1 'Spline Sans Mono',monospace;font-style:normal;padding:5px 8px;background:#e6d3ad}"
     },
     {
-      "name": "Escrow meter",
+      "name": "Stage",
       "kind": "custom",
-      "description": "Ten flag cells filling toward the next hoist.",
-      "html": "<div class=\"ds-meter\" style=\"--fill:.32\"><i style=\"--i:0\"></i><i style=\"--i:1\"></i><i style=\"--i:2\"></i><i style=\"--i:3\"></i><i style=\"--i:4\"></i><i style=\"--i:5\"></i><i style=\"--i:6\"></i><i style=\"--i:7\"></i><i style=\"--i:8\"></i><i style=\"--i:9\"></i></div>",
-      "css": ".ds-meter{display:flex;gap:5px}.ds-meter i{position:relative;width:30px;height:22px;border:2.5px solid #16181d;background:#f8f4ea}.ds-meter i:after{content:'';position:absolute;inset:0;background:#f9c80e;transform-origin:0 50%;transform:scaleX(clamp(0,calc(var(--fill)*10 - var(--i)),1))}.ds-meter i:nth-child(5n):after{background:#d7263d}"
+      "description": "One stage of the flight-plan rocket; the burning one turns orange.",
+      "html": "<div class=\"ds-stage\"><span>1</span><i></i><p><b>Stage 1 \u00b7 Supply Drop</b>0.02 ETH</p></div>",
+      "css": ".ds-stage{display:grid;grid-template-columns:120px 48px 1fr;align-items:center;background:#1f2f8a;color:#f1e4c8;padding:12px}.ds-stage span{display:grid;place-items:center;height:90px;background:#ff7a1a;color:#161616;border:4px solid #161616;font:900 36px/1 Unbounded,sans-serif}.ds-stage i{height:2px;background:#f1e4c8}.ds-stage p{margin:0 0 0 12px;font:500 15px/1.3 'Spline Sans Mono',monospace}.ds-stage b{display:block;font:900 20px/1.05 Unbounded,sans-serif;text-transform:uppercase}"
     },
     {
       "name": "Wallet field",
       "kind": "input",
-      "description": "The wallet lookup input.",
-      "html": "<input class=\"ds-input\" placeholder=\"0x…\">",
-      "css": ".ds-input{height:48px;padding:0 14px;border:3px solid #16181d;border-radius:0;background:#fff;color:#16181d;font:600 14px/1 'Martian Mono',monospace}.ds-input:focus-visible{outline:3px solid #1b4dbf;outline-offset:3px}"
+      "description": "Wallet lookup.",
+      "html": "<input class=\"ds-input\" placeholder=\"0x\u2026\">",
+      "css": ".ds-input{height:48px;padding:0 14px;border:2px solid #161616;border-radius:0;background:#fffaf0;color:#161616;font:500 14px/1 'Spline Sans Mono',monospace}.ds-input:focus-visible{outline:3px solid #1f2f8a;outline-offset:3px}"
     }
   ],
   "narrative": {
-    "northStar": "Dressed Overall",
-    "overview": "A pirate ship dressed overall in signal flags. The page speaks the International Code of Signals: five flag colours at full strength, rectangles, swallowtails and pennants, one black halyard everything hangs from, over a light-cartoon 3D cove.",
-    "keyCharacteristics": ["Flag fields own whole regions", "Zero radius; shapes come from flags", "Stencil display, Archivo body, Martian Mono numbers", "A letter flag hauled across between sections"],
-    "rules": [
-      { "name": "The Real Signal Rule", "body": "A flag means what it means in the Code where the Code fits: O overboard, B explosives, numeral pennants for ranks.", "section": "colors" },
-      { "name": "The Stencil Is For Shouting Rule", "body": "Stencil only at 18px and up, uppercase; never names, sentences or numbers.", "section": "typography" }
+    "northStar": "Space Race Poster",
+    "overview": "A 1960s space-race poster you scroll through: flat red, paper and ultramarine fields cut on the diagonal, one orbit arc drawn across the page, over a light-cartoon 3D planet with a rocket that lifts off at the end.",
+    "keyCharacteristics": [
+      "Fields own whole regions",
+      "Square corners, one corner clipped",
+      "Circles only for people and planets",
+      "Burn orange only for what is firing now"
     ],
-    "dos": ["Do draw every flag from src/lib/flags.ts", "Do keep every number in Martian Mono", "Do give each section its own composition"],
-    "donts": ["Don't put translucent dark panels over the 3D", "Don't round corners or soften the signal colours", "Don't add a kicker above a headline", "Don't put a CSS transition on a GSAP-animated element"]
+    "rules": [
+      {
+        "name": "The One Burn Rule",
+        "body": "Burn orange marks one thing at a time: the stage firing now, the fuel held, the flame.",
+        "section": "colors"
+      },
+      {
+        "name": "The Wide Caps Rule",
+        "body": "Unbounded only at 15px and up, uppercase, never for sentences.",
+        "section": "typography"
+      }
+    ],
+    "dos": [
+      "Do keep every number in Spline Sans Mono",
+      "Do cut sheets and buttons on one corner",
+      "Do keep 3D subjects clear of the sheet beside them"
+    ],
+    "donts": [
+      "Don't add glows, neon or gradients to UI fields",
+      "Don't use burn orange for decoration",
+      "Don't add a kicker above a headline",
+      "Don't put a CSS transition on a GSAP-animated element",
+      "Don't use political symbols"
+    ]
   }
 }

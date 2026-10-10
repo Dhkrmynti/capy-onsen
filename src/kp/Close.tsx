@@ -1,4 +1,4 @@
-/** The close: the black flag goes up. One line, the buy, the address, the way out. */
+/** The close: liftoff. One line, the buy, the address, the way out. */
 import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -27,10 +27,10 @@ export function Close({ status }: { status: Status | null }) {
       <div className="close__field">
         <p className="close__h">
           <span className="mask">
-            <span className="ln">Raise the</span>
+            <span className="ln">We have</span>
           </span>
           <span className="mask">
-            <span className="ln">black flag.</span>
+            <span className="ln">liftoff.</span>
           </span>
         </p>
         <div className="close__acts">
@@ -40,7 +40,7 @@ export function Close({ status }: { status: Status | null }) {
         <nav className="close__links" aria-label="Elsewhere">
           {X_URL ? (
             <a href={X_URL} target="_blank" rel="noreferrer">
-              <XLogo weight="bold" aria-hidden="true" /> Plunders on X <ArrowUpRight weight="bold" aria-hidden="true" />
+              <XLogo weight="bold" aria-hidden="true" /> Orbiters on X <ArrowUpRight weight="bold" aria-hidden="true" />
             </a>
           ) : null}
           {ca ? (
@@ -48,11 +48,11 @@ export function Close({ status }: { status: Status | null }) {
               Chart <ArrowUpRight weight="bold" aria-hidden="true" />
             </a>
           ) : null}
-          <a href="#rules">The Code</a>
-          <a href="#record">Captain's Log</a>
+          <a href="#rules">Flight rules</a>
+          <a href="#record">Mission log</a>
         </nav>
         <p className="close__sig">
-          <Mark size={22} /> Plunders · $LOOT · Robinhood Chain
+          <Mark size={22} /> Orbiters · $ORBIT · Robinhood Chain
         </p>
       </div>
     </footer>
