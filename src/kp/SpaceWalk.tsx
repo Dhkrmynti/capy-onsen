@@ -11,7 +11,7 @@ import * as THREE from "three";
 import { Canvas, useFrame, useThree, type ThreeElements } from "@react-three/fiber";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
-import { gasGiant, milkyWay, regolith, ringBands, rocketSkin, solarCells } from "./spaceTex";
+import { gasGiant, milkyWay, regolith, ribs, ringBands, solarCells, stageSkin } from "./spaceTex";
 
 const INK = "#161616";
 const C = { red: "#d6372b", cream: "#f1e4c8", blue: "#1f2f8a", night: "#0e1433", burn: "#ff7a1a", ground: "#e6d3ad", crater: "#cdb78e" };
@@ -148,6 +148,20 @@ function Space({ narrow }: { narrow: boolean }) {
   }, []);
   const ring = useMemo(() => new THREE.MeshBasicMaterial({ map: ringBands(19 / 23, 1), transparent: true, side: THREE.DoubleSide, depthWrite: false }), []);
   const ball = useMemo(() => new THREE.SphereGeometry(1, 48, 32), []);
+  // a thin atmosphere: brighter where the surface turns away from the eye
+  const halo = useMemo(
+    () =>
+      new THREE.ShaderMaterial({
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        side: THREE.BackSide,
+        uniforms: { tint: { value: new THREE.Color("#ff8a66") } },
+        vertexShader: "varying vec3 n; varying vec3 v; void main(){ vec4 mv = modelViewMatrix * vec4(position,1.0); n = normalize(normalMatrix * normal); v = normalize(-mv.xyz); gl_Position = projectionMatrix * mv; }",
+        fragmentShader: "uniform vec3 tint; varying vec3 n; varying vec3 v; void main(){ float f = pow(1.0 - abs(dot(n, v)), 2.5); gl_FragColor = vec4(tint * f * 0.9, f); }",
+      }),
+    [],
+  );
   return (
     <group>
       <mesh>
@@ -159,7 +173,8 @@ function Space({ narrow }: { narrow: boolean }) {
       </points>
       {/* the red planet with its ring, the poster's big circle */}
       <group position={[-46, 16, -78]} rotation={[0.3, 0, 0.35]}>
-        <Inked geometry={ball} material={red} scale={15} ink={1.012} />
+        <Inked geometry={ball} material={red} scale={15} />
+        <mesh geometry={ball} material={halo} scale={15.9} />
         <mesh rotation={[Math.PI / 2 - 0.25, 0, 0]} material={ring}>
           <ringGeometry args={[19, 23, 72]} />
         </mesh>
@@ -179,14 +194,21 @@ function Planet({ narrow }: { narrow: boolean }) {
   }, [narrow]);
   const sphere = useMemo(() => new THREE.SphereGeometry(R, 72, 48), []);
   const rocks = useMemo(() => {
-    const n = narrow ? 12 : 22;
-    const m = new THREE.InstancedMesh(new THREE.DodecahedronGeometry(1, 0), new THREE.MeshStandardMaterial({ color: "#8d8476", roughness: 1, flatShading: true }), n);
+    const n = narrow ? 26 : 64;
+    const geo = new THREE.IcosahedronGeometry(1, 1);
+    const pp = geo.getAttribute("position") as THREE.BufferAttribute;
+    for (let i = 0; i < pp.count; i++) {
+      const k = 0.72 + rand() * 0.45; // jagged, not round
+      pp.setXYZ(i, pp.getX(i) * k, pp.getY(i) * k * 0.8, pp.getZ(i) * k);
+    }
+    geo.computeVertexNormals();
+    const m = new THREE.InstancedMesh(geo, new THREE.MeshStandardMaterial({ color: "#837a6c", roughness: 1, flatShading: true }), n);
     const o = new THREE.Object3D();
     for (let i = 0; i < n; i++) {
-      const s = surf(rand() * 360, 30 + rand() * 50, 0.1);
+      const s = surf(rand() * 360, 26 + rand() * 58, 0.05);
       o.position.copy(s.p);
       o.rotation.set(rand() * 3, rand() * 3, rand() * 3);
-      const k = 0.2 + rand() * 0.45;
+      const k = 0.12 + Math.pow(rand(), 2) * 0.55;
       o.scale.set(k, k * 0.7, k);
       o.updateMatrix();
       m.setMatrixAt(i, o.matrix);
@@ -205,47 +227,132 @@ function Planet({ narrow }: { narrow: boolean }) {
   );
 }
 
-/* ───────── the rocket on its pad; lifts off at the close ───────── */
+/* ───────── the launch vehicle on its pad; lifts off at the close ───────── */
+const ROCKET_SCALE = 0.55;
+
+/** A steel lattice tower: posts, rings and cross-bracing as one instanced mesh. */
+function Tower() {
+  const truss = useMemo(() => {
+    const H = 7.4;
+    const bay = 0.62;
+    const w = 0.9;
+    const bars: { p: THREE.Vector3; s: THREE.Vector3; r: THREE.Euler }[] = [];
+    const t = 0.06;
+    for (const x of [-w / 2, w / 2]) for (const z of [-w / 2, w / 2]) bars.push({ p: new THREE.Vector3(x, H / 2, z), s: new THREE.Vector3(t * 1.6, H, t * 1.6), r: new THREE.Euler() });
+    const diag = Math.hypot(w, bay);
+    const ang = Math.atan2(bay, w);
+    for (let y = 0; y < H - 0.01; y += bay) {
+      for (const sd of [-1, 1]) {
+        bars.push({ p: new THREE.Vector3(0, y, sd * w / 2), s: new THREE.Vector3(w, t, t), r: new THREE.Euler() });
+        bars.push({ p: new THREE.Vector3(sd * w / 2, y, 0), s: new THREE.Vector3(t, t, w), r: new THREE.Euler() });
+        bars.push({ p: new THREE.Vector3(0, y + bay / 2, sd * w / 2), s: new THREE.Vector3(diag, t, t), r: new THREE.Euler(0, 0, sd * ang) });
+        bars.push({ p: new THREE.Vector3(sd * w / 2, y + bay / 2, 0), s: new THREE.Vector3(t, t, diag), r: new THREE.Euler(sd * ang, 0, 0) });
+      }
+    }
+    const m = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), paint("#b4302a", { metalness: 0.45, roughness: 0.5, clearcoat: 0.15 }), bars.length);
+    const o = new THREE.Object3D();
+    bars.forEach((b, i) => {
+      o.position.copy(b.p);
+      o.scale.copy(b.s);
+      o.rotation.copy(b.r);
+      o.updateMatrix();
+      m.setMatrixAt(i, o.matrix);
+    });
+    m.instanceMatrix.needsUpdate = true;
+    m.castShadow = true;
+    m.receiveShadow = true;
+    return m;
+  }, []);
+  const arm = useMemo(() => steel("#c3c6cc", 0.5), []);
+  const lamp = useMemo(() => new THREE.MeshBasicMaterial({ color: "#ff4a3a" }), []);
+  return (
+    <group position={[-2.1, 0.35, -0.3]}>
+      <primitive object={truss} />
+      {/* swing arms reaching the vehicle */}
+      {[3.2, 5.0].map((y) => (
+        <mesh key={y} material={arm} position={[0.95, y, 0.12]} rotation={[0, -0.12, 0]} castShadow>
+          <boxGeometry args={[1.5, 0.16, 0.34]} />
+        </mesh>
+      ))}
+      <mesh material={arm} position={[0, 7.9, 0]} castShadow>
+        <cylinderGeometry args={[0.035, 0.05, 1, 6]} />
+      </mesh>
+      <mesh material={lamp} position={[0, 8.45, 0]}>
+        <sphereGeometry args={[0.07, 8, 6]} />
+      </mesh>
+    </group>
+  );
+}
+
 function Rocket({ lift, fonts }: { lift: React.MutableRefObject<number>; fonts: boolean }) {
   const body = useRef<THREE.Group>(null);
   const flame = useRef<THREE.Group>(null);
   const smoke = useRef<THREE.Points>(null);
   const fire = useRef<THREE.PointLight>(null);
-  const skin = useMemo(() => rocketSkin("ORBITERS"), [fonts]);
+  // the exhaust plume: hot at the nozzle, thinning to nothing, softer at its edges
+  const plume = useMemo(() => {
+    const t = canvasTex(64, 256, (gg) => {
+      const v = gg.createLinearGradient(0, 0, 0, 256);
+      v.addColorStop(0, "#ffffff");
+      v.addColorStop(0.35, "#9a9a9a");
+      v.addColorStop(1, "#000000");
+      gg.fillStyle = v;
+      gg.fillRect(0, 0, 64, 256);
+      const h = gg.createLinearGradient(0, 0, 64, 0);
+      h.addColorStop(0, "rgba(0,0,0,0.85)");
+      h.addColorStop(0.5, "rgba(0,0,0,0)");
+      h.addColorStop(1, "rgba(0,0,0,0.85)");
+      gg.globalCompositeOperation = "multiply";
+      gg.fillStyle = h;
+      gg.fillRect(0, 0, 64, 256);
+    });
+    t.colorSpace = THREE.NoColorSpace;
+    return t;
+  }, []);
   const m = useMemo(
     () => ({
-      cream: paint("#ffffff", { map: skin, roughness: 0.38 }),
+      s1: paint("#ffffff", { map: stageSkin("ORBITERS", true), roughness: 0.4 }),
+      s2: paint("#ffffff", { map: stageSkin(null, false), roughness: 0.4 }),
+      ribs: new THREE.MeshStandardMaterial({ map: ribs(), metalness: 0.5, roughness: 0.55 }),
       red: paint("#c8332a"),
-      blue: new THREE.MeshPhysicalMaterial({ color: "#0d1440", roughness: 0.05, metalness: 0.2, clearcoat: 1 }),
-      dark: steel("#3b3e46", 0.45),
-      steel: steel("#b9bec8", 0.3),
-      pad: new THREE.MeshStandardMaterial({ color: "#8a8c92", roughness: 0.9 }),
-      truss: paint("#b4302a", { metalness: 0.4, roughness: 0.5, clearcoat: 0.2 }),
-      deck: steel("#c4c7cd", 0.55),
-      glow: new THREE.MeshBasicMaterial({ color: "#fff1c2", toneMapped: false, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false }),
-      burn: new THREE.MeshBasicMaterial({ color: "#ff8a2a", toneMapped: false, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, depthWrite: false }),
+      dark: steel("#2f3238", 0.5),
+      bell: steel("#5b5f68", 0.32),
+      silver: steel("#d4d7dd", 0.22),
+      pad: new THREE.MeshStandardMaterial({ color: "#8b8c8f", roughness: 0.95 }),
+      trench: new THREE.MeshStandardMaterial({ color: "#2b2b2e", roughness: 1 }),
+      pole: steel("#9aa0ab", 0.45),
+      light: new THREE.MeshBasicMaterial({ color: "#fff4d6" }),
+      glow: new THREE.MeshBasicMaterial({ color: "#fff1c2", alphaMap: plume, toneMapped: false, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide }),
+      burn: new THREE.MeshBasicMaterial({ color: "#ff8a2a", alphaMap: plume, toneMapped: false, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide }),
     }),
-    [skin],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [fonts, plume],
   );
   const g = useMemo(() => {
-    const lathe = (pts: number[][]) => new THREE.LatheGeometry(pts.map(([x, y]) => new THREE.Vector2(x, y)), 40);
+    const lathe = (pts: number[][], seg = 32) => new THREE.LatheGeometry(pts.map(([x, y]) => new THREE.Vector2(x, y)), seg);
     const fin = new THREE.Shape();
-    fin.moveTo(0.95, 0.3);
-    fin.lineTo(2.0, -0.45);
-    fin.lineTo(2.05, 0.5);
-    fin.lineTo(1.0, 1.9);
+    fin.moveTo(0.78, 0.1);
+    fin.lineTo(1.25, -0.25);
+    fin.lineTo(1.25, 0.35);
+    fin.lineTo(0.78, 1.0);
+    const cyl = (rt: number, rb: number, h: number) => new THREE.CylinderGeometry(rt, rb, h, 40, 1, true);
     return {
-      body: lathe([[0, 0], [0.86, 0], [1.02, 0.5], [1.1, 1.8], [1.08, 3.2], [0.98, 3.9], [0, 3.9]]),
-      nose: lathe([[0, 3.85], [0.99, 3.85], [0.86, 4.5], [0.55, 5.1], [0.18, 5.5], [0, 5.6]]),
-      band: new THREE.CylinderGeometry(1.115, 1.115, 0.32, 40, 1, true),
-      nozzle: lathe([[0, 0], [0.52, 0], [0.7, -0.55], [0.6, -0.6], [0.42, -0.05], [0, -0.05]]),
-      fin: new THREE.ExtrudeGeometry(fin, { depth: 0.14, bevelEnabled: false }).translate(0, 0, -0.07),
-      port: new THREE.CircleGeometry(0.36, 28),
-      rim: new THREE.RingGeometry(0.36, 0.5, 28),
-      flame: new THREE.ConeGeometry(0.55, 2.4, 18, 1, true).rotateX(Math.PI).translate(0, -1.4, 0),
-      core: new THREE.ConeGeometry(0.32, 1.5, 14, 1, true).rotateX(Math.PI).translate(0, -1, 0),
-      pad: new THREE.CylinderGeometry(2.6, 2.9, 0.35, 40),
-      beam: new THREE.BoxGeometry(0.18, 1, 0.18),
+      bell: lathe([[0.1, 0], [0.16, -0.06], [0.26, -0.3], [0.36, -0.62], [0.34, -0.63], [0.24, -0.32], [0.14, -0.08], [0.08, 0]], 24),
+      thrust: new THREE.CylinderGeometry(0.8, 0.72, 0.55, 40),
+      fin: new THREE.ExtrudeGeometry(fin, { depth: 0.08, bevelEnabled: false }).translate(0, 0, -0.04),
+      s1: cyl(0.8, 0.8, 4.4),
+      inter: cyl(0.8, 0.8, 0.45),
+      s2: cyl(0.7, 0.7, 2.6),
+      taper: cyl(0.52, 0.7, 0.4),
+      s3: cyl(0.52, 0.52, 1.4),
+      adapter: cyl(0.42, 0.52, 0.5),
+      capsule: new THREE.ConeGeometry(0.42, 0.72, 40),
+      les: new THREE.CylinderGeometry(0.04, 0.06, 1.0, 8),
+      motor: new THREE.CylinderGeometry(0.1, 0.1, 0.5, 12),
+      tip: new THREE.ConeGeometry(0.1, 0.26, 12),
+      flame: new THREE.ConeGeometry(0.9, 3.4, 20, 1, true).rotateX(Math.PI).translate(0, -1.9, 0),
+      core: new THREE.ConeGeometry(0.55, 2.2, 16, 1, true).rotateX(Math.PI).translate(0, -1.3, 0),
+      pad: new THREE.CylinderGeometry(2.6, 2.9, 0.35, 48),
     };
   }, []);
   const N = 70;
@@ -257,13 +364,13 @@ function Rocket({ lift, fonts }: { lift: React.MutableRefObject<number>; fonts: 
   const seeds = useMemo(() => Array.from({ length: N }, () => [rand(), rand() * Math.PI * 2, rand()]), []);
   const cloud = useMemo(
     () =>
-      canvasTex(64, 64, (g) => {
-        const r = g.createRadialGradient(32, 32, 0, 32, 32, 32);
-        r.addColorStop(0, "rgba(255,250,240,1)");
-        r.addColorStop(0.6, "rgba(241,228,200,0.85)");
-        r.addColorStop(1, "rgba(241,228,200,0)");
-        g.fillStyle = r;
-        g.fillRect(0, 0, 64, 64);
+      canvasTex(64, 64, (gg) => {
+        const r = gg.createRadialGradient(32, 32, 0, 32, 32, 32);
+        r.addColorStop(0, "rgba(250,247,240,0.55)");
+        r.addColorStop(0.45, "rgba(232,228,220,0.3)");
+        r.addColorStop(1, "rgba(232,228,220,0)");
+        gg.fillStyle = r;
+        gg.fillRect(0, 0, 64, 64);
       }),
     [],
   );
@@ -272,11 +379,11 @@ function Rocket({ lift, fonts }: { lift: React.MutableRefObject<number>; fonts: 
     const k = lift.current;
     if (body.current) {
       body.current.position.y = 0.35 + k * k * 7;
-      body.current.rotation.z = Math.sin(t * 30) * 0.004 * k;
+      body.current.rotation.z = Math.sin(t * 30) * 0.003 * k;
     }
     if (flame.current) {
-      const f = 0.15 + k * 1.1 + Math.sin(t * 40) * 0.06 * (0.3 + k);
-      flame.current.scale.set(0.6 + k * 0.5, f, 0.6 + k * 0.5);
+      const f = 0.05 + k * 1.1 + Math.sin(t * 40) * 0.05 * (0.2 + k);
+      flame.current.scale.set(0.5 + k * 0.6, f, 0.5 + k * 0.6);
     }
     const p = puff.getAttribute("position") as THREE.BufferAttribute;
     seeds.forEach(([a, b, c], i) => {
@@ -285,46 +392,66 @@ function Rocket({ lift, fonts }: { lift: React.MutableRefObject<number>; fonts: 
       p.setXYZ(i, Math.cos(b) * r, 0.25 + life * (0.6 + k * 1.6), Math.sin(b) * r);
     });
     p.needsUpdate = true;
-    if (smoke.current) (smoke.current.material as THREE.PointsMaterial).opacity = 0.25 + k * 0.75;
+    if (smoke.current) (smoke.current.material as THREE.PointsMaterial).opacity = 0.18 + k * 0.8;
     if (fire.current) fire.current.intensity = k * (60 + Math.sin(t * 40) * 8);
   });
+  const bells: V3[] = [
+    [0, 0, 0],
+    [0.42, 0, 0],
+    [-0.42, 0, 0],
+    [0, 0, 0.42],
+    [0, 0, -0.42],
+  ];
   return (
     <group>
+      {/* the pad: concrete, a flame trench, floodlights */}
       <Inked geometry={g.pad} material={m.pad} position={[0, 0.17, 0]} />
-      {/* the launch tower */}
-      <group position={[-2.3, 0.35, -0.4]}>
-        {[-0.35, 0.35].map((x) => [-0.35, 0.35].map((z) => <mesh key={`${x}${z}`} geometry={g.beam} material={m.truss} position={[x, 3, z]} scale={[1, 6, 1]} castShadow />))}
-        {Array.from({ length: 7 }, (_, i) => (
-          <mesh key={i} geometry={g.beam} material={m.deck} position={[0, 0.5 + i * 0.85, 0]} scale={[4.6, 0.6, 4.6]} castShadow />
-        ))}
-        <mesh geometry={g.beam} material={m.truss} position={[0.95, 4.6, 0.4]} rotation={[0, 0.3, Math.PI / 2]} scale={[1, 1.6, 1]} castShadow />
-      </group>
-      <group ref={body} position={[0, 0.35, 0]}>
-        <Inked geometry={g.body} material={m.cream} ink={1.03} />
-        <Inked geometry={g.nose} material={m.red} ink={1.03} />
-        <mesh geometry={g.band} material={m.red} position={[0, 1.15, 0]} castShadow />
-        <Inked geometry={g.nozzle} material={m.dark} ink={1.05} />
-        {[0, (Math.PI * 2) / 3, (Math.PI * 4) / 3].map((a) => (
-          <group key={a} rotation={[0, a + 0.5, 0]}>
-            <Inked geometry={g.fin} material={m.red} ink={1.04} />
-          </group>
-        ))}
-        <group position={[0, 2.75, 1.09]}>
-          <mesh geometry={g.rim} material={m.steel} />
-          <mesh geometry={g.port} material={m.blue} position={[0, 0, -0.01]} />
-          <mesh position={[-0.12, 0.12, 0.01]}>
-            <circleGeometry args={[0.09, 12]} />
-            <meshBasicMaterial color={C.cream} />
+      <mesh material={m.trench} position={[0, 0.355, 0.9]} receiveShadow>
+        <boxGeometry args={[1.3, 0.02, 3.6]} />
+      </mesh>
+      {[0.6, 2.4, 4.2].map((a) => (
+        <group key={a} position={[Math.cos(a) * 2.55, 0.35, Math.sin(a) * 2.55]}>
+          <mesh material={m.pole} position={[0, 1.1, 0]} castShadow>
+            <cylinderGeometry args={[0.03, 0.045, 2.2, 6]} />
+          </mesh>
+          <mesh material={m.light} position={[0, 2.25, 0]}>
+            <boxGeometry args={[0.28, 0.14, 0.1]} />
           </mesh>
         </group>
-        <group ref={flame} position={[0, -0.55, 0]}>
-          <mesh geometry={g.flame} material={m.burn} />
-          <mesh geometry={g.core} material={m.glow} />
+      ))}
+      <Tower />
+      <group ref={body} position={[0, 0.35, 0]}>
+        <group scale={ROCKET_SCALE}>
+          {/* engines and thrust structure */}
+          {bells.map((b, i) => (
+            <mesh key={i} geometry={g.bell} material={m.bell} position={[b[0], 0.62, b[2]]} castShadow />
+          ))}
+          <Inked geometry={g.thrust} material={m.dark} position={[0, 0.9, 0]} />
+          {[0, 1, 2, 3].map((i) => (
+            <group key={i} rotation={[0, (i * Math.PI) / 2 + Math.PI / 4, 0]}>
+              <Inked geometry={g.fin} material={m.s2} position={[0, 0.7, 0]} />
+            </group>
+          ))}
+          {/* three stages, the capsule and its escape tower */}
+          <Inked geometry={g.s1} material={m.s1} position={[0, 3.37, 0]} />
+          <Inked geometry={g.inter} material={m.ribs} position={[0, 5.8, 0]} />
+          <Inked geometry={g.s2} material={m.s2} position={[0, 7.32, 0]} />
+          <Inked geometry={g.taper} material={m.ribs} position={[0, 8.82, 0]} />
+          <Inked geometry={g.s3} material={m.s2} position={[0, 9.72, 0]} />
+          <Inked geometry={g.adapter} material={m.silver} position={[0, 10.67, 0]} />
+          <Inked geometry={g.capsule} material={m.silver} position={[0, 11.28, 0]} />
+          <Inked geometry={g.les} material={m.dark} position={[0, 12.1, 0]} />
+          <Inked geometry={g.motor} material={m.red} position={[0, 12.82, 0]} />
+          <Inked geometry={g.tip} material={m.red} position={[0, 13.2, 0]} />
+          <group ref={flame} position={[0, 0, 0]}>
+            <mesh geometry={g.flame} material={m.burn} />
+            <mesh geometry={g.core} material={m.glow} />
+          </group>
         </group>
-        <pointLight ref={fire} color="#ff9a3c" intensity={0} distance={18} decay={1.6} position={[0, -1.6, 0]} />
+        <pointLight ref={fire} color="#ff9a3c" intensity={0} distance={18} decay={1.6} position={[0, -0.8, 0]} />
       </group>
       <points ref={smoke} geometry={puff}>
-        <pointsMaterial map={cloud} size={1.6} transparent depthWrite={false} opacity={0.3} />
+        <pointsMaterial map={cloud} size={2.6} transparent depthWrite={false} opacity={0.2} />
       </points>
     </group>
   );
@@ -333,12 +460,24 @@ function Rocket({ lift, fonts }: { lift: React.MutableRefObject<number>; fonts: 
 /* ───────── the crew pods: ten in orbit, names on the side ───────── */
 function Pods({ names, fonts }: { names: string[]; fonts: boolean }) {
   const refs = useRef<(THREE.Group | null)[]>([]);
-  const m = useMemo(() => ({ cream: paint("#eceae4", { roughness: 0.42 }), red: paint("#c8332a"), panel: new THREE.MeshStandardMaterial({ map: solarCells(), metalness: 0.55, roughness: 0.3 }) }), []);
+  const m = useMemo(
+    () => ({
+      cream: paint("#eceae4", { roughness: 0.42 }),
+      silver: steel("#cfd3da", 0.25),
+      dark: steel("#3a3d44", 0.5),
+      red: paint("#c8332a"),
+      panel: new THREE.MeshStandardMaterial({ map: solarCells(), metalness: 0.55, roughness: 0.3 }),
+    }),
+    [],
+  );
   const g = useMemo(
     () => ({
-      pod: new THREE.CapsuleGeometry(0.55, 0.9, 6, 18).rotateZ(Math.PI / 2),
-      wing: new THREE.BoxGeometry(1.4, 0.05, 0.6),
-      band: new THREE.CylinderGeometry(0.57, 0.57, 0.24, 24, 1, true).rotateZ(Math.PI / 2),
+      pod: new THREE.CylinderGeometry(0.32, 0.6, 0.7, 32),
+      shield: new THREE.CylinderGeometry(0.62, 0.62, 0.08, 32),
+      service: new THREE.CylinderGeometry(0.58, 0.58, 0.85, 32),
+      wing: new THREE.BoxGeometry(1.6, 0.03, 0.55),
+      band: new THREE.CylinderGeometry(0.59, 0.59, 0.16, 32, 1, true),
+      nozzle: new THREE.CylinderGeometry(0.16, 0.3, 0.3, 20, 1, true),
     }),
     [],
   );
@@ -389,12 +528,16 @@ function Pods({ names, fonts }: { names: string[]; fonts: boolean }) {
         <group key={i} ref={(el) => void (refs.current[i] = el)} position={p}>
           {/* each pod turns its nameplate outward, toward the roster's camera */}
           <group rotation={[0, Math.PI, 0]}>
-            <Inked geometry={g.pod} material={m.cream} ink={1.06} />
-            <mesh geometry={g.band} material={i < 5 ? m.red : m.panel} />
-            {[-1.25, 1.25].map((x) => (
-              <mesh key={x} geometry={g.wing} material={m.panel} position={[x, 0, 0]} />
+            {/* crew capsule on its service module, solar wings out */}
+            <Inked geometry={g.pod} material={m.silver} position={[0, 0.45, 0]} />
+            <mesh geometry={g.shield} material={m.dark} position={[0, 0.07, 0]} />
+            <Inked geometry={g.service} material={m.cream} position={[0, -0.4, 0]} />
+            <mesh geometry={g.band} material={i < 5 ? m.red : m.dark} position={[0, -0.15, 0]} />
+            <mesh geometry={g.nozzle} material={m.dark} position={[0, -0.97, 0]} />
+            {[-1.45, 1.45].map((x) => (
+              <mesh key={x} geometry={g.wing} material={m.panel} position={[x, -0.4, 0]} castShadow />
             ))}
-            <mesh material={plates[i]} position={[0, 1.05, 0]}>
+            <mesh material={plates[i]} position={[0, 1.25, 0]}>
               <planeGeometry args={[1.9, 0.74]} />
             </mesh>
           </group>
@@ -905,17 +1048,17 @@ export default function SpaceWalk({ names, still = false }: { names: string[]; s
         // a soft studio reflection for the astronauts' visors and shells; toon materials ignore it
         const pmrem = new THREE.PMREMGenerator(gl);
         scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-        scene.environmentIntensity = 0.45;
+        scene.environmentIntensity = 0.35;
         pmrem.dispose();
         scene.fog = new THREE.Fog("#1a2878", 60, 160);
       }}
     >
       <Pace />
-      <hemisphereLight args={["#9fb0ff", "#1a1f38", 0.5]} />
+      <hemisphereLight args={["#8fa0ff", "#14182c", 0.22]} />
       {/* the sun: one hard key light, shadows on desktop only, its shadow box held tight around the pad */}
       <directionalLight
-        position={[9, 14, 10]}
-        intensity={2.2}
+        position={[13, 9, 9]}
+        intensity={3.4}
         color="#fff3e2"
         castShadow={!narrow}
         shadow-mapSize={[1024, 1024]}
@@ -928,7 +1071,7 @@ export default function SpaceWalk({ names, still = false }: { names: string[]; s
         shadow-bias={-0.0005}
         shadow-normalBias={0.03}
       />
-      <directionalLight position={[-12, 5, -14]} intensity={0.7} color="#7d93ff" />
+      <directionalLight position={[-12, 5, -14]} intensity={0.55} color="#7d93ff" />
       <Walk narrow={narrow} names={names} still={still} />
     </Canvas>
   );

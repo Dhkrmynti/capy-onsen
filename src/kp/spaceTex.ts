@@ -125,9 +125,9 @@ export function milkyWay(narrow: boolean) {
   const h = w / 2;
   const [c, g] = canvas(w, h);
   const grd = g.createLinearGradient(0, 0, 0, h);
-  grd.addColorStop(0, "#070b22");
-  grd.addColorStop(0.5, "#141f63");
-  grd.addColorStop(1, "#070b22");
+  grd.addColorStop(0, "#03050f");
+  grd.addColorStop(0.5, "#0c1446");
+  grd.addColorStop(1, "#03050f");
   g.fillStyle = grd;
   g.fillRect(0, 0, w, h);
   g.save();
@@ -196,5 +196,61 @@ export function solarCells() {
       g.fillStyle = (x + y) % 32 ? "#16226a" : "#1c2b80";
       g.fillRect(x + 1.5, y + 1.5, 13, 13);
     }
+  return tex(c);
+}
+
+/**
+ * A launch-vehicle stage: white paint, panel seams and rivets, the black roll pattern at the top
+ * (like the Saturn V's first stage), a black skirt, and the name read bottom to top.
+ */
+export function stageSkin(name: string | null, roll: boolean) {
+  const [c, g] = canvas(512, 1024);
+  g.fillStyle = "#f1f0ec";
+  g.fillRect(0, 0, 512, 1024);
+  g.strokeStyle = "rgba(55,58,66,0.22)";
+  g.lineWidth = 2;
+  for (let y = 60; y < 1024; y += 96) {
+    g.beginPath();
+    g.moveTo(0, y);
+    g.lineTo(512, y);
+    g.stroke();
+  }
+  for (let x = 32; x < 512; x += 64) {
+    g.beginPath();
+    g.moveTo(x, 0);
+    g.lineTo(x, 1024);
+    g.stroke();
+  }
+  g.fillStyle = "rgba(55,58,66,0.22)";
+  for (let y = 60; y < 1024; y += 96) for (let x = 4; x < 512; x += 10) g.fillRect(x, y + 5, 2, 2);
+  g.fillStyle = "#1b1c20";
+  if (roll) {
+    // the roll pattern: alternating black quarters in a band near the top, and two long stripes
+    g.fillRect(128, 0, 128, 150);
+    g.fillRect(384, 0, 128, 150);
+    g.fillRect(0, 150, 128, 120);
+    g.fillRect(256, 150, 128, 120);
+    g.fillRect(232, 270, 40, 680);
+  }
+  g.fillRect(0, 980, 512, 44);
+  if (name) {
+    g.save();
+    g.translate(58, 900);
+    g.rotate(-Math.PI / 2);
+    g.fillStyle = "#c8332a";
+    g.font = '900 54px "Unbounded", sans-serif';
+    g.fillText(name, 0, 0);
+    g.restore();
+  }
+  return tex(c);
+}
+
+/** Ribbed dark interstage. */
+export function ribs() {
+  const [c, g] = canvas(256, 64);
+  for (let x = 0; x < 256; x += 8) {
+    g.fillStyle = x % 16 ? "#2a2c31" : "#3a3d44";
+    g.fillRect(x, 0, 8, 64);
+  }
   return tex(c);
 }
