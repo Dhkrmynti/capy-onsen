@@ -8,7 +8,7 @@ web
 
 ## Stack
 
-Delegated (chosen to match the owner's other token sites so the VPS deploy flow stays identical): Vite + React + TypeScript static site, GSAP + ScrollTrigger for scroll motion, served by nginx from `/var/www/horizon.fun/dist`. Bot: Node + `tsx` + ethers v6 under pm2, HTTP API on its own port, proxied at `/api/`.
+Delegated (chosen to match the owner's other token sites so the VPS deploy flow stays identical): Vite + React + TypeScript static site, GSAP + ScrollTrigger for scroll motion, served by nginx from `/opt/horizon/dist`. Bot: Node + `tsx` + ethers v6 under pm2, HTTP API on its own port, proxied at `/api/`.
 
 ## Users
 
@@ -45,7 +45,7 @@ Every other fee-engine token on the owner's VPS burns. $VOID rewards patience di
 
 ## Brand Commitments
 
-- Name **Horizon**, ticker **$VOID** (branch `lore-void`, domain horizon.fun suggested, not yet confirmed). A second draft beside Orbiters (lore-space, kept). No word "bank" in the name or domain.
+- Name **Horizon**, ticker **$VOID** (branch `lore-void`, domain thehorizon.fun). A second draft beside Orbiters (lore-space, kept). No word "bank" in the name or domain.
 - **Only the UI and the lore change.** Backend, engine, API, features and tokenomics are exactly the Heirloom build: 0.02 ETH to the top 10 (No. 1-5 share 0.014, No. 6-10 share 0.006, by balance) → treasury 0.025 → buyback & burn 0.01 → treasury 0.025, repeat; min 100,000 tokens; no hold time; one sale disqualifies forever; dev wallet shown but never ranked or paid; X connect, names, portraits, waiting/sold strips, /lotnok, statement.
 - Lore: a black hole. Rank is distance: **No. 1 is the Singularity**, the closest orbit. Step 1 → **The Pull**, paid to the ten closest (photon ring No. 1-5, accretion disk No. 6-10); steps 2/4 → **Dark Matter** (treasury, shown openly); step 3 → **Into the Void** (buyback + burn, the burned tokens fall in); sold → **Spaghettified** (forever); leaderboard → **the orbit**; rules → **the laws**; wallet check → **your orbit**; history → **observations**; dev wallet → **the Observer**.
 - Owner's taste for this world: realistic but light 3D (black hole with accretion disk and lensing, orbiting bodies), scroll-driven camera and GSAP scroll transitions; UI fresh and not identical to any earlier draft; never heavy on phones; not serious or corporate: it is a memecoin.
