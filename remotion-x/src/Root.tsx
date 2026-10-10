@@ -1,4 +1,8 @@
 import { Composition, Still } from "remotion";
+import { HZBanner, HZGif, HZLogo, HZPostEmpty, HZPostOrbit, HZPostWho, HZHookPaper, HZHookOutmass, HZHookTen, HZPostLaws, HZ_GIF_LENGTH } from "./HZStills";
+import { HZExplainer, HZ_EXPLAINER_LENGTH } from "./HZExplainer";
+import { HZTutorial, HZ_TUTORIAL_LENGTH } from "./HZTutorial";
+import { HZSimulation, HZ_SIM_LENGTH } from "./HZSimulation";
 import { KPBanner, KPGif, KPLogo, KPPostEmpty, KPPostLadder, KPPostWho, KPLogoPad, KPHookPaper, KPHookOuthold, KPHookTen, KPPostRules, KP_GIF_LENGTH } from "./KPStills";
 import { KPExplainer, KP_EXPLAINER_LENGTH } from "./KPExplainer";
 import { KPTutorial, KP_TUTORIAL_LENGTH } from "./KPTutorial";
@@ -18,6 +22,19 @@ import { HLSimulation, HL_SIM_LENGTH } from "./HLSimulation";
 export function RemotionRoot() {
   return (
     <>
+      <Still id="HZLogo" component={HZLogo} width={1080} height={1080} />
+      <Still id="HZBanner" component={HZBanner} width={1500} height={500} />
+      <Still id="HZPostOrbit" component={HZPostOrbit} width={1600} height={900} />
+      <Still id="HZPostLaws" component={HZPostLaws} width={1600} height={900} />
+      <Still id="HZPostEmpty" component={HZPostEmpty} width={1600} height={900} />
+      <Still id="HZPostWho" component={HZPostWho} width={1600} height={900} />
+      <Still id="HZHookPaper" component={HZHookPaper} width={1600} height={900} />
+      <Still id="HZHookOutmass" component={HZHookOutmass} width={1600} height={900} />
+      <Still id="HZHookTen" component={HZHookTen} width={1600} height={900} />
+      <Composition id="HZGif" component={HZGif} width={720} height={720} fps={30} durationInFrames={HZ_GIF_LENGTH} />
+      <Composition id="HZExplainer" component={HZExplainer} width={1920} height={1080} fps={30} durationInFrames={HZ_EXPLAINER_LENGTH} />
+      <Composition id="HZTutorial" component={HZTutorial} width={1920} height={1080} fps={30} durationInFrames={HZ_TUTORIAL_LENGTH} />
+      <Composition id="HZSimulation" component={HZSimulation} width={1920} height={1080} fps={30} durationInFrames={HZ_SIM_LENGTH} />
       <Still id="KPLogoPad" component={KPLogoPad} width={1080} height={1080} />
       <Still id="KPLogo" component={KPLogo} width={1080} height={1080} />
       <Still id="KPBanner" component={KPBanner} width={1500} height={500} />
