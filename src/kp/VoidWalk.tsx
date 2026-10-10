@@ -9,14 +9,12 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
-import { earthLike, milkyWay, regolith, solarCells } from "./spaceTex";
+import { milkyWay, regolith, solarCells } from "./spaceTex";
 
 const ANCHORS = ["top", "ladder", "round", "rules", "card", "record", "closing"] as const;
 const RS = 2.2; // the event horizon's radius
 const TILT = 0.12; // the disk leans slightly toward the opening's camera
 const PROBE = new THREE.Vector3(11, 2.6, 7);
-/** The disk flares for a moment each time it swallows a world; the devourer sets it, the disk reads it. */
-const FLARE = { v: 0 };
 
 const rand = (() => {
   let s = 5;
@@ -86,7 +84,7 @@ const NOISE = /* glsl */ `
 `;
 /** Hot inner edge, cooler outer edge, streaks sheared by orbital speed, one side Doppler-bright. */
 const DISK_FRAG = /* glsl */ `
-  uniform float time; uniform float inner; uniform float outer; uniform float halo; uniform float boost;
+  uniform float time; uniform float inner; uniform float outer; uniform float halo;
   varying vec2 vp;
   ${NOISE}
   void main(){
@@ -102,7 +100,6 @@ const DISK_FRAG = /* glsl */ `
     float edge = smoothstep(0.0, 0.06, k) * (1.0 - smoothstep(0.7, 1.0, k));
     float lum = (0.35 + s) * edge * doppler * (1.25 - k);
     if (halo > 0.5) lum *= 0.85;
-    lum *= 1.0 + boost * (1.2 - k);
     gl_FragColor = vec4(col * lum * 1.6, clamp(lum, 0.0, 1.0));
   }
 `;
@@ -160,7 +157,7 @@ function BlackHole() {
   const disk = useMemo(
     () =>
       new THREE.ShaderMaterial({
-        uniforms: { time: { value: 0 }, inner: { value: RS * 1.3 }, outer: { value: RS * 4.4 }, halo: { value: 0 }, boost: { value: 0 } },
+        uniforms: { time: { value: 0 }, inner: { value: RS * 1.3 }, outer: { value: RS * 4.4 }, halo: { value: 0 } },
         vertexShader: PLANE_VERT,
         fragmentShader: DISK_FRAG,
         transparent: true,
@@ -172,7 +169,7 @@ function BlackHole() {
   );
   const lens = useMemo(() => {
     const m = disk.clone();
-    m.uniforms = { time: disk.uniforms.time, inner: { value: RS * 1.08 }, outer: { value: RS * 2.1 }, halo: { value: 1 }, boost: disk.uniforms.boost };
+    m.uniforms = { time: disk.uniforms.time, inner: { value: RS * 1.08 }, outer: { value: RS * 2.1 }, halo: { value: 1 } };
     return m;
   }, [disk]);
   const glow = useMemo(
@@ -195,10 +192,8 @@ function BlackHole() {
       }),
     [],
   );
-  useFrame((s, dt) => {
+  useFrame((s) => {
     disk.uniforms.time.value = s.clock.elapsedTime;
-    FLARE.v *= Math.exp(-dt * 1.1);
-    disk.uniforms.boost.value = FLARE.v;
     // the halo and the photon ring always face the eye, as light bent round the horizon does
     halo.current?.quaternion.copy(s.camera.quaternion);
     ring.current?.quaternion.copy(s.camera.quaternion);
@@ -358,134 +353,6 @@ function Infall({ narrow }: { narrow: boolean }) {
   );
 }
 
-/* ───────── a world falls in: spirals down, is stretched, torn into a stream, swallowed; repeat ───────── */
-const FALL_T = 17; // seconds from far out to the horizon
-const GAP_T = 3.5; // the quiet before the next world arrives
-const START_R = 17;
-
-function Devour({ narrow }: { narrow: boolean }) {
-  const body = useRef<THREE.Group>(null);
-  const planet = useRef<THREE.Mesh>(null);
-  const air = useRef<THREE.Mesh>(null);
-  const world = useMemo(() => new THREE.MeshStandardMaterial({ map: earthLike(), roughness: 0.75, metalness: 0 }), []);
-  const glow = useMemo(
-    () =>
-      new THREE.ShaderMaterial({
-        transparent: true,
-        depthWrite: false,
-        blending: THREE.AdditiveBlending,
-        side: THREE.BackSide,
-        vertexShader: "varying vec3 n; varying vec3 v; void main(){ vec4 mv = modelViewMatrix * vec4(position,1.0); n = normalize(normalMatrix * normal); v = normalize(-mv.xyz); gl_Position = projectionMatrix * mv; }",
-        fragmentShader: "varying vec3 n; varying vec3 v; void main(){ float f = pow(1.0 - abs(dot(n, v)), 2.2); gl_FragColor = vec4(vec3(0.45,0.7,1.0) * f, f); }",
-      }),
-    [],
-  );
-  const ball = useMemo(() => new THREE.SphereGeometry(1, 48, 32), []);
-  // debris: a ring buffer of torn-off pieces, each on its own faster spiral inward
-  const N = narrow ? 500 : 1400;
-  const geo = useMemo(() => {
-    const g = new THREE.BufferGeometry();
-    g.setAttribute("position", new THREE.BufferAttribute(new Float32Array(N * 3).fill(9999), 3));
-    g.setAttribute("color", new THREE.BufferAttribute(new Float32Array(N * 3), 3));
-    return g;
-  }, [N]);
-  const bits = useMemo(() => Array.from({ length: N }, () => ({ live: false, r: 0, a: 0, y: 0, age: 0, hue: 0 })), [N]);
-  const spark = useMemo(
-    () =>
-      canvasTex(32, 32, (g) => {
-        const r = g.createRadialGradient(16, 16, 0, 16, 16, 16);
-        r.addColorStop(0, "rgba(255,255,255,1)");
-        r.addColorStop(0.45, "rgba(255,255,255,0.45)");
-        r.addColorStop(1, "rgba(255,255,255,0)");
-        g.fillStyle = r;
-        g.fillRect(0, 0, 32, 32);
-      }),
-    [],
-  );
-  const state = useRef({ t: 0, a0: 0.8, next: 0, swallowed: false });
-  const cool = useMemo(() => [new THREE.Color("#6fa8ff"), new THREE.Color("#7fd06a"), new THREE.Color("#ffffff"), new THREE.Color("#d8b46a")], []);
-  const hot = useMemo(() => new THREE.Color("#ff8a3a"), []);
-  const tmpC = useMemo(() => new THREE.Color(), []);
-
-  useFrame((_, dt) => {
-    const st = state.current;
-    st.t += dt;
-    const p = Math.min(1, st.t / FALL_T);
-    if (st.t > FALL_T + GAP_T) {
-      // a new world, from somewhere else on the sky
-      st.t = 0;
-      st.a0 = rand() * Math.PI * 2;
-      st.swallowed = false;
-    }
-    const falling = st.t < FALL_T;
-    const r = RS + (START_R - RS) * Math.pow(1 - p, 1.05); // lingers where the tide tears it
-    const a = st.a0 + p * p * Math.PI * 5.5 + p * Math.PI * 1.2; // the spiral tightens and speeds up
-    const x = Math.cos(a) * r;
-    const z = Math.sin(a) * r;
-    if (body.current) {
-      body.current.visible = falling && r > RS * 1.08;
-      body.current.position.set(x, 0.3 * (1 - p), z);
-      // tidal stretch: long toward the hole, thin across it
-      const tide = r < 10 ? 1 + Math.pow((10 - r) / (10 - RS), 1.5) * 4.5 : 1;
-      const shrink = r < 4.5 ? Math.max(0.05, (r - RS) / (4.5 - RS)) : 1;
-      body.current.rotation.set(0, -a, 0);
-      body.current.scale.set(tide * shrink, shrink / Math.sqrt(tide), shrink / Math.sqrt(tide));
-    }
-    if (planet.current) planet.current.rotation.y += dt * 0.25;
-    if (falling && r <= RS * 1.08 && !st.swallowed) {
-      st.swallowed = true;
-      FLARE.v = 1.6;
-    }
-    // shed pieces once the tide starts to bite
-    const shed = falling && r < 12 && r > RS * 1.1 ? Math.floor((narrow ? 200 : 560) * dt * (1 + (12 - r) * 0.4)) : 0;
-    for (let k = 0; k < shed; k++) {
-      const b = bits[st.next];
-      st.next = (st.next + 1) % N;
-      b.live = true;
-      b.r = r + (rand() - 0.5) * 0.5;
-      b.a = a + (rand() - 0.5) * 0.25;
-      b.y = (rand() - 0.5) * 0.4;
-      b.age = 0;
-      b.hue = Math.floor(rand() * cool.length);
-    }
-    const pos = geo.getAttribute("position") as THREE.BufferAttribute;
-    const col = geo.getAttribute("color") as THREE.BufferAttribute;
-    for (let i = 0; i < N; i++) {
-      const b = bits[i];
-      if (!b.live) continue;
-      b.age += dt;
-      const w = 2.4 / Math.pow(Math.max(b.r, RS), 1.5);
-      b.a += w * dt * 2.2;
-      b.r -= dt * (0.35 + 6 / (b.r * b.r)); // falls faster as it nears the horizon
-      b.y *= 0.985;
-      if (b.r < RS * 1.02) {
-        b.live = false;
-        pos.setXYZ(i, 9999, 9999, 9999);
-        continue;
-      }
-      pos.setXYZ(i, Math.cos(b.a) * b.r, b.y, Math.sin(b.a) * b.r);
-      // pieces heat up as they fall: from the world's colours to the disk's
-      tmpC.copy(cool[b.hue]).lerp(hot, Math.min(1, Math.max(0, (7 - b.r) / 4.5)));
-      col.setXYZ(i, tmpC.r, tmpC.g, tmpC.b);
-    }
-    pos.needsUpdate = true;
-    col.needsUpdate = true;
-  });
-
-  return (
-    <group rotation={[TILT, 0, 0]}>
-      <group ref={body}>
-        <mesh ref={planet} geometry={ball} material={world} scale={1.15} />
-        <mesh ref={air} geometry={ball} material={glow} scale={1.3} />
-      </group>
-      {/* normal blending, drawn after the disk: the world's blues and greens stay visible against the glow */}
-      <points geometry={geo} renderOrder={5}>
-        <pointsMaterial map={spark} vertexColors size={narrow ? 0.42 : 0.34} transparent depthWrite={false} toneMapped={false} />
-      </points>
-    </group>
-  );
-}
-
 /* ───────── the probe: a small observer craft, your orbit ───────── */
 function Probe() {
   const ref = useRef<THREE.Group>(null);
@@ -600,7 +467,6 @@ function Walk({ narrow, names, still }: { narrow: boolean; names: string[]; stil
       <BlackHole />
       <Bodies names={names} fonts={fonts} show={labels} />
       <Infall narrow={narrow} />
-      <Devour narrow={narrow} />
       <Probe />
     </>
   );
