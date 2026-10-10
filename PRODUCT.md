@@ -8,7 +8,7 @@ web
 
 ## Stack
 
-Delegated (chosen to match the owner's other token sites so the VPS deploy flow stays identical): Vite + React + TypeScript static site, GSAP + ScrollTrigger for scroll motion, served by nginx from `/var/www/hawking.fun/dist`. Bot: Node + `tsx` + ethers under pm2, HTTP API on its own port, proxied at `/api/`.
+Delegated (chosen to match the owner's other token sites so the VPS deploy flow stays identical): Vite + React + TypeScript static site, GSAP + ScrollTrigger for scroll motion, served by nginx from `/var/www/hawkings.fun/dist`. Bot: Node + `tsx` + ethers under pm2, HTTP API on its own port, proxied at `/api/`.
 
 ## Users
 
