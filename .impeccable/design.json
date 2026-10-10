@@ -1,100 +1,65 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-10T09:00:00+07:00",
-  "title": "Design System: Orbiters",
+  "generatedAt": "2026-10-10T12:00:00+07:00",
+  "title": "Design System: Horizon",
   "extensions": {
     "colorMeta": {
-      "signal-red": {
+      "accretion": {
         "role": "primary",
-        "displayName": "Signal Red",
-        "canonical": "#d6372b",
+        "displayName": "Accretion",
+        "canonical": "#ff6b1a",
         "tonalRamp": [
-          "#3a0d09",
-          "#6b1811",
-          "#9a2318",
-          "#b02a20",
-          "#d6372b",
-          "#e2685f",
-          "#ee9f99",
-          "#f9d9d6"
+          "#3d1504",
+          "#6e2608",
+          "#a3380b",
+          "#d9540d",
+          "#ff6b1a",
+          "#ff9255",
+          "#ffbb94",
+          "#ffe4d4"
         ]
       },
-      "ultramarine": {
-        "role": "secondary",
-        "displayName": "Ultramarine",
-        "canonical": "#1f2f8a",
-        "tonalRamp": [
-          "#080d2a",
-          "#0e1433",
-          "#16226a",
-          "#1f2f8a",
-          "#3b55d6",
-          "#7086e2",
-          "#a9b6ee",
-          "#e0e5f9"
-        ]
+      "void": {
+        "role": "neutral",
+        "displayName": "Void",
+        "canonical": "#050506"
       },
-      "burn": {
-        "role": "tertiary",
-        "displayName": "Burn",
-        "canonical": "#ff7a1a",
-        "tonalRamp": [
-          "#3d1a02",
-          "#6e3005",
-          "#a34708",
-          "#d9600d",
-          "#ff7a1a",
-          "#ff9d55",
-          "#ffc194",
-          "#ffe7d4"
-        ]
+      "void-raised": {
+        "role": "neutral",
+        "displayName": "Void Raised",
+        "canonical": "#0d0d10"
       },
       "paper": {
         "role": "neutral",
         "displayName": "Paper",
-        "canonical": "#f1e4c8"
+        "canonical": "#f3f3ef"
       },
-      "paper-shade": {
+      "muted": {
         "role": "neutral",
-        "displayName": "Paper Shade",
-        "canonical": "#e6d3ad"
-      },
-      "night": {
-        "role": "neutral",
-        "displayName": "Night",
-        "canonical": "#0e1433"
-      },
-      "ink": {
-        "role": "neutral",
-        "displayName": "Ink",
-        "canonical": "#161616"
-      },
-      "ink-soft": {
-        "role": "neutral",
-        "displayName": "Ink Soft",
-        "canonical": "#4b4a52"
+        "displayName": "Muted",
+        "canonical": "#8f8f8a"
       }
     },
     "typographyMeta": {
       "display": {
         "displayName": "Display",
-        "purpose": "Hero and close, wide uppercase caps."
+        "purpose": "Hero and close."
       },
       "headline": {
         "displayName": "Headline",
         "purpose": "Section titles."
       },
-      "title": {
-        "displayName": "Title",
-        "purpose": "Stage names, log kinds."
+      "caption": {
+        "displayName": "Caption",
+        "purpose": "Figure captions, journal style."
       },
-      "body": {
-        "displayName": "Body",
-        "purpose": "Explanations."
+      "law": {
+        "displayName": "Law",
+        "purpose": "Rules as numbered equations."
       },
       "label": {
         "displayName": "Label",
-        "purpose": "Buttons, nav, tags."
+        "purpose": "Buttons and nav."
       },
       "data": {
         "displayName": "Data",
@@ -106,22 +71,22 @@
       {
         "name": "ease-out",
         "value": "cubic-bezier(0.16, 1, 0.3, 1)",
-        "purpose": "Nav dot and CSS state changes."
+        "purpose": "Nav underline and state changes."
       },
       {
-        "name": "needle",
-        "value": "elastic.out(1, 0.45)",
-        "purpose": "GSAP: the fuel needle swings past and settles."
+        "name": "fall",
+        "value": "back.out(1.6)",
+        "purpose": "GSAP: the escrow body falls down the 1/r curve and settles."
       },
       {
-        "name": "band-scrub",
+        "name": "well",
+        "value": "ScrollTrigger progress, 0.6s power2.out follow",
+        "purpose": "The page grid deepens into the well as you scroll."
+      },
+      {
+        "name": "pull-in",
         "value": "scrub 0.6",
-        "purpose": "GSAP ScrollTrigger: the diagonal band between sections."
-      },
-      {
-        "name": "orbit",
-        "value": "ScrollTrigger progress, 0.5s power2.out follow",
-        "purpose": "The page-long orbit arc drawn as you scroll."
+        "purpose": "Band: the next title pulled in from wide and faint."
       }
     ],
     "breakpoints": [
@@ -130,89 +95,75 @@
         "value": "760px"
       },
       {
-        "name": "nav-hidden",
-        "value": "1080px"
+        "name": "stack",
+        "value": "1100px"
       }
     ]
   },
   "components": [
     {
-      "name": "Buy block",
+      "name": "Buy",
       "kind": "button",
       "refersTo": "button-primary",
       "description": "The one primary action.",
-      "html": "<a class=\"ds-buy\" href=\"#\">Buy $ORBIT</a>",
-      "css": ".ds-buy{display:inline-flex;align-items:center;height:54px;padding:0 28px;background:#d6372b;color:#f1e4c8;font:800 15px/1 'Golos Text',sans-serif;text-transform:uppercase;letter-spacing:.08em;text-decoration:none;clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,0 100%);transition:background-color .2s}.ds-buy:hover{background:#b02a20}.ds-buy:focus-visible{outline:3px solid #f1e4c8;outline-offset:3px}"
+      "html": "<a class=\"ds-buy\" href=\"#\">Buy $VOID</a>",
+      "css": ".ds-buy{display:inline-flex;align-items:center;height:52px;padding:0 26px;background:#ff6b1a;color:#050506;font:700 14px/1 'Schibsted Grotesk',sans-serif;text-transform:uppercase;letter-spacing:.08em;text-decoration:none;transition:background-color .2s}.ds-buy:hover{background:#d9540d}.ds-buy:focus-visible{outline:2px solid #ff6b1a;outline-offset:3px}"
     },
     {
       "name": "Line button",
       "kind": "button",
       "refersTo": "button-line",
-      "description": "Secondary action on dark fields.",
-      "html": "<a class=\"ds-line\" href=\"#\">Meet the crew</a>",
-      "css": ".ds-line{display:inline-flex;align-items:center;height:54px;padding:0 24px;border:2px solid #f1e4c8;color:#f1e4c8;background:#1f2f8a;font:800 15px/1 'Golos Text',sans-serif;text-transform:uppercase;letter-spacing:.08em;text-decoration:none;transition:background-color .2s,color .2s}.ds-line:hover{background:#f1e4c8;color:#161616}"
+      "description": "Secondary action.",
+      "html": "<a class=\"ds-line\" href=\"#\">See the orbit</a>",
+      "css": ".ds-line{display:inline-flex;align-items:center;height:52px;padding:0 24px;border:1px solid rgba(243,243,239,.45);color:#f3f3ef;background:#050506;font:700 14px/1 'Schibsted Grotesk',sans-serif;text-transform:uppercase;letter-spacing:.08em;text-decoration:none;transition:background-color .2s,color .2s}.ds-line:hover{background:#f3f3ef;color:#050506}"
     },
     {
-      "name": "Masthead nav",
-      "kind": "nav",
-      "description": "Red bar, current section brightens with a dot.",
-      "html": "<nav class=\"ds-nav\"><a class=\"is-on\" href=\"#\">Crew</a><a href=\"#\">Flight plan</a><a href=\"#\">Mission log</a></nav>",
-      "css": ".ds-nav{display:flex;gap:2px;padding:16px;background:#d6372b}.ds-nav a{position:relative;padding:8px 12px;font:700 13px/1 'Golos Text',sans-serif;text-transform:uppercase;letter-spacing:.08em;text-decoration:none;color:rgba(241,228,200,.78)}.ds-nav a.is-on,.ds-nav a:hover{color:#f1e4c8}.ds-nav a.is-on:after{content:'';position:absolute;left:50%;bottom:-6px;width:8px;height:8px;margin-left:-4px;border-radius:50%;background:#f1e4c8}"
-    },
-    {
-      "name": "Crew row",
+      "name": "Orbit row",
       "kind": "custom",
-      "description": "A seat on the roster.",
-      "html": "<div class=\"ds-seat\"><b>02</b><span>@moonwalker<small>6.6M \u00b7 $272</small></span><em>0.0035 ETH</em></div>",
-      "css": ".ds-seat{display:grid;grid-template-columns:52px 1fr auto;align-items:center;gap:14px;padding:10px 12px;background:#f1e4c8;border-bottom:1px solid rgba(22,22,22,.16);font:800 16px/1.2 'Golos Text',sans-serif;color:#161616}.ds-seat b{font:900 26px/1 Unbounded,sans-serif;color:#d6372b}.ds-seat small{display:block;font:500 12px/1.3 'Spline Sans Mono',monospace;color:#4b4a52}.ds-seat em{font:600 13px/1 'Spline Sans Mono',monospace;font-style:normal;padding:5px 8px;background:#e6d3ad}"
+      "description": "One rank in the orbit table.",
+      "html": "<div class=\"ds-row\"><span>01</span><b>@eventhorizon<small>m = 9.4M · $387</small></b><em>0.0050 ETH</em></div>",
+      "css": ".ds-row{display:grid;grid-template-columns:36px 1fr auto;align-items:center;gap:14px;padding:9px 12px;background:#050506;border-bottom:1px solid rgba(243,243,239,.22);color:#f3f3ef}.ds-row span{font:400 13px 'Geist Mono',monospace;color:#ff6b1a}.ds-row b{font:700 15px 'Schibsted Grotesk',sans-serif}.ds-row small{display:block;font:400 12px 'Geist Mono',monospace;color:#8f8f8a}.ds-row em{font:500 12.5px 'Geist Mono',monospace;font-style:normal;padding:5px 8px;background:#ff6b1a;color:#050506}"
     },
     {
-      "name": "Stage",
+      "name": "Law",
       "kind": "custom",
-      "description": "One stage of the flight-plan rocket; the burning one turns orange.",
-      "html": "<div class=\"ds-stage\"><span>1</span><i></i><p><b>Stage 1 \u00b7 Supply Drop</b>0.02 ETH</p></div>",
-      "css": ".ds-stage{display:grid;grid-template-columns:120px 48px 1fr;align-items:center;background:#1f2f8a;color:#f1e4c8;padding:12px}.ds-stage span{display:grid;place-items:center;height:90px;background:#ff7a1a;color:#161616;border:4px solid #161616;font:900 36px/1 Unbounded,sans-serif}.ds-stage i{height:2px;background:#f1e4c8}.ds-stage p{margin:0 0 0 12px;font:500 15px/1.3 'Spline Sans Mono',monospace}.ds-stage b{display:block;font:900 20px/1.05 Unbounded,sans-serif;text-transform:uppercase}"
+      "description": "A rule as a numbered equation.",
+      "html": "<div class=\"ds-law\"><span><i>one sale</i> <b>⟹</b> spaghettified. For good.</span><small>(4)</small></div>",
+      "css": ".ds-law{display:grid;grid-template-columns:1fr auto;gap:20px;padding:18px 12px;background:#050506;border-bottom:1px solid rgba(243,243,239,.22);font:400 24px/1.35 'STIX Two Text',serif;color:#f3f3ef}.ds-law b{color:#ff6b1a;font-weight:400}.ds-law small{font:400 14px 'Geist Mono',monospace;color:#8f8f8a}"
     },
     {
       "name": "Wallet field",
       "kind": "input",
       "description": "Wallet lookup.",
-      "html": "<input class=\"ds-input\" placeholder=\"0x\u2026\">",
-      "css": ".ds-input{height:48px;padding:0 14px;border:2px solid #161616;border-radius:0;background:#fffaf0;color:#161616;font:500 14px/1 'Spline Sans Mono',monospace}.ds-input:focus-visible{outline:3px solid #1f2f8a;outline-offset:3px}"
+      "html": "<input class=\"ds-input\" placeholder=\"0x…\">",
+      "css": ".ds-input{height:48px;padding:0 14px;border:1px solid rgba(243,243,239,.45);border-radius:0;background:#050506;color:#f3f3ef;font:400 14px 'Geist Mono',monospace}.ds-input:focus-visible{outline:2px solid #ff6b1a;outline-offset:3px}"
     }
   ],
   "narrative": {
-    "northStar": "Space Race Poster",
-    "overview": "A 1960s space-race poster you scroll through: flat red, paper and ultramarine fields cut on the diagonal, one orbit arc drawn across the page, over a light-cartoon 3D planet with a rocket that lifts off at the end.",
+    "northStar": "Gravity Well Figure",
+    "overview": "A physics figure about a black hole you scroll through: hairlines on the void, a grid bending into a well, a polar orbit plot, journal captions, one accretion orange, over a realistic, light 3D black hole.",
     "keyCharacteristics": [
-      "Fields own whole regions",
-      "Square corners, one corner clipped",
-      "Circles only for people and planets",
-      "Burn orange only for what is firing now"
+      "Monochrome hairline figures",
+      "One accretion orange owned outright",
+      "Figures, not cards",
+      "STIX captions and laws"
     ],
     "rules": [
       {
-        "name": "The One Burn Rule",
-        "body": "Burn orange marks one thing at a time: the stage firing now, the fuel held, the flame.",
+        "name": "The One Orange Rule",
+        "body": "Orange is the action and the present tense, never decoration.",
         "section": "colors"
-      },
-      {
-        "name": "The Wide Caps Rule",
-        "body": "Unbounded only at 15px and up, uppercase, never for sentences.",
-        "section": "typography"
       }
     ],
     "dos": [
-      "Do keep every number in Spline Sans Mono",
-      "Do cut sheets and buttons on one corner",
-      "Do keep 3D subjects clear of the sheet beside them"
+      "Do caption every figure",
+      "Do keep every number in Geist Mono"
     ],
     "donts": [
-      "Don't add glows, neon or gradients to UI fields",
-      "Don't use burn orange for decoration",
-      "Don't add a kicker above a headline",
-      "Don't put a CSS transition on a GSAP-animated element",
-      "Don't use political symbols"
+      "Don't add glows to UI",
+      "Don't use orange as decoration",
+      "Don't round corners or add kickers",
+      "Don't put a CSS transition on a GSAP-animated element"
     ]
   }
 }

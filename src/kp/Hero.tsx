@@ -1,6 +1,6 @@
 /**
- * The opening: the rocket on its pad behind, and in front who commands the mission right now and
- * how much fuel the escrow holds toward the next stage.
+ * The opening: the black hole behind, and in front the figure that matters: who sits closest to
+ * the singularity right now, and the escrow falling down a 1/r curve toward the next Pull.
  */
 import { useRef } from "react";
 import gsap from "gsap";
@@ -14,31 +14,58 @@ import { CrewFace } from "../components/Face";
 
 gsap.registerPlugin(useGSAP);
 
-/** A poster dial: the needle carries mass, so a new reading swings past and settles. */
-function Gauge({ value, target, label }: { value: number; target: number; label: string }) {
+const PW = 360;
+const PH = 170;
+const X0 = 34;
+const Y0 = 150;
+/** The well's profile: steep near the horizon (left), flat far away (right). */
+const curveY = (r: number) => Y0 - Math.min(132, 9 / (r + 0.06));
+const pt = (r: number) => [X0 + r * (PW - X0 - 10), curveY(r)] as const;
+
+/** The escrow as a body falling in: the closer to the next step, the closer to the horizon. */
+function Fall({ value, target, label }: { value: number; target: number; label: string }) {
   const root = useRef<SVGSVGElement>(null);
   const pct = target > 0 ? Math.max(0, Math.min(1, value / target)) : 0;
+  const d = Array.from({ length: 80 }, (_, i) => {
+    const r = 0.02 + (i / 79) * 0.98;
+    const [x, y] = pt(r);
+    return `${i ? "L" : "M"}${x.toFixed(1)} ${y.toFixed(1)}`;
+  }).join("");
   useGSAP(
     () => {
-      const to = { rotate: -90 + pct * 180, svgOrigin: "100 100" };
-      if (prefersReducedMotion()) gsap.set(".gauge__needle", to);
-      else gsap.fromTo(".gauge__needle", { rotate: -90, svgOrigin: "100 100" }, { ...to, duration: 2, ease: "elastic.out(1, 0.45)", delay: 0.7 });
+      const dot = root.current?.querySelector<SVGGElement>(".fall__body");
+      if (!dot) return;
+      const st = { r: 1 };
+      const place = () => {
+        const [x, y] = pt(st.r);
+        dot.setAttribute("transform", `translate(${x} ${y})`);
+      };
+      const to = 1 - pct * 0.94;
+      if (prefersReducedMotion()) {
+        st.r = to;
+        return place();
+      }
+      gsap.to(st, { r: to, duration: 2.2, ease: "back.out(1.6)", delay: 0.6, onUpdate: place });
+      place();
     },
     { scope: root, dependencies: [pct] },
   );
   return (
-    <svg className="gauge" ref={root} viewBox="0 0 200 112" role="meter" aria-valuemin={0} aria-valuemax={target} aria-valuenow={value} aria-label={label}>
-      <path className="gauge__track" d="M 14 100 A 86 86 0 0 1 186 100" />
-      <path className="gauge__fill" d="M 14 100 A 86 86 0 0 1 186 100" pathLength={100} style={{ strokeDasharray: `${pct * 100} 100` }} />
-      {Array.from({ length: 11 }, (_, i) => {
-        const a = Math.PI - (i / 10) * Math.PI;
-        const r1 = i % 5 ? 70 : 64;
-        return <line key={i} className="gauge__tick" x1={100 + Math.cos(a) * r1} y1={100 - Math.sin(a) * r1} x2={100 + Math.cos(a) * 76} y2={100 - Math.sin(a) * 76} />;
-      })}
-      <g className="gauge__needle">
-        <path d="M 97 100 L 100 30 L 103 100 Z" />
+    <svg className="fall" ref={root} viewBox={`0 0 ${PW} ${PH + 26}`} role="meter" aria-valuemin={0} aria-valuemax={target} aria-valuenow={value} aria-label={label}>
+      <line className="fall__axis" x1={X0} y1={Y0} x2={PW - 6} y2={Y0} />
+      <line className="fall__axis" x1={X0} y1={Y0} x2={X0} y2={10} />
+      <line className="fall__horizon" x1={X0 + 6} y1={Y0} x2={X0 + 6} y2={14} />
+      <path className="fall__curve" d={d} />
+      <text className="fall__t" x={X0 + 10} y={22}>
+        r = rₛ
+      </text>
+      <text className="fall__t" x={PW - 8} y={Y0 + 20} textAnchor="end">
+        distance to The Pull
+      </text>
+      <g className="fall__body">
+        <circle r="9" className="fall__halo" />
+        <circle r="4.5" className="fall__dot" />
       </g>
-      <circle className="gauge__hub" cx="100" cy="100" r="8" />
     </svg>
   );
 }
@@ -60,65 +87,64 @@ export function Hero({ status, pond, offline }: { status: Status | null; pond: P
       if (prefersReducedMotion()) return;
       gsap
         .timeline({ defaults: { ease: "expo.out" } })
-        .from(".hero__h .ln", { yPercent: 105, duration: 1.2, stagger: 0.1, delay: 0.25 })
-        .from(".cmdr", { clipPath: "polygon(0 0, 0 0, 0 100%, 0 100%)", duration: 1, ease: "power4.inOut" }, "-=0.8")
-        .from(".fuel, .hero__acts", { y: 20, opacity: 0, duration: 0.8, stagger: 0.1 }, "-=0.5");
+        .from(".hero__h .ln", { yPercent: 105, duration: 1.3, stagger: 0.1, delay: 0.25 })
+        .from(".sing", { opacity: 0, y: 16, duration: 0.9 }, "-=0.8")
+        .from(".fall__curve", { strokeDasharray: 900, strokeDashoffset: 900, duration: 1.6, ease: "power3.out" }, "-=0.7")
+        .from(".hero__fig, .hero__acts", { opacity: 0, y: 14, duration: 0.8, stagger: 0.08 }, "-=1.2");
     },
     { scope: root },
   );
 
   return (
-    <section className="hero" id="top" ref={root} aria-label="Orbiters">
+    <section className="hero" id="top" ref={root} aria-label="Horizon">
       <div className="hero__copy">
         <h1 className="hero__h">
           <span className="mask">
-            <span className="ln">Take</span>
+            <span className="ln">Fall</span>
           </span>
           <span className="mask">
-            <span className="ln">command.</span>
+            <span className="ln">closer.</span>
           </span>
         </h1>
-        <div className="cmdr" role="status">
+        <div className="sing" role="status">
           {offline ? (
-            <p className="cmdr__line">Mission control is quiet for a moment. Back shortly.</p>
+            <p className="sing__line">The observatory is quiet for a moment. Back shortly.</p>
           ) : top && who ? (
-            <p className="cmdr__line">
-              <span className="cmdr__k">Commander</span>
-              <span className="cmdr__who">
-                <CrewFace addr={top.addr} pp={top.pp} x={top.x} size={34} className="cmdr__face" />
+            <p className="sing__line">
+              <span className="sing__k">The Singularity</span>
+              <span className="sing__who">
+                <CrewFace addr={top.addr} pp={top.pp} x={top.x} size={30} className="sing__face" />
                 <b>{who.name}</b>
               </span>
-              <span className="cmdr__bal tabular">
-                {compact(top.balance)} $ORBIT{px > 0 ? ` · ${usd(parseFloat(top.balance) * px)}` : ""}
+              <span className="sing__bal tabular">
+                m = {compact(top.balance)} $VOID{px > 0 ? ` · ${usd(parseFloat(top.balance) * px)}` : ""}
               </span>
             </p>
           ) : (
-            <p className="cmdr__line">
-              <span className="cmdr__k">Commander</span>
-              <span className="cmdr__who">
-                <b>The seat is empty.</b>
+            <p className="sing__line">
+              <span className="sing__k">The Singularity</span>
+              <span className="sing__who">
+                <b>Nobody yet.</b>
               </span>
-              <span className="cmdr__bal">The biggest holder commands. The top ten get paid in ETH.</span>
+              <span className="sing__bal">The biggest holder orbits closest. The ten closest are paid in ETH.</span>
             </p>
           )}
         </div>
-        <div className="fuel">
-          <Gauge value={escrow} target={target} label={`Fuel toward ${stepName}`} />
-          <p className="fuel__read tabular">
-            <span className="fuel__k">Fuel</span>
-            <b>{escrow.toFixed(4)}</b>
-            <span>/ {next.thresholdETH} ETH to {stepName}</span>
-          </p>
-        </div>
+        <figure className="hero__plot">
+          <Fall value={escrow} target={target} label={`Escrow toward ${stepName}`} />
+          <figcaption className="hero__fig">
+            <i>Fig. 1.</i> Escrow at <b className="tabular">{escrow.toFixed(4)}</b> of {next.thresholdETH} ETH, falling toward {stepName}.
+          </figcaption>
+        </figure>
         <div className="hero__acts">
           <BuyButton status={status} />
-          <a className="sr-btn is-line" href="#ladder">
-            Meet the crew
+          <a className="vd-btn" href="#ladder">
+            See the orbit
           </a>
         </div>
       </div>
       <a className="hero__cue" href="#ladder">
-        Begin countdown <ArrowDown weight="bold" aria-hidden="true" />
+        Fall in <ArrowDown weight="bold" aria-hidden="true" />
       </a>
     </section>
   );

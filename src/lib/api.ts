@@ -124,9 +124,9 @@ export interface RoundRow {
 
 /** The cycle, in plain names. */
 export const STEP: Record<RoundKind, { name: string; does: string }> = {
-  feeding: { name: "Supply Drop", does: "ETH to the ten Crew" },
-  keeper: { name: "Mission Fund", does: "to the treasury wallet" },
-  sink: { name: "The Burn", does: "buy $ORBIT back and burn it" },
+  feeding: { name: "The Pull", does: "ETH to the ten in orbit" },
+  keeper: { name: "Dark Matter", does: "to the treasury wallet" },
+  sink: { name: "Into the Void", does: "buy $VOID back and burn it" },
 };
 
 export const DEFAULT_STEPS: Status["cycle"]["steps"] = [

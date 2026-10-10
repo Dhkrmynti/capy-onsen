@@ -1,9 +1,8 @@
-/** Flight Rules: four lines on the red diagonal, and the count ejected so far. */
+/** The Laws: four rules set as numbered equations, and the count spaghettified so far. */
 import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { Eject } from "@phosphor-icons/react";
 import { amount, type Status } from "../lib/api";
 import { prefersReducedMotion } from "../lib/motion";
 
@@ -16,38 +15,40 @@ export function Rules({ status }: { status: Status | null }) {
   useGSAP(
     () => {
       if (prefersReducedMotion()) return;
-      gsap.from(".rules__field", { clipPath: "polygon(0 0, 0 0, 0 100%, 0 100%)", duration: 1.2, ease: "power4.inOut", scrollTrigger: { trigger: ".rules__field", start: "top 75%" } });
-      gsap.from(".rule", { x: -40, opacity: 0, duration: 0.8, ease: "expo.out", stagger: 0.1, delay: 0.4, scrollTrigger: { trigger: ".rules__field", start: "top 75%" } });
+      gsap.from(".law", { opacity: 0, x: -24, duration: 0.8, ease: "expo.out", stagger: 0.12, scrollTrigger: { trigger: ".laws__list", start: "top 78%" } });
     },
     { scope: root },
   );
-  const rules: [string, string][] = [
-    [`${min} $ORBIT`, "gets you a seat."],
-    ["The biggest holder", "commands the mission."],
-    ["The top ten", "split every Supply Drop."],
-    ["One sale", "and you're ejected. For good."],
+  const laws: [string, string][] = [
+    [`m ≥ ${min} $VOID`, "you are in orbit."],
+    ["max(m)", "is the Singularity."],
+    ["the ten closest", "share every Pull."],
+    ["one sale", "spaghettified. For good."],
   ];
   return (
-    <section className="rules" id="rules" ref={root} aria-labelledby="rules-head">
-      <div className="rules__field">
-        <h2 className="sr-h2" id="rules-head">
-          Flight rules.
+    <section className="laws" id="rules" ref={root} aria-labelledby="rules-head">
+      <div className="frame laws__frame">
+        <h2 className="vd-h2" id="rules-head">
+          The laws.
         </h2>
-        <ol className="rules__list">
-          {rules.map(([k, v], i) => (
-            <li key={k} className="rule">
-              <span className="rule__n tabular">{i + 1}</span>
-              <span>
-                <b>{k}</b> {v}
+        <ol className="laws__list">
+          {laws.map(([k, v], i) => (
+            <li key={k} className="law">
+              <span className="law__eq">
+                <i>{k}</i>
+                <span className="law__to" aria-hidden="true">
+                  {" "}
+                  ⟹{" "}
+                </span>
+                <span className="sr-only"> means </span>
+                {v}
               </span>
+              <span className="law__n tabular">({i + 1})</span>
             </li>
           ))}
         </ol>
-        <p className="rules__out">
-          <Eject weight="bold" aria-hidden="true" />
-          <span>
-            <b className="tabular">{out}</b> ejected so far. Moving between your own wallets is not a sale.
-          </span>
+        <p className="laws__out">
+          <b className="tabular">{out}</b> spaghettified so far. Moving between your own wallets is not a sale.
         </p>
       </div>
     </section>

@@ -17,12 +17,12 @@ const VALID = /^0x[0-9a-fA-F]{40}$/;
 
 type Tone = "ok" | "wait" | "stop" | "dim";
 const STAMP: Record<WalletInfo["status"], { word: string; tone: Tone; line: string }> = {
-  sitting: { word: "Crew", tone: "ok", line: "You have a seat. Hold on and share the Supply Drop." },
-  waiting: { word: "Pending", tone: "wait", line: "Your first $ORBIT are still settling. A moment." },
-  "too-small": { word: "Cadet", tone: "wait", line: "Under 100,000 $ORBIT. Hold more to get a seat." },
-  hopped: { word: "Ejected", tone: "stop", line: "This wallet sold. Out the airlock, for good." },
+  sitting: { word: "In orbit", tone: "ok", line: "You are in orbit. Hold and feel The Pull." },
+  waiting: { word: "Pending", tone: "wait", line: "Your first $VOID are still settling. A moment." },
+  "too-small": { word: "Drifting", tone: "wait", line: "Under 100,000 $VOID. Too light to be pulled in. Hold more." },
+  hopped: { word: "Spaghettified", tone: "stop", line: "This wallet sold. Stretched into the void, for good." },
   excluded: { word: "Not crew", tone: "dim", line: "Engine, curve, chest or dead address. Never paid." },
-  "not-holding": { word: "No fuel", tone: "dim", line: "This wallet holds no $ORBIT." },
+  "not-holding": { word: "No mass", tone: "dim", line: "This wallet holds no $VOID." },
 };
 
 /** What X sign-in came back with (?x=…), read once and then cleared from the address bar. */
@@ -352,7 +352,7 @@ export function CrewCard({ live }: { live: boolean }) {
       url.searchParams.set("w", addr);
       window.history.replaceState(null, "", url);
     } catch (e: any) {
-      setError(e?.message === "Not Found" || !live ? "The rocket hasn't launched yet: nothing to check." : "Couldn't reach the engine. Try again in a moment.");
+      setError(e?.message === "Not Found" || !live ? "Nothing has crossed the horizon yet: nothing to check." : "Couldn't reach the engine. Try again in a moment.");
     } finally {
       setBusy(false);
     }
@@ -421,22 +421,22 @@ export function CrewCard({ live }: { live: boolean }) {
     } catch {}
   };
 
-  const base = info ? (info.house ? { word: "Ground Control", tone: "ok" as Tone, line: "The founder's wallet. Watches the mission, never ranked, never paid." } : STAMP[info.status]) : null;
+  const base = info ? (info.house ? { word: "Observer", tone: "ok" as Tone, line: "The founder's wallet. Watches from outside, never ranked, never paid." } : STAMP[info.status]) : null;
   // Crew outside the top N gets no cut yet: say how far it has to climb.
   const stamp =
     info && base && info.status === "sitting" && !info.inTop
-      ? { ...base, tone: "wait" as const, line: `No. ${info.rank}. Only the top ${info.topN} share the Supply Drop: climb ${info.rank! - info.topN} more.` }
+      ? { ...base, tone: "wait" as const, line: `No. ${info.rank}. Only the top ${info.topN} feel The Pull: climb ${info.rank! - info.topN} more.` }
       : info && base && info.status === "sitting"
-        ? { ...base, word: info.rank === 1 ? "Commander" : base.word, line: info.rank === 1 ? "You hold the most. The biggest cut of the next Supply Drop is yours." : `Top ${info.topN}. You share the next Haul.` }
+        ? { ...base, word: info.rank === 1 ? "The Singularity" : base.word, line: info.rank === 1 ? "You hold the most mass. The biggest share of the next Pull is yours." : `Top ${info.topN}. You share the next Haul.` }
         : base;
 
   return (
     <section className="share" id="card" ref={root} aria-labelledby="card-head">
-      <div className="share__sheet">
+      <div className="frame">
       <div className="cardpage__grid">
         <div className="cardpage__ask">
-          <h2 className="sr-h2" id="card-head">
-            Your seat.
+          <h2 className="vd-h2" id="card-head">
+            Your orbit.
           </h2>
           <form className="lookup" onSubmit={submit} noValidate>
             <label htmlFor="wallet">Wallet address</label>
@@ -466,8 +466,8 @@ export function CrewCard({ live }: { live: boolean }) {
           {info && stamp ? (
             <article className={`card is-${stamp.tone}`}>
               <header className="card__top">
-                <span className="card__org"><Mark size={24} /> Orbiters</span>
-                <span className="card__kind">Crew badge</span>
+                <span className="card__org"><Mark size={24} /> Horizon</span>
+                <span className="card__kind">Orbit card</span>
               </header>
               <div className="card__body">
                 <div className="card__mug" aria-hidden="true">
@@ -510,7 +510,7 @@ export function CrewCard({ live }: { live: boolean }) {
                       <dd className="tabular">{eth(info.received)}</dd>
                     </div>
                     <div>
-                      <dt>{info.status === "sitting" && info.inTop ? "Next Supply Drop, est." : info.status === "hopped" ? "Ejected" : "Rank"}</dt>
+                      <dt>{info.status === "sitting" && info.inTop ? "Next Pull, est." : info.status === "hopped" ? "Spaghettified" : "Rank"}</dt>
                       <dd className="tabular">
                         {info.status === "sitting" && info.inTop ? (
                           eth(info.estNext)
@@ -545,10 +545,10 @@ export function CrewCard({ live }: { live: boolean }) {
           ) : (
             <div className="card is-blank" aria-hidden="true">
               <header className="card__top">
-                <span className="card__org"><Mark size={24} /> Orbiters</span>
-                <span className="card__kind">Crew badge</span>
+                <span className="card__org"><Mark size={24} /> Horizon</span>
+                <span className="card__kind">Orbit card</span>
               </header>
-              <p className="card__blank">Your crew badge appears here.</p>
+              <p className="card__blank">Your orbit card appears here.</p>
             </div>
           )}
           {info && info.status !== "not-holding" && (info.status !== "excluded" || info.house) ? (
@@ -557,8 +557,8 @@ export function CrewCard({ live }: { live: boolean }) {
             // Say why the booth is shut instead of leaving a connected holder guessing.
             <p className="byline__shut">
               {live
-                ? "Names, portraits and X links are for wallets holding $ORBIT. Buy in, then come back."
-                : "Opens at launch: once $ORBIT trades, any holder can set a name, a portrait or link X here."}
+                ? "Names, portraits and X links are for wallets holding $VOID. Buy in, then come back."
+                : "Opens at launch: once $VOID trades, any holder can set a name, a portrait or link X here."}
             </p>
           ) : null}
         </div>

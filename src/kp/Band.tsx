@@ -1,6 +1,6 @@
 /**
- * Between sections, a poster band cuts across the screen on the diagonal: its field slides in with
- * the scroll, the next section's name runs along it, and the 3D camera travels behind.
+ * Between figures, the next section's name is pulled in: it starts spread wide and small at the
+ * edge of the frame and is drawn tight toward the centre as you scroll, under its figure number.
  */
 import { useRef } from "react";
 import gsap from "gsap";
@@ -10,27 +10,24 @@ import { prefersReducedMotion } from "../lib/motion";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
-export function Band({ tone, label }: { tone: "red" | "cream" | "blue"; label: string }) {
+export function Band({ fig, label }: { fig: number; label: string }) {
   const root = useRef<HTMLDivElement>(null);
   useGSAP(
     () => {
       if (prefersReducedMotion()) return;
       gsap
         .timeline({ scrollTrigger: { trigger: root.current, start: "top bottom", end: "bottom top", scrub: 0.6 } })
-        .fromTo(".band__field", { xPercent: 60, rotate: -14 }, { xPercent: -60, rotate: -6, ease: "none" }, 0)
-        .fromTo(".band__word", { xPercent: 40 }, { xPercent: -40, ease: "none" }, 0)
-        .fromTo(".band__stripe", { xPercent: -80 }, { xPercent: 80, ease: "none" }, 0);
+        .fromTo(".band__word", { scale: 0.45, letterSpacing: "0.6em", opacity: 0.2 }, { scale: 1, letterSpacing: "-0.04em", opacity: 1, ease: "power2.in", duration: 0.55 }, 0)
+        .to(".band__word", { scale: 0.2, opacity: 0, filter: "blur(6px)", ease: "power3.in", duration: 0.45 }, 0.55)
+        .fromTo(".band__rule", { scaleX: 0 }, { scaleX: 1, ease: "none", duration: 0.5 }, 0);
     },
     { scope: root },
   );
   return (
-    <div className={`band is-${tone}`} ref={root} aria-hidden="true">
-      <div className="band__stripe" />
-      <div className="band__field">
-        <p className="band__word">
-          {label} <span>·</span> {label} <span>·</span> {label}
-        </p>
-      </div>
+    <div className="band" ref={root} aria-hidden="true">
+      <span className="band__rule" />
+      <p className="band__fig">Fig. {fig}</p>
+      <p className="band__word">{label}</p>
     </div>
   );
 }

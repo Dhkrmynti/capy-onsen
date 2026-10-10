@@ -15,10 +15,10 @@ import { Record } from "./kp/Record";
 import { Close } from "./kp/Close";
 import { nameFor } from "./lib/alias";
 import { Band } from "./kp/Band";
-import { Orbit } from "./kp/Orbit";
+import { Well } from "./kp/Well";
 
-// The planet loads after the page, so the first paint never waits for it.
-const SpaceWalk = lazy(() => import("./kp/SpaceWalk"));
+// The black hole loads after the page, so the first paint never waits for it.
+const VoidWalk = lazy(() => import("./kp/VoidWalk"));
 
 function useWalk() {
   const [show, setShow] = useState(false);
@@ -107,28 +107,28 @@ export function App() {
   }, []);
 
   return (
-    <div className="kp sr">
-      {/* the planet, fixed behind every section; the page scrolls through it */}
+    <div className="kp vd">
+      {/* the black hole, fixed behind every section; the page scrolls through it */}
       <div className="walk" aria-hidden="true">
         {walk ? (
           <Suspense fallback={null}>
-            <SpaceWalk names={names} still={prefersReducedMotion()} />
+            <VoidWalk names={names} still={prefersReducedMotion()} />
           </Suspense>
         ) : null}
       </div>
-      <Orbit />
+      <Well />
       <Header status={status} />
       <main>
         <Hero status={status} pond={pond} offline={!!error && !status} />
-        <Band tone="red" label="The crew" />
+        <Band fig={2} label="The orbit" />
         <Ladder status={status} pond={pond} />
-        <Band tone="cream" label="Flight plan" />
+        <Band fig={3} label="The cycle" />
         <Round status={status} />
-        <Band tone="blue" label="Flight rules" />
+        <Band fig={4} label="The laws" />
         <Rules status={status} />
-        <Band tone="cream" label="Your seat" />
+        <Band fig={5} label="Your orbit" />
         <CrewCard live={live} />
-        <Band tone="red" label="Mission log" />
+        <Band fig={6} label="Observations" />
         <Record status={status} />
       </main>
       <Close status={status} />

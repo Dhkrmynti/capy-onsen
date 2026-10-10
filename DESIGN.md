@@ -1,200 +1,143 @@
 ---
-name: Orbiters — Space Race Poster
-description: "$ORBIT as a 1960s space-race poster you scroll through: flat red, paper and ultramarine fields cut on the diagonal, one orbit arc drawn across the page, over a light-cartoon 3D planet with a rocket on its pad."
+name: Horizon — Gravity Well Figure
+description: "$VOID as a physics figure about a black hole: white hairlines on the void, a grid that bends into a well as you scroll, a polar plot of orbits, journal captions, and one accretion orange, over a realistic, light 3D black hole."
 colors:
-  signal-red: "#d6372b"
-  red-deep: "#b02a20"
-  paper: "#f1e4c8"
-  paper-shade: "#e6d3ad"
-  ultramarine: "#1f2f8a"
-  ultramarine-light: "#3b55d6"
-  night: "#0e1433"
-  ink: "#161616"
-  ink-soft: "#4b4a52"
-  burn: "#ff7a1a"
+  void: "#050506"
+  void-raised: "#0d0d10"
+  paper: "#f3f3ef"
+  muted: "#8f8f8a"
+  hairline: "rgba(243, 243, 239, 0.22)"
+  hairline-strong: "rgba(243, 243, 239, 0.45)"
+  accretion: "#ff6b1a"
+  accretion-deep: "#d9540d"
 typography:
   display:
-    fontFamily: "Unbounded, Golos Text, sans-serif"
-    fontSize: "clamp(40px, 5.2vw, 76px)"
+    fontFamily: "Schibsted Grotesk, system-ui, sans-serif"
+    fontSize: "clamp(64px, 8.6vw, 96px)"
     fontWeight: 900
-    lineHeight: 0.94
-    letterSpacing: "-0.03em"
+    lineHeight: 0.88
+    letterSpacing: "-0.045em"
   headline:
-    fontFamily: "Unbounded, Golos Text, sans-serif"
-    fontSize: "clamp(40px, 5.6vw, 80px)"
-    fontWeight: 900
-    lineHeight: 0.94
-    letterSpacing: "-0.02em"
-  title:
-    fontFamily: "Unbounded, Golos Text, sans-serif"
-    fontSize: "clamp(18px, 1.8vw, 24px)"
-    fontWeight: 900
-    lineHeight: 1.05
-  body:
-    fontFamily: "Golos Text, system-ui, sans-serif"
-    fontSize: "15px"
-    fontWeight: 500
-    lineHeight: 1.45
-  label:
-    fontFamily: "Golos Text, system-ui, sans-serif"
-    fontSize: "13px"
+    fontFamily: "Schibsted Grotesk, system-ui, sans-serif"
+    fontSize: "clamp(40px, 5.2vw, 72px)"
     fontWeight: 800
+    lineHeight: 0.96
+    letterSpacing: "-0.035em"
+  caption:
+    fontFamily: "STIX Two Text, Times New Roman, serif"
+    fontSize: "15px"
+    fontWeight: 400
+    lineHeight: 1.5
+  law:
+    fontFamily: "STIX Two Text, Times New Roman, serif"
+    fontSize: "clamp(20px, 2.1vw, 27px)"
+    fontWeight: 400
+    lineHeight: 1.35
+  label:
+    fontFamily: "Schibsted Grotesk, system-ui, sans-serif"
+    fontSize: "14px"
+    fontWeight: 700
     letterSpacing: "0.08em"
   data:
-    fontFamily: "Spline Sans Mono, ui-monospace, monospace"
+    fontFamily: "Geist Mono, ui-monospace, monospace"
     fontSize: "12px"
-    fontWeight: 500
+    fontWeight: 400
     lineHeight: 1.3
 rounded:
   none: "0px"
-  disc: "50%"
 spacing:
   gutter: "clamp(16px, 4vw, 48px)"
-  sheet: "clamp(24px, 3vw, 40px)"
-  cut: "44px"
-  head: "64px"
+  frame: "clamp(24px, 3vw, 44px)"
+  head: "60px"
 components:
   button-primary:
-    backgroundColor: "{colors.signal-red}"
-    textColor: "{colors.paper}"
+    backgroundColor: "{colors.accretion}"
+    textColor: "{colors.void}"
     rounded: "{rounded.none}"
-    height: "54px"
-    padding: "0 28px"
-  button-primary-waiting:
-    backgroundColor: "{colors.ultramarine}"
-    textColor: "{colors.paper}"
+    height: "52px"
+    padding: "0 26px"
   button-line:
     textColor: "{colors.paper}"
     rounded: "{rounded.none}"
-    height: "54px"
+    height: "52px"
     padding: "0 24px"
-  sheet:
-    backgroundColor: "{colors.paper}"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.none}"
-    padding: "{spacing.sheet}"
-  masthead:
-    backgroundColor: "{colors.signal-red}"
+  frame:
+    backgroundColor: "{colors.void}"
     textColor: "{colors.paper}"
-    height: "{spacing.head}"
+    rounded: "{rounded.none}"
+    padding: "{spacing.frame}"
 ---
 
-# Design System: Orbiters
+# Design System: Horizon
 
 ## Overview
 
-**Creative North Star: "Space Race Poster"**
+**Creative North Star: "Gravity Well Figure"**
 
-Orbiters reads like a 1960s space-race poster that you scroll through. Flat fields of signal red, paper cream and ultramarine sit on night blue, cut on the diagonal; big circles carry the people; heavy wide capitals carry the claims. Behind it all is a light-cartoon 3D planet (`src/kp/SpaceWalk.tsx`): a three-stage launch vehicle (black roll pattern, five engines, capsule and escape tower) beside a steel lattice tower on a concrete pad with a flame trench and floodlights, atop a tiny cratered world, crew capsules on service modules with solar wings in orbit, names on them, a fuel line, a flight-rules billboard, a landed capsule, a radar dish, a red ringed planet far off, and a crowd of astronauts drifting around the rocket in the opening: EMU-style suits (gold metallic visor, glossy helmet shell, life-support pack, chest control box, joint rings, red commander stripes) under a soft studio environment, with no ink outline (placed by screen position so they never sit behind the headline). At the end of the page the rocket lifts off.
+Horizon is a physics figure about a black hole that you scroll through. White hairlines on the void, a coordinate grid behind everything that bends toward one point and deepens with the scroll (`src/kp/Well.tsx`), and every section framed as a figure with a journal caption. Rank is distance: the biggest holder is the Singularity, on the innermost orbit.
 
-One orbit arc (`src/kp/Orbit.tsx`) crosses the whole page and is drawn as you scroll, with a small rocket riding its head. It is the page's only governing curve. Between sections a diagonal band slides across carrying the next section's name (`src/kp/Band.tsx`), while the 3D camera moves to the next subject behind it.
-
-The page refuses the dark starfield with neon telemetry and glowing edges that space and crypto pages default to.
+Behind it all is a realistic but light 3D black hole (`src/kp/VoidWalk.tsx`): a shader accretion disk (hot inner edge, cooler outer edge, streaks sheared by orbital speed, one side Doppler-bright), a camera-facing lensed halo arcing over and under the horizon, a photon ring, the rubber-sheet well as a grid funnel below, the ten closest holders as rocky bodies in Keplerian orbit with mono name labels, matter spiralling in, and a gold-foil probe. At the end the camera crosses the horizon.
 
 **Key Characteristics:**
-- Fields own whole regions: the masthead is red, the flight plan is ultramarine, the flight rules are a red diagonal, the close is ultramarine cut on a slant.
-- Square corners, with one corner clipped on every sheet and button.
-- Circles only for people and planets: the Commander disc under poster rays, crew faces, log icons.
-- Burn orange is reserved for what is firing now: the stage burning, the fuel in the gauge, the rocket flame.
+- Monochrome hairline figures; one accretion orange owned outright.
+- Figures, not cards: a polar orbit plot, a 1/r fall curve, a cycle ring, numbered equations, a lab log.
+- Captions and laws in STIX Two Text, the face of physics journals.
+- Between sections the next title is pulled in from wide and faint to tight and solid, under its figure number.
 
 ## Colors
 
-Full palette: four poster inks on night, plus one reserved accent.
-
 ### Primary
-- **Signal Red** (#d6372b): masthead, the Buy block, the Commander strip, the flight rules field, flight crew numerals, The Burn.
-
-### Secondary
-- **Ultramarine** (#1f2f8a): the flight plan field, the close field, the Commander disc, the crew badge, waiting buttons, backup crew numerals.
-- **Ultramarine Light** (#3b55d6): Mission Fund stages, pod panels.
-
-### Tertiary
-- **Burn** (#ff7a1a): only what is firing now.
+- **Accretion** (#ff6b1a): the Buy, No. 1 (dot, rank, next-pull chip), the step firing now, the escrow marker, the horizon line in the fall plot, focus rings. Nowhere else.
 
 ### Neutral
-- **Paper** (#f1e4c8): sheets, display type on dark fields, the orbit line.
-- **Paper Shade** (#e6d3ad): tag rows, "next ETH" chips, the empty badge.
-- **Night** (#0e1433): page ground behind the 3D.
-- **Ink** (#161616) and **Ink Soft** (#4b4a52): text on paper.
+- **Void** (#050506) and **Void Raised** (#0d0d10): ground and figure frames (frames at 88% over the 3D).
+- **Paper** (#f3f3ef): type, plotted lines, bodies.
+- **Muted** (#8f8f8a): captions, secondary data.
+- **Hairline** and **Hairline Strong** (paper at 22% and 45%): rules, rings, axes, leaders.
 
 ### Named Rules
-**The One Burn Rule.** Burn orange marks one thing at a time: the stage firing now, the fuel already in the tank, the flame. Never decoration.
-
-**The Ejected Is Final Rule.** Ejected wallets are struck through in red and never softened or greyed into neutrality.
+**The One Orange Rule.** Orange is the action and the present tense. It never decorates, never tints a background, never appears twice in a row of equals.
 
 ## Typography
 
-**Display Font:** Unbounded 900 (fallback Golos Text)
-**Body Font:** Golos Text 500/700/800
-**Data Font:** Spline Sans Mono 500/600
+**Display:** Schibsted Grotesk 800/900. **Captions and laws:** STIX Two Text 400 and italic. **Data:** Geist Mono 400/500.
 
-**Character:** wide geometric poster capitals against a plain grotesque that stays legible on phones; every number in mono.
-
-### Hierarchy
-- **Display** (900, clamp(40px, 5.2vw, 76px), 0.94, uppercase): hero and close.
-- **Headline** (900, clamp(40px, 5.6vw, 80px), 0.94, uppercase): section titles.
-- **Title** (900, 18-24px, uppercase): stage names, log kinds, labels in sheets.
-- **Body** (500, 15-17px, 1.45-1.5): explanations, max 44-52ch.
-- **Label** (800, 12-15px, 0.08em, uppercase): buttons, nav, tags.
-- **Data** (500-600, 11-15px, mono): balances, ETH, dates, hashes; the fuel reading at 30px.
-
-### Named Rules
-**The Wide Caps Rule.** Unbounded only at 15px and up, uppercase except holder names in the Commander disc. Never for sentences.
+- **Display** (900, clamp(64px, 8.6vw, 96px), 0.88, -0.045em): hero and close, sentence case.
+- **Headline** (800, clamp(40px, 5.2vw, 72px), 0.96): section titles.
+- **Caption** (STIX 15px/1.5, muted, "Fig. n." in paper italic): under every figure.
+- **Law** (STIX clamp(20px, 2.1vw, 27px)): the laws as numbered equations, the arrow in orange, the number in mono at the right.
+- **Data** (Geist Mono 11-14px): masses ("m = 9.4M"), ETH, dates, hashes.
 
 ## Layout
 
-| Section | Composition |
-|---|---|
-| Hero | copy column (max 720px) left over the 3D, rocket right; on phones the copy sits on an ultramarine block cut on a slant |
-| Crew | paper sheet (max 900px) on the right; Commander disc with rays (260px column) beside flight and backup crew; roster grid below; pods in 3D on the left |
-| Flight plan | full ultramarine field; the four-stage rocket stack with stages as tall as their share of the fees, leader lines to the stage text |
-| Flight rules | red field (64% wide) with a diagonal right edge; billboard in 3D on the right |
-| Your seat, Mission log | paper sheet (max 1040px) on the left; capsule or radar on the right |
-| Close | 48svh open to the liftoff, then the ultramarine field |
-
-Bands are 58vh (40vh on phones). Under 760px every sheet drops below a 30svh window onto the 3D, stage bodies narrow to 92px, and the nav hides (under 1080px).
+Each section is a figure frame (max 1180px; laws, your orbit and observations narrower and left-aligned so the 3D shows on the right). The orbit figure pairs the 520px polar plot with the table; the cycle pairs the 440px ring with the step list. Bands are 56vh (40vh on phones). Under 1100px the figure grids stack and the nav hides; under 760px frames drop below a 30svh window onto the 3D and the hero copy sits on a void panel under the black hole.
 
 ## Elevation & Depth
 
-Flat. No shadows on UI; depth comes from the fields overlapping the 3D and from diagonal cuts. The 3D carries the only shading, and it is physically based throughout: painted and metal materials under one shadow-casting sun (desktop only, shadow box held to the pad), a blue rim light, and a dimmed studio environment for reflections. Every surface texture is drawn on canvas at load (regolith with craters and bump, a banded gas giant and ring, the moon, the Milky Way, rocket panelling with its name, solar cells), so the scene downloads no images.
+Flat. No shadows; depth comes from the 3D behind the frames. The 3D is physically lit by the disk itself (a warm point light at the centre), a faint cool rim, and a dimmed studio environment; the disk, halo, photon ring and infall are additive light.
 
 ## Shapes
 
-Zero radius, except circles for people, planets and log icons. Every sheet clips its top-left corner (`--cut`, 44px; 28px on phones); buttons clip their top-right corner by 16px. The Commander strip, the flight rules field and the close field are parallelograms. Structural rules are 3px ink on paper, 2px paper at half strength on red.
+Zero radius. Circles only where physics draws them: orbits, the horizon, bodies, log marks. Lines are 1px.
 
 ## Components
 
-### Buttons
-- **Primary (Buy):** signal red block, paper label, top-right corner clipped, 54px (40px in the masthead, where it turns paper on red).
-- **Waiting:** ultramarine with paper at 75%.
-- **Line:** 2px currentColor border, transparent; hover fills paper with ink text.
-
-### Masthead
-Red bar, mark and wide caps wordmark, five sections in uppercase Golos; the current one brightens and a paper dot appears under it.
-
-### Fuel gauge
-A semicircle dial: paper track at 22%, burn arc for the fuel held, eleven ticks, a paper needle with a red hub that swings with elastic mass and settles.
-
-### Commander disc
-A 200px ultramarine circle with a 6px ink ring holding the portrait, under red poster rays that turn in on reveal.
-
-### The stage stack
-Nose cone, four stages, fins. Stage bodies are paper (Supply Drop), ultramarine light (Mission Fund) or red (The Burn); the stage firing now turns burn orange and carries a "burning now" chip.
-
-### Band
-A diagonal field (red, paper or ultramarine) sliding across with scroll, its name repeated in wide caps, crossed by a thin stripe moving the other way.
+- **Buttons:** orange block (Buy) with void label; hairline secondary that fills paper on hover; waiting state is a hairline outline in muted.
+- **Fall plot:** axes, the 1/r curve, a dashed orange horizon line, an orange body that falls with a little overshoot.
+- **Polar orbit plot:** ten rings (photon ring stronger), the horizon at the centre, one body per ring, mono labels on leader lines; No. 1 orange.
+- **Cycle ring:** four arcs sized by fee share, traced in order with the scroll; the firing step orange.
+- **Laws:** numbered equations with hairline rules.
+- **Observation log:** mono rows with drawn marks: a filled body (Pull), a half body (Dark Matter), an orange ring (Into the Void).
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** keep every number in Spline Sans Mono with tabular figures.
-- **Do** cut sheets and buttons on one corner; keep everything else square.
-- **Do** use hyphens for ranges ("No. 1-5"), never en or em dashes.
-- **Do** keep 3D subjects clear of the sheet they sit beside.
+- **Do** caption every figure ("Fig. n.") in STIX.
+- **Do** keep every number in Geist Mono.
+- **Do** use hyphens for ranges ("No. 1-5").
 
 ### Don't:
-- **Don't** add glows, neon, or gradients to UI fields.
-- **Don't** use burn orange for anything that is not firing now.
-- **Don't** add a kicker above a section headline.
+- **Don't** add glows or gradients to UI; the 3D carries the light.
+- **Don't** use orange for anything but the action and what is happening now.
+- **Don't** round corners or add a kicker above a headline.
 - **Don't** put a CSS `transition` on an element GSAP animates.
-- **Don't** use political symbols; the poster world is the space race's graphics, not its propaganda.
