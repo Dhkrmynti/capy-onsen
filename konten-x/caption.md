@@ -16,7 +16,7 @@
 | `post-5-fee-simulation.mp4` | Post 5: simulasi fee berjalan dan berulang |
 | `gif-new-singularity.gif` | GIF: holder menyalip No. 1 dan jatuh ke pusat ("FELL IN.") |
 
-`[CA]` diganti alamat kontrak setelah launch di Pons. Situs: **https://thehorizon.fun**
+`0xa70271d01dc9b4af4a795434c31d08f827981265` diganti alamat kontrak setelah launch di Pons. Situs: **https://thehorizon.fun**
 
 ---
 
@@ -183,7 +183,7 @@ Pakai hook di sela-sela post utama, 1 per hari, atau sebagai quote dari post lai
 ## Urutan posting
 
 1. Sebelum launch: pasang foto profil, header, bio, lalu **Post 1** (pin).
-2. Saat launch: **Post 0b** dengan CA. Lalu quote Post 1 dengan CA: *"$VOID is live on Pons. CA: [CA] · thehorizon.fun"*
+2. Saat launch: **Post 0b** dengan CA. Lalu quote Post 1 dengan CA: *"$VOID is live on Pons. CA: 0xa70271d01dc9b4af4a795434c31d08f827981265 · thehorizon.fun"*
 3. +2-3 jam: **Post 2** (tutorial).
 4. Hari berikutnya: **Post 3**, lalu **Post 4**.
 5. Setelah Pull pertama: **Post 5**, quote dengan link tx asli dari Observations.
