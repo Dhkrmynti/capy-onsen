@@ -202,7 +202,21 @@ if (typeof window !== "undefined" && DEMO) {
       .catch(() => {});
   pull();
   setInterval(() => !document.hidden && pull(), 3000);
+  // the test board changed somewhere: read it now, not on the next tick
+  liveStream("demo", pull);
 }
+
+/**
+ * Live push: one event stream per page. The engine says "pond" the moment a transfer, name or X
+ * link lands, and every board reprints at once; the polls stay as the fallback.
+ */
+function liveStream(what: string, then: () => void) {
+  if (typeof window === "undefined" || typeof EventSource === "undefined") return;
+  const es = (window as unknown as { __hzStream?: EventSource }).__hzStream ?? new EventSource("/api/stream");
+  (window as unknown as { __hzStream?: EventSource }).__hzStream = es;
+  es.addEventListener(what, then);
+}
+if (typeof window !== "undefined" && !DEMO) liveStream("pond", () => window.dispatchEvent(new Event("rbank:refresh")));
 
 async function get<T>(path: string): Promise<T> {
   const r = await fetch(path, { cache: "no-store" });

@@ -168,6 +168,7 @@ async function indexTransfers() {
     let found: ethers.Log[];
     try {
       found = await provider.getLogs({ address: token, topics: [TRANSFER_TOPIC], fromBlock: from, toBlock: to });
+      if (found.length) moved = true;
       if (span < 2_000_000) span = Math.min(2_000_000, span * 2);
     } catch (e: any) {
       span = Math.max(1_000, Math.floor(span / 4));
@@ -428,6 +429,19 @@ async function runCycle() {
   if (r.kind === "feeding") log("success", `Feeding #${r.n} done: ${r.payouts.filter((p) => !p.skipped).length} sitters fed.`);
 }
 
+/* ───────────────────────── live push ───────────────────────── */
+
+// Every open page keeps one event stream and refetches the moment something changes,
+// instead of waiting for its next poll.
+const streams = new Set<http.ServerResponse>();
+function push(what: "pond" | "demo") {
+  for (const r of streams) r.write(`event: ${what}\ndata: ${Date.now()}\n\n`);
+}
+setInterval(() => {
+  for (const r of streams) r.write(": ping\n\n");
+}, 20_000);
+let moved = false;
+
 /* ───────────────────────── main loop ───────────────────────── */
 
 let busy = false;
@@ -453,6 +467,10 @@ async function tick() {
     status = "indexing";
     await indexTransfers();
     await runCycle();
+    if (moved) {
+      moved = false;
+      push("pond");
+    }
     status = "idle";
   } catch (e: any) {
     status = "error";
@@ -642,6 +660,15 @@ const server = http.createServer((req, res) => {
   const url = new URL(req.url || "/", "http://x");
   const p = url.pathname.replace(/\/$/, "");
   const now = Math.floor(Date.now() / 1000);
+
+  if (req.method === "GET" && p === "/api/stream") {
+    if (streams.size >= 2000) return send(res, 503, { success: false, error: "Too many live pages." });
+    res.writeHead(200, { "Content-Type": "text/event-stream", "Cache-Control": "no-store", Connection: "keep-alive", "X-Accel-Buffering": "no" });
+    res.write("retry: 2000\n\n");
+    streams.add(res);
+    req.on("close", () => streams.delete(res));
+    return;
+  }
 
   if (req.method === "GET" && p === "/api/status") {
     const kind = currentKind();
@@ -870,10 +897,12 @@ const server = http.createServer((req, res) => {
         if (demo) {
           demoBoard[addr] = x;
           saveDemoBoard();
+          push("demo");
           log("info", `[X demo] ${addr.slice(0, 8)}… shows @${x.username} on the test board`);
           return go(backTo(addr, "demo", { demo: "1", xdemo: parkDemoResult(x) }));
         }
         setX(addr, x);
+        push("pond");
         log("info", `[X] ${addr.slice(0, 8)}… linked @${x.username}${x.verified ? ` (${x.verified})` : ""}`);
         go(backTo(addr, "linked"));
       })
@@ -897,6 +926,7 @@ const server = http.createServer((req, res) => {
       if (addr) {
         delete demoBoard[addr];
         saveDemoBoard();
+        push("demo");
       }
       send(res, 200, { success: true });
     });
@@ -932,6 +962,7 @@ const server = http.createServer((req, res) => {
       const bad = spendNonce(addr, d.nonce, d.signature, (n) => xMessage(addr, "unlink", n));
       if (bad) return send(res, 400, { success: false, error: bad });
       clearX(addr);
+      push("pond");
       log("info", `[X] ${addr.slice(0, 8)}… unlinked X`);
       return send(res, 200, { success: true, data: { unlinked: true } });
     });
@@ -944,6 +975,7 @@ const server = http.createServer((req, res) => {
       const out = claimByline(d, (addr) => big(state.holders[addr]?.balance || "0") > 0n);
       if (out.error) return send(res, 400, { success: false, error: out.error });
       log("info", `[BYLINE] ${String(d.addr).slice(0, 8)}… is now "${out.name}"`);
+      push("pond");
       return send(res, 200, { success: true, data: { nickname: out.name, pp: out.pp } });
     });
     return;
