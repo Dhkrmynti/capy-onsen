@@ -85,7 +85,7 @@ components:
 
 **Creative North Star: "Space Race Poster"**
 
-Orbiters reads like a 1960s space-race poster that you scroll through. Flat fields of signal red, paper cream and ultramarine sit on night blue, cut on the diagonal; big circles carry the people; heavy wide capitals carry the claims. Behind it all is a light-cartoon 3D planet (`src/kp/SpaceWalk.tsx`): a rocket on its pad atop a tiny cream world, crew pods in orbit with names on them, a fuel line, a flight-rules billboard, a landed capsule, a radar dish, a red ringed planet far off, and a crowd of astronauts drifting around the rocket in the opening, the one physically lit element: EMU-style suits (gold metallic visor, glossy helmet shell, life-support pack, chest control box, joint rings, red commander stripes) under a soft studio environment, with no ink outline (placed by screen position so they never sit behind the headline). At the end of the page the rocket lifts off.
+Orbiters reads like a 1960s space-race poster that you scroll through. Flat fields of signal red, paper cream and ultramarine sit on night blue, cut on the diagonal; big circles carry the people; heavy wide capitals carry the claims. Behind it all is a light-cartoon 3D planet (`src/kp/SpaceWalk.tsx`): a rocket on its pad atop a tiny cream world, crew pods in orbit with names on them, a fuel line, a flight-rules billboard, a landed capsule, a radar dish, a red ringed planet far off, and a crowd of astronauts drifting around the rocket in the opening: EMU-style suits (gold metallic visor, glossy helmet shell, life-support pack, chest control box, joint rings, red commander stripes) under a soft studio environment, with no ink outline (placed by screen position so they never sit behind the headline). At the end of the page the rocket lifts off.
 
 One orbit arc (`src/kp/Orbit.tsx`) crosses the whole page and is drawn as you scroll, with a small rocket riding its head. It is the page's only governing curve. Between sections a diagonal band slides across carrying the next section's name (`src/kp/Band.tsx`), while the 3D camera moves to the next subject behind it.
 
@@ -156,7 +156,7 @@ Bands are 58vh (40vh on phones). Under 760px every sheet drops below a 30svh win
 
 ## Elevation & Depth
 
-Flat. No shadows on UI; depth comes from the fields overlapping the 3D and from diagonal cuts. The 3D carries the only shading: a five-step toon ramp with ink outlines for the world, physically based materials for the astronauts.
+Flat. No shadows on UI; depth comes from the fields overlapping the 3D and from diagonal cuts. The 3D carries the only shading, and it is physically based throughout: painted and metal materials under one shadow-casting sun (desktop only, shadow box held to the pad), a blue rim light, and a dimmed studio environment for reflections. Every surface texture is drawn on canvas at load (regolith with craters and bump, a banded gas giant and ring, the moon, the Milky Way, rocket panelling with its name, solar cells), so the scene downloads no images.
 
 ## Shapes
 
