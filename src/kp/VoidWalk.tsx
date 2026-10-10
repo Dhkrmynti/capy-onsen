@@ -15,10 +15,6 @@ const ANCHORS = ["top", "ladder", "round", "rules", "card", "record", "closing"]
 const RS = 2.2; // the event horizon's radius
 const TILT = 0.12; // the disk leans slightly toward the opening's camera
 const PROBE = new THREE.Vector3(11, 2.6, 7);
-const SKY_TINT = "#7b7f8f";
-const RP = 6; // the lens covers this many horizon radii; beyond it light runs straight
-/** The lensed hole's own horizon radius: its shadow shows at about 2.6 times this, as in nature. */
-const RS_L = 0.95;
 
 const rand = (() => {
   let s = 5;
@@ -69,13 +65,13 @@ function stations(narrow: boolean): Station[] {
   const o: V3 = [0, 0, 0];
   const pr: V3 = [PROBE.x, PROBE.y, PROBE.z];
   return [
-    narrow ? { pos: [0, 1.4, 22], look: [0, -6.8, 0] } : aim([0, 1.4, 15.5], o, 0.42), // the black hole, right of the headline
+    narrow ? { pos: [0, 1.6, 30], look: [0, -9.5, 0] } : aim([0, 1.8, 22], o, 0.42), // the black hole, right of the headline
     narrow ? { pos: [0, 30, 14], look: [0, 0, 0] } : aim([0, 24, 12], o, -0.5), // the orbits from above, left of the table
     { pos: [15, 3.5, 13], look: [0, 0, 0] }, // the disk up close
     narrow ? { pos: [0, -7, 26], look: [0, -3, 0] } : aim([4, -7, 24], [0, -4, 0], 0.5), // the well from below, right of the laws
     narrow ? { pos: [PROBE.x - 3, PROBE.y + 2, PROBE.z + 8], look: pr } : aim([PROBE.x - 6, PROBE.y + 1.5, PROBE.z + 9], pr, 0.5), // the probe, right of your orbit
     narrow ? { pos: [-11, 3, 10], look: [0, 0, 0] } : aim([-12, 3, 11], o, 0.48), // matter falling in, right of the log
-    { pos: [0, 0.22, 2.7], look: [0, 0, 0] }, // crossing the horizon
+    { pos: [0, 0.35, 3.9], look: [0, 0, 0] }, // crossing the horizon
   ];
 }
 
@@ -86,92 +82,35 @@ const NOISE = /* glsl */ `
     return mix(mix(h(i), h(i+vec2(1,0)), f.x), mix(h(i+vec2(0,1)), h(i+vec2(1,1)), f.x), f.y); }
   float fbm(vec2 p){ float v = 0.0, a = 0.5; for (int i = 0; i < 4; i++){ v += a*n(p); p *= 2.03; a *= 0.5; } return v; }
 `;
-/**
- * The lens: for every pixel near the hole, trace the light ray back through Schwarzschild space
- * (the photon-orbit equation a = -1.5 h² x / r⁵, in units of the horizon radius). Where it crosses
- * the disk plane it picks up disk light (temperature by radius, sheared turbulence, Doppler
- * beaming); if it falls below the horizon it is black; if it escapes it samples the sky in the
- * bent direction. That gives the real Gargantua picture: the far side of the disk arched over and
- * under the shadow, a thin photon ring, and the stars behind smeared round it.
- */
-const LENS_VERT = /* glsl */ `
-  varying vec3 vWorld;
-  void main(){ vec4 w = modelMatrix * vec4(position, 1.0); vWorld = w.xyz; gl_Position = projectionMatrix * viewMatrix * w; }
-`;
-const LENS_FRAG = (steps: number) => /* glsl */ `
-  uniform vec3 camPos; uniform mat3 toFrame; uniform mat3 fromFrame; uniform float time; uniform float rs; uniform float rp;
-  uniform sampler2D sky; uniform vec3 skyTint;
-  varying vec3 vWorld;
+/** Hot inner edge, cooler outer edge, streaks sheared by orbital speed, one side Doppler-bright. */
+const DISK_FRAG = /* glsl */ `
+  uniform float time; uniform float inner; uniform float outer; uniform float halo;
+  varying vec2 vp;
   ${NOISE}
-  const float IN = 1.6; const float OUT = 5.4;
-  vec3 skyCol(vec3 d){
-    float theta = acos(clamp(d.y, -1.0, 1.0));
-    float u = fract(atan(d.z, -d.x) / 6.2831853);
-    return texture2D(sky, vec2(u, 1.0 - theta / 3.14159265)).rgb * skyTint;
-  }
-  vec4 disk(vec3 xi, vec3 dir){
-    float r = length(xi.xz);
-    if (r < IN || r > OUT) return vec4(0.0);
-    float k = (r - IN) / (OUT - IN);
-    float a = atan(xi.z, xi.x);
-    float shear = time * 0.8 / pow(r, 1.5);
-    float s = fbm(vec2(a * 6.0 + shear * 7.0, r * 3.0)) * 0.65 + fbm(vec2(a * 18.0 + shear * 11.0, r * 9.0)) * 0.5;
-    // relativistic beaming: the side moving toward the eye is far brighter
-    vec3 tang = normalize(vec3(-xi.z, 0.0, xi.x));
-    float beta = 0.62 / sqrt(r);
-    float dop = pow(max(0.15, 1.0 + beta * dot(tang, -dir)), 3.5);
-    // temperature falls with radius: white-hot at the inner edge, deep red outside
-    float T = pow(IN / r, 0.75);
-    vec3 col = mix(vec3(0.62, 0.12, 0.04), vec3(1.0, 0.55, 0.2), smoothstep(0.3, 0.7, T));
-    col = mix(col, vec3(1.0, 0.94, 0.86), smoothstep(0.75, 1.0, T));
-    float edge = smoothstep(0.0, 0.04, k) * (1.0 - smoothstep(0.7, 1.0, k));
-    float lum = (0.25 + s) * edge * (0.35 + T * 1.3) * dop;
-    return vec4(col * lum * 1.35, clamp(lum * 0.85, 0.0, 1.0));
-  }
   void main(){
-    vec3 ro = toFrame * camPos / rs;
-    vec3 rd = normalize(toFrame * (vWorld - camPos));
-    float b = dot(ro, rd);
-    float c = dot(ro, ro) - rp * rp;
-    if (c > 0.0) {
-      float disc = b * b - c;
-      if (disc < 0.0) discard;
-      float t0 = -b - sqrt(disc);
-      if (t0 > 0.0) ro += rd * t0;
-    }
-    vec3 x = ro; vec3 v = rd;
-    vec3 hv = cross(x, v); float h2 = dot(hv, hv);
-    vec3 col = vec3(0.0); float acc = 0.0; bool hole = false;
-    for (int i = 0; i < ${steps}; i++) {
-      float r2 = dot(x, x);
-      float dt = clamp(0.045 * r2, 0.012, 0.45);
-      v += -1.5 * h2 * x / (r2 * r2 * sqrt(r2)) * dt;
-      vec3 xn = x + v * dt;
-      if (x.y * xn.y < 0.0) {
-        vec3 xi = mix(x, xn, x.y / (x.y - xn.y));
-        vec4 d = disk(xi, normalize(v));
-        col += (1.0 - acc) * d.rgb;
-        acc += (1.0 - acc) * d.a;
-      }
-      x = xn;
-      if (dot(x, x) < 1.0) { hole = true; break; }
-      if (dot(x, x) > rp * rp * 1.04 && dot(x, v) > 0.0) break;
-    }
-    vec3 bg = vec3(0.0);
-    if (!hole) {
-      // ease the bend to nothing at the proxy's rim so the lens meets the plain sky without a seam
-      float imp = length(cross(ro, rd));
-      vec3 dF = normalize(mix(normalize(v), rd, smoothstep(rp * 0.72, rp * 0.98, imp)));
-      bg = skyCol(fromFrame * dF);
-    }
-    gl_FragColor = vec4(col + bg * (1.0 - acc), 1.0);
-    #include <tonemapping_fragment>
-    #include <colorspace_fragment>
+    float r = length(vp);
+    float k = clamp((r - inner) / (outer - inner), 0.0, 1.0);
+    float a = atan(vp.y, vp.x);
+    float shear = time * 0.9 / pow(max(r, 0.5), 1.5);
+    float s = fbm(vec2(a * 5.0 + shear * 6.0, r * 2.2)) * 0.7 + fbm(vec2(a * 14.0 + shear * 9.0, r * 6.0)) * 0.45;
+    vec3 hot = vec3(1.0, 0.93, 0.8), mid = vec3(1.0, 0.52, 0.16), cool = vec3(0.55, 0.12, 0.05);
+    vec3 col = mix(hot, mid, smoothstep(0.0, 0.35, k));
+    col = mix(col, cool, smoothstep(0.35, 1.0, k));
+    float doppler = 0.55 + 0.75 * (0.5 + 0.5 * cos(a + 0.6));
+    float edge = smoothstep(0.0, 0.06, k) * (1.0 - smoothstep(0.7, 1.0, k));
+    float lum = (0.35 + s) * edge * doppler * (1.25 - k);
+    if (halo > 0.5) lum *= 0.85;
+    gl_FragColor = vec4(col * lum * 1.6, clamp(lum, 0.0, 1.0));
   }
+`;
+const PLANE_VERT = /* glsl */ `
+  varying vec2 vp;
+  void main(){ vp = position.xy; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }
 `;
 
 /* ───────── space: a quiet sky and a few bright stars ───────── */
-function Sky({ narrow, sky }: { narrow: boolean; sky: THREE.Texture }) {
+function Sky({ narrow }: { narrow: boolean }) {
+  const sky = useMemo(() => milkyWay(narrow), [narrow]);
   const stars = useMemo(() => {
     const N = narrow ? 260 : 600;
     const pos = new Float32Array(N * 3);
@@ -200,9 +139,9 @@ function Sky({ narrow, sky }: { narrow: boolean; sky: THREE.Texture }) {
   );
   return (
     <group>
-      <mesh renderOrder={-3}>
+      <mesh>
         <sphereGeometry args={[140, 24, 16]} />
-        <meshBasicMaterial map={sky} color={SKY_TINT} side={THREE.BackSide} depthWrite={false} fog={false} />
+        <meshBasicMaterial map={sky} color="#7b7f8f" side={THREE.BackSide} depthWrite={false} fog={false} />
       </mesh>
       <points geometry={stars}>
         <pointsMaterial map={dot} size={narrow ? 0.9 : 0.75} transparent opacity={0.9} depthWrite={false} fog={false} />
@@ -211,37 +150,37 @@ function Sky({ narrow, sky }: { narrow: boolean; sky: THREE.Texture }) {
   );
 }
 
-/* ───────── the black hole: one ray-traced lens, a depth-only shadow, a faint bloom ───────── */
-function BlackHole({ sky, narrow }: { sky: THREE.Texture; narrow: boolean }) {
-  const bloom = useRef<THREE.Mesh>(null);
+/* ───────── the black hole: horizon, photon ring, disk, lensed halo ───────── */
+function BlackHole() {
+  const halo = useRef<THREE.Mesh>(null);
+  const ring = useRef<THREE.Mesh>(null);
+  const disk = useMemo(
+    () =>
+      new THREE.ShaderMaterial({
+        uniforms: { time: { value: 0 }, inner: { value: RS * 1.3 }, outer: { value: RS * 4.4 }, halo: { value: 0 } },
+        vertexShader: PLANE_VERT,
+        fragmentShader: DISK_FRAG,
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        side: THREE.DoubleSide,
+      }),
+    [],
+  );
   const lens = useMemo(() => {
-    const to = new THREE.Matrix3().setFromMatrix4(new THREE.Matrix4().makeRotationX(-TILT));
-    const from = new THREE.Matrix3().setFromMatrix4(new THREE.Matrix4().makeRotationX(TILT));
-    return new THREE.ShaderMaterial({
-      uniforms: {
-        camPos: { value: new THREE.Vector3() },
-        toFrame: { value: to },
-        fromFrame: { value: from },
-        time: { value: 0 },
-        rs: { value: RS_L },
-        rp: { value: RP },
-        sky: { value: sky },
-        skyTint: { value: new THREE.Color(SKY_TINT) },
-      },
-      vertexShader: LENS_VERT,
-      fragmentShader: LENS_FRAG(narrow ? 44 : 72),
-      side: THREE.BackSide,
-      depthTest: false,
-      depthWrite: false,
-    });
-  }, [sky, narrow]);
+    const m = disk.clone();
+    m.uniforms = { time: disk.uniforms.time, inner: { value: RS * 1.08 }, outer: { value: RS * 2.1 }, halo: { value: 1 } };
+    return m;
+  }, [disk]);
   const glow = useMemo(
     () =>
       new THREE.MeshBasicMaterial({
         map: canvasTex(256, 256, (g) => {
           const r = g.createRadialGradient(128, 128, 0, 128, 128, 128);
-          r.addColorStop(0, "rgba(255,150,70,0)");
-          r.addColorStop(0.3, "rgba(255,150,70,0.10)");
+          r.addColorStop(0, "rgba(0,0,0,0)");
+          r.addColorStop(0.83, "rgba(0,0,0,0)");
+          r.addColorStop(0.86, "rgba(255,236,205,1)");
+          r.addColorStop(0.9, "rgba(255,170,90,0.45)");
           r.addColorStop(1, "rgba(255,120,40,0)");
           g.fillStyle = r;
           g.fillRect(0, 0, 256, 256);
@@ -254,23 +193,25 @@ function BlackHole({ sky, narrow }: { sky: THREE.Texture; narrow: boolean }) {
     [],
   );
   useFrame((s) => {
-    lens.uniforms.time.value = s.clock.elapsedTime;
-    lens.uniforms.camPos.value.copy(s.camera.position);
-    bloom.current?.quaternion.copy(s.camera.quaternion);
+    disk.uniforms.time.value = s.clock.elapsedTime;
+    // the halo and the photon ring always face the eye, as light bent round the horizon does
+    halo.current?.quaternion.copy(s.camera.quaternion);
+    ring.current?.quaternion.copy(s.camera.quaternion);
   });
   return (
     <group>
-      {/* the lens paints everything within RP horizon radii, before anything else is drawn */}
-      <mesh material={lens} renderOrder={-2} frustumCulled={false}>
-        <sphereGeometry args={[RS_L * RP, 48, 32]} />
+      <mesh ref={halo} material={lens}>
+        <ringGeometry args={[RS * 1.0, RS * 2.2, 160, 6]} />
       </mesh>
-      {/* a depth-only shadow so bodies and stars behind the hole are hidden */}
-      <mesh renderOrder={-1}>
-        <sphereGeometry args={[RS_L * 2.3, 32, 24]} />
-        <meshBasicMaterial colorWrite={false} />
-      </mesh>
-      <mesh ref={bloom} material={glow} scale={RS_L * 12}>
+      <mesh ref={ring} material={glow} scale={RS * 1.19}>
         <planeGeometry args={[2, 2]} />
+      </mesh>
+      <mesh>
+        <sphereGeometry args={[RS, 64, 48]} />
+        <meshBasicMaterial color="#000000" />
+      </mesh>
+      <mesh material={disk} rotation={[-Math.PI / 2 + TILT, 0, 0]}>
+        <ringGeometry args={[RS * 1.25, RS * 4.5, 200, 8]} />
       </mesh>
       {/* the disk lights what orbits it */}
       <pointLight color="#ffb377" intensity={70} distance={40} decay={1.4} />
@@ -407,7 +348,7 @@ function Infall({ narrow }: { narrow: boolean }) {
   });
   return (
     <points geometry={geo} rotation={[TILT, 0, 0]}>
-      <pointsMaterial map={spark} size={narrow ? 0.18 : 0.13} transparent depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
+      <pointsMaterial map={spark} size={narrow ? 0.28 : 0.2} transparent depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
     </points>
   );
 }
@@ -458,7 +399,6 @@ function Probe() {
 function Walk({ narrow, names, still }: { narrow: boolean; names: string[]; still: boolean }) {
   const { camera } = useThree();
   const fonts = useFonts();
-  const skyTex = useMemo(() => milkyWay(narrow), [narrow]);
   const st = useMemo(() => stations(narrow), [narrow]);
   const pos = useMemo(() => new THREE.CatmullRomCurve3(st.map((s) => new THREE.Vector3(...s.pos)), false, "centripetal"), [st]);
   const look = useMemo(() => new THREE.CatmullRomCurve3(st.map((s) => new THREE.Vector3(...s.look)), false, "centripetal"), [st]);
@@ -522,9 +462,9 @@ function Walk({ narrow, names, still }: { narrow: boolean; names: string[]; stil
 
   return (
     <>
-      <Sky narrow={narrow} sky={skyTex} />
+      <Sky narrow={narrow} />
       <Well narrow={narrow} />
-      <BlackHole sky={skyTex} narrow={narrow} />
+      <BlackHole />
       <Bodies names={names} fonts={fonts} show={labels} />
       <Infall narrow={narrow} />
       <Probe />
