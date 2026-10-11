@@ -1,0 +1,20 @@
+/* The rabbit queue: name tags under each rabbit, and the prototype's control strip. */
+.brawl { position: relative; width: 100%; height: 100vh; min-height: 520px; background: #8fd3ff; overflow: hidden; }
+.brawl__tag { display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 4px 8px 5px; background: #1a1206; color: #fff; border: 2px solid #1a1206; border-radius: 8px; font: 700 11px/1.15 "JetBrains Mono", ui-monospace, monospace; white-space: nowrap; box-shadow: 0 3px 0 rgba(0, 0, 0, 0.25); }
+.brawl__tag b { font: 900 16px/1 "Barlow Condensed", system-ui, sans-serif; color: #ffc93c; }
+.brawl__tag i { font-style: normal; color: #9fe38c; }
+.brawl__tag.is-first { background: #ffc93c; color: #1a1206; }
+.brawl__tag.is-first b { color: #1a1206; font-size: 20px; }
+.brawl__tag.is-first i { color: #4a3200; }
+.brawl__title { position: absolute; left: 0; right: 0; top: 22px; text-align: center; pointer-events: none; font: 900 clamp(34px, 6vw, 84px)/0.95 "Barlow Condensed", system-ui, sans-serif; text-transform: uppercase; color: #fff; -webkit-text-stroke: 3px #1a1206; paint-order: stroke fill; text-shadow: 0 6px 0 #1a1206; }
+.brawl__title small { display: block; margin-top: 12px; font: 700 clamp(12px, 1.4vw, 18px)/1 "JetBrains Mono", monospace; letter-spacing: 0.12em; -webkit-text-stroke: 0; text-shadow: none; color: #1a1206; }
+.brawl__ctl { position: absolute; left: 0; right: 0; bottom: 18px; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; padding: 0 12px; }
+.brawl__ctl button { font: 800 15px/1 "Barlow Condensed", system-ui, sans-serif; letter-spacing: 0.06em; text-transform: uppercase; padding: 10px 14px; background: #fff; color: #1a1206; border: 3px solid #1a1206; border-radius: 10px; box-shadow: 0 4px 0 #1a1206; cursor: pointer; }
+.brawl__ctl button:active { transform: translateY(3px); box-shadow: 0 1px 0 #1a1206; }
+.brawl__ctl button.is-on { background: #ffc93c; }
+@media (max-aspect-ratio: 9/10) {
+  .brawl__tag { padding: 2px 5px 3px; font-size: 9px; border-radius: 6px; }
+  .brawl__tag b { font-size: 13px; }
+  .brawl__tag.is-first b { font-size: 15px; }
+  .brawl__tag i { display: none; }
+}
