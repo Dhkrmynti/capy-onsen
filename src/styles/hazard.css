@@ -814,6 +814,16 @@ body {
 .post__read {
   font: 700 13px/1.2 var(--mono);
 }
+.post__plain {
+  font: 700 12px/1 var(--mono);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: #5c5f64;
+}
+.cycle__order .is-on {
+  color: var(--y);
+  font-weight: 700;
+}
 .cycle__order {
   margin: 16px 0 0;
   font: 600 13px/1.5 var(--mono);

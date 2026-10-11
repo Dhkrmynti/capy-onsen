@@ -31,10 +31,10 @@ export function Round({ status }: { status: Status | null }) {
     },
     { scope: root },
   );
-  const look: Record<string, { name: string; line: string; sign: "warn" | "mand" | "proh"; pict: Pict }> = {
-    feeding: { name: "The Emission", line: `ETH to the ten nearest the core. No. 1-5 split ${tiers[0]?.eth ?? "0.014"}, No. 6-10 split ${tiers[1]?.eth ?? "0.006"}, by balance.`, sign: "warn", pict: "core" },
-    keeper: { name: "Containment Fund", line: "To the treasury wallet. Every transfer is in the incident log.", sign: "mand", pict: "vault" },
-    sink: { name: "Evaporation", line: "Buys $HAWK back on Pons, then burns exactly what it bought.", sign: "proh", pict: "flame" },
+  const look: Record<string, { name: string; plain: string; line: string; sign: "warn" | "mand" | "proh"; pict: Pict }> = {
+    feeding: { name: "The Emission", plain: "Reward", line: `ETH to the ten nearest the core. No. 1-5 split ${tiers[0]?.eth ?? "0.014"}, No. 6-10 split ${tiers[1]?.eth ?? "0.006"}, by balance.`, sign: "warn", pict: "core" },
+    keeper: { name: "Containment Fund", plain: "Treasury", line: "To the treasury wallet. Every transfer is in the incident log.", sign: "mand", pict: "vault" },
+    sink: { name: "Evaporation", plain: "Buyback & burn", line: "Buys $HAWK back on Pons, then burns exactly what it bought.", sign: "proh", pict: "flame" },
   };
   return (
     <section className="cycle" id="round" ref={root} aria-labelledby="round-head">
@@ -63,6 +63,7 @@ export function Round({ status }: { status: Status | null }) {
                   {now ? <span className="post__beacon">Running</span> : live ? <span className="post__wait">Waiting</span> : null}
                 </span>
                 <Sign kind={l.pict} size={86} />
+                <span className="post__plain">{l.plain}</span>
                 <span className="post__name">{l.name}</span>
                 <span className="post__sol tabular">
                   {level} ETH{mine.length > 1 ? ` · runs ${mine.length}× per cycle` : ""}
@@ -82,7 +83,15 @@ export function Round({ status }: { status: Status | null }) {
             );
           })}
         </ol>
-        <p className="cycle__order">Order: {steps.map((s) => look[s.kind].name).join(" → ")} → again.</p>
+        <p className="cycle__order">
+          The loop:{" "}
+          {steps.map((s, i) => (
+            <span key={i} className={at === i ? "is-on" : ""}>
+              {look[s.kind].plain} →{" "}
+            </span>
+          ))}
+          {look[steps[0].kind].plain}, and round again.
+        </p>
         <p className="cycle__sum tabular">
           Over a full cycle: <b>{stepShare(steps, "feeding")}%</b> emitted to the ten, <b>{stepShare(steps, "keeper")}%</b> to containment, <b>{stepShare(steps, "sink")}%</b> evaporated.
         </p>
