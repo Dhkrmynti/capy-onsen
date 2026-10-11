@@ -6,7 +6,7 @@ import { Mandatory, Prohibit, Safe, Warn } from "./HKSigns";
 import { Mascot } from "./HKMascot";
 
 /** The real render of the contained black hole from the site, framed on a point (px of the 1920x1080 plate). */
-function Render({ src = "hk/plate-hero.png", cx = 1328, cy = 545, scale = 1, w, h, dark = 0 }: { src?: string; cx?: number; cy?: number; scale?: number; w: number; h: number; dark?: number }) {
+export function Render({ src = "hk/plate-hero.png", cx = 1328, cy = 545, scale = 1, w, h, dark = 0 }: { src?: string; cx?: number; cy?: number; scale?: number; w: number; h: number; dark?: number }) {
   return (
     <AbsoluteFill style={{ overflow: "hidden", background: V.void }}>
       <Img src={staticFile(src)} style={{ position: "absolute", width: 1920 * scale, height: 1080 * scale, left: w / 2 - cx * scale, top: h / 2 - cy * scale }} />
@@ -16,7 +16,7 @@ function Render({ src = "hk/plate-hero.png", cx = 1328, cy = 545, scale = 1, w, 
 }
 
 /** The ten zones seen from above: red rings 1-5, amber 6-10, a striped containment ring outside. */
-function Zones({ size, filled = 0, mark, open = [] as number[] }: { size: number; filled?: number; mark?: React.ReactNode; open?: number[] }) {
+export function Zones({ size, filled = 0, mark, open = [] as number[] }: { size: number; filled?: number; mark?: React.ReactNode; open?: number[] }) {
   const c = size / 2;
   const r0 = size * 0.1;
   const step = size * 0.036;
@@ -134,7 +134,7 @@ export function HKPostRules() {
 }
 
 /** The radiation level bar from the hero placard. */
-function Level({ fill, segs = 24 }: { fill: number; segs?: number }) {
+export function Level({ fill, segs = 24 }: { fill: number; segs?: number }) {
   const lit = Math.round(segs * fill);
   return (
     <div style={{ display: "flex", gap: 4, padding: 5, background: "#121212" }}>
