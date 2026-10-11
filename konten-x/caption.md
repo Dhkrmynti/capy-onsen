@@ -26,6 +26,7 @@ Maskot orisinal: burung hawk berhelm astronot (plesetan "Hawk-ing"), bukan wajah
 
 ## Nama & bio
 
+**Akun:** `@hawkingrh` (https://x.com/hawkingrh)
 **Nama tampilan:** `Hawking $HAWK`  **Website:** `hawkings.fun`
 
 Pilih satu bio:
