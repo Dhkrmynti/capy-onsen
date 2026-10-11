@@ -1,5 +1,6 @@
 import { Composition, Still } from "remotion";
 import { HKBanner, HKGif, HKLogo, HKPostBoard, HKPostEmpty, HKPostRules, HKPostWho, HKHookPaper, HKHookCore, HKHookTen, HK_GIF_LENGTH } from "./HKStills";
+import { HKNews, HK_NEWS_DEFAULTS, HK_NEWS_LENGTH } from "./HKNews";
 import { HKNowLevel, HKNowLive, HKNowOut, HKNowZones, HK_NOW_DEFAULTS } from "./HKNow";
 import { HKExplainer, HK_EXPLAINER_LENGTH } from "./HKExplainer";
 import { HKTutorial, HK_TUTORIAL_LENGTH } from "./HKTutorial";
@@ -42,6 +43,7 @@ export function RemotionRoot() {
       <Still id="HKHookCore" component={HKHookCore} width={1600} height={900} />
       <Still id="HKHookTen" component={HKHookTen} width={1600} height={900} />
       <Composition id="HKGif" component={HKGif} width={720} height={720} fps={30} durationInFrames={HK_GIF_LENGTH} />
+      <Composition id="HKNews" component={HKNews} width={1920} height={1080} fps={30} durationInFrames={HK_NEWS_LENGTH} defaultProps={HK_NEWS_DEFAULTS} />
       <Composition id="HKExplainer" component={HKExplainer} width={1920} height={1080} fps={30} durationInFrames={HK_EXPLAINER_LENGTH} />
       <Composition id="HKTutorial" component={HKTutorial} width={1920} height={1080} fps={30} durationInFrames={HK_TUTORIAL_LENGTH} />
       <Composition id="HKSimulation" component={HKSimulation} width={1920} height={1080} fps={30} durationInFrames={HK_SIM_LENGTH} />

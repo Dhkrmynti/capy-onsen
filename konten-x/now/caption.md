@@ -91,3 +91,28 @@ Kalau dirender ulang, samakan angka di caption dengan posternya.
 5. Setelah emission pertama dibayar: quote dengan link tx asli dari Incident log di situs.
 
 $HAWK adalah memecoin tanpa janji nilai. Jangan pakai kata yield, APY atau passive income.
+
+---
+
+## Video berita: Mission Control briefing
+
+**File:** `news-briefing.mp4` (32 detik, tanpa suara, teks terbakar di video)
+Render ulang dengan angka terbaru: `cd remotion-x && ./render-hawking-news.sh`
+
+Isi video:
+1. Konferensi pers: astronot Hawking di podium Mission Control: "Hello everyone." → "Today, the first emission went out." → "0.048 ETH, paid to the 10 holders nearest the core."
+2. Grafik candle hijau naik ("Green on the board."), dengan label ILLUSTRATION · NOT A PRICE FEED. Candle itu gambar, bukan harga asli.
+3. BREAKING: top 10 holder live (wallet, jumlah $HAWK, ETH yang diterima dari emission #1).
+4. "Sell once, and you're spaghettified. Thank you." → end card hawkings.fun + CA.
+
+> 🎙️ Mission Control briefing.
+>
+> Emission #1 is done: 0.048 ETH went to the ten holders nearest the core.
+> 0.032 ETH went to the Containment Fund. Next up: buyback & burn.
+>
+> Here are the top ten. Are you on the board?
+>
+> CA: 0xa19d5a29879eb9ce751a8a7416e1d0a475c3afca
+> hawkings.fun
+
+**Alt text:** A cartoon hawk in an astronaut helmet gives a press briefing at a Mission Control podium, with a LIVE news chyron and ticker. A drawn green candle chart labelled as an illustration climbs, then a "Breaking: the top ten holders" table lists wallets, $HAWK holdings and ETH received from emission #1.

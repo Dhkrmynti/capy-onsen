@@ -10,7 +10,8 @@ const STARS: [number, number, number][] = [
   [28, 40, 1.4], [170, 34, 1.1], [182, 92, 1.6], [16, 104, 1], [40, 150, 1.2], [160, 150, 1], [120, 18, 1], [70, 22, 1.2], [150, 64, 0.9], [52, 70, 0.8],
 ];
 
-export function Mascot({ size = 1080, ring = true }: { size?: number; ring?: boolean }) {
+/** `bare` drops the round field (sky, glow, ring) to stand the hawk in a scene; `talk` (0-1) opens the beak. */
+export function Mascot({ size = 1080, ring = true, bare = false, talk = 0 }: { size?: number; ring?: boolean; bare?: boolean; talk?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 200 200">
       <defs>
@@ -32,14 +33,18 @@ export function Mascot({ size = 1080, ring = true }: { size?: number; ring?: boo
           <circle cx="100" cy="100" r="100" />
         </clipPath>
       </defs>
-      <g clipPath="url(#mcirc)">
-        <rect width="200" height="200" fill="url(#mbg)" />
-        {STARS.map(([x, y, r], i) => (
-          <circle key={i} cx={x} cy={y} r={r} fill="#fff" fillOpacity="0.8" />
-        ))}
-        {/* the contained black hole behind the helmet */}
-        <circle cx="100" cy="90" r="86" fill="url(#mglow)" />
-        <ellipse cx="100" cy="92" rx="96" ry="18" fill="none" stroke={V.glow} strokeOpacity="0.55" strokeWidth="6" transform="rotate(-10 100 92)" />
+      <g clipPath={bare ? undefined : "url(#mcirc)"}>
+        {bare ? null : (
+          <>
+            <rect width="200" height="200" fill="url(#mbg)" />
+            {STARS.map(([x, y, r], i) => (
+              <circle key={i} cx={x} cy={y} r={r} fill="#fff" fillOpacity="0.8" />
+            ))}
+            {/* the contained black hole behind the helmet */}
+            <circle cx="100" cy="90" r="86" fill="url(#mglow)" />
+            <ellipse cx="100" cy="92" rx="96" ry="18" fill="none" stroke={V.glow} strokeOpacity="0.55" strokeWidth="6" transform="rotate(-10 100 92)" />
+          </>
+        )}
 
         {/* suit: shoulders, neck ring, chest unit, hazard patch */}
         <path d="M18 206 C 20 172, 44 152, 72 146 L 128 146 C 156 152, 180 172, 182 206 Z" fill={V.paper} {...line} />
@@ -102,6 +107,8 @@ export function Mascot({ size = 1080, ring = true }: { size?: number; ring?: boo
           {/* stern brows: a hawk never looks friendly */}
           <path d="M74 78 L 96 82 L 95 77 L 76 73 Z" fill="#3d2410" stroke={INK} strokeWidth="1.6" />
           <path d="M126 78 L 104 82 L 105 77 L 124 73 Z" fill="#3d2410" stroke={INK} strokeWidth="1.6" />
+          {/* an open mouth under the beak while it talks */}
+          {talk > 0.05 ? <ellipse cx="100" cy={110 + talk * 3} rx={5 + talk * 3} ry={talk * 6} fill="#3a1408" stroke={INK} strokeWidth="1.6" /> : null}
           {/* the hooked beak */}
           <path d="M92 96 C 94 92, 106 92, 108 96 C 110 102, 106 110, 100 118 C 99 112, 96 106, 92 100 Z" fill={V.orange} stroke={INK} strokeWidth="2.6" strokeLinejoin="round" />
           <path d="M100 118 C 99 114, 98 111, 96.5 108.5" fill="none" stroke={INK} strokeWidth="2" />
@@ -116,7 +123,7 @@ export function Mascot({ size = 1080, ring = true }: { size?: number; ring?: boo
         <ellipse cx="100" cy="92" rx="38" ry="34" fill="none" {...line} />
 
         {/* the containment ring, inside X's round crop */}
-        {ring ? (
+        {ring && !bare ? (
           <>
             <circle cx="100" cy="100" r="93" fill="none" stroke={INK} strokeWidth="9" />
             <circle cx="100" cy="100" r="93" fill="none" stroke={V.orange} strokeWidth="9" strokeDasharray="7.3 7.3" />
