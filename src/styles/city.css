@@ -1,0 +1,30 @@
+/* Holder town prototype: name tags over heads and the HUD (minimap, chat, hints). */
+.city { position: relative; width: 100vw; height: 100vh; background: #e6f4ff; overflow: hidden; font-family: "Barlow Condensed", system-ui, sans-serif; user-select: none; }
+.city canvas { touch-action: none; }
+.city__tags { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.city__tag { position: absolute; left: 0; top: 0; transform-origin: 50% 100%; will-change: transform; display: flex; flex-direction: column; align-items: center; gap: 4px; white-space: nowrap; }
+.city__name { display: flex; align-items: center; gap: 5px; padding: 3px 7px; background: rgba(12, 12, 14, 0.82); color: #fff; border-radius: 7px; font: 700 13px/1 "JetBrains Mono", ui-monospace, monospace; }
+.city__name i { font: 900 12px/1 "Barlow Condensed", sans-serif; font-style: normal; letter-spacing: 0.08em; padding: 2px 5px; border-radius: 4px; }
+.city__name i.is-human { background: #22c55e; color: #052e12; }
+.city__name i.is-ai { background: #a855f7; color: #fff; }
+.city__top { font: 900 13px/1 "Barlow Condensed", sans-serif; letter-spacing: 0.06em; padding: 2px 5px; border-radius: 4px; background: #ffc93c; color: #2a1a00; }
+.city__say { max-width: 220px; white-space: normal; text-align: center; padding: 5px 9px; background: #fff; color: #111; border: 2px solid #111; border-radius: 12px; font: 600 14px/1.2 "Barlow", system-ui, sans-serif; }
+.city__hud { position: absolute; inset: 0; pointer-events: none; }
+.city__hud > * { pointer-events: auto; }
+.city__me { position: absolute; left: 16px; top: 14px; padding: 10px 14px; background: rgba(12, 12, 14, 0.82); color: #fff; border-radius: 10px; }
+.city__me h1 { margin: 0; font: 900 26px/1 "Barlow Condensed", sans-serif; letter-spacing: 0.04em; text-transform: uppercase; }
+.city__me p { margin: 5px 0 0; font: 700 12px/1.3 "JetBrains Mono", monospace; color: #c9ccd1; }
+.city__mode { position: absolute; left: 50%; top: 14px; transform: translateX(-50%); padding: 8px 16px; border-radius: 999px; font: 900 18px/1 "Barlow Condensed", sans-serif; letter-spacing: 0.1em; }
+.city__mode.is-human { background: #22c55e; color: #052e12; }
+.city__mode.is-ai { background: #a855f7; color: #fff; }
+.city__keys { position: absolute; right: 16px; top: 14px; padding: 10px 14px; background: rgba(12, 12, 14, 0.82); color: #fff; border-radius: 10px; font: 700 12px/1.6 "JetBrains Mono", monospace; }
+.city__keys b { color: #ffc93c; }
+.city__map { position: absolute; left: 16px; bottom: 16px; width: 190px; height: 190px; border: 4px solid #0c0c0e; border-radius: 12px; background: #2a2d33; }
+.city__chat { position: absolute; left: 222px; bottom: 16px; width: min(380px, calc(100vw - 250px)); display: flex; flex-direction: column; gap: 6px; }
+.city__log { display: flex; flex-direction: column; gap: 2px; font: 600 14px/1.25 "Barlow", system-ui, sans-serif; color: #fff; text-shadow: 0 1px 2px #000, 0 0 6px rgba(0, 0, 0, 0.7); }
+.city__log b { color: #ffc93c; }
+.city__log em { font-style: normal; font-size: 11px; color: #d8b4fe; }
+.city__chat input { padding: 9px 12px; border: 3px solid #0c0c0e; border-radius: 10px; font: 600 15px/1 "Barlow", system-ui, sans-serif; background: rgba(255, 255, 255, 0.95); }
+.city__prompt { position: absolute; left: 50%; bottom: 90px; transform: translateX(-50%); padding: 9px 16px; background: #ffc93c; color: #1a1206; border: 3px solid #0c0c0e; border-radius: 10px; font: 900 20px/1 "Barlow Condensed", sans-serif; letter-spacing: 0.06em; }
+.city__note { position: absolute; right: 16px; bottom: 16px; font: 700 11px/1 "JetBrains Mono", monospace; color: #0c0c0e; background: rgba(255, 255, 255, 0.7); padding: 5px 8px; border-radius: 6px; }
+@media (max-width: 720px) { .city__keys { display: none; } .city__map { width: 120px; height: 120px; } .city__chat { left: 148px; width: calc(100vw - 164px); } }

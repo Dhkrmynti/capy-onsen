@@ -61,6 +61,7 @@ type Tween = { p: Puppet; k: Key; a: number | null; b: number; t0: number; d: nu
 const out3 = (t: number) => 1 - Math.pow(1 - t, 3);
 const inOut = (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
 const lin = (t: number) => t;
+const snap = (t: number) => 1 - Math.pow(1 - t, 5);
 const backOut = (t: number) => 1 + 2.7 * Math.pow(t - 1, 3) + 1.7 * Math.pow(t - 1, 2);
 
 function newPuppet(id: string, slot: number): Puppet {
@@ -82,6 +83,8 @@ type Parts = {
   glove: THREE.Group;
   lidL: THREE.Mesh;
   lidR: THREE.Mesh;
+  pupL: THREE.Group;
+  pupR: THREE.Group;
   mouth: THREE.Group;
   crown: THREE.Group;
 };
@@ -111,10 +114,12 @@ function Bunny({ id, register, label }: { id: string; register: (id: string, p: 
   const glove = useRef<THREE.Group>(null!);
   const lidL = useRef<THREE.Mesh>(null!);
   const lidR = useRef<THREE.Mesh>(null!);
+  const pupL = useRef<THREE.Group>(null!);
+  const pupR = useRef<THREE.Group>(null!);
   const mouth = useRef<THREE.Group>(null!);
   const crown = useRef<THREE.Group>(null!);
   useEffect(() => {
-    register(id, { root: root.current, body: body.current, earL: earL.current, earR: earR.current, earL2: earL2.current, earR2: earR2.current, armR: armR.current, armL: armL.current, glove: glove.current, lidL: lidL.current, lidR: lidR.current, mouth: mouth.current, crown: crown.current });
+    register(id, { root: root.current, body: body.current, earL: earL.current, earR: earR.current, earL2: earL2.current, earR2: earR2.current, armR: armR.current, armL: armL.current, glove: glove.current, lidL: lidL.current, lidR: lidR.current, pupL: pupL.current, pupR: pupR.current, mouth: mouth.current, crown: crown.current });
     return () => register(id, null);
   }, [id, register]);
 
@@ -122,7 +127,7 @@ function Bunny({ id, register, label }: { id: string; register: (id: string, p: 
   // short velvet fur: a soft sheen at grazing angles instead of a plastic highlight
   const M = useMemo(() => {
     const fur = new THREE.Color(FURS[h % FURS.length]);
-    const soft = (c: THREE.Color) => new THREE.MeshPhysicalMaterial({ color: c, roughness: 0.82, sheen: 0.55, sheenRoughness: 0.5, sheenColor: c.clone().lerp(new THREE.Color("#ffffff"), 0.6) });
+    const soft = (c: THREE.Color) => new THREE.MeshPhysicalMaterial({ color: c, roughness: 0.62, sheen: 0.25, sheenRoughness: 0.6, sheenColor: c.clone().lerp(new THREE.Color("#ffffff"), 0.6) });
     return {
       fur: soft(fur),
       pale: soft(fur.clone().lerp(new THREE.Color("#fffaf0"), 0.7)),
@@ -161,17 +166,20 @@ function Bunny({ id, register, label }: { id: string; register: (id: string, p: 
       </group>
     </group>
   );
-  const eye = (side: 1 | -1, lid: RefObject<THREE.Mesh>) => (
+  const eye = (side: 1 | -1, lid: RefObject<THREE.Mesh>, pup: RefObject<THREE.Group>) => (
     <group position={[0.165 * side, 1.34, 0.29]} scale={[1, 1.1, 0.82]}>
       <mesh material={M.eye}>
         <sphereGeometry args={[0.155, 28, 20]} />
       </mesh>
-      <mesh position={[-0.025 * side, -0.01, 0.105]} scale={[1, 1, 0.42]} material={M.iris}>
-        <sphereGeometry args={[0.085, 20, 14]} />
-      </mesh>
-      <mesh position={[-0.028 * side, -0.01, 0.13]} scale={[1, 1, 0.4]} material={M.black}>
-        <sphereGeometry args={[0.048, 16, 12]} />
-      </mesh>
+      {/* iris and pupil shrink to a dot when the rabbit rages */}
+      <group ref={pup} position={[-0.025 * side, -0.01, 0.105]}>
+        <mesh scale={[1, 1, 0.42]} material={M.iris}>
+          <sphereGeometry args={[0.085, 20, 14]} />
+        </mesh>
+        <mesh position={[0, 0, 0.025]} scale={[1, 1, 0.4]} material={M.black}>
+          <sphereGeometry args={[0.048, 16, 12]} />
+        </mesh>
+      </group>
       <mesh position={[0.012, 0.04, 0.152]}>
         <sphereGeometry args={[0.02, 10, 8]} />
         <meshBasicMaterial color="#ffffff" />
@@ -223,8 +231,8 @@ function Bunny({ id, register, label }: { id: string; register: (id: string, p: 
         </mesh>
         {ear(-1, earL, earL2)}
         {ear(1, earR, earR2)}
-        {eye(-1, lidL)}
-        {eye(1, lidR)}
+        {eye(-1, lidL, pupL)}
+        {eye(1, lidR, pupR)}
         {[-1, 1].map((s) => (
           <mesh key={s} position={[0.17 * s, 1.535, 0.33]} rotation={[0.3, 0, Math.PI / 2 + 0.5 * s]} material={M.dark}>
             <capsuleGeometry args={[0.03, 0.17, 4, 10]} />
@@ -450,6 +458,57 @@ function Stage() {
       })}
       {/* the prize over the No. 1 podium: a golden carrot */}
       <Carrot />
+      <Yard />
+    </group>
+  );
+}
+
+/** A back garden: a plank fence across the back and a few round trees behind it. */
+function Yard() {
+  const planks = useRef<THREE.InstancedMesh>(null!);
+  const N = 70;
+  const Z = LAYOUT.tall ? -10.5 : -7.5;
+  useEffect(() => {
+    const o = new THREE.Object3D();
+    const col = new THREE.Color();
+    for (let i = 0; i < N; i++) {
+      const hgt = 2.5 + ((i * 37) % 7) * 0.03;
+      o.position.set((i - N / 2) * 0.62, hgt / 2, Z + ((i * 13) % 5) * 0.01);
+      o.scale.set(1, hgt, 1);
+      o.rotation.set(0, 0, (((i * 29) % 9) - 4) * 0.004);
+      o.updateMatrix();
+      planks.current.setMatrixAt(i, o.matrix);
+      planks.current.setColorAt(i, col.setHSL(0.08, 0.42, 0.5 + ((i * 17) % 6) * 0.018));
+    }
+    planks.current.instanceMatrix.needsUpdate = true;
+    if (planks.current.instanceColor) planks.current.instanceColor.needsUpdate = true;
+  }, [Z]);
+  return (
+    <group>
+      <instancedMesh ref={planks} args={[undefined, undefined, N]} castShadow receiveShadow>
+        <boxGeometry args={[0.56, 1, 0.07]} />
+        <meshStandardMaterial roughness={0.85} />
+      </instancedMesh>
+      {[0.7, 1.9].map((y) => (
+        <mesh key={y} position={[0, y, Z - 0.1]} receiveShadow>
+          <boxGeometry args={[N * 0.62, 0.14, 0.08]} />
+          <meshStandardMaterial color="#8a5a33" roughness={0.9} />
+        </mesh>
+      ))}
+      {[[-13, -12, 1.2], [-3, -14, 1.5], [8, -12.5, 1.1], [17, -15, 1.6]].map(([x, z, k], i) => (
+        <group key={i} position={[x, 0, z]} scale={k}>
+          <mesh position={[0, 1.6, 0]} castShadow>
+            <cylinderGeometry args={[0.28, 0.4, 3.2, 12]} />
+            <meshStandardMaterial color="#6b4428" roughness={1} />
+          </mesh>
+          {[[0, 4.2, 0, 2], [1.3, 3.7, 0.3, 1.4], [-1.3, 3.8, -0.2, 1.5], [0.2, 5.4, 0.1, 1.3]].map(([a, b, c, r], n) => (
+            <mesh key={n} position={[a, b, c]} castShadow>
+              <sphereGeometry args={[r, 20, 16]} />
+              <meshStandardMaterial color={n % 2 ? "#3e9a3c" : "#358a36"} roughness={1} />
+            </mesh>
+          ))}
+        </group>
+      ))}
     </group>
   );
 }
@@ -493,6 +552,8 @@ function Director({ rows, cast, setCast }: { rows: BrawlRow[]; cast: string[]; s
   const busyUntil = useRef(0);
   const now = useRef(0);
   const shake = useRef(0);
+  const real = useRef(0);
+  const stopUntil = useRef(0); // hit-stop: the world all but freezes for a few frames on impact
   const pow = useRef<THREE.Mesh>(null!);
   const powAt = useRef(-10);
   const powMap = useMemo(powTex, []);
@@ -586,16 +647,32 @@ function Director({ rows, cast, setCast }: { rows: BrawlRow[]; cast: string[]; s
     tw(a, "yell", 0, 1.0, 0.3);
     tw(v, "yell", 1, 0.72, 0.06);
     tw(v, "yell", 0, 1.5, 0.3);
-    tw(a, "arm", 1.1, 0.42, 0.2);
-    tw(a, "lean", -0.3, 0.42, 0.2);
-    tw(a, "arm", -1.75, 0.64, 0.08, lin);
-    tw(a, "lean", 0.45, 0.64, 0.08, lin);
-    tw(a, "fist", 2.3, 0.64, 0.08, lin, () => {
+    // snap into the wind-up and hold it, then throw in two frames
+    tw(a, "arm", 1.25, 0.4, 0.07, snap);
+    tw(a, "lean", -0.4, 0.4, 0.07, snap);
+    tw(a, "squash", 0.3, 0.4, 0.07, snap);
+    tw(a, "arm", -1.75, 0.66, 0.05, lin);
+    tw(a, "lean", 0.5, 0.66, 0.05, lin);
+    tw(a, "squash", -0.3, 0.66, 0.05, lin);
+    tw(a, "squash", 0, 0.82, 0.25, backOut);
+    tw(a, "fist", 2.6, 0.66, 0.05, lin, () => {
       shake.current = 1;
+      stopUntil.current = real.current + 0.1;
+      // the whole queue flinches and howls, rippling out from the hit
+      order.current.forEach((qid, k) => {
+        const q = puppets.current.get(qid);
+        if (!q || q === a || q === v) return;
+        const dl = 0.03 * Math.abs(k - i);
+        tw(q, "yell", 0.85, dl, 0.06, snap);
+        tw(q, "yell", 0, dl + 0.55, 0.25);
+        tweens.current.push({ p: q, k: "squash", a: 0.38, b: 0, t0: now.current + dl, d: 0.35, e: backOut });
+      });
       powAt.current = now.current;
       pow.current.position.set(v.x + 0.3, v.y + 1.25, v.z + 1.2);
     });
-    tweens.current.push({ p: v, k: "squash", a: 0.5, b: 0, t0: now.current + 0.72, d: 0.3, e: backOut });
+    // flattened by the glove, then stretched long in the air
+    tweens.current.push({ p: v, k: "squash", a: 0.65, b: -0.45, t0: now.current + 0.71, d: 0.1, e: snap });
+    tweens.current.push({ p: v, k: "squash", a: -0.45, b: 0, t0: now.current + 0.81, d: 0.6, e: lin });
     // the victim is sent to its new place, or off the stage if it fell out of the ten
     const vi = order.current.indexOf(v.id);
     if (vi === -1) flyOff(v, 0.72, -1);
@@ -631,7 +708,8 @@ function Director({ rows, cast, setCast }: { rows: BrawlRow[]; cast: string[]; s
   };
 
   useFrame(({ clock }, dt) => {
-    const t = (now.current = clock.elapsedTime);
+    real.current = clock.elapsedTime;
+    const t = (now.current += Math.min(dt, 0.05) * (real.current < stopUntil.current ? 0.04 : 1));
     if (t >= busyUntil.current && order.current.length) step();
 
     for (let n = timers.current.length - 1; n >= 0; n--) if (t >= timers.current[n].at) timers.current.splice(n, 1)[0].fn();
@@ -683,6 +761,14 @@ function Director({ rows, cast, setCast }: { rows: BrawlRow[]; cast: string[]; s
       // No. 2 shakes a fist at the podium while it waits
       m.armL.rotation.set(id === second && p.arm === 0 ? -1.2 + Math.sin(ph * 2) * 0.5 : Math.sin(ph) * 0.2, 0, -0.35);
       m.glove.scale.setScalar(p.fist);
+      // rage: the body buzzes and the pupils pinch to dots
+      if (p.yell > 0.5) {
+        m.root.position.x += Math.sin(t * 95 + p.seed * 9) * 0.03 * p.yell;
+        m.body.rotation.z += Math.sin(t * 80 + p.seed * 5) * 0.06 * p.yell;
+      }
+      const pin = 1 - 0.6 * p.yell;
+      m.pupL.scale.set(pin, pin, 1);
+      m.pupR.scale.set(pin, pin, 1);
       const blink = (t * 0.7 + p.seed * 7) % 3.1 < 0.1 ? 1.15 : p.yell * -0.25;
       m.lidL.rotation.x = m.lidR.rotation.x = 0.2 + blink;
       // No. 2 mutters at the podium; a punch thrown or taken opens the mouth wide
@@ -770,7 +856,7 @@ function Scene({ rows, cast, setCast }: { rows: BrawlRow[]; cast: string[]; setC
 export default function BunnyBrawl({ rows, fx = true }: { rows: BrawlRow[]; fx?: boolean }) {
   const [cast, setCast] = useState<string[]>([]);
   return (
-    <Canvas shadows="soft" style={{ position: "absolute", inset: 0 }} dpr={[1, 1.75]} camera={{ fov: 32, near: 0.1, far: 220, position: [0, 4, 16] }} gl={{ antialias: !fx, toneMappingExposure: 0.92 }}>
+    <Canvas shadows style={{ position: "absolute", inset: 0 }} dpr={[1, 1.75]} camera={{ fov: 32, near: 0.1, far: 220, position: [0, 4, 16] }} gl={{ antialias: !fx, toneMappingExposure: 0.92 }}>
       <color attach="background" args={["#d8f0ff"]} />
       <fog attach="fog" args={["#d8f0ff", 34, 95]} />
       <Env />
