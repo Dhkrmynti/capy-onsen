@@ -166,3 +166,58 @@ Render ulang post news dengan angka terbaru: `cd remotion-x && ./render-hawking-
 > hawkings.fun
 
 **Alt text:** Red tape reading "Seller detected" over the headline "Bold choice.", the line "It's off the board for good. Its share of every emission now goes to the ten who held.", and the hawk astronaut mascot saying "Spaghetti, extra long."
+
+---
+
+## 3 post lagi: news reward #2 + 2 gimmick
+
+Render ulang news dengan angka terbaru: `cd remotion-x && ./render-hawking-hooks2.sh`
+
+### News: reward ke-2 masuk
+
+**File:** `news-reward-landed.png` (angka 11 Oct 2026, 16:06 WIB)
+
+> 🚨 The 2nd reward landed.
+>
+> 0.0205 ETH went straight to the 10 wallets nearest the core.
+>
+> So far:
+> ⚠️ 0.0685 ETH paid to holders over 2 rewards
+> 🔥 2.17M $HAWK bought back and burned
+> ⚙️ 5 rounds, all run by the engine on its own
+>
+> Top earner: 0xec9c…32ab, +0.0128 ETH. Never sold.
+>
+> CA: 0xa19d5a29879eb9ce751a8a7416e1d0a475c3afca
+> hawkings.fun
+
+**Alt text:** A "Mission Control Bulletin" card: "The 2nd reward landed." 0.0205 ETH to the 10 wallets nearest the core, with totals (0.0685 ETH paid over 2 rewards, 5 rounds, 2.17M $HAWK burned), the top earner 0xec9c…32ab at +0.0128 ETH, 41 holders on site, and Treasury running now.
+
+### Gimmick: boarding pass
+
+**File:** `hook-boarding-pass.png`
+
+> Now boarding. ✈️
+>
+> From: your wallet
+> To: the core
+> Baggage: 100,000 $HAWK
+> Return ticket: none
+>
+> Gate: Pons · hawkings.fun
+
+**Alt text:** A "Hawking Air" boarding pass from WLT to CORE: passenger You, seat No. 1-10, baggage 100,000 $HAWK minimum, return ticket None, class Diamond Hands, gate Pons, with the hawk astronaut mascot in the corner.
+
+### Gimmick: ramalan cuaca
+
+**File:** `hook-forecast-from-the-core.png`
+
+> Today's forecast from the core: 🌤️
+>
+> Top 10: sunny, ETH every reward
+> Sellers: severe spaghettification
+> Supply: falling, buybacks burn what they buy
+>
+> hawkings.fun
+
+**Alt text:** A weather report titled "Forecast from the core." with the hawk astronaut as presenter: Top 10 sunny (ETH every reward), Sellers severe (spaghettification, no recovery), Supply falling (buybacks burn what they buy).
