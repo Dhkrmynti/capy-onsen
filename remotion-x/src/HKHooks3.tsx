@@ -238,3 +238,54 @@ export function HKCycleFeature() {
     </AbsoluteFill>
   );
 }
+
+/* ───────── 5. news: who got the reward, wallet by wallet ───────── */
+
+export type PayRow = { addr: string; balance: number; amount: number; tx: string };
+export type PayslipProps = { n: number; totalETH: number; at: string; rows: PayRow[] };
+export const PAYSLIP_DEFAULTS: PayslipProps = { n: 2, totalETH: 0.0205, at: "", rows: [] };
+
+export function HKPayslip({ n, totalETH, at, rows }: PayslipProps) {
+  return (
+    <AbsoluteFill style={{ background: V.void, overflow: "hidden" }}>
+      <div style={{ position: "absolute", left: 0, right: 0, top: 0, height: 18, background: `repeating-linear-gradient(-45deg, ${V.orange} 0 18px, #121212 18px 36px)` }} />
+      <div style={{ position: "absolute", left: 80, top: 46, right: 80, display: "flex", alignItems: "flex-end", justifyContent: "space-between" }}>
+        <div>
+          <Caps size={22}>Reward #{n} · paid on chain{at ? ` · ${at}` : ""}</Caps>
+          <Head size={92} style={{ marginTop: 6 }}>
+            Ten wallets. <span style={{ color: V.orange }}>Paid.</span>
+          </Head>
+        </div>
+        <div style={{ background: V.orange, color: "#121212", padding: "12px 22px", textAlign: "right" }}>
+          <div style={{ fontFamily: VF.display, fontWeight: 900, fontSize: 20, letterSpacing: "0.14em" }}>TOTAL REWARD</div>
+          <div style={{ fontFamily: VF.display, fontWeight: 900, fontSize: 56, lineHeight: 1 }}>{totalETH.toFixed(4)} ETH</div>
+        </div>
+      </div>
+      {/* the slip */}
+      <div style={{ position: "absolute", left: 80, right: 80, top: 210, background: V.paper, color: "#121212", padding: "14px 26px 10px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "70px 1fr 220px 240px 200px", padding: "0 0 8px", borderBottom: "3px solid #121212", fontFamily: VF.display, fontWeight: 900, fontSize: 20, letterSpacing: "0.12em", color: "#5c5f64" }}>
+          <span>NO.</span>
+          <span>WALLET</span>
+          <span style={{ textAlign: "right" }}>HOLDING</span>
+          <span style={{ textAlign: "right" }}>RECEIVED</span>
+          <span style={{ textAlign: "right" }}>TX</span>
+        </div>
+        {rows.slice(0, 10).map((r, i) => (
+          <div key={r.addr} style={{ display: "grid", gridTemplateColumns: "70px 1fr 220px 240px 200px", alignItems: "center", height: 49, borderBottom: i === 4 ? "3px dashed #121212" : "1px solid rgba(18,18,18,0.15)" }}>
+            <span style={{ fontFamily: VF.display, fontWeight: 900, fontSize: 32, color: i < 5 ? V.red : V.glow }}>{String(i + 1).padStart(2, "0")}</span>
+            <span style={{ fontFamily: VF.mono, fontWeight: 700, fontSize: 26 }}>{short(r.addr)}</span>
+            <span style={{ fontFamily: VF.mono, fontWeight: 700, fontSize: 24, textAlign: "right" }}>{mil(r.balance)}</span>
+            <span style={{ fontFamily: VF.mono, fontWeight: 700, fontSize: 26, textAlign: "right", color: "#0b7a3d" }}>+{r.amount.toFixed(5)} ETH</span>
+            <span style={{ fontFamily: VF.mono, fontWeight: 500, fontSize: 20, textAlign: "right", color: "#5c5f64" }}>{r.tx.slice(0, 8)}…</span>
+          </div>
+        ))}
+      </div>
+      <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: 60, background: "#121212", borderTop: `4px solid ${V.orange}`, display: "flex", alignItems: "center", padding: "0 80px", justifyContent: "space-between" }}>
+        <Mono size={20} color={V.paper}>
+          <span style={{ color: V.red }}>■</span> NO. 1-5 SHARE 70% · <span style={{ color: V.glow }}>■</span> NO. 6-10 SHARE 30% · BY BALANCE
+        </Mono>
+        <Mono size={22} color={V.orange}>{SITE}</Mono>
+      </div>
+    </AbsoluteFill>
+  );
+}

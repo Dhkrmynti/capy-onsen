@@ -237,3 +237,24 @@ Render ulang news dengan angka terbaru: `cd remotion-x && ./render-hawking-hooks
 > hawkings.fun/#round
 
 **Alt text:** "New on hawkings.fun: Watch the cycle live." above a screenshot of the site's cycle section: three placards (Reward, Treasury, Buyback & burn); only Buyback & burn is lit with a Running beacon and a meter at 0.0047 / 0.01 ETH, the other two are greyed out, and a line shows the loop Reward → Treasury → Buyback & burn → Treasury → again.
+
+---
+
+## News: penerima reward ke-2
+
+**File:** `news-reward-2-paid.png` (data asli dari engine: reward #2, dibayar 11 Oct 2026, 15:32 WIB)
+
+> Reward #2 is paid. 0.0205 ETH, ten wallets, straight from the engine. ⚠️
+>
+> No. 1 0xc364…37e8: +0.00387 ETH
+> No. 2 0xec9c…32ab: +0.00310 ETH
+> No. 3 0xe730…da3d: +0.00259 ETH
+> …down to No. 10 0x3ba7…ea71: +0.00116 ETH
+>
+> No. 1-5 share 70%, No. 6-10 share 30%, by balance. Every transfer is on chain.
+>
+> Next reward goes to whoever holds the top ten then. Sellers are out for good.
+>
+> hawkings.fun
+
+**Alt text:** A pay slip titled "Ten wallets. Paid." for Reward #2 (total 0.0205 ETH): ten rows with rank, short wallet address, holding in $HAWK, ETH received (from +0.00387 for No. 1 to +0.00116 for No. 10) and the start of each transaction hash, with a dashed line between No. 5 and No. 6.
