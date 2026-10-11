@@ -38,14 +38,14 @@ export const HK_NEWS_DEFAULTS: NewsProps = {
 
 export const HK_NEWS_LENGTH = 960;
 
-const NAVY = "#0a1426";
+export const NAVY = "#0a1426";
 const short = (a: string) => (a.length > 12 ? `${a.slice(0, 6)}…${a.slice(-4)}` : a);
 const mil = (n: number) => (n >= 1e6 ? `${(n / 1e6).toFixed(2)}M` : `${Math.round(n / 1e3)}K`);
 
 /* ───────────────────────── pieces ───────────────────────── */
 
 /** The subtitle a press feed burns in: white on a black box, bottom centre. */
-function Sub({ children, from, to }: { children: ReactNode; from: number; to: number }) {
+export function Sub({ children, from, to }: { children: ReactNode; from: number; to: number }) {
   const f = useCurrentFrame();
   if (f < from || f > to) return null;
   const o = Math.min(ramp(f, from, from + 6), 1 - ramp(f, to - 6, to));
@@ -57,7 +57,7 @@ function Sub({ children, from, to }: { children: ReactNode; from: number; to: nu
 }
 
 /** Broadcast lower third and the ticker crawl along the bottom. */
-function Chyron({ title, sub, ticker, live = true }: { title: string; sub: string; ticker: string[]; live?: boolean }) {
+export function Chyron({ title, sub, ticker, live = true }: { title: string; sub: string; ticker: string[]; live?: boolean }) {
   const f = useCurrentFrame();
   const x = -((f * 4) % 2400);
   const line = ticker.join("   ✕   ") + "   ✕   ";
@@ -83,7 +83,7 @@ function Chyron({ title, sub, ticker, live = true }: { title: string; sub: strin
 }
 
 /** Camera flashes from the press pit. */
-function Flashes({ at }: { at: number[] }) {
+export function Flashes({ at }: { at: number[] }) {
   const f = useCurrentFrame();
   const o = Math.max(0, ...at.map((a) => (f >= a && f < a + 3 ? 1 - (f - a) / 3 : 0)));
   // a soft pop from the press pit, never a full white-out
@@ -91,7 +91,7 @@ function Flashes({ at }: { at: number[] }) {
 }
 
 /** The press room: curtain, a step-and-repeat of the mark, the podium, the astronaut. */
-function Room({ talk, zoom = 1 }: { talk: number; zoom?: number }) {
+export function Room({ talk, zoom = 1 }: { talk: number; zoom?: number }) {
   const f = useCurrentFrame();
   const bob = Math.sin(f / 9) * 4;
   const wall: CSSProperties = {
@@ -143,7 +143,7 @@ function Room({ talk, zoom = 1 }: { talk: number; zoom?: number }) {
 }
 
 /** How open the beak is for a stretch of speech: a quick, uneven flap. */
-function talkAt(f: number, spans: [number, number][]) {
+export function talkAt(f: number, spans: [number, number][]) {
   const on = spans.some(([a, b]) => f >= a && f <= b);
   if (!on) return 0;
   return Math.max(0, Math.sin(f * 1.3) * 0.6 + Math.sin(f * 0.55) * 0.4);
@@ -166,21 +166,24 @@ const CANDLES = (() => {
   return out;
 })();
 
-function Chart({ start }: { start: number }) {
+const BEAR = CANDLES.map((c) => ({ o: 200 - c.o, c: 200 - c.c, h: 200 - c.l, l: 200 - c.h }));
+
+export function Chart({ start, bear = false }: { start: number; bear?: boolean }) {
   const f = useCurrentFrame() - start;
+  const CANDLES_ = bear ? BEAR : CANDLES;
   const W = 1400;
   const H = 620;
-  const lo = Math.min(...CANDLES.map((c) => c.l));
-  const hi = Math.max(...CANDLES.map((c) => c.h));
+  const lo = Math.min(...CANDLES_.map((c) => c.l));
+  const hi = Math.max(...CANDLES_.map((c) => c.h));
   const y = (v: number) => H - ((v - lo) / (hi - lo)) * (H - 40) - 20;
-  const cw = W / CANDLES.length;
-  const shown = Math.min(CANDLES.length, Math.floor(f / 4.5) + 1);
+  const cw = W / CANDLES_.length;
+  const shown = Math.min(CANDLES_.length, Math.floor(f / 4.5) + 1);
   return (
     <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
       {[0.2, 0.4, 0.6, 0.8].map((g) => (
         <line key={g} x1={0} x2={W} y1={H * g} y2={H * g} stroke="rgba(244,244,240,0.08)" strokeWidth={2} />
       ))}
-      {CANDLES.slice(0, shown).map((c, i) => {
+      {CANDLES_.slice(0, shown).map((c, i) => {
         const grow = ease(Math.min(1, (f - i * 4.5) / 6));
         const up = c.c >= c.o;
         const col = up ? "#16c784" : "#ea3943";

@@ -339,3 +339,36 @@ Render ulang news dengan angka terbaru: `cd remotion-x && ./render-hawking-hooks
 > hawkings.fun
 
 **Alt text:** The headline "Nobody remembers 0x1a2b…3c4d." beside a slice of the exposure board where rank 01 shows "@you" with an X logo highlighted in yellow, above two anonymous wallet addresses.
+
+---
+
+## Video: fitur Connect X
+
+**File:** `video-connect-x.mp4` (19 detik, tanpa suara)
+
+> New on hawkings.fun: Connect X. 🧑‍🚀
+>
+> Three clicks and the exposure board shows your X handle, picture and badge instead of 0x…
+>
+> Connect the wallet → Your dosimeter → Connect X.
+> Read-only. We never post or see your DMs.
+>
+> hawkings.fun
+
+**Alt text:** Animated video: an X logo pops in over "Connect X.", three numbered steps appear beside a screenshot of the site's Connect X booth, then a row on the exposure board turns from an anonymous 0x address into "@you" with the hawk astronaut avatar and the tag "That's you".
+
+## Video: good afternoon, red day
+
+**File:** `video-good-afternoon-red-day.mp4` (32 detik, tanpa suara; angka engine asli saat render. Render ulang: `cd remotion-x && ./render-hawking-videos2.sh`)
+
+> 🎙️ Good afternoon from Mission Control.
+>
+> Yes, the market is red today. The engine doesn't read charts, it reads trades.
+> Every trade, up or down, still pays a fee into the escrow, and the cycle keeps running:
+> reward → treasury → buyback & burn → treasury.
+>
+> Sellers get spaghettified. Holders stay near the core.
+>
+> hawkings.fun
+
+**Alt text:** The hawk astronaut gives an afternoon press briefing at a Mission Control podium with a LIVE chyron, a drawn red candle chart labelled as an illustration, then an "engine report" with the real totals: ETH paid to the ten nearest the core, $HAWK burned, ETH into the Containment Fund and rounds run.
