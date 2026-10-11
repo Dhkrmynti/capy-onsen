@@ -274,3 +274,68 @@ Render ulang news dengan angka terbaru: `cd remotion-x && ./render-hawking-hooks
 > hawkings.fun
 
 **Alt text:** A confirm dialog from "Mission Control" asking "Are you sure you want to sell $HAWK? Even 10%. Even by accident. This wallet will be spaghettified and never earn another reward." with a crossed-out red SELL button and a yellow HOLD button, beside the headline "The core has no undo button." and the hawk astronaut mascot.
+
+---
+
+## Update fitur: Connect X + 3 konten (news, gimmick, hook)
+
+Render ulang news dengan angka terbaru: `cd remotion-x && ./render-hawking-hooks3.sh`
+
+### Update fitur: Connect X
+
+**File:** `feature-connect-x.png`
+
+> New on hawkings.fun: Connect X. 🧑‍🚀
+>
+> Put your X handle, picture and badge on the exposure board, right next to your rank.
+>
+> 1. Connect the wallet that holds $HAWK
+> 2. Your dosimeter → "Set your name, astronaut or connect X"
+> 3. Connect X → Sign & connect X → Authorize
+>
+> Read-only. We never post or see your DMs. Free to sign, moves no funds.
+>
+> hawkings.fun
+
+**Alt text:** "New on hawkings.fun: Connect X." with three numbered steps, beside a screenshot of the site's booth showing the Connect X tab and a "Sign & connect X" button, and a large X logo.
+
+### News: burn ke-2
+
+**File:** `news-burn-2.png` (angka 11 Oct 2026, 17:54 WIB)
+
+> 🔥 Evaporation #2: 1.95M $HAWK gone.
+>
+> The engine bought it back on Pons and burned exactly what it bought.
+>
+> So far:
+> 🔥 4.12M $HAWK burned for good
+> ⚠️ 0.0685 ETH paid to the ten nearest the core
+> 🛡️ 0.0856 ETH into the Containment Fund
+>
+> 7 rounds, no hands. Treasury is filling now, then the next reward.
+>
+> hawkings.fun
+
+**Alt text:** A "Mission Control Bulletin" card: "1.95M $HAWK gone." for the 2nd buyback and burn, with totals (4.12M $HAWK burned, 0.0685 ETH to the ten nearest the core, 0.0856 ETH into the Containment Fund), 7 rounds, Treasury running now at 0.0207 / 0.025 ETH, then the next reward.
+
+### Gimmick: hello, my name is
+
+**File:** `gimmick-hello-my-name-is.png`
+
+> Mission Control dress code: wear your @ to the core. 🏷️
+>
+> Connect X on hawkings.fun and the board shows your handle instead of 0x…
+
+**Alt text:** A red "Hello, my name is" sticker reading "@you" with an X logo and "Rank: near the core · Status: never sold", next to the line "Wear your @ to the core." and the hawk astronaut mascot.
+
+### Hook: nobody remembers 0x…
+
+**File:** `hook-nobody-remembers-0x.png`
+
+> Nobody remembers 0x1a2b…3c4d.
+>
+> Hold near the core with your X on it. Let them see who's getting paid.
+>
+> hawkings.fun
+
+**Alt text:** The headline "Nobody remembers 0x1a2b…3c4d." beside a slice of the exposure board where rank 01 shows "@you" with an X logo highlighted in yellow, above two anonymous wallet addresses.

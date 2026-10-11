@@ -1,5 +1,6 @@
 import { Composition, Still } from "remotion";
 import { HKBanner, HKGif, HKLogo, HKPostBoard, HKPostEmpty, HKPostRules, HKPostWho, HKHookPaper, HKHookCore, HKHookTen, HK_GIF_LENGTH } from "./HKStills";
+import { BURN_DEFAULTS, HKBurnNews, HKHookHandle, HKNameTag, HKXFeature } from "./HKHooks4";
 import { HKBoardingPass, HKCycleFeature, HKForecast, HKMisclick, HKPayslip, PAYSLIP_DEFAULTS, HKRewardNews, REWARD_DEFAULTS } from "./HKHooks3";
 import { BULLETIN_DEFAULTS, HKBoldChoice, HKBulletin, HKJobAd } from "./HKHooks2";
 import { HKNews, HK_NEWS_DEFAULTS, HK_NEWS_LENGTH } from "./HKNews";
@@ -31,6 +32,10 @@ import { HLSimulation, HL_SIM_LENGTH } from "./HLSimulation";
 export function RemotionRoot() {
   return (
     <>
+      <Still id="HKXFeature" component={HKXFeature} width={1600} height={900} />
+      <Still id="HKBurnNews" component={HKBurnNews} width={1600} height={900} defaultProps={BURN_DEFAULTS} />
+      <Still id="HKNameTag" component={HKNameTag} width={1600} height={900} />
+      <Still id="HKHookHandle" component={HKHookHandle} width={1600} height={900} />
       <Still id="HKRewardNews" component={HKRewardNews} width={1600} height={900} defaultProps={REWARD_DEFAULTS} />
       <Still id="HKBoardingPass" component={HKBoardingPass} width={1600} height={900} />
       <Still id="HKForecast" component={HKForecast} width={1600} height={900} />
