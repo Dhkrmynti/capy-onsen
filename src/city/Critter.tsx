@@ -8,6 +8,10 @@ import type { ReactNode, RefObject } from "react";
 import * as THREE from "three";
 
 export type Kind = "rabbit" | "ape" | "croc";
+export type Outfit = "hoodie" | "suit" | "cape";
+/** crown: the No. 1 holder. chain: No. 2 to 10. */
+export type Mark = "crown" | "chain" | null;
+export const HOODIES = ["#e5262b", "#1f6fe0", "#f59e0b", "#7c3aed", "#0ea5a4", "#111827", "#ec4899", "#f4f4f0", "#16a34a"];
 export type CritterParts = { root: THREE.Group; rig: THREE.Group; legL: THREE.Group; legR: THREE.Group; armL: THREE.Group; armR: THREE.Group; head: THREE.Group; tail: THREE.Group | null };
 
 export const hash = (s: string) => {
@@ -21,9 +25,9 @@ const FUR: Record<Kind, string[]> = {
   ape: ["#7a5236", "#5e4130", "#a0744c", "#3d3230", "#b98b5e", "#8a8f98"],
   croc: ["#4f9e4a", "#3f8a5a", "#7fb23f", "#2f7d6b", "#93a83a", "#5aa88a"],
 };
-const HOODIE = ["#e5262b", "#1f6fe0", "#f59e0b", "#7c3aed", "#0ea5a4", "#111827", "#ec4899", "#f4f4f0", "#16a34a"];
 
-export function Critter({ id, kind, gold, register, children }: { id: string; kind: Kind; gold: boolean; register: (id: string, p: CritterParts | null) => void; children?: ReactNode }) {
+export function Critter({ id, kind, mark, outfit = "hoodie", color, register, children }: { id: string; kind: Kind; mark: Mark; outfit?: Outfit; color?: string; register: (id: string, p: CritterParts | null) => void; children?: ReactNode }) {
+  const gold = mark !== null;
   const root = useRef<THREE.Group>(null!);
   const rig = useRef<THREE.Group>(null!);
   const legL = useRef<THREE.Group>(null!);
@@ -45,7 +49,9 @@ export function Critter({ id, kind, gold, register, children }: { id: string; ki
       fur: std(fur),
       pale: std(fur.clone().lerp(new THREE.Color("#fff6e6"), 0.6)),
       dark: std(fur.clone().multiplyScalar(0.5)),
-      hoodie: std(HOODIE[(h >>> 5) % HOODIE.length], 0.85),
+      hoodie: std(outfit === "hoodie" ? (color ?? HOODIES[(h >>> 5) % HOODIES.length]) : "#1b2333", outfit === "hoodie" ? 0.85 : 0.6),
+      shirt: std("#f4f4f0", 0.7),
+      accent: std(color ?? "#c8102e", 0.6),
       pants: std(["#22303f", "#3b3b3b", "#5b4632", "#1e3a5f"][(h >>> 9) % 4], 0.9),
       shoe: std("#f4f4f0", 0.5),
       eye: new THREE.MeshStandardMaterial({ color: "#fffdf7", roughness: 0.1 }),
@@ -54,7 +60,7 @@ export function Critter({ id, kind, gold, register, children }: { id: string; ki
       tooth: std("#ffffff", 0.3),
       gold: new THREE.MeshStandardMaterial({ color: "#ffc93c", metalness: 1, roughness: 0.2 }),
     };
-  }, [h, kind]);
+  }, [h, kind, outfit, color]);
 
   const leg = (side: 1 | -1, ref: RefObject<THREE.Group>) => (
     <group ref={ref} position={[0.15 * side, 0.56, 0]}>
@@ -102,6 +108,22 @@ export function Critter({ id, kind, gold, register, children }: { id: string; ki
         </mesh>
         {arm(-1, armL)}
         {arm(1, armR)}
+        {outfit !== "hoodie" ? (
+          <>
+            {/* shirt front and tie under the jacket */}
+            <mesh position={[0, 1.0, 0.2]} rotation={[0.1, 0, 0]} scale={[0.5, 1, 0.3]} material={M.shirt}>
+              <coneGeometry args={[0.28, 0.5, 3]} />
+            </mesh>
+            <mesh position={[0, 0.98, 0.255]} material={M.accent}>
+              <boxGeometry args={[0.06, 0.34, 0.02]} />
+            </mesh>
+          </>
+        ) : null}
+        {outfit === "cape" ? (
+          <mesh position={[0, 0.78, -0.27]} rotation={[0.16, 0, 0]} scale={[1, 1, 0.12]} material={M.accent} castShadow>
+            <coneGeometry args={[0.52, 1.15, 16, 1, true]} />
+          </mesh>
+        ) : null}
         {gold ? (
           <mesh position={[0, 1.2, 0.08]} rotation={[1.15, 0, 0]} material={M.gold}>
             <torusGeometry args={[0.2, 0.03, 8, 24]} />
@@ -218,8 +240,8 @@ export function Critter({ id, kind, gold, register, children }: { id: string; ki
               ))}
             </>
           )}
-          {gold ? (
-            <group position={[0, kind === "croc" ? 0.36 : 0.36, kind === "rabbit" ? 0.06 : 0]}>
+          {mark === "crown" ? (
+            <group position={[0, 0.36, kind === "rabbit" ? 0.06 : 0]}>
               <mesh material={M.gold}>
                 <cylinderGeometry args={[0.17, 0.15, 0.1, 16, 1, true]} />
               </mesh>
