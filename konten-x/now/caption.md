@@ -258,3 +258,19 @@ Render ulang news dengan angka terbaru: `cd remotion-x && ./render-hawking-hooks
 > hawkings.fun
 
 **Alt text:** A pay slip titled "Ten wallets. Paid." for Reward #2 (total 0.0205 ETH): ten rows with rank, short wallet address, holding in $HAWK, ETH received (from +0.00387 for No. 1 to +0.00116 for No. 10) and the start of each transaction hash, with a dashed line between No. 5 and No. 6.
+
+---
+
+## Gimmick: misclick
+
+**File:** `hook-no-undo-button.png`
+
+> PSA: the core has no undo button. ⚠️
+>
+> The engine can't tell a misclick from a sell. Any sale, any size, and that wallet is spaghettified for good.
+>
+> Check twice. Click once. Or just don't click.
+>
+> hawkings.fun
+
+**Alt text:** A confirm dialog from "Mission Control" asking "Are you sure you want to sell $HAWK? Even 10%. Even by accident. This wallet will be spaghettified and never earn another reward." with a crossed-out red SELL button and a yellow HOLD button, beside the headline "The core has no undo button." and the hawk astronaut mascot.

@@ -289,3 +289,61 @@ export function HKPayslip({ n, totalETH, at, rows }: PayslipProps) {
     </AbsoluteFill>
   );
 }
+
+/* ───────── 6. gimmick: the misclick, as a confirm dialog ───────── */
+
+export function HKMisclick() {
+  return (
+    <AbsoluteFill style={{ background: V.void, overflow: "hidden" }}>
+      <div style={{ position: "absolute", inset: 0, opacity: 0.45 }}>
+        <Render w={1600} h={900} scale={0.9} />
+      </div>
+      <AbsoluteFill style={{ background: "rgba(11,11,12,0.6)" }} />
+      <div style={{ position: "absolute", left: 90, top: 70, width: 620 }}>
+        <Caps size={22} color={V.muted}>Public service announcement</Caps>
+        <Head size={104} style={{ marginTop: 10 }}>
+          The core has no <span style={{ color: V.orange }}>undo</span> button.
+        </Head>
+        <Body size={32} color={V.paper} style={{ marginTop: 24 }}>
+          The engine can't tell a misclick from a sell. Any sale, any size, and that wallet is off the board for good.
+        </Body>
+        <Body size={28} color={V.orange} style={{ marginTop: 22 }}>
+          Check twice. Click once. Or just don't click.
+        </Body>
+      </div>
+      {/* the dialog */}
+      <div style={{ position: "absolute", right: 90, top: 150, width: 720, background: V.paper, color: "#121212", border: "4px solid #121212", boxShadow: "14px 14px 0 #121212, 0 50px 90px rgba(0,0,0,0.6)" }}>
+        <div style={{ height: 52, background: "#121212", display: "flex", alignItems: "center", padding: "0 18px", gap: 12 }}>
+          <Tri size={32} />
+          <span style={{ fontFamily: VF.display, fontWeight: 900, fontSize: 24, letterSpacing: "0.12em", color: V.orange }}>MISSION CONTROL · CONFIRM</span>
+          <span style={{ marginLeft: "auto", fontFamily: VF.display, fontWeight: 900, fontSize: 26, color: V.paper }}>✕</span>
+        </div>
+        <div style={{ padding: "30px 34px 28px", display: "grid", gridTemplateColumns: "120px 1fr", gap: 24 }}>
+          <svg width={110} height={100} viewBox="0 0 120 110">
+            <path d="M60 6 L 115 104 H 5 Z" fill={V.orange} stroke="#121212" strokeWidth="8" strokeLinejoin="round" />
+            <text x="60" y="88" textAnchor="middle" fontFamily={VF.display} fontWeight={900} fontSize="64" fill="#121212">!</text>
+          </svg>
+          <div>
+            <div style={{ fontFamily: VF.display, fontWeight: 900, fontSize: 46, lineHeight: 1.02, textTransform: "uppercase" }}>Are you sure you want to sell $HAWK?</div>
+            <div style={{ fontFamily: VF.serif, fontWeight: 600, fontSize: 26, marginTop: 14, color: "#3c3f44" }}>Even 10%. Even by accident. This wallet will be spaghettified and never earn another reward.</div>
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: 18, padding: "0 34px 54px", justifyContent: "flex-end" }}>
+          <div style={{ border: "4px solid #121212", padding: "14px 26px", fontFamily: VF.display, fontWeight: 900, fontSize: 30, letterSpacing: "0.04em", color: V.red, background: "#fff", position: "relative" }}>
+            SELL
+            <div style={{ position: "absolute", left: -6, right: -6, top: "50%", height: 5, background: V.red, transform: "rotate(-8deg)" }} />
+            <div style={{ position: "absolute", left: 0, right: 0, top: "100%", marginTop: 6, fontFamily: VF.mono, fontWeight: 700, fontSize: 15, color: V.red, textAlign: "center", whiteSpace: "nowrap" }}>spaghettified for good</div>
+          </div>
+          <div style={{ border: "4px solid #121212", padding: "14px 34px", fontFamily: VF.display, fontWeight: 900, fontSize: 30, letterSpacing: "0.04em", background: V.orange, boxShadow: "5px 5px 0 #121212" }}>HOLD ✓</div>
+        </div>
+      </div>
+      {/* the hawk, watching the cursor */}
+      <div style={{ position: "absolute", right: 120, bottom: -30 }}>
+        <Mascot size={300} bare />
+      </div>
+      <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: 60, background: "#121212", borderTop: `4px solid ${V.orange}`, display: "flex", alignItems: "center", padding: "0 90px" }}>
+        <Mono size={22} color={V.orange}>{SITE} · $HAWK · ON PONS</Mono>
+      </div>
+    </AbsoluteFill>
+  );
+}
