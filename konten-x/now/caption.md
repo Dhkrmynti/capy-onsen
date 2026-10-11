@@ -221,3 +221,19 @@ Render ulang news dengan angka terbaru: `cd remotion-x && ./render-hawking-hooks
 > hawkings.fun
 
 **Alt text:** A weather report titled "Forecast from the core." with the hawk astronaut as presenter: Top 10 sunny (ETH every reward), Sellers severe (spaghettification, no recovery), Supply falling (buybacks burn what they buy).
+
+---
+
+## Fitur baru: siklus live di web
+
+**File:** `feature-watch-the-cycle-live.png` (tangkapan layar asli hawkings.fun, 11 Oct 2026; saat itu Buyback & burn yang berjalan, 0.0047 / 0.01 ETH)
+
+> New on hawkings.fun: watch the cycle live. ⚠️
+>
+> Only the step running now lights up, with its meter filling toward the next payout. The others wait in grey for their turn.
+>
+> Reward → Treasury → Buyback & burn → Treasury → again.
+>
+> hawkings.fun/#round
+
+**Alt text:** "New on hawkings.fun: Watch the cycle live." above a screenshot of the site's cycle section: three placards (Reward, Treasury, Buyback & burn); only Buyback & burn is lit with a Running beacon and a meter at 0.0047 / 0.01 ETH, the other two are greyed out, and a line shows the loop Reward → Treasury → Buyback & burn → Treasury → again.

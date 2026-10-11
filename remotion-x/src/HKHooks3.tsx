@@ -3,7 +3,7 @@
  * render time by render-hawking-hooks2.sh), and two gimmicks: a boarding pass to the core and
  * the weather report from the core.
  */
-import { AbsoluteFill } from "remotion";
+import { AbsoluteFill, Img, staticFile } from "remotion";
 import { Body, Caps, Head, Mono, SITE, Tri, V, VF } from "./HKTheme";
 import { Mascot } from "./HKMascot";
 import { Render } from "./HKStills";
@@ -190,6 +190,50 @@ export function HKForecast() {
       </div>
       <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: 64, background: "#121212", borderTop: `4px solid ${V.orange}`, display: "flex", alignItems: "center", padding: "0 80px", justifyContent: "flex-end" }}>
         <Mono size={24} color={V.orange}>{SITE} · $HAWK · ON PONS</Mono>
+      </div>
+    </AbsoluteFill>
+  );
+}
+
+/* ───────── 4. feature: the cycle, live on the site ───────── */
+
+/** The real cycle section from hawkings.fun (public/hk/cycle-live.png, a 1920x1080 capture). */
+export function HKCycleFeature() {
+  // crop of the capture: the three placards and the loop line
+  const cx = 372;
+  const cy = 412;
+  const cw = 1190;
+  const ch = 448;
+  const k = 1240 / cw;
+  return (
+    <AbsoluteFill style={{ background: V.void, overflow: "hidden" }}>
+      <div style={{ position: "absolute", left: 0, right: 0, top: 0, height: 18, background: `repeating-linear-gradient(-45deg, ${V.orange} 0 18px, #121212 18px 36px)` }} />
+      <div style={{ position: "absolute", left: 90, top: 56, right: 90, display: "flex", alignItems: "flex-end", justifyContent: "space-between" }}>
+        <div>
+          <div style={{ display: "inline-block", background: V.orange, color: "#121212", fontFamily: VF.display, fontWeight: 900, fontSize: 26, letterSpacing: "0.14em", padding: "6px 14px" }}>NEW ON {SITE.toUpperCase()}</div>
+          <Head size={104} style={{ marginTop: 12 }}>
+            Watch the cycle <span style={{ color: V.orange }}>live.</span>
+          </Head>
+        </div>
+        <Body size={28} color={V.paper} style={{ width: 420, textAlign: "right", marginBottom: 8 }}>
+          Only the step running now lights up, its meter filling toward the next payout.
+        </Body>
+      </div>
+      {/* the site, in a browser frame */}
+      <div style={{ position: "absolute", left: 180, top: 300, width: 1240, background: "#121212", border: `3px solid ${V.orange}`, boxShadow: "0 40px 80px rgba(0,0,0,0.7)" }}>
+        <div style={{ height: 40, display: "flex", alignItems: "center", gap: 10, padding: "0 16px", borderBottom: "2px solid #2c2f33" }}>
+          {[V.red, V.orange, V.green].map((c) => (
+            <span key={c} style={{ width: 13, height: 13, borderRadius: "50%", background: c }} />
+          ))}
+          <span style={{ marginLeft: 16, fontFamily: VF.mono, fontWeight: 700, fontSize: 18, color: V.muted }}>{SITE}/#round</span>
+        </div>
+        <div style={{ position: "relative", width: 1240, height: ch * k, overflow: "hidden" }}>
+          <Img src={staticFile("hk/cycle-live.png")} style={{ position: "absolute", width: 1920 * k, left: -cx * k, top: -cy * k }} />
+        </div>
+      </div>
+      <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: 64, background: "#121212", borderTop: `4px solid ${V.orange}`, display: "flex", alignItems: "center", padding: "0 90px", justifyContent: "space-between" }}>
+        <Mono size={22} color={V.paper}>REWARD → TREASURY → BUYBACK & BURN → TREASURY → AGAIN</Mono>
+        <Mono size={24} color={V.orange}>{SITE}</Mono>
       </div>
     </AbsoluteFill>
   );
