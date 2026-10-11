@@ -44,7 +44,7 @@ function Preview() {
   }, [auto]);
   return (
     <div className="brawl">
-      <BunnyBrawl rows={rows.slice(0, 10)} />
+      <BunnyBrawl rows={rows.slice(0, 10)} fx={!location.search.includes("fx=0")} />
       <div className="brawl__title">
         Fight for No. 1<small>3D PROTOTYPE · DEMO HOLDERS · MOVES WITH THE TOP 10</small>
       </div>
