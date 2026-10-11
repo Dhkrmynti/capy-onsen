@@ -372,3 +372,36 @@ Render ulang news dengan angka terbaru: `cd remotion-x && ./render-hawking-hooks
 > hawkings.fun
 
 **Alt text:** The hawk astronaut gives an afternoon press briefing at a Mission Control podium with a LIVE chyron, a drawn red candle chart labelled as an illustration, then an "engine report" with the real totals: ETH paid to the ten nearest the core, $HAWK burned, ETH into the Containment Fund and rounds run.
+
+## Video hook: red day = scoop day
+
+**File:** `video-red-day-scoop.mp4` (16 detik, tanpa suara. Render ulang: `cd remotion-x && ./render-hawking-videos3.sh`)
+
+> The chart is red. 🔴
+> Mission Control's plan:
+>
+> Scoop. Scoop. Scoop. 🥄🥄🥄
+>
+> Then hold. 100,000+ $HAWK puts you on the board, the ten nearest the core share every 0.02 ETH reward, and one sale spaghettifies you for good.
+>
+> hawkings.fun
+> CA: 0xa19d5a29879eb9ce751a8a7416e1d0a475c3afca
+>
+> NFA · memecoin
+
+**Alt text:** Animated video: a drawn red candle chart under "The chart is red. Mission Control's plan:", then the hawk astronaut scoops three red candles with a giant spoon into a $HAWK bag as "Scoop. Scoop. Scoop." pops in, a card with the rules (100,000+ to get on the board, top 10 share each reward, sell once and you're out), and an end card "Red day = scoop day, hawkings.fun".
+
+## Video gimmick: paper hands vs scooper
+
+**File:** `video-paper-hands-vs-scooper.mp4` (17 detik, tanpa suara)
+
+> Same red candle. Two astronauts. 🧑‍🚀🧑‍🚀
+>
+> 🔴 Paper hands: "it's red, I'm out." → SELL → spaghettified, forever.
+> 🟡 Scooper: "it's red. scoop." → BUY → climbs the board, closer to the core.
+>
+> Which astronaut are you? 👇
+>
+> hawkings.fun
+
+**Alt text:** Split-screen animation: on the left, a "paper hands" hawk astronaut presses SELL and is stretched and pulled into a black hole ("Spaghettified. Forever."); on the right, a "scooper" presses BUY, a spoon drops in and its exposure-board rank climbs from #14 to #08, "in the ten". It ends with "Which astronaut are you?" and hawkings.fun.
