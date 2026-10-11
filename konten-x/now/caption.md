@@ -116,3 +116,53 @@ Isi video:
 > hawkings.fun
 
 **Alt text:** A cartoon hawk in an astronaut helmet gives a press briefing at a Mission Control podium, with a LIVE news chyron and ticker. A drawn green candle chart labelled as an illustration climbs, then a "Breaking: the top ten holders" table lists wallets, $HAWK holdings and ETH received from emission #1.
+
+---
+
+## 3 post: news + 2 hook
+
+Render ulang post news dengan angka terbaru: `cd remotion-x && ./render-hawking-hooks.sh` (dua hook ikut dirender, isinya tetap).
+
+### News: siklus 1 selesai
+
+**File:** `news-cycle-complete.png` (angka 11 Oct 2026, 14:56 WIB)
+
+> 🚨 Mission Control bulletin: cycle 1 is complete.
+>
+> All four steps ran on their own, on chain:
+> ⚠️ 0.048 ETH paid to the ten nearest the core
+> 🛡️ 0.057 ETH into the Containment Fund
+> 🔥 2.17M $HAWK bought back and burned
+>
+> 37 on site. 93 spaghettified. Next up: The Emission.
+>
+> CA: 0xa19d5a29879eb9ce751a8a7416e1d0a475c3afca
+> hawkings.fun
+
+**Alt text:** A "Mission Control Bulletin" news card: "Cycle 1 is complete." with three totals (0.048 ETH paid to the ten nearest the core, 0.057 ETH into the Containment Fund, 2.17M $HAWK bought back and burned), counts of 37 on site and 93 spaghettified, and "Next up: The Emission".
+
+### Hook: lowongan astronot
+
+**File:** `hook-astronauts-wanted.png`
+
+> Now hiring. 🧑‍🚀
+>
+> Requirements: hold 100,000 $HAWK.
+> Pay: ETH, every emission.
+> Dismissal: sell once.
+>
+> Apply at hawkings.fun
+
+**Alt text:** A job notice with hazard tape: "Now hiring · Mission Control. Astronauts wanted." listing requirements (hold 100,000 $HAWK), pay (ETH every emission), location (within ten rings of a black hole), hours (24/7) and dismissal (sell once, spaghettified), with the hawk astronaut mascot beside it.
+
+### Hook: bold choice
+
+**File:** `hook-bold-choice.png` (cocok sebagai balasan saat ada yang jual)
+
+> Someone sold $HAWK.
+>
+> Bold choice. Their share of every emission now goes to the ten who held. 🍝
+>
+> hawkings.fun
+
+**Alt text:** Red tape reading "Seller detected" over the headline "Bold choice.", the line "It's off the board for good. Its share of every emission now goes to the ten who held.", and the hawk astronaut mascot saying "Spaghetti, extra long."

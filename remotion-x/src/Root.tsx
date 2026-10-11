@@ -1,5 +1,6 @@
 import { Composition, Still } from "remotion";
 import { HKBanner, HKGif, HKLogo, HKPostBoard, HKPostEmpty, HKPostRules, HKPostWho, HKHookPaper, HKHookCore, HKHookTen, HK_GIF_LENGTH } from "./HKStills";
+import { BULLETIN_DEFAULTS, HKBoldChoice, HKBulletin, HKJobAd } from "./HKHooks2";
 import { HKNews, HK_NEWS_DEFAULTS, HK_NEWS_LENGTH } from "./HKNews";
 import { HKNowLevel, HKNowLive, HKNowOut, HKNowZones, HK_NOW_DEFAULTS } from "./HKNow";
 import { HKExplainer, HK_EXPLAINER_LENGTH } from "./HKExplainer";
@@ -29,6 +30,9 @@ import { HLSimulation, HL_SIM_LENGTH } from "./HLSimulation";
 export function RemotionRoot() {
   return (
     <>
+      <Still id="HKBulletin" component={HKBulletin} width={1600} height={900} defaultProps={BULLETIN_DEFAULTS} />
+      <Still id="HKJobAd" component={HKJobAd} width={1600} height={900} />
+      <Still id="HKBoldChoice" component={HKBoldChoice} width={1600} height={900} />
       <Still id="HKNowLive" component={HKNowLive} width={1600} height={900} defaultProps={HK_NOW_DEFAULTS} />
       <Still id="HKNowZones" component={HKNowZones} width={1600} height={900} defaultProps={HK_NOW_DEFAULTS} />
       <Still id="HKNowLevel" component={HKNowLevel} width={1600} height={900} defaultProps={HK_NOW_DEFAULTS} />
