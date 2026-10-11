@@ -21,4 +21,4 @@ print(json.dumps({"ca": s["tokenAddress"], "rows": rows, "emissionN": last["n"],
 echo "$PROPS" > out-news-props.json
 echo "$PROPS" | head -c 300; echo
 npx remotion bundle --out-dir=build-hk >/dev/null
-npx remotion render build-hk HKNews "$OUT/news-briefing.mp4" --props=out-news-props.json --codec=h264 --crf=18 --concurrency=2 --timeout=120000
+npx remotion render build-hk HKNews "$OUT/news-briefing.mp4" --props=out-news-props.json --codec=h264 --crf=18 --concurrency=1 --gl=swangle --timeout=120000

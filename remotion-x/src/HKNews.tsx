@@ -85,8 +85,9 @@ function Chyron({ title, sub, ticker, live = true }: { title: string; sub: strin
 /** Camera flashes from the press pit. */
 function Flashes({ at }: { at: number[] }) {
   const f = useCurrentFrame();
-  const o = Math.max(0, ...at.map((a) => (f >= a && f < a + 5 ? 1 - (f - a) / 5 : 0)));
-  return o ? <AbsoluteFill style={{ background: "#fff", opacity: o * 0.55, pointerEvents: "none" }} /> : null;
+  const o = Math.max(0, ...at.map((a) => (f >= a && f < a + 3 ? 1 - (f - a) / 3 : 0)));
+  // a soft pop from the press pit, never a full white-out
+  return o ? <AbsoluteFill style={{ background: "radial-gradient(circle at 50% 40%, rgba(255,255,255,0.9), rgba(255,255,255,0) 60%)", opacity: o * 0.28, pointerEvents: "none" }} /> : null;
 }
 
 /** The press room: curtain, a step-and-repeat of the mark, the podium, the astronaut. */
