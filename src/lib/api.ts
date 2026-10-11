@@ -173,6 +173,8 @@ export const DEMO = (() => {
   if (typeof window === "undefined") return false;
   const q = new URLSearchParams(window.location.search);
   if (q.has("live")) return false;
+  // the local dev server always runs the illustration edition, so any wallet can try the booth
+  if (import.meta.env.DEV) return true;
   return q.has("demo") || document.querySelector('meta[name="rh-mode"]')?.getAttribute("content") === "demo";
 })();
 

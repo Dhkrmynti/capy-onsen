@@ -781,7 +781,7 @@ const server = http.createServer((req, res) => {
         nickname: bylineOf(addr),
         pp: mugshotOf(addr),
         x: xOf(addr),
-        xLogin: false,
+        xLogin: xEnabled(),
         // the dev: the creator wallet the engine runs on (excluded from the book, but may set a name and X)
         house: !!wallet && lc(wallet.address) === addr,
         lastIndexedBlock: state.lastIndexedBlock,
@@ -859,9 +859,6 @@ const server = http.createServer((req, res) => {
     const { nonce, expiresAt } = issueNonce(addr);
     return send(res, 200, { success: true, data: { nonce, expiresAt, template: bylineMessage(addr, "{nickname}", "{mugshot}", nonce), linkX: xMessage(addr, "link", nonce), unlinkX: xMessage(addr, "unlink", nonce) } });
   }
-
-  // Hawking has no Connect X: names and astronaut portraits only.
-  if (p.startsWith("/api/x/")) return send(res, 404, { success: false, error: "Connect X is off on this site." });
 
   /* ───────── X: a signed wallet links its X account; the paper then shows that account ───────── */
 
