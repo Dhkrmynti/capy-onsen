@@ -765,9 +765,59 @@ body {
     background: #7a1810;
   }
 }
+.post {
+  flex: 1 1 0;
+  transition: filter 0.4s, background-color 0.4s;
+}
 .post.is-now {
   border-color: var(--y);
-  box-shadow: 0 0 0 4px var(--k);
+  box-shadow: 0 0 0 4px var(--k), 0 0 0 8px var(--y);
+}
+/* the steps not running now: greyed out until their turn */
+.post.is-idle {
+  background: #6f7277;
+  border-color: #3a3d42;
+  color: #2c2f33;
+  filter: grayscale(1) contrast(0.7) brightness(0.75);
+}
+.post.is-idle .post__line {
+  color: #2c2f33;
+}
+.post__wait {
+  margin-left: auto;
+  padding: 4px 7px;
+  border: 2px solid #5c5f64;
+  color: #5c5f64;
+  font: 900 11px/1 var(--display);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+.post__meter {
+  display: grid;
+  gap: 6px;
+  width: 100%;
+  margin-top: 6px;
+}
+.post__bar {
+  display: block;
+  height: 14px;
+  padding: 3px;
+  background: var(--k);
+}
+.post__bar span {
+  display: block;
+  height: 100%;
+  min-width: 4px;
+  background: repeating-linear-gradient(-45deg, var(--y) 0 8px, #e6bc00 8px 16px);
+  transition: width 0.6s ease;
+}
+.post__read {
+  font: 700 13px/1.2 var(--mono);
+}
+.cycle__order {
+  margin: 16px 0 0;
+  font: 600 13px/1.5 var(--mono);
+  color: var(--muted);
 }
 .post__name {
   font: 900 27px/0.95 var(--display);

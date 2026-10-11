@@ -1,6 +1,7 @@
 /**
- * The Emission Cycle: one round as four placards posted in a row, the way a plant posts its
- * procedure. Each placard's width is its share of the fees; the step running now has its beacon on.
+ * The Emission Cycle: the three kinds of step as placards posted in a row, the way a plant posts
+ * its procedure. Only the one running now is lit, with its beacon on and the escrow filling toward
+ * its level; the other two stand greyed out until their turn.
  */
 import { useRef } from "react";
 import gsap from "gsap";
@@ -17,7 +18,9 @@ export function Round({ status }: { status: Status | null }) {
   const steps = status?.cycle.steps ?? DEFAULT_STEPS;
   const tiers = status?.rules.tiers ?? DEFAULT_TIERS;
   const at = status?.tokenAddress ? status.cycle.index : -1;
-  const total = steps.reduce((a, s) => a + parseFloat(s.thresholdETH), 0) || 1;
+  const escrow = parseFloat(status?.escrowETH ?? "0");
+  // each kind of step once, in the order it first runs
+  const kinds = steps.map((s) => s.kind).filter((k, i, all) => all.indexOf(k) === i);
   useGSAP(
     () => {
       if (prefersReducedMotion()) return;
@@ -43,24 +46,43 @@ export function Round({ status }: { status: Status | null }) {
           <p className="slab__deck">Each trade's creator fee builds up in the Pons fee escrow. When it reaches the next step's level, the engine collects it and runs that step. Then the next, then the cycle starts over.</p>
         </div>
         <ol className="placards">
-          {steps.map((s, i) => {
-            const l = look[s.kind];
+          {kinds.map((kind, k) => {
+            const l = look[kind];
             const Sign = l.sign === "warn" ? Warn : l.sign === "mand" ? Mandatory : Prohibit;
+            const mine = steps.map((s, i) => (s.kind === kind ? i : -1)).filter((i) => i >= 0);
+            const live = at >= 0;
+            const now = live && steps[at]?.kind === kind;
+            const level = parseFloat((now ? steps[at] : steps[mine[0]]).thresholdETH);
+            const fill = now ? Math.min(1, escrow / level) : 0;
+            const turn = now && mine.length > 1 ? mine.indexOf(at) + 1 : 0;
             return (
-              <li key={i} className={`post is-${s.kind} ${at === i ? "is-now" : ""}`} style={{ flexGrow: parseFloat(s.thresholdETH) / total, flexBasis: 0 }}>
+              <li key={kind} className={`post is-${kind} ${now ? "is-now" : live ? "is-idle" : ""}`} aria-current={now ? "step" : undefined}>
                 <span className="post__screws" aria-hidden="true" />
                 <span className="post__head">
-                  <span className="post__n tabular">Step {i + 1}</span>
-                  {at === i ? <span className="post__beacon">Running</span> : null}
+                  <span className="post__n tabular">Step {k + 1}</span>
+                  {now ? <span className="post__beacon">Running</span> : live ? <span className="post__wait">Waiting</span> : null}
                 </span>
                 <Sign kind={l.pict} size={86} />
                 <span className="post__name">{l.name}</span>
-                <span className="post__sol tabular">{s.thresholdETH} ETH</span>
-                <span className="post__line">{i === 3 ? "Treasury again. Then the cycle starts over." : l.line}</span>
+                <span className="post__sol tabular">
+                  {level} ETH{mine.length > 1 ? ` · runs ${mine.length}× per cycle` : ""}
+                </span>
+                <span className="post__line">{l.line}</span>
+                {now ? (
+                  <span className="post__meter" role="img" aria-label={`${escrow.toFixed(4)} of ${level} ETH collected`}>
+                    <span className="post__bar">
+                      <span style={{ width: `${fill * 100}%` }} />
+                    </span>
+                    <span className="post__read tabular">
+                      {escrow.toFixed(4)} / {level} ETH{turn ? ` · round ${turn} of ${mine.length}` : ""}
+                    </span>
+                  </span>
+                ) : null}
               </li>
             );
           })}
         </ol>
+        <p className="cycle__order">Order: {steps.map((s) => look[s.kind].name).join(" → ")} → again.</p>
         <p className="cycle__sum tabular">
           Over a full cycle: <b>{stepShare(steps, "feeding")}%</b> emitted to the ten, <b>{stepShare(steps, "keeper")}%</b> to containment, <b>{stepShare(steps, "sink")}%</b> evaporated.
         </p>
