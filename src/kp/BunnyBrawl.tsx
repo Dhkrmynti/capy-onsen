@@ -27,12 +27,12 @@ const slotPos = (i: number) => {
 };
 const SCALE = (i: number) => 1.12 - Math.min(i, 9) * 0.03;
 
-const hash = (s: string) => {
+export const hash = (s: string) => {
   let h = 2166136261;
   for (let i = 0; i < s.length; i++) h = Math.imul(h ^ s.charCodeAt(i), 16777619);
   return h >>> 0;
 };
-const compact = (n: number) => (n >= 1e6 ? `${(n / 1e6).toFixed(2)}M` : n >= 1e3 ? `${Math.round(n / 1e3)}K` : String(Math.round(n)));
+export const compact = (n: number) => (n >= 1e6 ? `${(n / 1e6).toFixed(2)}M` : n >= 1e3 ? `${Math.round(n / 1e3)}K` : String(Math.round(n)));
 
 /* ───────── the puppet state and its tweens ───────── */
 
@@ -58,11 +58,11 @@ type Puppet = {
 type Key = "x" | "y" | "z" | "hop" | "rotY" | "spin" | "lean" | "arm" | "fist" | "squash" | "scale" | "yell";
 type Tween = { p: Puppet; k: Key; a: number | null; b: number; t0: number; d: number; e: (t: number) => number; start?: () => void; done?: () => void; on?: boolean };
 
-const out3 = (t: number) => 1 - Math.pow(1 - t, 3);
-const inOut = (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
-const lin = (t: number) => t;
-const snap = (t: number) => 1 - Math.pow(1 - t, 5);
-const backOut = (t: number) => 1 + 2.7 * Math.pow(t - 1, 3) + 1.7 * Math.pow(t - 1, 2);
+export const out3 = (t: number) => 1 - Math.pow(1 - t, 3);
+export const inOut = (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+export const lin = (t: number) => t;
+export const snap = (t: number) => 1 - Math.pow(1 - t, 5);
+export const backOut = (t: number) => 1 + 2.7 * Math.pow(t - 1, 3) + 1.7 * Math.pow(t - 1, 2);
 
 function newPuppet(id: string, slot: number): Puppet {
   const s = slotPos(slot);
@@ -71,7 +71,7 @@ function newPuppet(id: string, slot: number): Puppet {
 
 /* ───────── one rabbit ───────── */
 
-type Parts = {
+export type Parts = {
   root: THREE.Group;
   body: THREE.Group;
   earL: THREE.Group;
@@ -87,6 +87,8 @@ type Parts = {
   pupR: THREE.Group;
   mouth: THREE.Group;
   crown: THREE.Group;
+  footL: THREE.Group;
+  footR: THREE.Group;
 };
 
 /** Torso and head in one skin: a pear turned on a lathe, so there is no seam at the neck. */
@@ -102,7 +104,7 @@ const FURS = ["#f3e6d2", "#f0c79c", "#cfa67e", "#c3cad2", "#f6b6c6", "#b5d6f2", 
 const IRIS = ["#7a4a1e", "#3f7d3a", "#c98a1a", "#5a3a8a", "#a33a2a"];
 const TRUNKS = ["#e5262b", "#1f6fe0", "#16a34a", "#f59e0b", "#7c3aed", "#0ea5a4", "#111827", "#ec4899"];
 
-function Bunny({ id, register, label }: { id: string; register: (id: string, p: Parts | null) => void; label: ReactNode }) {
+export function Bunny({ id, register, label }: { id: string; register: (id: string, p: Parts | null) => void; label: ReactNode }) {
   const root = useRef<THREE.Group>(null!);
   const body = useRef<THREE.Group>(null!);
   const earL = useRef<THREE.Group>(null!);
@@ -118,8 +120,10 @@ function Bunny({ id, register, label }: { id: string; register: (id: string, p: 
   const pupR = useRef<THREE.Group>(null!);
   const mouth = useRef<THREE.Group>(null!);
   const crown = useRef<THREE.Group>(null!);
+  const footL = useRef<THREE.Group>(null!);
+  const footR = useRef<THREE.Group>(null!);
   useEffect(() => {
-    register(id, { root: root.current, body: body.current, earL: earL.current, earR: earR.current, earL2: earL2.current, earR2: earR2.current, armR: armR.current, armL: armL.current, glove: glove.current, lidL: lidL.current, lidR: lidR.current, pupL: pupL.current, pupR: pupR.current, mouth: mouth.current, crown: crown.current });
+    register(id, { root: root.current, body: body.current, earL: earL.current, earR: earR.current, earL2: earL2.current, earR2: earR2.current, armR: armR.current, armL: armL.current, glove: glove.current, lidL: lidL.current, lidR: lidR.current, pupL: pupL.current, pupR: pupR.current, mouth: mouth.current, crown: crown.current, footL: footL.current, footR: footR.current });
     return () => register(id, null);
   }, [id, register]);
 
@@ -255,11 +259,13 @@ function Bunny({ id, register, label }: { id: string; register: (id: string, p: 
             <sphereGeometry args={[0.04, 12, 10]} />
           </mesh>
         ))}
-        {/* feet */}
+        {/* feet, each on its own hinge so a seated rabbit can stick them out and kick */}
         {[-0.25, 0.25].map((x) => (
-          <mesh key={x} position={[x, 0.08, 0.2]} scale={[1, 0.5, 1.75]} material={M.fur} castShadow>
-            <sphereGeometry args={[0.17, 20, 14]} />
-          </mesh>
+          <group key={x} ref={x < 0 ? footL : footR} position={[x, 0.1, 0.12]}>
+            <mesh position={[0, -0.02, 0.08]} scale={[1, 0.5, 1.75]} material={M.fur} castShadow>
+              <sphereGeometry args={[0.17, 20, 14]} />
+            </mesh>
+          </group>
         ))}
         {/* arms with boxing gloves; the one on +x punches (it faces the camera when the rabbit turns left) */}
         {arm(1, armR, true)}
@@ -297,7 +303,7 @@ function Bunny({ id, register, label }: { id: string; register: (id: string, p: 
 
 /* ───────── the stage ───────── */
 
-function numberTex(n: number) {
+export function numberTex(n: number) {
   const c = document.createElement("canvas");
   c.width = c.height = 128;
   const g = c.getContext("2d")!;
@@ -313,7 +319,7 @@ function numberTex(n: number) {
   return t;
 }
 
-function powTex() {
+export function powTex(text = "POW!", px = 70) {
   const c = document.createElement("canvas");
   c.width = c.height = 256;
   const g = c.getContext("2d")!;
@@ -331,17 +337,17 @@ function powTex() {
   g.strokeStyle = "#1a1206";
   g.stroke();
   g.fillStyle = "#e5262b";
-  g.font = "900 70px system-ui, sans-serif";
+  g.font = `900 ${px}px system-ui, sans-serif`;
   g.textAlign = "center";
   g.textBaseline = "middle";
   g.rotate(-0.15);
-  g.fillText("POW!", 0, 6);
+  g.fillText(text, 0, 6);
   const t = new THREE.CanvasTexture(c);
   t.colorSpace = THREE.SRGBColorSpace;
   return t;
 }
 
-function gradTex(stops: [number, string][], radial = false) {
+export function gradTex(stops: [number, string][], radial = false) {
   const c = document.createElement("canvas");
   c.width = c.height = 256;
   const g = c.getContext("2d")!;
@@ -355,7 +361,7 @@ function gradTex(stops: [number, string][], radial = false) {
 }
 
 /** Soft studio reflections for the glossy eyes, gloves and gold, built in memory (no download). */
-function Env() {
+export function Env() {
   const { gl, scene } = useThree();
   useEffect(() => {
     const pm = new THREE.PMREMGenerator(gl);
@@ -513,7 +519,7 @@ function Yard() {
   );
 }
 
-const CARROT_GEO = new THREE.LatheGeometry([[0, -0.5], [0.05, -0.42], [0.13, -0.1], [0.2, 0.2], [0.22, 0.34], [0.17, 0.42], [0, 0.44]].map(([x, y]) => new THREE.Vector2(x, y)), 24);
+export const CARROT_GEO = new THREE.LatheGeometry([[0, -0.5], [0.05, -0.42], [0.13, -0.1], [0.2, 0.2], [0.22, 0.34], [0.17, 0.42], [0, 0.44]].map(([x, y]) => new THREE.Vector2(x, y)), 24);
 
 function Carrot() {
   const g = useRef<THREE.Group>(null!);
@@ -556,7 +562,7 @@ function Director({ rows, cast, setCast }: { rows: BrawlRow[]; cast: string[]; s
   const stopUntil = useRef(0); // hit-stop: the world all but freezes for a few frames on impact
   const pow = useRef<THREE.Mesh>(null!);
   const powAt = useRef(-10);
-  const powMap = useMemo(powTex, []);
+  const powMap = useMemo(() => powTex(), []);
   const { camera, size } = useThree();
 
   target.current = rows.slice(0, SLOTS).map((r) => r.id);

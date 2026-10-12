@@ -12,6 +12,7 @@
 .brawl__ctl button { font: 800 15px/1 "Barlow Condensed", system-ui, sans-serif; letter-spacing: 0.06em; text-transform: uppercase; padding: 10px 14px; background: #fff; color: #1a1206; border: 3px solid #1a1206; border-radius: 10px; box-shadow: 0 4px 0 #1a1206; cursor: pointer; }
 .brawl__ctl button:active { transform: translateY(3px); box-shadow: 0 1px 0 #1a1206; }
 .brawl__ctl button.is-on { background: #ffc93c; }
+.brawl__ctl button.is-sell { background: #e5262b; color: #fff; }
 @media (max-aspect-ratio: 9/10) {
   .brawl__tag { padding: 2px 5px 3px; font-size: 9px; border-radius: 6px; }
   .brawl__tag b { font-size: 13px; }
