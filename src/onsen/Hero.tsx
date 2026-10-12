@@ -33,16 +33,16 @@ const WIDE: [number, number, number][] = [
   [50, 27, 0.72],
 ];
 const NARROW: [number, number, number][] = [
-  [50, 86, 1.25],
-  [29, 62, 1],
-  [71, 62, 1],
-  [13, 86, 0.9],
-  [87, 86, 0.9],
-  [31, 35, 0.72],
-  [69, 35, 0.72],
-  [12, 37, 0.7],
-  [88, 37, 0.7],
-  [50, 33, 0.72],
+  [50, 84, 1.25],
+  [29, 60, 1],
+  [71, 60, 1],
+  [14, 84, 0.9],
+  [86, 84, 0.9],
+  [31, 34, 0.72],
+  [69, 34, 0.72],
+  [13, 36, 0.7],
+  [87, 36, 0.7],
+  [50, 32, 0.72],
 ];
 
 type Soak = { id: string; addr: string; name: string; traits: Traits };
@@ -55,7 +55,8 @@ export function Hero({ status, pond, offline }: { status: Status | null; pond: P
   const top = live ? (pond?.rows ?? []).slice(0, 10) : [];
   const rows: Soak[] = useMemo(() => top.map((r) => ({ id: r.addr.toLowerCase(), addr: r.addr, name: nameFor(r.addr, r.nickname, r.x).name, traits: capyOf(r.addr, r.pp) })), [pond, live]);
   const house = live ? pond?.house : null;
-  const empty = rows.length === 0;
+  // the token is live but the board has not arrived yet: say nothing about an empty bath until it has
+  const empty = rows.length === 0 && !(live && !pond);
 
   // everyone the engine ever reported as sold stays in the set, so a late board update still sends the right capybara out
   const soldSet = useRef(new Set<string>());
@@ -65,14 +66,16 @@ export function Hero({ status, pond, offline }: { status: Status | null; pond: P
   // a capybara that sold and dropped off the ten gets one last moment: it bolts out of the water
   const prev = useRef<{ row: Soak; at: number }[]>([]);
   const [leaving, setLeaving] = useState<{ row: Soak; at: number }[]>([]);
+  const alive = useRef(true);
+  useEffect(() => () => void (alive.current = false), []);
   useEffect(() => {
     const now = new Set(rows.map((r) => r.id));
     const gone = prev.current.filter((p) => !now.has(p.row.id) && soldSet.current.has(p.row.id));
     prev.current = rows.map((row, at) => ({ row, at }));
     if (!gone.length) return;
     setLeaving((l) => [...l, ...gone]);
-    const t = window.setTimeout(() => setLeaving((l) => l.filter((x) => !gone.includes(x))), 1500);
-    return () => clearTimeout(t);
+    // not cleared when the board updates again: a second update must not leave the capybara hanging in the air
+    window.setTimeout(() => alive.current && setLeaving((l) => l.filter((x) => !gone.includes(x))), 1500);
   }, [rows]);
 
   const steps = status?.cycle.steps ?? DEFAULT_STEPS;
@@ -82,17 +85,19 @@ export function Hero({ status, pond, offline }: { status: Status | null; pond: P
   const pct = target > 0 ? Math.max(0, Math.min(1, escrow / target)) : 0;
 
   // when ranks move, each capybara wades to its new spot (FLIP, keyed by wallet)
-  const last = useRef(new Map<string, DOMRect>());
+  // Measured inside the pool (offsets), not on screen: the scroll zoom and a resize must not look like a move.
+  const last = useRef(new Map<string, { x: number; y: number; w: number }>());
   useLayoutEffect(() => {
     const el = wrap.current;
     if (!el) return;
-    const now = new Map<string, DOMRect>();
+    const now = new Map<string, { x: number; y: number; w: number }>();
+    const poolW = el.querySelector<HTMLElement>(".spots")?.offsetWidth ?? 0;
     el.querySelectorAll<HTMLElement>(".spot[data-key]").forEach((n) => {
-      const b = n.getBoundingClientRect();
+      const b = { x: n.offsetLeft, y: n.offsetTop, w: poolW };
       now.set(n.dataset.key!, b);
       const a = last.current.get(n.dataset.key!);
-      if (!a || prefersReducedMotion() || (Math.abs(a.left - b.left) < 2 && Math.abs(a.top - b.top) < 2)) return;
-      gsap.fromTo(n, { x: a.left - b.left, y: a.top - b.top }, { x: 0, y: 0, duration: 1.1, ease: "power3.inOut" });
+      if (!a || a.w !== b.w || prefersReducedMotion() || (Math.abs(a.x - b.x) < 2 && Math.abs(a.y - b.y) < 2)) return;
+      gsap.fromTo(n, { x: a.x - b.x, y: a.y - b.y }, { x: 0, y: 0, duration: 1.1, ease: "power3.inOut" });
     });
     last.current = now;
   });

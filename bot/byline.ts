@@ -90,7 +90,7 @@ export function clearX(addr: string) {
 /** The text a wallet signs to link or unlink X. */
 export function xMessage(addr: string, action: "link" | "unlink", nonce: string) {
   return [
-    `Old Money: ${action} my X account`,
+    `Capy Onsen: ${action} my X account`,
     `Wallet: ${ethers.getAddress(addr)}`,
     `Nonce: ${nonce}`,
     "This signature is free and moves no funds.",
@@ -104,10 +104,10 @@ function validMugshot(pp: unknown): pp is number[] {
 /** The exact text the wallet signs. The server rebuilds it, so the client cannot change a word. */
 export function bylineMessage(addr: string, name: string, pp: string, nonce: string) {
   return [
-    "Old Money: claim my account name",
+    "Capy Onsen: set my name and capybara",
     `Wallet: ${ethers.getAddress(addr)}`,
     `Nickname: ${name}`,
-    `Mugshot: ${pp}`,
+    `Capybara: ${pp}`,
     `Nonce: ${nonce}`,
     "This signature is free and moves no funds.",
   ].join("\n");

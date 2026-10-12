@@ -1,6 +1,6 @@
 # Capy Onsen · $ONSEN
 
-Memecoin site + engine for **$ONSEN · Capy Onsen** (Robinhood Chain 4663, launched on Pons). Creator fees run a four-step loop: ETH straight to the **10 biggest wallets that never sold**, the treasury, a buyback that is burned, the treasury again. Concept and the earlier lores: `CONCEPT.md`. Design: `DESIGN.md`.
+Memecoin site + engine for **$ONSEN · Capy Onsen** (Robinhood Chain 4663, launched on Pons). Creator fees run a two-step loop: ETH straight to the **10 biggest wallets that never sold**, then the treasury, then again. No buyback, no burn. Concept and the earlier lores: `CONCEPT.md`. Design: `DESIGN.md`.
 
 ## Run locally
 
@@ -19,7 +19,7 @@ npm run dev          # site on http://localhost:5183 (proxies /api to 5023)
 |---|---|
 | Indexer | Follows every `$ONSEN` Transfer from the mint block. Tracks balance, first-buy time, hopped-off flag. Contracts that relay tokens within one tx (routers) are recognised and never counted as holders. |
 | Hopped off | A wallet that sends `$ONSEN` to the Pons curve, a DEX, or any other contract is marked hopped off forever. Wallet-to-wallet is fine. |
-| The cycle | Each time the Pons fee escrow reaches the current step's size, the engine claims it (tongue snap) and spends all of it on that step, then moves on: **feeding** `FEEDING_ETH` (0.02) → ETH to the top `FEEDING_TOP_N` (10) holders by balance, split by tier (`FEEDING_TIERS`) and balance · **keeper** `KEEPER_ETH` (0.025) → treasury · **sink** `SINK_ETH` (0.01) → buy $ONSEN (curve, or Uniswap v4 after graduation) and send exactly what was bought to 0x…dEaD (the operator wallet's own bag is never touched) · **keeper** again · back to feeding. |
+| The cycle | Each time the Pons fee escrow reaches the current step's size, the engine claims it (tongue snap) and spends all of it on that step, then moves on: **feeding** `FEEDING_ETH` (0.02) → ETH to the top `FEEDING_TOP_N` (10) holders by balance, split by tier (`FEEDING_TIERS`) and balance · **keeper** `KEEPER_ETH` (0.025) → treasury · back to feeding. There is no buyback and no burn: the engine never buys or destroys $ONSEN. |
 | Sitters | Never hopped off, balance ≥ `MIN_BALANCE`, first $ONSEN at least `MIN_HOLD_HOURS` old (live engine: 0, set 8 Oct 2026 so a full escrow pays out at once). |
 | Restarts | Every tx hash is saved before it is awaited; a restart checks the chain and resumes the round, so nothing is sent or counted twice. A recipient that refuses ETH is skipped and its share stays with the engine. |
 

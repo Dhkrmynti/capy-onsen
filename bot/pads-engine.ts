@@ -7,9 +7,7 @@
  *    and spends all of it on that step, then moves to the next:
  *      feeding  (0.02 ETH)  → ETH straight to the 10 biggest holders in the bath, split by tier and balance
  *      keeper   (0.025 ETH) → the treasury
- *      sink     (0.01 ETH)  → buys $ONSEN (curve, or Uniswap v4 after graduation) and burns what it bought
- *      keeper   (0.025 ETH) → the treasury
- *    then back to feeding.
+ *    then back to feeding. There is no buyback and no burn: the engine never buys or destroys $ONSEN.
  * Every transaction hash is saved before it is awaited, so a restart checks the chain and
  * resumes the round instead of sending twice.
  */
@@ -18,7 +16,7 @@ import http from "http";
 import path from "path";
 import { ethers } from "ethers";
 import { config, saveConfig, state, saveStateNow, saveStateSoon, resetStateForToken, logs, log, CYCLE, type Holder, type Payout, type Round, type RoundKind } from "./store";
-import { buildUniswapV4Buy, UNISWAP_V4_UNIVERSAL_ROUTER } from "./uniswap-v4";
+import { UNISWAP_V4_UNIVERSAL_ROUTER } from "./uniswap-v4";
 import { bylineOf, bylineMessage, claimByline, clearX, issueNonce, mugshotOf, rateLimited, removeByline, setX, spendNonce, xMessage, xOf } from "./byline";
 import { backTo, finishLink, parkDemoResult, startLink, takeDemoResult, xDemoEnabled, xEnabled } from "./xlink";
 
@@ -29,10 +27,8 @@ const TRANSFER_TOPIC = ethers.id("Transfer(address,address,uint256)");
 const GAS_BUFFER = ethers.parseEther("0.0008");
 
 const ESCROW_ABI = ["function balanceOf(address) view returns (uint256)", "function claim()"];
-const CURVE_ABI = [
-  "function buy(uint256 quoteIn, uint256 minTokensOut, address recipient) payable returns (uint256)",
-  "function graduated() view returns (bool)",
-];
+// Only ever called as a static quote for the display price; the engine never sends a buy.
+const CURVE_ABI = ["function buy(uint256 quoteIn, uint256 minTokensOut, address recipient) payable returns (uint256)"];
 const ERC20_ABI = [
   "function balanceOf(address) view returns (uint256)",
   "function transfer(address to, uint256 amount) returns (bool)",
@@ -42,7 +38,7 @@ const ERC20_ABI = [
 
 let provider: ethers.JsonRpcProvider | null = null;
 let wallet: ethers.Wallet | null = null;
-let status: "standby" | "indexing" | "claiming" | "feeding" | "keeper" | "sinking" | "idle" | "error" = "standby";
+let status: "standby" | "indexing" | "claiming" | "feeding" | "keeper" | "idle" | "error" = "standby";
 let escrowWei = 0n;
 let decimals = 18;
 
@@ -107,7 +103,7 @@ function sittersByBalance(now: number) {
     .sort((a, b) => (big(b.h.balance) > big(a.h.balance) ? 1 : big(b.h.balance) < big(a.h.balance) ? -1 : a.h.firstIn - b.h.firstIn));
 }
 
-const stepETH = (k: RoundKind) => (k === "feeding" ? config.feedingETH : k === "keeper" ? config.keeperETH : config.sinkETH);
+const stepETH = (k: RoundKind) => (k === "feeding" ? config.feedingETH : config.keeperETH);
 const currentKind = () => CYCLE[state.cycle % CYCLE.length];
 
 /* ───────────────────────── indexer ───────────────────────── */
@@ -270,10 +266,6 @@ async function startRound() {
     snapshotBlock: 0,
     payouts: [],
     treasuryTx: "",
-    buyTx: "",
-    tokensBought: "0",
-    burnTx: "",
-    tokensBurned: "0",
     doneAt: 0,
   };
   state.rounds.unshift(r);
@@ -361,51 +353,6 @@ async function keep(r: Round) {
   return true;
 }
 
-async function sink(r: Round) {
-  status = "sinking";
-  if (!isAddr(config.curveAddress)) return note(`Round #${r.n}: waiting for the curve address before buying.`);
-  const token = new ethers.Contract(config.tokenAddress, ERC20_ABI, wallet!);
-  const pay = big(r.payWei);
-  if (!r.buyTx || (await txState(r.buyTx)) !== "ok") {
-    // Remember what the wallet already held (e.g. the creator's own bag) so it is never burned.
-    if (!r.buyTx) {
-      r.heldBefore = ((await token.balanceOf(wallet!.address)) as bigint).toString();
-      saveStateNow();
-    }
-    const curve = new ethers.Contract(config.curveAddress, CURVE_ABI, wallet!);
-    const graduated: boolean = await curve.graduated().catch(() => false);
-    const ok = await once(
-      () => r.buyTx,
-      (h) => (r.buyTx = h),
-      () =>
-        graduated
-          ? wallet!.sendTransaction({ to: UNISWAP_V4_UNIVERSAL_ROUTER, value: pay, data: buildUniswapV4Buy(config.tokenAddress, pay), gasLimit: 400000n })
-          : curve.buy(pay, 0n, wallet!.address, { value: pay }),
-    );
-    if (!ok) throw new Error(`Round #${r.n}: buyback reverted`);
-    log("info", `Sink #${r.n}: buyback landed (${graduated ? "Uniswap v4" : "curve"}, ${r.buyTx}).`);
-  }
-  // Also covers a restart between the buy landing and its amount being saved.
-  if (big(r.tokensBought) === 0n && r.heldBefore !== undefined && !r.burnTx) {
-    const after: bigint = await token.balanceOf(wallet!.address);
-    const before = big(r.heldBefore);
-    r.tokensBought = (after > before ? after - before : 0n).toString();
-    saveStateNow();
-    log("info", `Sink #${r.n}: bought ${ethers.formatUnits(big(r.tokensBought), decimals)} $ONSEN.`);
-  }
-  count(r, "buy", () => (state.totals.sinkWei = add(state.totals.sinkWei, pay)));
-  // Burn exactly what this round bought, never the rest of the wallet.
-  const burn = big(r.tokensBought);
-  if (burn > 0n) {
-    r.tokensBurned = burn.toString();
-    const ok = await once(() => r.burnTx, (h) => (r.burnTx = h), () => token.transfer(DEAD, burn));
-    if (!ok) throw new Error(`Round #${r.n}: burn reverted`);
-    count(r, "burn", () => (state.totals.tokensBurned = add(state.totals.tokensBurned, burn)));
-    log("success", `Sink #${r.n}: burned ${ethers.formatUnits(burn, decimals)} $ONSEN (${r.burnTx})`);
-  } else log("warn", `Sink #${r.n}: the buy added no $ONSEN, nothing to burn.`);
-  return true;
-}
-
 async function runCycle() {
   if (!wallet || !provider || !isAddr(config.tokenAddress)) return;
   const escrow = new ethers.Contract(PONS_FEE_ESCROW, ESCROW_ABI, wallet);
@@ -421,7 +368,7 @@ async function runCycle() {
 
   // Feedings use a fresh balance book.
   if (r.kind === "feeding" && state.lastIndexedBlock < (await provider.getBlockNumber()) - 5) return;
-  const finished = r.kind === "feeding" ? await feed(r) : r.kind === "keeper" ? await keep(r) : await sink(r);
+  const finished = r.kind === "feeding" ? await feed(r) : await keep(r);
   if (!finished) return;
   r.stage = "done";
   r.doneAt = Math.floor(Date.now() / 1000);
@@ -619,10 +566,7 @@ function roundRow(r: Round) {
     recipients: r.payouts.filter((p) => !p.skipped).length,
     fedETH: ethOf(paid),
     treasuryTx: r.treasuryTx,
-    buyTx: r.buyTx,
-    burnTx: r.burnTx,
-    tokensBurned: fmt(r.tokensBurned),
-    tx: r.kind === "feeding" ? r.payouts.find((p) => p.tx)?.tx || "" : r.kind === "keeper" ? r.treasuryTx : r.burnTx || r.buyTx,
+    tx: r.kind === "feeding" ? r.payouts.find((p) => p.tx)?.tx || "" : r.treasuryTx,
     doneAt: r.doneAt,
   };
 }
@@ -696,8 +640,6 @@ const server = http.createServer((req, res) => {
           feesClaimedETH: ethOf(state.totals.feesClaimedWei),
           fedETH: ethOf(state.totals.fedWei),
           keeperETH: ethOf(state.totals.keeperWei),
-          sinkETH: ethOf(state.totals.sinkWei),
-          tokensBurned: fmt(state.totals.tokensBurned),
         },
         rounds: state.rounds.filter((r) => r.stage === "done").length,
         lastIndexedBlock: state.lastIndexedBlock,

@@ -4,9 +4,8 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { ArrowUpRight } from "@phosphor-icons/react";
-import { STEP, amount, dateWib, demoRounds, eth, txUrl, usePoll, type RoundRow, type Status } from "../lib/api";
+import { STEP, dateWib, demoRounds, eth, txUrl, usePoll, type RoundRow, type Status } from "../lib/api";
 import { prefersReducedMotion } from "../lib/motion";
-import { TICKER } from "../lib/brand";
 import { useMedia } from "./Bits";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
@@ -24,7 +23,7 @@ export function Ledger({ status }: { status: Status | null }) {
   useGSAP(
     () => {
       if (prefersReducedMotion()) return;
-      // the three totals are written in one after another, like a brush down the page
+      // the totals are written in one after the other, like a brush down the page
       gsap.from(".totals > *", { clipPath: "inset(0 100% 0 0)", duration: 0.9, ease: "power3.out", stagger: 0.14, scrollTrigger: { trigger: ".totals", start: "top 80%" } });
     },
     { scope: root },
@@ -43,17 +42,14 @@ export function Ledger({ status }: { status: Status | null }) {
           <span>
             <b className="num">{eth(t?.keeperETH ?? "0")}</b> to the treasury
           </span>
-          <span>
-            <b className="num">{amount(t?.tokensBurned ?? "0")}</b> {TICKER} burned
-          </span>
         </p>
         {shown.length ? (
           <ol className="entries">
             {shown.map((r) => {
               const done = r.stage === "done";
-              const what = r.kind === "feeding" ? `paid to ${r.recipients || 10} holders` : r.kind === "keeper" ? "to the treasury wallet" : done ? `${amount(r.tokensBurned)} ${TICKER} burned` : "buying back";
+              const what = r.kind === "feeding" ? `paid to ${r.recipients || 10} holders` : "to the treasury wallet";
               const value = r.kind === "feeding" && done ? r.fedETH : r.spentETH;
-              const tx = r.kind === "feeding" ? r.claimTx : r.kind === "keeper" ? r.treasuryTx : r.burnTx || r.buyTx;
+              const tx = r.kind === "feeding" ? r.claimTx : r.treasuryTx;
               return (
                 <li key={r.n} className={`entry is-${r.kind} ${done ? "" : "is-open"}`}>
                   <span className="entry__n num">#{r.n}</span>

@@ -46,20 +46,24 @@ export function Pool({ status, pond }: { status: Status | null; pond: Pond | nul
   const one = ten[0];
 
   // rows glide to their new places when ranks move (FLIP, keyed by wallet)
-  const last = useRef(new Map<string, DOMRect>());
+  // Positions are taken inside the section, so scrolling between two updates is not read as a move;
+  // a change of width (rotation, resize) reflows everything and is not animated either.
+  const last = useRef(new Map<string, { x: number; y: number; w: number }>());
   const prevOne = useRef<string | undefined>(undefined);
   const [taken, setTaken] = useState(0);
   useLayoutEffect(() => {
     const el = root.current;
     if (!el) return;
-    const now = new Map<string, DOMRect>();
-    el.querySelectorAll<HTMLElement>("[data-key]").forEach((n) => now.set(n.dataset.key!, n.getBoundingClientRect()));
+    const w = el.offsetWidth;
+    const now = new Map<string, { x: number; y: number; w: number }>();
+    // offsets ignore transforms, so a row that is mid-glide or waiting to fade in is still read at its true place
+    el.querySelectorAll<HTMLElement>("[data-key]").forEach((n) => now.set(n.dataset.key!, { x: n.offsetLeft, y: n.offsetTop, w }));
     if (!prefersReducedMotion())
       el.querySelectorAll<HTMLElement>("[data-key]").forEach((n) => {
         const a = last.current.get(n.dataset.key!);
         const b = now.get(n.dataset.key!);
-        if (!a || !b || (Math.abs(a.left - b.left) < 2 && Math.abs(a.top - b.top) < 2)) return;
-        gsap.fromTo(n, { x: a.left - b.left, y: a.top - b.top, zIndex: 3 }, { x: 0, y: 0, duration: 0.9, ease: "power3.inOut", clearProps: "zIndex" });
+        if (!a || !b || a.w !== b.w || (Math.abs(a.x - b.x) < 2 && Math.abs(a.y - b.y) < 2)) return;
+        gsap.fromTo(n, { x: a.x - b.x, y: a.y - b.y, zIndex: 3 }, { x: 0, y: 0, duration: 0.9, ease: "power3.inOut", clearProps: "zIndex" });
       });
     last.current = now;
     const k = rows[0]?.addr;
