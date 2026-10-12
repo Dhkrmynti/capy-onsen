@@ -3,15 +3,16 @@
  * the gold one. The seats follow the board in real time. A holder that overtakes another gets
  * up, walks over and punches it out of its chair; the loser lands a few chairs down. A holder
  * that sells is hit much harder: out through the window and gone, a twinkle in the sky.
- * Same rabbits and tween list as BunnyBrawl; only the set and the director differ.
+ * The cast are the trait-rolled apes from Ape.tsx; the tween list is the one from BunnyBrawl.
  */
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { RoundedBox } from "@react-three/drei";
 import { Bloom, EffectComposer, N8AO, Vignette } from "@react-three/postprocessing";
-import { Bunny, CARROT_GEO, Env, backOut, compact, gradTex, hash, inOut, lin, numberTex, out3, powTex, snap } from "./BunnyBrawl";
+import { Env, backOut, compact, gradTex, hash, inOut, lin, numberTex, out3, powTex, snap } from "./BunnyBrawl";
 import type { BrawlRow, Parts } from "./BunnyBrawl";
+import { Ape } from "./Ape";
 
 const SLOTS = 10;
 const SEAT = 0.6; // height of a chair seat above its floor
@@ -310,7 +311,7 @@ function Room({ fx }: { fx: Fx }) {
           </group>
         );
       })}
-      <Carrot />
+      <Prize />
 
       {/* a water cooler at the head of the row, a plant at the tail */}
       <group position={[-(W / 2 + 1.25), 0, -0.85]}>
@@ -344,8 +345,8 @@ function Room({ fx }: { fx: Fx }) {
   );
 }
 
-/** The prize over the gold chair: a golden carrot. */
-function Carrot() {
+/** The prize over the gold chair: a golden banana. */
+function Prize() {
   const g = useRef<THREE.Group>(null!);
   const s = seat(0);
   useFrame(({ clock }) => {
@@ -353,16 +354,11 @@ function Carrot() {
     g.current.position.y = s.y + 3.5 + Math.sin(clock.elapsedTime * 2) * 0.12;
   });
   return (
-    <group ref={g} position={[s.x, s.y + 3.5, s.z]} rotation={[0, 0, 0.18]}>
-      <mesh geometry={CARROT_GEO} castShadow>
-        <meshStandardMaterial color="#ffb21a" metalness={1} roughness={0.16} emissive="#8a4b00" emissiveIntensity={0.35} />
+    <group ref={g} position={[s.x, s.y + 3.5, s.z]} >
+      <mesh rotation={[0, 0, Math.PI / 2 + 0.75]} position={[0, -0.25, 0]} castShadow>
+        <torusGeometry args={[0.5, 0.12, 14, 28, 1.7]} />
+        <meshStandardMaterial color="#ffc21a" metalness={1} roughness={0.16} emissive="#8a5a00" emissiveIntensity={0.35} />
       </mesh>
-      {[-0.09, 0, 0.09].map((x) => (
-        <mesh key={x} position={[x, 0.6, 0]} rotation={[0, 0, -x * 4]} scale={[1, 1, 0.5]}>
-          <capsuleGeometry args={[0.05, 0.26, 4, 10]} />
-          <meshPhysicalMaterial color="#35b04a" roughness={0.4} clearcoat={0.6} />
-        </mesh>
-      ))}
       <pointLight color="#ffd37a" intensity={6} distance={5} />
     </group>
   );
@@ -631,7 +627,7 @@ function Director({ rows, sold, cast, setCast, fx }: DirProps) {
       }
     }
 
-    // pose every rabbit
+    // pose every ape
     const leader = order.current[0];
     const second = order.current[1];
     puppets.current.forEach((p, id) => {
@@ -725,7 +721,7 @@ function Director({ rows, sold, cast, setCast, fx }: DirProps) {
         const r = ranks.indexOf(id);
         const row = info.current.get(id);
         return (
-          <Bunny
+          <Ape
             key={id}
             id={id}
             register={register}
