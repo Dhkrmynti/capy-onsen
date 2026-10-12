@@ -1,35 +1,35 @@
 /**
- * A crew portrait: a cartoon astronaut, head and shoulders, face behind the visor. Every
- * wallet gets one generated from its address; holders can pick their own at the desk.
+ * A holder's portrait: a bored cartoon ape, head and shoulders. Every wallet gets one generated
+ * from its address; holders can pick their own at the desk. The same four traits dress the 3D
+ * ape that sits in the waiting room, so the portrait and the chair always match.
  * Drawn flat in SVG, so it costs nothing to show.
  * Part counts must match MUGSHOT_PARTS in bot/byline.ts (the slot keys are kept for the engine).
  */
-import { useId, type CSSProperties, type ReactNode } from "react";
+import { type CSSProperties } from "react";
 
 export const PARTS = { fur: 5, hat: 5, acc: 6, bg: 6 } as const;
 export type Traits = [fur: number, hat: number, acc: number, bg: number];
 
-/** fur = skin, hat = suit, acc = kit (patch, antenna, lamps or visor), bg = backdrop. */
+/** fur = fur colour, hat = headwear, acc = eyewear and earring, bg = shirt (and the portrait's backdrop). */
 export const PART_NAMES = {
-  fur: ["Porcelain", "Peach", "Honey", "Bronze", "Umber"],
-  hat: ["White suit", "Rescue orange", "Silver suit", "Hazard yellow", "Black suit"],
-  acc: ["Hazard patch", "Orbit patch", "Star patch", "Antenna", "Headlamps", "Gold visor"],
-  bg: ["Deep space", "Hazard yellow", "Signal red", "Mission blue", "Pad green", "Steel"],
+  fur: ["Brown", "Cream", "Grey", "Gold", "Blue"],
+  hat: ["No hat", "Beanie", "Cap", "Party hat", "Headband"],
+  acc: ["Nothing", "Shades", "Gold specs", "Earring", "Shades + earring", "Specs + earring"],
+  bg: ["Red shirt", "Blue shirt", "Green shirt", "Orange shirt", "Purple shirt", "Black shirt"],
 };
 
-const INK = "#121212";
-const SKIN = ["#f6dcc8", "#efc2a0", "#d9a274", "#b07a4f", "#7a4f32"];
-const SUIT = ["#f4f4f0", "#ff7a1a", "#c4c8cc", "#ffd100", "#4a4f57"];
-const BACK = ["#121212", "#ffd100", "#d52b1e", "#0057b8", "#00843d", "#3a3e44"];
-const STARS = [
-  [12, 14, 1.1],
-  [86, 10, 0.9],
-  [90, 34, 1.3],
-  [8, 40, 0.8],
-  [18, 64, 1],
-  [84, 60, 0.8],
-  [70, 6, 0.7],
-];
+/** Shared with the 3D ape. */
+export const APE_FUR = ["#8a5a3a", "#d9b98a", "#5d5856", "#e0b03a", "#7fb6d9"];
+export const APE_SHIRT = ["#e5262b", "#1f6fe0", "#16a34a", "#f59e0b", "#7c3aed", "#1b2230"];
+/** Hat and trim colour: the shirt's opposite number, so a hat never vanishes into the shirt. */
+export const APE_TRIM = ["#ffc93c", "#ff8a2b", "#f4f1e8", "#1f6fe0", "#ffc93c", "#e5262b"];
+export const hasShades = (acc: number) => acc === 1 || acc === 4;
+export const hasSpecs = (acc: number) => acc === 2 || acc === 5;
+export const hasEarring = (acc: number) => acc >= 3;
+
+const INK = "#1a1206";
+const BACK = ["#ffd3d0", "#cfe2ff", "#cdeed9", "#ffe6b8", "#e2d6ff", "#cfd5dd"];
+const GOLD = "#ffc93c";
 
 function fnv(s: string) {
   let h = 0x811c9dc5;
@@ -51,107 +51,87 @@ export function validTraits(t: unknown): t is Traits {
   return Array.isArray(t) && t.length === 4 && t.every((v, i) => Number.isInteger(v) && v >= 0 && v < max[i]);
 }
 
-const line = { stroke: INK, strokeWidth: 2.2, strokeLinejoin: "round" as const, strokeLinecap: "round" as const };
-
-/** The chest patch on the left shoulder; kits 3-5 sit on the helmet instead. */
-function Patch({ kind, id }: { kind: number; id: string }): ReactNode {
-  if (kind === 0)
-    return (
-      <g>
-        <clipPath id={`${id}-p`}>
-          <rect x="23" y="84" width="11" height="11" />
-        </clipPath>
-        <g clipPath={`url(#${id}-p)`}>
-          <rect x="23" y="84" width="11" height="11" fill="#ffd100" />
-          {[0, 5, 10, 15].map((o) => (
-            <path key={o} d={`M${19 + o} 95 L ${25 + o} 84`} stroke={INK} strokeWidth="2.4" />
-          ))}
-        </g>
-        <rect x="23" y="84" width="11" height="11" fill="none" {...line} strokeWidth={1.6} />
-      </g>
-    );
-  if (kind === 1)
-    return (
-      <g>
-        <circle cx="28.5" cy="89.5" r="6" fill="#0057b8" {...line} strokeWidth={1.6} />
-        <circle cx="28.5" cy="89.5" r="2.2" fill="#121212" />
-        <ellipse cx="28.5" cy="89.5" rx="5" ry="1.8" fill="none" stroke="#ff9e1b" strokeWidth="1.2" transform="rotate(-20 28.5 89.5)" />
-      </g>
-    );
-  if (kind === 2)
-    return (
-      <g>
-        <circle cx="28.5" cy="89.5" r="6" fill="#d52b1e" {...line} strokeWidth={1.6} />
-        <path d="M28.5 85.4 L 29.7 88.3 L 32.6 88.4 L 30.3 90.2 L 31.1 93.2 L 28.5 91.4 L 25.9 93.2 L 26.7 90.2 L 24.4 88.4 L 27.3 88.3 Z" fill="#f4f4f0" />
-      </g>
-    );
-  return <rect x="24" y="86" width="9" height="6" rx="1" fill="#d52b1e" {...line} strokeWidth={1.4} />;
+/** Mixes a hex colour toward another by k (0..1). */
+function mix(a: string, b: string, k: number) {
+  const p = (h: string) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+  const [x, y] = [p(a), p(b)];
+  return `#${x.map((v, i) => Math.round(v + (y[i] - v) * k).toString(16).padStart(2, "0")).join("")}`;
 }
 
+const line = { stroke: INK, strokeWidth: 2.2, strokeLinejoin: "round" as const, strokeLinecap: "round" as const };
+
 export function Mugshot({ traits, size = 40, className = "", title, style }: { traits: Traits; size?: number; className?: string; title?: string; style?: CSSProperties }) {
-  const id = useId().replace(/:/g, "");
-  const [skin, suit, kit, back] = traits;
-  const s = SKIN[skin] ?? SKIN[0];
-  const c = SUIT[suit] ?? SUIT[0];
-  const dark = back === 0 || back === 5;
+  const [f, hat, acc, shirtN] = traits;
+  const fur = APE_FUR[f] ?? APE_FUR[0];
+  const skin = mix(fur, "#f3d6b3", 0.72);
+  const shirt = APE_SHIRT[shirtN] ?? APE_SHIRT[0];
+  const trim = APE_TRIM[shirtN] ?? APE_TRIM[0];
   return (
     <svg className={`mugshot ${className}`} viewBox="0 0 100 100" width={size} height={size} role={title ? "img" : undefined} aria-label={title} aria-hidden={title ? undefined : true} style={style}>
-      <rect width="100" height="100" fill={BACK[back] ?? BACK[0]} />
-      {STARS.map(([x, y, r], i) => (
-        <circle key={i} cx={x} cy={y} r={r} fill="#fff" fillOpacity={dark ? 0.85 : 0.45} />
+      <rect width="100" height="100" fill={BACK[shirtN] ?? BACK[0]} />
+      {/* shirt and collar */}
+      <path d="M8 101 C 10 85, 24 76, 38 74 L 62 74 C 76 76, 90 85, 92 101 Z" fill={shirt} {...line} />
+      <path d="M38 74 C 43 81, 57 81, 62 74" fill="none" stroke={trim} strokeWidth="4" strokeLinecap="round" />
+      {/* ears */}
+      {[22, 78].map((x) => (
+        <g key={x}>
+          <circle cx={x} cy="46" r="9.5" fill={fur} {...line} />
+          <circle cx={x} cy="46" r="5" fill={skin} />
+        </g>
       ))}
-      {/* the suit: shoulders, the neck ring, the chest unit */}
-      <path d="M6 101 C 8 84, 21 74, 37 71 L 63 71 C 79 74, 92 84, 94 101 Z" fill={c} {...line} />
-      <path d="M22 84 C 20 90, 19 95, 19 101 M78 84 C 80 90, 81 95, 81 101" fill="none" stroke={INK} strokeOpacity="0.25" strokeWidth="1.4" />
-      <rect x="40" y="81" width="20" height="13" rx="2" fill="#3a3e44" {...line} strokeWidth={1.8} />
-      <circle cx="45" cy="87.5" r="2" fill="#d52b1e" />
-      <circle cx="50.5" cy="87.5" r="2" fill="#ffd100" />
-      <rect x="54" y="85.5" width="3.5" height="4" fill="#9cc3f0" />
-      <Patch kind={kit} id={id} />
-      <rect x="66" y="85" width="12" height="4" fill="none" stroke={INK} strokeOpacity="0.35" strokeWidth="1.3" />
-      <path d="M34 73 C 40 78, 60 78, 66 73 L 64 68 C 58 72, 42 72, 36 68 Z" fill="#a3a6ab" {...line} strokeWidth={1.8} />
-      {/* kit on the helmet, behind it */}
-      {kit === 3 ? (
+      {hasEarring(acc) ? <circle cx="80" cy="57" r="3.2" fill="none" stroke={GOLD} strokeWidth="2.2" /> : null}
+      {/* skull, face, muzzle */}
+      <circle cx="50" cy="44" r="27" fill={fur} {...line} />
+      <ellipse cx="50" cy="42" rx="19.5" ry="12.5" fill={skin} />
+      <ellipse cx="50" cy="60" rx="20" ry="13.5" fill={skin} {...line} strokeWidth={1.8} />
+      <path d="M33 32 C 40 28.5, 60 28.5, 67 32" fill="none" stroke={mix(fur, "#000000", 0.4)} strokeWidth="4" strokeLinecap="round" />
+      {/* bored eyes: a heavy lid over each */}
+      {[42, 58].map((x) => (
+        <g key={x}>
+          <circle cx={x} cy="42" r="5.6" fill="#fffdf7" {...line} strokeWidth={1.6} />
+          <circle cx={x} cy="43.6" r="2.3" fill={INK} />
+          <path d={`M${x - 5.6} 42 A 5.6 5.6 0 0 1 ${x + 5.6} 42 Z`} fill={skin} {...line} strokeWidth={1.6} />
+        </g>
+      ))}
+      <circle cx="47" cy="54" r="1.3" fill={INK} />
+      <circle cx="53" cy="54" r="1.3" fill={INK} />
+      <path d="M40 63.5 C 46 66, 54 66, 60 63.5" fill="none" stroke={INK} strokeWidth="2" strokeLinecap="round" />
+      {hasShades(acc) ? (
         <g>
-          <path d="M69 25 L 77 9" {...line} fill="none" />
-          <circle cx="77.5" cy="8" r="2.6" fill="#d52b1e" {...line} strokeWidth={1.6} />
+          <rect x="33" y="36.5" width="15" height="10" rx="4" fill={INK} />
+          <rect x="52" y="36.5" width="15" height="10" rx="4" fill={INK} />
+          <path d="M48 40 L 52 40 M33 40 L 24 38 M67 40 L 76 38" stroke={INK} strokeWidth="2.2" strokeLinecap="round" />
+          <path d="M36 39 L 40 39" stroke="#fff" strokeOpacity="0.7" strokeWidth="1.4" strokeLinecap="round" />
         </g>
       ) : null}
-      {/* the helmet */}
-      <circle cx="50" cy="44" r="28" fill={c} {...line} />
-      <circle cx="23.5" cy="47" r="4" fill="#a3a6ab" {...line} strokeWidth={1.8} />
-      <circle cx="76.5" cy="47" r="4" fill="#a3a6ab" {...line} strokeWidth={1.8} />
-      {kit === 4 ? (
-        <g>
-          <rect x="27" y="22" width="9" height="6" rx="1.5" fill="#3a3e44" {...line} strokeWidth={1.6} transform="rotate(-35 31.5 25)" />
-          <rect x="64" y="22" width="9" height="6" rx="1.5" fill="#3a3e44" {...line} strokeWidth={1.6} transform="rotate(35 68.5 25)" />
-          <circle cx="31.5" cy="25" r="2" fill="#ffd100" />
-          <circle cx="68.5" cy="25" r="2" fill="#ffd100" />
+      {hasSpecs(acc) ? (
+        <g fill="none" stroke={GOLD} strokeWidth="2">
+          <circle cx="42" cy="42" r="7.4" />
+          <circle cx="58" cy="42" r="7.4" />
+          <path d="M49.4 42 L 50.6 42 M34.6 42 L 25 39.5 M65.4 42 L 75 39.5" />
         </g>
       ) : null}
-      {/* the visor and the face behind it */}
-      <clipPath id={`${id}-v`}>
-        <ellipse cx="50" cy="46" rx="20" ry="19" />
-      </clipPath>
-      <ellipse cx="50" cy="46" rx="20" ry="19" fill="#1f2a38" />
-      <g clipPath={`url(#${id}-v)`}>
-        <ellipse cx="50" cy="49" rx="15.5" ry="17" fill={s} {...line} strokeWidth={1.8} />
-        <path d="M41 42 L 46 41.2 M54 41.2 L 59 42" stroke={INK} strokeWidth="1.8" strokeLinecap="round" />
-        <circle cx="44" cy="47" r="2" fill={INK} />
-        <circle cx="56" cy="47" r="2" fill={INK} />
-        <circle cx="44.6" cy="46.3" r="0.6" fill="#fff" />
-        <circle cx="56.6" cy="46.3" r="0.6" fill="#fff" />
-        <ellipse cx="40.5" cy="53" rx="2.8" ry="1.7" fill="#e8806b" fillOpacity="0.3" />
-        <ellipse cx="59.5" cy="53" rx="2.8" ry="1.7" fill="#e8806b" fillOpacity="0.3" />
-        <path d="M45.5 55.5 C 48 58.5, 52 58.5, 54.5 55.5" fill="none" stroke={INK} strokeWidth="1.8" strokeLinecap="round" />
-        {kit === 5 ? <rect x="28" y="20" width="44" height="31" fill="#d9a63a" fillOpacity="0.92" /> : null}
-        {kit === 5 ? <path d="M30 51 L 70 51" stroke={INK} strokeWidth="1.6" /> : null}
-        {/* glass: a tint and a highlight */}
-        <ellipse cx="50" cy="46" rx="20" ry="19" fill="#9cc3f0" fillOpacity="0.12" />
-        <path d="M36 36 C 39 30, 45 28, 50 28" fill="none" stroke="#fff" strokeOpacity="0.75" strokeWidth="2.6" strokeLinecap="round" />
-        <circle cx="62" cy="33" r="1.6" fill="#fff" fillOpacity="0.6" />
-      </g>
-      <ellipse cx="50" cy="46" rx="20" ry="19" fill="none" {...line} />
+      {hat === 1 ? (
+        <g>
+          <path d="M24 34 C 24 10, 76 10, 76 34 Z" fill={trim} {...line} />
+          <rect x="21" y="29" width="58" height="9" rx="4.5" fill="#fffdf7" {...line} strokeWidth={1.8} />
+          <circle cx="50" cy="13" r="5" fill="#fffdf7" {...line} strokeWidth={1.8} />
+        </g>
+      ) : null}
+      {hat === 2 ? (
+        <g>
+          <path d="M25 33 C 25 12, 75 12, 75 33 Z" fill={trim} {...line} />
+          <path d="M40 33 C 44 27, 78 26, 88 34 C 78 37, 52 37, 40 33 Z" fill={trim} {...line} />
+        </g>
+      ) : null}
+      {hat === 3 ? (
+        <g>
+          <path d="M40 22 L 54 -2 L 64 22 Z" fill={trim} {...line} />
+          <circle cx="54" cy="0" r="4" fill={GOLD} {...line} strokeWidth={1.6} />
+          <path d="M45 14 L 60 12" stroke="#fffdf7" strokeWidth="2.4" strokeLinecap="round" />
+        </g>
+      ) : null}
+      {hat === 4 ? <path d="M24.5 33 C 34 24, 66 24, 75.5 33" fill="none" stroke={trim} strokeWidth="6" strokeLinecap="round" /> : null}
       <rect x="1" y="1" width="98" height="98" fill="none" stroke={INK} strokeWidth="2" />
     </svg>
   );

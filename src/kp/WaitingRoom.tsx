@@ -12,6 +12,7 @@ import { Html, RoundedBox } from "@react-three/drei";
 import { Bloom, EffectComposer, N8AO, Vignette } from "@react-three/postprocessing";
 import { Env, backOut, compact, gradTex, hash, inOut, lin, numberTex, out3, powTex, snap } from "./BunnyBrawl";
 import type { BrawlRow, Parts } from "./BunnyBrawl";
+import type { Traits } from "../components/Mugshot";
 import { Ape } from "./Ape";
 
 const SLOTS = 10;
@@ -60,7 +61,9 @@ type Puppet = {
 type Key = "x" | "y" | "z" | "hop" | "rotY" | "spin" | "lean" | "arm" | "fist" | "squash" | "scale" | "yell" | "sit";
 type Tween = { p: Puppet; k: Key; a: number | null; b: number; t0: number; d: number; e: (t: number) => number; start?: () => void; done?: () => void; on?: boolean };
 type Fx = { smash: (col: number) => void };
-export type Dev = { name: string; balance: number };
+export type Dev = { id: string; name: string; balance: number; traits?: Traits | null };
+/** A seated holder. `traits` are its portrait traits; without them the ape is rolled from the id. */
+export type SeatRow = BrawlRow & { traits?: Traits | null };
 /** Scene centre on wide screens: the row plus the cooler on the left and the desk on the right. */
 const CX = 0.5;
 
@@ -365,7 +368,8 @@ function Reception({ dev, x }: { dev: Dev; x: number }) {
     <group position={[x, 0, -0.95]}>
       <group position={[0, 0.6, 0]}>
         <Ape
-          id="dev-wallet"
+          id={dev.id}
+          traits={dev.traits}
           register={register}
           label={
             <div className="brawl__tag is-dev">
@@ -416,7 +420,7 @@ function Prize() {
 
 /* ───────── the director ───────── */
 
-type DirProps = { rows: BrawlRow[]; sold: string[]; cast: string[]; setCast: (f: (c: string[]) => string[]) => void; fx: Fx; scroll?: { current: number } };
+type DirProps = { rows: SeatRow[]; sold: string[]; cast: string[]; setCast: (f: (c: string[]) => string[]) => void; fx: Fx; scroll?: { current: number } };
 
 function Director({ rows, sold, cast, setCast, fx, scroll }: DirProps) {
   // the numbers on the tags follow the room, not the incoming board: a rank changes when the punch lands
@@ -783,7 +787,7 @@ function Director({ rows, sold, cast, setCast, fx, scroll }: DirProps) {
   });
 
   const register = useMemo(() => (id: string, p: Parts | null) => void (p ? parts.current.set(id, p) : parts.current.delete(id)), []);
-  const info = useRef(new Map<string, BrawlRow>());
+  const info = useRef(new Map<string, SeatRow>());
   rows.forEach((r) => info.current.set(r.id, r));
   return (
     <>
@@ -792,8 +796,11 @@ function Director({ rows, sold, cast, setCast, fx, scroll }: DirProps) {
         const row = info.current.get(id);
         return (
           <Ape
-            key={id}
+            key={`${id}:${row?.traits?.join(".") ?? ""}`}
             id={id}
+            traits={row?.traits}
+            // two rows on a phone: the back row's tags go over their heads, or they would cover the front row's faces
+            labelAt={LAYOUT.tall && r >= 5 ? [0, 2.3, 0] : undefined}
             register={register}
             label={
               r === -1 ? null : (
@@ -849,12 +856,13 @@ function Scene({ dev, ...props }: Omit<DirProps, "fx"> & { dev?: Dev }) {
  * the board goes out through the window instead of down the row. `dev` puts the dev wallet behind
  * the front desk. `scroll` is a 0..1 ref the page drives to push the camera in on the gold chair.
  * Mount it once the board has loaded: whoever is on it at mount is seated without ceremony, and an
- * empty board is shown as an empty room. `fx` turns the post effects off.
+ * empty board is shown as an empty room. `paused` stops drawing (the page has scrolled past the
+ * room). `fx` turns the post effects off.
  */
-export default function WaitingRoom({ rows, sold = [], dev, scroll, fx = true }: { rows: BrawlRow[]; sold?: string[]; dev?: Dev; scroll?: { current: number }; fx?: boolean }) {
+export default function WaitingRoom({ rows, sold = [], dev, scroll, paused = false, fx = true }: { rows: SeatRow[]; sold?: string[]; dev?: Dev; scroll?: { current: number }; paused?: boolean; fx?: boolean }) {
   const [cast, setCast] = useState<string[]>([]);
   return (
-    <Canvas shadows style={{ position: "absolute", inset: 0 }} dpr={[1, 1.75]} camera={{ fov: 32, near: 0.1, far: 240, position: [0, 4, 18] }} gl={{ antialias: !fx, toneMappingExposure: 0.92 }}>
+    <Canvas shadows frameloop={paused ? "never" : "always"} style={{ position: "absolute", inset: 0 }} dpr={[1, 1.75]} camera={{ fov: 32, near: 0.1, far: 240, position: [0, 4, 18] }} gl={{ antialias: !fx, toneMappingExposure: 0.92 }}>
       <color attach="background" args={["#d8f0ff"]} />
       <fog attach="fog" args={["#d8f0ff", 40, 100]} />
       <Env />

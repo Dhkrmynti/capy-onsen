@@ -1,11 +1,12 @@
-/** Safety rules: four signs on the wall, the way a site posts them, and the count spaghettified so far. */
+/** House rules: four cards, and the count of wallets thrown out so far. */
 import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import { Armchair, Crown, HandCoins, SignOut } from "@phosphor-icons/react";
 import { amount, type Status } from "../lib/api";
 import { prefersReducedMotion } from "../lib/motion";
-import { Mandatory, Prohibit, Safe, Warn } from "./Signs";
+import { TICKER } from "../lib/brand";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -16,40 +17,40 @@ export function Rules({ status }: { status: Status | null }) {
   useGSAP(
     () => {
       if (prefersReducedMotion()) return;
-      gsap.from(".rule-sign", { scale: 0.7, opacity: 0, duration: 0.7, ease: "back.out(2)", stagger: 0.12, scrollTrigger: { trigger: ".rule-signs", start: "top 78%" } });
+      gsap.from(".st-rule", { y: 60, rotate: (i) => [-4, 3, -3, 4][i % 4], opacity: 0, duration: 0.65, ease: "back.out(1.7)", stagger: 0.1, scrollTrigger: { trigger: ".st-rulegrid", start: "top 80%" } });
     },
     { scope: root },
   );
   return (
-    <section className="safety" id="rules" ref={root} aria-labelledby="rules-head">
-      <div className="slab">
-        <h2 className="hz-h2" id="rules-head">
-          Safety rules
+    <section className="st-sec st-rules" id="rules" ref={root} aria-labelledby="rules-head">
+      <div className="st-wrap">
+        <h2 className="st-h2" id="rules-head">
+          House rules
         </h2>
-        <ul className="rule-signs">
-          <li className="rule-sign">
-            <Mandatory kind="coins" size={92} />
-            <b>Hold {min} $HAWK</b>
-            <span>to enter the site.</span>
+        <ul className="st-rulegrid">
+          <li className="st-rule">
+            <Armchair weight="fill" aria-hidden="true" />
+            <b>Hold {min} {TICKER}</b>
+            <span>to be let into the room.</span>
           </li>
-          <li className="rule-sign">
-            <Warn kind="core" size={92} />
+          <li className="st-rule">
+            <Crown weight="fill" aria-hidden="true" />
             <b>Biggest holder</b>
-            <span>sits at the core.</span>
+            <span>sits on the gold chair.</span>
           </li>
-          <li className="rule-sign">
-            <Safe kind="hand" size={92} />
-            <b>The top ten</b>
-            <span>share every emission.</span>
+          <li className="st-rule">
+            <HandCoins weight="fill" aria-hidden="true" />
+            <b>The ten seated</b>
+            <span>share every reward, in ETH.</span>
           </li>
-          <li className="rule-sign is-red">
-            <Prohibit kind="sell" size={92} />
+          <li className="st-rule is-red">
+            <SignOut weight="fill" aria-hidden="true" />
             <b>No selling</b>
-            <span>One sale and you are spaghettified. For good.</span>
+            <span>One sale and you are thrown out. For good.</span>
           </li>
         </ul>
-        <p className="safety__out">
-          <b className="tabular">{out}</b> spaghettified so far. Moving between your own wallets is not a sale.
+        <p className="st-rules__out">
+          <b className="tabular">{out}</b> thrown out so far. Moving between your own wallets is not a sale.
         </p>
       </div>
     </section>

@@ -37,10 +37,9 @@ export interface Config {
   sellSinks: string[];
   /** Any transfer of $HEIR into a contract counts as a sell (except excluded addresses). */
   contractsAreSells: boolean;
-  /** Escrow size (ETH) that triggers each step of the cycle: feeding → keeper → sink → feeding … */
+  /** Escrow size (ETH) that triggers each step of the cycle: feeding → keeper → feeding … */
   feedingETH: string;
   keeperETH: string;
-  sinkETH: string;
   /** Feedings go to this many sitters, the biggest balances first. */
   feedingTopN: number;
   /** Tiers inside the top N: ranks up to `upTo` share `pct`% of each feeding, by balance. */
@@ -67,7 +66,6 @@ export const config: Config = {
   contractsAreSells: env.CONTRACTS_ARE_SELLS !== "0",
   feedingETH: env.FEEDING_ETH || "0.02",
   keeperETH: env.KEEPER_ETH || "0.025",
-  sinkETH: env.SINK_ETH || "0.01",
   feedingTopN: parseInt(env.FEEDING_TOP_N || "10", 10),
   // "5:70,10:30": ranks 1–5 share 70% (0.014 of 0.02 ETH), ranks 6–10 share 30% (0.006).
   feedingTiers: (env.FEEDING_TIERS || "5:70,10:30")
@@ -113,9 +111,9 @@ export interface Holder {
   relay?: boolean;
 }
 
-export type RoundKind = "feeding" | "keeper" | "sink";
-// One round: inheritance → treasury → buyback & burn → treasury, then again from the inheritance.
-export const CYCLE: RoundKind[] = ["feeding", "keeper", "sink", "keeper"];
+export type RoundKind = "feeding" | "keeper";
+// One round: the reward to the seated ten, then the treasury, then again. No buyback, no burn.
+export const CYCLE: RoundKind[] = ["feeding", "keeper"];
 
 export interface Payout {
   addr: string;
@@ -134,7 +132,7 @@ export interface Payout {
 export interface Round {
   n: number;
   kind: RoundKind;
-  /** Position in CYCLE this round was started at (the keeper appears twice, so the kind alone is not enough). */
+  /** Position in CYCLE this round was started at. */
   slot?: number;
   at: number;
   stage: "claiming" | "claimed" | "done" | "failed";
@@ -145,15 +143,9 @@ export interface Round {
   snapshotBlock: number;
   payouts: Payout[];
   treasuryTx: string;
-  buyTx: string;
-  /** Engine's $HEIR balance just before the buyback; only what the buy added gets burned. */
-  heldBefore?: string;
-  tokensBought: string;
-  burnTx: string;
-  tokensBurned: string;
   doneAt: number;
   /** Which confirmed steps are already in the totals. */
-  counted?: { claim?: boolean; keeper?: boolean; buy?: boolean; burn?: boolean };
+  counted?: { claim?: boolean; keeper?: boolean };
 }
 
 export interface State {
@@ -168,12 +160,10 @@ export interface State {
     feesClaimedWei: string;
     fedWei: string;
     keeperWei: string;
-    sinkWei: string;
-    tokensBurned: string;
   };
 }
 
-const freshTotals = () => ({ feesClaimedWei: "0", fedWei: "0", keeperWei: "0", sinkWei: "0", tokensBurned: "0" });
+const freshTotals = () => ({ feesClaimedWei: "0", fedWei: "0", keeperWei: "0" });
 
 export const state: State = {
   lastIndexedBlock: 0,

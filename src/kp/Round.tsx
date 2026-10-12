@@ -1,15 +1,16 @@
 /**
- * The Emission Cycle: the three kinds of step as placards posted in a row, the way a plant posts
- * its procedure. Only the one running now is lit, with its beacon on and the escrow filling toward
- * its level; the other two stand greyed out until their turn.
+ * The loop: two steps and nothing else. Trading fees fill the escrow; at the first level the ten
+ * seated holders are paid, at the next the treasury is, then round again. No buyback, no burn.
+ * The step being filled now is lit and shows the escrow climbing toward its level.
  */
 import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { DEFAULT_STEPS, DEFAULT_TIERS, stepShare, type Status } from "../lib/api";
+import { ArrowUpRight, ArrowsClockwise, Coins, Vault } from "@phosphor-icons/react";
+import { DEFAULT_STEPS, DEFAULT_TIERS, addrUrl, short, stepShare, type Status } from "../lib/api";
 import { prefersReducedMotion } from "../lib/motion";
-import { Mandatory, Prohibit, Warn, type Pict } from "./Signs";
+import { TICKER } from "../lib/brand";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -17,83 +18,80 @@ export function Round({ status }: { status: Status | null }) {
   const root = useRef<HTMLElement>(null);
   const steps = status?.cycle.steps ?? DEFAULT_STEPS;
   const tiers = status?.rules.tiers ?? DEFAULT_TIERS;
-  const at = status?.tokenAddress ? status.cycle.index : -1;
+  const live = !!status?.tokenAddress;
+  const at = live ? status!.cycle.index : -1;
   const escrow = parseFloat(status?.escrowETH ?? "0");
-  // each kind of step once, in the order it first runs
-  const kinds = steps.map((s) => s.kind).filter((k, i, all) => all.indexOf(k) === i);
+  const treasury = live ? status?.treasuryAddress : "";
   useGSAP(
     () => {
       if (prefersReducedMotion()) return;
-      // placards are posted one after another as you scroll, swinging on their top screws
-      gsap
-        .timeline({ scrollTrigger: { trigger: ".placards", start: "top 85%", end: "center 55%", scrub: 0.7 } })
-        .from(".post", { rotate: -12, y: 60, opacity: 0, transformOrigin: "50% 0%", ease: "back.out(1.6)", stagger: 0.25 });
+      const st = { trigger: ".st-loop", start: "top 80%" };
+      gsap.from(".st-step", { y: 70, rotate: (i) => (i ? 5 : -5), opacity: 0, duration: 0.7, ease: "back.out(1.5)", stagger: 0.14, scrollTrigger: st });
+      gsap.from(".st-loop__arrow", { scale: 0, rotate: -180, duration: 0.7, ease: "back.out(2)", delay: 0.3, scrollTrigger: st });
     },
     { scope: root },
   );
-  const look: Record<string, { name: string; plain: string; line: string; sign: "warn" | "mand" | "proh"; pict: Pict }> = {
-    feeding: { name: "The Emission", plain: "Reward", line: `ETH to the ten nearest the core. No. 1-5 split ${tiers[0]?.eth ?? "0.014"}, No. 6-10 split ${tiers[1]?.eth ?? "0.006"}, by balance.`, sign: "warn", pict: "core" },
-    keeper: { name: "Containment Fund", plain: "Treasury", line: "To the treasury wallet. Every transfer is in the incident log.", sign: "mand", pict: "vault" },
-    sink: { name: "Evaporation", plain: "Buyback & burn", line: "Buys $HAWK back on Pons, then burns exactly what it bought.", sign: "proh", pict: "flame" },
-  };
+  const look = {
+    feeding: { n: "01", name: "Reward", icon: Coins, line: `ETH straight to the ten seated holders. No. 1-5 split ${tiers[0]?.eth ?? "0.014"}, No. 6-10 split ${tiers[1]?.eth ?? "0.006"}, by balance inside each row.` },
+    keeper: { n: "02", name: "Treasury", icon: Vault, line: "ETH to the treasury wallet. Every transfer is listed in the receipts below." },
+  } as const;
   return (
-    <section className="cycle" id="round" ref={root} aria-labelledby="round-head">
-      <div className="slab is-wide">
-        <div className="slab__head">
-          <h2 className="hz-h2" id="round-head">
-            Every trade charges the core.
+    <section className="st-sec st-cycle is-paper" id="round" ref={root} aria-labelledby="round-head">
+      <div className="st-wrap">
+        <div className="st-sec__head">
+          <h2 className="st-h2" id="round-head">
+            Two steps. Round and round.
           </h2>
-          <p className="slab__deck">Each trade's creator fee builds up in the Pons fee escrow. When it reaches the next step's level, the engine collects it and runs that step. Then the next, then the cycle starts over.</p>
+          <p className="st-deck">Each trade's creator fee builds up in the Pons fee escrow. When it reaches the next step's level, the engine collects it and runs that step. Then the other one, then again.</p>
         </div>
-        <ol className="placards">
-          {kinds.map((kind, k) => {
-            const l = look[kind];
-            const Sign = l.sign === "warn" ? Warn : l.sign === "mand" ? Mandatory : Prohibit;
-            const mine = steps.map((s, i) => (s.kind === kind ? i : -1)).filter((i) => i >= 0);
-            const live = at >= 0;
-            const now = live && steps[at]?.kind === kind;
-            const level = parseFloat((now ? steps[at] : steps[mine[0]]).thresholdETH);
+        <ol className="st-loop">
+          {steps.map((s, i) => {
+            const l = look[s.kind];
+            const Icon = l.icon;
+            const now = at === i;
+            const level = parseFloat(s.thresholdETH);
             const fill = now ? Math.min(1, escrow / level) : 0;
-            const turn = now && mine.length > 1 ? mine.indexOf(at) + 1 : 0;
             return (
-              <li key={kind} className={`post is-${kind} ${now ? "is-now" : live ? "is-idle" : ""}`} aria-current={now ? "step" : undefined}>
-                <span className="post__screws" aria-hidden="true" />
-                <span className="post__head">
-                  <span className="post__n tabular">Step {k + 1}</span>
-                  {now ? <span className="post__beacon">Running</span> : live ? <span className="post__wait">Waiting</span> : null}
-                </span>
-                <Sign kind={l.pict} size={86} />
-                <span className="post__plain">{l.plain}</span>
-                <span className="post__name">{l.name}</span>
-                <span className="post__sol tabular">
-                  {level} ETH{mine.length > 1 ? ` · runs ${mine.length}× per cycle` : ""}
-                </span>
-                <span className="post__line">{l.line}</span>
+              <li key={i} className={`st-step is-${s.kind} ${now ? "is-now" : live ? "is-idle" : ""}`} aria-current={now ? "step" : undefined}>
+                <span className="st-step__n tabular">{l.n}</span>
+                <span className="st-step__state">{now ? "Filling now" : live ? "Next" : "At launch"}</span>
+                <Icon className="st-step__icon" weight="fill" aria-hidden="true" />
+                <span className="st-step__name">{l.name}</span>
+                <span className="st-step__eth tabular">{level} ETH</span>
+                <span className="st-step__line">{l.line}</span>
                 {now ? (
-                  <span className="post__meter" role="img" aria-label={`${escrow.toFixed(4)} of ${level} ETH collected`}>
-                    <span className="post__bar">
+                  <span className="st-step__meter" role="img" aria-label={`${escrow.toFixed(4)} of ${level} ETH collected`}>
+                    <span className="st-step__bar">
                       <span style={{ width: `${fill * 100}%` }} />
                     </span>
-                    <span className="post__read tabular">
-                      {escrow.toFixed(4)} / {level} ETH{turn ? ` · round ${turn} of ${mine.length}` : ""}
+                    <span className="st-step__read tabular">
+                      {escrow.toFixed(4)} / {level} ETH
                     </span>
+                  </span>
+                ) : null}
+                {i === 0 ? (
+                  <span className="st-loop__arrow" aria-hidden="true">
+                    <ArrowsClockwise weight="bold" />
                   </span>
                 ) : null}
               </li>
             );
           })}
         </ol>
-        <p className="cycle__order">
-          The loop:{" "}
-          {steps.map((s, i) => (
-            <span key={i} className={at === i ? "is-on" : ""}>
-              {look[s.kind].plain} →{" "}
-            </span>
-          ))}
-          {look[steps[0].kind].plain}, and round again.
+        <p className="st-sum tabular">
+          Of every full loop: <b>{stepShare(steps, "feeding")}%</b> to the ten seated holders, <b>{stepShare(steps, "keeper")}%</b> to the treasury.
         </p>
-        <p className="cycle__sum tabular">
-          Over a full cycle: <b>{stepShare(steps, "feeding")}%</b> emitted to the ten, <b>{stepShare(steps, "keeper")}%</b> to containment, <b>{stepShare(steps, "sink")}%</b> evaporated.
+        <p className="st-plain">
+          No buyback and no burn: the engine never buys, sells or destroys {TICKER}.
+          {treasury ? (
+            <>
+              {" "}
+              Treasury wallet:{" "}
+              <a href={addrUrl(treasury)} target="_blank" rel="noreferrer" className="tabular">
+                {short(treasury)} <ArrowUpRight weight="bold" aria-hidden="true" />
+              </a>
+            </>
+          ) : null}
         </p>
       </div>
     </section>

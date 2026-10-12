@@ -1,3 +1,17 @@
+# Take a Seat ($SEAT) · working name · branch `lore-seat` (12 Oct 2026)
+
+Rebranded from Hawking ($HAWK). Same site and engine underneath; two things changed.
+
+**Lore.** A waiting room. The ten biggest holders are bored cartoon apes seated on ten numbered chairs, No. 1 on the gold one. Overtake someone and your ape gets up and punches theirs down the row. Sell once and you are punched out through the window, for good. The dev wallet is the ape behind the front desk: always shown, never seated, never paid. Each ape wears its holder's portrait traits (fur, hat, eyewear, shirt), so the 2D portrait and the 3D ape match. Original characters: not copies of any NFT collection.
+
+**Engine.** No buyback and no burn. The cycle is two steps: reward (0.02 ETH to the seated ten: No. 1-5 share 0.014, No. 6-10 share 0.006) then treasury (0.025 ETH), then again. The engine never buys, sells or destroys the token.
+
+Vocabulary: the row (board) · gold chair (No. 1) · front row / back row (the two tiers) · standing in line (11-50) · at the door (holding not aged yet) · thrown out (sold) · front desk (dev) · your ticket (wallet card) · receipts (log).
+
+Name and ticker live in `src/lib/brand.ts` (plus a few strings in the wallet card, `index.html` and the engine logs). `scripts/` and `DEPLOY-VPS.md` still describe the Hawking server; nothing is deployed for this lore.
+
+---
+
 # Robin Heist ($RBANK) · konsep
 
 Rebrand 8 Okt 2026 dari Pepads ($PADS). Mekanik engine tidak berubah; nama, ticker, maskot, UI dan lore diganti total. Token baru di-launch di Pons; engine dipindah ke CA baru, $PADS lama berhenti dapat split.

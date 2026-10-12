@@ -1,20 +1,18 @@
 /**
- * A bored cartoon ape in the spirit of profile-picture collections: every holder id rolls its own
- * traits (fur, shirt, hat, eyewear, earring). An original design built from primitives; it hands
- * the director the same parts as the rabbit, so either can sit in the waiting room.
+ * A bored cartoon ape in the spirit of profile-picture collections. Its four traits (fur, hat,
+ * eyewear and earring, shirt) are the holder's portrait traits from Mugshot.tsx: the ones the
+ * holder picked, or the ones rolled from the wallet address. An original design built from
+ * primitives; it hands the director the same parts as the rabbit.
  */
 import { useEffect, useMemo, useRef } from "react";
 import type { ReactNode, RefObject } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
-import { hash } from "./BunnyBrawl";
 import type { Parts } from "./BunnyBrawl";
+import { APE_FUR, APE_SHIRT, APE_TRIM, hasEarring, hasShades, hasSpecs, traitsFor, type Traits } from "../components/Mugshot";
 
-const FURS = ["#8a5a3a", "#6b4428", "#b98a5a", "#d9b98a", "#55504f", "#2f2a28", "#e0b03a", "#7fb6d9", "#e99ab3", "#8fbf7a", "#c7c9cf", "#a35a3a"];
-const SHIRTS = ["#e5262b", "#1f6fe0", "#16a34a", "#f59e0b", "#7c3aed", "#0ea5a4", "#111827", "#ec4899", "#f4f1e8", "#ff7a1a"];
-const HATS = ["none", "beanie", "cap", "party", "none", "headband"] as const;
-const EYEWEAR = ["none", "shades", "none", "specs", "none"] as const;
+const HATS = ["none", "beanie", "cap", "party", "headband"] as const;
 const LID_GEO = new THREE.SphereGeometry(0.117, 20, 12, 0, Math.PI * 2, 0, 1.1);
 const TORSO_GEO = (() => {
   const pts: [number, number][] = [[0, 0], [0.3, 0.01], [0.48, 0.14], [0.55, 0.42], [0.52, 0.7], [0.42, 0.9], [0.26, 0.98], [0, 1.0]];
@@ -24,7 +22,7 @@ const TORSO_GEO = (() => {
   return g;
 })();
 
-export function Ape({ id, register, label }: { id: string; register: (id: string, p: Parts | null) => void; label: ReactNode }) {
+export function Ape({ id, traits, register, label, labelAt = [0, -0.02, 0.75] }: { id: string; traits?: Traits | null; register: (id: string, p: Parts | null) => void; label: ReactNode; labelAt?: [number, number, number] }) {
   const root = useRef<THREE.Group>(null!);
   const body = useRef<THREE.Group>(null!);
   const earL = useRef<THREE.Group>(null!);
@@ -52,19 +50,19 @@ export function Ape({ id, register, label }: { id: string; register: (id: string
     hat.current.visible = !crown.current.visible;
   });
 
-  const h = hash(id);
-  const hatKind = HATS[(h >>> 9) % HATS.length];
-  const eyewear = EYEWEAR[(h >>> 15) % EYEWEAR.length];
-  const earring = (h >>> 20) % 3 === 0;
+  const [furN, hatN, accN, shirtN] = traits ?? traitsFor(id);
+  const hatKind = HATS[hatN] ?? "none";
+  const eyewear = hasShades(accN) ? "shades" : hasSpecs(accN) ? "specs" : "none";
+  const earring = hasEarring(accN);
   const M = useMemo(() => {
-    const fur = new THREE.Color(FURS[h % FURS.length]);
+    const fur = new THREE.Color(APE_FUR[furN] ?? APE_FUR[0]);
     const soft = (c: THREE.Color) => new THREE.MeshPhysicalMaterial({ color: c, roughness: 0.66, sheen: 0.25, sheenRoughness: 0.6, sheenColor: c.clone().lerp(new THREE.Color("#ffffff"), 0.5) });
     return {
       fur: soft(fur),
       dark: soft(fur.clone().multiplyScalar(0.6)),
       skin: new THREE.MeshPhysicalMaterial({ color: fur.clone().lerp(new THREE.Color("#f3d6b3"), 0.72), roughness: 0.55, sheen: 0.2 }),
-      shirt: new THREE.MeshPhysicalMaterial({ color: SHIRTS[(h >>> 5) % SHIRTS.length], roughness: 0.75, sheen: 0.4, sheenColor: new THREE.Color("#ffffff") }),
-      trim: new THREE.MeshStandardMaterial({ color: SHIRTS[(h >>> 11) % SHIRTS.length], roughness: 0.7 }),
+      shirt: new THREE.MeshPhysicalMaterial({ color: APE_SHIRT[shirtN] ?? APE_SHIRT[0], roughness: 0.75, sheen: 0.4, sheenColor: new THREE.Color("#ffffff") }),
+      trim: new THREE.MeshStandardMaterial({ color: APE_TRIM[shirtN] ?? APE_TRIM[0], roughness: 0.7 }),
       glove: new THREE.MeshPhysicalMaterial({ color: "#d81e24", roughness: 0.28, clearcoat: 1, clearcoatRoughness: 0.18 }),
       eye: new THREE.MeshPhysicalMaterial({ color: "#fffdf7", roughness: 0.06, clearcoat: 1, clearcoatRoughness: 0.03 }),
       black: new THREE.MeshPhysicalMaterial({ color: "#0c0806", roughness: 0.1, clearcoat: 1 }),
@@ -75,7 +73,7 @@ export function Ape({ id, register, label }: { id: string; register: (id: string
       gold: new THREE.MeshStandardMaterial({ color: "#ffc93c", metalness: 1, roughness: 0.18 }),
       lens: new THREE.MeshPhysicalMaterial({ color: "#0b0f14", roughness: 0.05, metalness: 0.6, clearcoat: 1 }),
     };
-  }, [h]);
+  }, [furN, shirtN]);
 
   const ear = (side: 1 | -1, ref: RefObject<THREE.Group>, tip: RefObject<THREE.Group>) => (
     <group ref={ref} position={[0.43 * side, 1.3, 0]}>
@@ -287,7 +285,7 @@ export function Ape({ id, register, label }: { id: string; register: (id: string
           })}
         </group>
       </group>
-      <Html position={[0, -0.02, 0.75]} center zIndexRange={[5, 0]} style={{ pointerEvents: "none" }}>
+      <Html position={labelAt} center zIndexRange={[5, 0]} style={{ pointerEvents: "none" }}>
         {label}
       </Html>
     </group>

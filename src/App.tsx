@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect, useMemo, useState } from "react";
+import { useEffect } from "react";
 import Lenis from "lenis";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -8,33 +8,12 @@ import { CrewCard } from "./components/CrewCard";
 import { restoreWallet } from "./lib/wallet";
 import { Header } from "./kp/Header";
 import { Hero } from "./kp/Hero";
-import { Ladder } from "./kp/Ladder";
+import { Board } from "./kp/Board";
 import { Round } from "./kp/Round";
 import { Rules } from "./kp/Rules";
 import { Record } from "./kp/Record";
 import { Close } from "./kp/Close";
-import { nameFor } from "./lib/alias";
-import { Band } from "./kp/Band";
-
-// The contained black hole loads after the page, so the first paint never waits for it.
-const VoidWalk = lazy(() => import("./kp/VoidWalk"));
-
-function useWalk() {
-  const [show, setShow] = useState(false);
-  useEffect(() => {
-    try {
-      const c = document.createElement("canvas");
-      if (!(c.getContext("webgl2") || c.getContext("webgl"))) return;
-    } catch {
-      return;
-    }
-    const w = window as unknown as { requestIdleCallback?: (f: () => void) => number };
-    const go = () => setShow(true);
-    if (w.requestIdleCallback) w.requestIdleCallback(go);
-    else setTimeout(go, 300);
-  }, []);
-  return show;
-}
+import { Ticker } from "./kp/Ticker";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -43,9 +22,6 @@ export function App() {
   const live = !!status?.tokenAddress;
   // the Ladder is live: a new buyer is on the board within a few seconds
   const { data: pond } = usePoll<Pond>(live ? "/api/pond?limit=50" : null, 3000, demoPond);
-
-  const walk = useWalk();
-  const names = useMemo(() => (pond?.rows ?? []).slice(0, 10).map((r) => nameFor(r.addr, r.nickname, r.x).name), [pond]);
 
   // A wallet that already trusts this site shows as connected without a popup.
   useEffect(restoreWallet, []);
@@ -61,7 +37,7 @@ export function App() {
     };
     document.fonts?.ready.then(again);
     window.addEventListener("load", again);
-    const watched = ["ladder", "round", "rules", "card", "record"].map((id) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
+    const watched = ["row", "round", "rules", "card", "record"].map((id) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
     const heights = new Map<Element, number>();
     const ro = new ResizeObserver((entries) => {
       for (const e of entries) {
@@ -106,30 +82,20 @@ export function App() {
   }, []);
 
   return (
-    <div className="kp hz">
-      {/* the black hole, fixed behind every section; the page scrolls through it */}
-      <div className="walk" aria-hidden="true">
-        {walk ? (
-          <Suspense fallback={null}>
-            <VoidWalk names={names} still={prefersReducedMotion()} />
-          </Suspense>
-        ) : null}
-      </div>
+    <div className="kp st">
       <Header status={status} />
-      <main>
-        <Hero status={status} pond={pond} offline={!!error && !status} />
-        <Band label="Exposure board" />
-        <Ladder status={status} pond={pond} />
-        <Band label="Emission cycle" tone="red" />
+      {/* the room stays pinned behind; the page below is a sheet that slides up over it */}
+      <Hero status={status} pond={pond} offline={!!error && !status} />
+      <div className="st-gap" aria-hidden="true" />
+      <main className="st-sheet">
+        <Ticker items={["Top 10 are seated", "Biggest holder gets the gold chair", "Sell once and you are out", "Rewards in ETH"]} />
+        <Board status={status} pond={pond} />
         <Round status={status} />
-        <Band label="Safety rules" />
         <Rules status={status} />
-        <Band label="Your dosimeter" tone="red" />
         <CrewCard live={live} />
-        <Band label="Incident log" />
         <Record status={status} />
+        <Close status={status} />
       </main>
-      <Close status={status} />
     </div>
   );
 }

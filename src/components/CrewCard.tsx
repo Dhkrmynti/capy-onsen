@@ -17,17 +17,17 @@ const VALID = /^0x[0-9a-fA-F]{40}$/;
 
 type Tone = "ok" | "wait" | "stop" | "dim";
 const STAMP: Record<WalletInfo["status"], { word: string; tone: Tone; line: string }> = {
-  sitting: { word: "On site", tone: "ok", line: "You are on site. Hold and take your dose of each emission." },
-  waiting: { word: "Pending", tone: "wait", line: "Your first $HAWK are still settling. A moment." },
-  "too-small": { word: "Visitor", tone: "wait", line: "Under 100,000 $HAWK. Not enough to enter the site. Hold more." },
-  hopped: { word: "Spaghettified", tone: "stop", line: "This wallet sold. Spaghettified, for good." },
-  excluded: { word: "Not crew", tone: "dim", line: "Engine, curve, chest or dead address. Never paid." },
-  "not-holding": { word: "No exposure", tone: "dim", line: "This wallet holds no $HAWK." },
+  sitting: { word: "In the room", tone: "ok", line: "You are in the room. Hold and climb to a chair." },
+  waiting: { word: "At the door", tone: "wait", line: "Your first $SEAT are still settling. A moment." },
+  "too-small": { word: "Outside", tone: "wait", line: "Under 100,000 $SEAT. Not enough to be let in. Hold more." },
+  hopped: { word: "Thrown out", tone: "stop", line: "This wallet sold. Out the window, for good." },
+  excluded: { word: "Staff", tone: "dim", line: "Engine, curve, treasury or dead address. Never seated, never paid." },
+  "not-holding": { word: "Not here", tone: "dim", line: "This wallet holds no $SEAT." },
 };
 
 /** What X sign-in came back with (?x=…), read once and then cleared from the address bar. */
 const X_RESULT: Record<string, { ok: boolean; text: string }> = {
-  linked: { ok: true, text: "X linked. The register now prints your X handle, picture and badge." },
+  linked: { ok: true, text: "X linked. The row now prints your X handle, picture and badge." },
   demo: { ok: true, text: "X linked for real: that's your handle, picture and badge. Illustration edition, so nothing was saved." },
   cancelled: { ok: false, text: "X sign-in cancelled. Nothing changed." },
   expired: { ok: false, text: "The X sign-in took too long. Try again." },
@@ -125,7 +125,7 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
       if (tidy.length < 3 || tidy.length > 18 || !/^[A-Za-z0-9 _'-]+$/.test(tidy)) return setNote({ ok: false, text: "Names are 3 to 18 letters, numbers, spaces, - ' or _." });
       demoSaveByline(info.addr, { nickname: tidy, pp: mug });
       onSaved({ nickname: tidy, pp: mug });
-      return setNote({ ok: true, text: `Stamped. You're "${tidy}" on the register now. (Illustration edition: on this page only.)` });
+      return setNote({ ok: true, text: `Stamped. You're "${tidy}" in the room now. (Illustration edition: on this page only.)` });
     }
     try {
       setBusy(true);
@@ -134,7 +134,7 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
       const signature = await signText(account, template.replace("{nickname}", clean).replace("{mugshot}", mug.join("-")));
       const saved = await claimByline(info.addr, clean, mug, nonce, signature);
       onSaved({ nickname: saved.nickname, pp: saved.pp });
-      setNote({ ok: true, text: `Stamped. You're "${saved.nickname}" on the register now.` });
+      setNote({ ok: true, text: `Stamped. You're "${saved.nickname}" in the room now.` });
       window.dispatchEvent(new Event("rbank:refresh"));
     } catch (e: any) {
       setNote({ ok: false, text: e?.code === 4001 ? "You cancelled the signature. Nothing was saved." : e?.message || "Couldn't save the name." });
@@ -190,7 +190,7 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
       fetch("/api/x/demo/unlink", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ addr: info.addr }) }).catch(() => {});
       onSaved({ x: null });
       setTab("name");
-      return setNote({ ok: true, text: "X unlinked. The board shows your name and astronaut again." });
+      return setNote({ ok: true, text: "X unlinked. The board shows your name and ape again." });
     }
     try {
       setBusy(true);
@@ -198,7 +198,7 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
       await unlinkX(info.addr, nonce, await signText(account, text));
       onSaved({ x: null });
       setTab("name");
-      setNote({ ok: true, text: "X unlinked. The board shows your name and astronaut again." });
+      setNote({ ok: true, text: "X unlinked. The board shows your name and ape again." });
       window.dispatchEvent(new Event("rbank:refresh"));
     } catch (e: any) {
       failed(e, "Couldn't unlink X.");
@@ -210,7 +210,7 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
   if (!open)
     return (
       <button type="button" className="press-btn is-ink byline__open" onClick={() => setOpen(true)}>
-        <PenNib weight="bold" aria-hidden="true" /> {info.x ? "Manage X link" : info.nickname ? "Edit name, astronaut or connect X" : "Set your name, astronaut or connect X"}
+        <PenNib weight="bold" aria-hidden="true" /> {info.x ? "Manage X link" : info.nickname ? "Edit name, ape or connect X" : "Set your name, ape or connect X"}
       </button>
     );
 
@@ -226,9 +226,9 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
         </>
       ) : (
         <>
-          <div className="byline__tabs" role="tablist" aria-label="How the register prints you">
+          <div className="byline__tabs" role="tablist" aria-label="How the row prints you">
             <button type="button" role="tab" aria-selected={tab === "name"} className="byline__tab" onClick={() => setTab("name")}>
-              <PenNib weight="bold" aria-hidden="true" /> Name & astronaut
+              <PenNib weight="bold" aria-hidden="true" /> Name & ape
             </button>
             <button type="button" role="tab" aria-selected={tab === "x"} className="byline__tab" onClick={() => setTab("x")}>
               <XLogo weight="bold" aria-hidden="true" /> Connect X
@@ -276,7 +276,7 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
             </div>
           ) : info.x ? (
             <p className="lookup__help" role="tabpanel">
-              Your X account is showing right now. Unlink X on the other tab to set a name and astronaut instead.
+              Your X account is showing right now. Unlink X on the other tab to set a name and ape instead.
             </p>
           ) : (
             <form
@@ -291,7 +291,7 @@ function BylineDesk({ info, onSaved, flash }: { info: WalletInfo; onSaved: (patc
                   traits={mug}
                   size={132}
                   className="booth__shot"
-                  title={`Your astronaut: ${PART_NAMES.fur[mug[0]]} skin, ${PART_NAMES.hat[mug[1]]}, ${PART_NAMES.acc[mug[2]]}, ${PART_NAMES.bg[mug[3]]} backdrop`}
+                  title={`Your ape: ${PART_NAMES.fur[mug[0]]} fur, ${PART_NAMES.hat[mug[1]]}, ${PART_NAMES.acc[mug[2]]}, ${PART_NAMES.bg[mug[3]]} backdrop`}
                 />
                 <div className="booth__dials">
                   {SLOTS.map(([key, label], i) => (
@@ -421,13 +421,13 @@ export function CrewCard({ live }: { live: boolean }) {
     } catch {}
   };
 
-  const base = info ? (info.house ? { word: "Safety officer", tone: "ok" as Tone, line: "The founder's wallet. Watches the site, never ranked, never paid." } : STAMP[info.status]) : null;
+  const base = info ? (info.house ? { word: "Front desk", tone: "ok" as Tone, line: "The dev wallet. Works the desk, never seated, never paid." } : STAMP[info.status]) : null;
   // Crew outside the top N gets no cut yet: say how far it has to climb.
   const stamp =
     info && base && info.status === "sitting" && !info.inTop
-      ? { ...base, tone: "wait" as const, line: `No. ${info.rank}. Only the top ${info.topN} share the emission: climb ${info.rank! - info.topN} more.` }
+      ? { ...base, tone: "wait" as const, line: `No. ${info.rank}, standing. Only the top ${info.topN} get a chair: climb ${info.rank! - info.topN} more.` }
       : info && base && info.status === "sitting"
-        ? { ...base, word: info.rank === 1 ? "At the core" : base.word, line: info.rank === 1 ? "You hold the most. The biggest dose of the next emission is yours." : `Top ${info.topN}. You share the next emission.` }
+        ? { ...base, word: info.rank === 1 ? "Gold chair" : "Seated", line: info.rank === 1 ? "You hold the most. The gold chair and the biggest share of the next reward are yours." : `Chair No. ${info.rank}. You share the next reward.` }
         : base;
 
   return (
@@ -435,8 +435,8 @@ export function CrewCard({ live }: { live: boolean }) {
       <div className="slab">
       <div className="cardpage__grid">
         <div className="cardpage__ask">
-          <h2 className="hz-h2" id="card-head">
-            Your dosimeter
+          <h2 className="st-h2" id="card-head">
+            Your ticket
           </h2>
           <form className="lookup" onSubmit={submit} noValidate>
             <label htmlFor="wallet">Wallet address</label>
@@ -466,8 +466,8 @@ export function CrewCard({ live }: { live: boolean }) {
           {info && stamp ? (
             <article className={`card is-${stamp.tone}`}>
               <header className="card__top">
-                <span className="card__org"><Mark size={24} /> Hawking</span>
-                <span className="card__kind">Dosimeter</span>
+                <span className="card__org"><Mark size={24} /> Take a Seat</span>
+                <span className="card__kind">Ticket</span>
               </header>
               <div className="card__body">
                 <div className="card__mug" aria-hidden="true">
@@ -510,7 +510,7 @@ export function CrewCard({ live }: { live: boolean }) {
                       <dd className="tabular">{eth(info.received)}</dd>
                     </div>
                     <div>
-                      <dt>{info.status === "sitting" && info.inTop ? "Next emission, est." : info.status === "hopped" ? "Spaghettified" : "Rank"}</dt>
+                      <dt>{info.status === "sitting" && info.inTop ? "Next reward, est." : info.status === "hopped" ? "Thrown out" : "Rank"}</dt>
                       <dd className="tabular">
                         {info.status === "sitting" && info.inTop ? (
                           eth(info.estNext)
@@ -545,10 +545,10 @@ export function CrewCard({ live }: { live: boolean }) {
           ) : (
             <div className="card is-blank" aria-hidden="true">
               <header className="card__top">
-                <span className="card__org"><Mark size={24} /> Hawking</span>
-                <span className="card__kind">Dosimeter</span>
+                <span className="card__org"><Mark size={24} /> Take a Seat</span>
+                <span className="card__kind">Ticket</span>
               </header>
-              <p className="card__blank">Your dosimeter reading appears here.</p>
+              <p className="card__blank">Your ticket prints here.</p>
             </div>
           )}
           {info && info.status !== "not-holding" && (info.status !== "excluded" || info.house) ? (
@@ -557,8 +557,8 @@ export function CrewCard({ live }: { live: boolean }) {
             // Say why the booth is shut instead of leaving a connected holder guessing.
             <p className="byline__shut">
               {live
-                ? "Names, astronauts and X links are for wallets holding $HAWK. Buy in, then come back."
-                : "Opens at launch: once $HAWK trades, any holder can set a name, an astronaut or link X here."}
+                ? "Names, apes and X links are for wallets holding $SEAT. Buy in, then come back."
+                : "Opens at launch: once $SEAT trades, any holder can set a name, dress their ape or link X here."}
             </p>
           ) : null}
         </div>

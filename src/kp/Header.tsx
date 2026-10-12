@@ -1,18 +1,19 @@
-/** The masthead: black bar on a strip of hazard tape, the facility's name, its five areas, the way in. */
+/** The masthead: a floating bar with the name, the five sections and the way in. */
 import { useEffect, useState } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { XLogo } from "@phosphor-icons/react";
 import { X_URL, type Status } from "../lib/api";
+import { NAME, TICKER } from "../lib/brand";
 import { BuyButton } from "../components/Bits";
 import { ConnectButton } from "../components/Connect";
 import { Mark } from "./Pieces";
 
 export const NAV: [string, string][] = [
-  ["ladder", "Exposure"],
-  ["round", "Emission"],
-  ["rules", "Safety"],
-  ["card", "Dosimeter"],
-  ["record", "Incidents"],
+  ["row", "The row"],
+  ["round", "The loop"],
+  ["rules", "House rules"],
+  ["card", "Your ticket"],
+  ["record", "Receipts"],
 ];
 
 export function Header({ status }: { status: Status | null }) {
@@ -23,22 +24,22 @@ export function Header({ status }: { status: Status | null }) {
     return () => [...st, top].forEach((s) => s.kill());
   }, []);
   return (
-    <header className="hz-head">
-      <a className="hz-head__brand" href="#top" aria-label="Hawking, back to the top">
+    <header className="st-head">
+      <a className="st-head__brand" href="#top" aria-label={`${NAME}, back to the top`}>
         <Mark size={34} />
-        <span className="hz-head__word">Hawking</span>
-        <span className="hz-head__tick">$HAWK</span>
+        <span className="st-head__word">{NAME}</span>
+        <span className="st-head__tick">{TICKER}</span>
       </a>
-      <nav className="hz-nav" aria-label="Sections">
+      <nav className="st-nav" aria-label="Sections">
         {NAV.map(([id, label]) => (
           <a key={id} href={`#${id}`} className={on === id ? "is-on" : ""} aria-current={on === id ? "location" : undefined}>
             {label}
           </a>
         ))}
       </nav>
-      <div className="hz-head__acts">
+      <div className="st-head__acts">
         {X_URL ? (
-          <a className="hz-x" href={X_URL} target="_blank" rel="noreferrer noopener" aria-label="Hawking on X" title="Hawking on X">
+          <a className="st-x" href={X_URL} target="_blank" rel="noreferrer noopener" aria-label={`${NAME} on X`} title={`${NAME} on X`}>
             <XLogo weight="bold" aria-hidden="true" />
           </a>
         ) : null}

@@ -15,7 +15,7 @@ type Holder = { id: string; name: string; balance: number; sold: boolean; joined
 const NAMES = ["apeking", "0x1a2b…3c4d", "@bananas", "hopium", "0x5e6f…7a8b", "silverback", "0x9c0d…1e2f", "@jungle", "kongfu", "0x3a4b…5c6d", "newape", "0x7e8f…9a0b", "@vines", "0xb1c2…d3e4", "@coconut", "chimp", "0xf5a6…b7c8", "@baboon"];
 const start = (joined: boolean): Holder[] => NAMES.map((name, i) => ({ id: `h${i}`, name, balance: Math.round(9_400_000 * Math.pow(0.8, i)), sold: false, joined }));
 const board = (r: Holder[]) => r.filter((h) => h.joined && !h.sold).sort((a, b) => b.balance - a.balance);
-const DEV = { name: "0xde5k…f00d", balance: 20_000_000 };
+const DEV = { id: "dev-wallet", name: "0xde5k…f00d", balance: 20_000_000 };
 const fmt = (n: number) => n.toLocaleString("en-US");
 
 function Preview() {
