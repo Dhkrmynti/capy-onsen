@@ -8,7 +8,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { RoundedBox } from "@react-three/drei";
+import { Html, RoundedBox } from "@react-three/drei";
 import { Bloom, EffectComposer, N8AO, Vignette } from "@react-three/postprocessing";
 import { Env, backOut, compact, gradTex, hash, inOut, lin, numberTex, out3, powTex, snap } from "./BunnyBrawl";
 import type { BrawlRow, Parts } from "./BunnyBrawl";
@@ -60,6 +60,9 @@ type Puppet = {
 type Key = "x" | "y" | "z" | "hop" | "rotY" | "spin" | "lean" | "arm" | "fist" | "squash" | "scale" | "yell" | "sit";
 type Tween = { p: Puppet; k: Key; a: number | null; b: number; t0: number; d: number; e: (t: number) => number; start?: () => void; done?: () => void; on?: boolean };
 type Fx = { smash: (col: number) => void };
+export type Dev = { name: string; balance: number };
+/** Scene centre on wide screens: the row plus the cooler on the left and the desk on the right. */
+const CX = 0.5;
 
 function newPuppet(id: string, slot: number): Puppet {
   const s = seat(slot);
@@ -147,7 +150,7 @@ function Chair({ i }: { i: number }) {
   );
 }
 
-function Room({ fx }: { fx: Fx }) {
+function Room({ fx, dev }: { fx: Fx; dev?: Dev }) {
   const n = cols();
   const W = n * pitch();
   const [y0, y1] = winY();
@@ -313,7 +316,7 @@ function Room({ fx }: { fx: Fx }) {
       })}
       <Prize />
 
-      {/* a water cooler at the head of the row, a plant at the tail */}
+      {/* a water cooler at the head of the row; the front desk is by the door at the tail */}
       <group position={[-(W / 2 + 1.25), 0, -0.85]}>
         <RoundedBox args={[0.8, 1.9, 0.8]} radius={0.06} smoothness={4} position={[0, 0.95, 0]} castShadow receiveShadow>
           <meshPhysicalMaterial color="#f4f6f8" roughness={0.3} clearcoat={0.6} />
@@ -329,18 +332,65 @@ function Room({ fx }: { fx: Fx }) {
           </mesh>
         ))}
       </group>
-      <group position={[W / 2 + 1.25, 0, -0.85]}>
-        <mesh position={[0, 0.4, 0]} castShadow receiveShadow>
-          <cylinderGeometry args={[0.46, 0.34, 0.8, 24]} />
-          <meshStandardMaterial color="#c8643c" roughness={0.8} />
-        </mesh>
-        {[[0, 1.7, 0, 0], [0.3, 1.45, 0.1, 0.5], [-0.3, 1.5, -0.05, -0.5], [0.1, 1.4, 0.3, 0.2], [-0.12, 1.55, -0.28, -0.2]].map(([x, y, z, r], k) => (
-          <mesh key={k} position={[x, y, z]} rotation={[z * 1.4, 0, -r]} scale={[0.34, 1, 0.12]} castShadow>
-            <sphereGeometry args={[0.95, 14, 12]} />
-            <meshStandardMaterial color={k % 2 ? "#2f8f3f" : "#3aa64a"} roughness={0.7} />
-          </mesh>
-        ))}
+      {/* the lamp over the gold chair */}
+      <mesh position={[slotPos(0).x, slotPos(0).y + SEAT + 3.3, slotPos(0).z]}>
+        <coneGeometry args={[1.15, 6.6, 32, 1, true]} />
+        <meshBasicMaterial color="#fff0a8" transparent opacity={0.11} blending={THREE.AdditiveBlending} depthWrite={false} side={THREE.DoubleSide} fog={false} />
+      </mesh>
+      <spotLight position={[slotPos(0).x, slotPos(0).y + 7.5, slotPos(0).z + 1.5]} target-position={[slotPos(0).x, slotPos(0).y, slotPos(0).z]} angle={0.3} penumbra={0.7} intensity={90} color="#ffe9a0" distance={12} />
+      {dev && !LAYOUT.tall ? <Reception dev={dev} x={W / 2 + 1.7} /> : null}
+    </group>
+  );
+}
+
+/**
+ * The front desk by the door. The dev wallet works behind it: always in the room, balance on
+ * show, never on a chair (it is not ranked and not paid).
+ */
+function Reception({ dev, x }: { dev: Dev; x: number }) {
+  const parts = useRef<Parts | null>(null);
+  const register = useMemo(() => (_: string, p: Parts | null) => void (parts.current = p), []);
+  useFrame(({ clock }) => {
+    const m = parts.current;
+    if (!m) return;
+    const t = clock.elapsedTime;
+    m.root.rotation.y = -0.4 + Math.sin(t * 0.4) * 0.18;
+    m.body.position.y = Math.sin(t * 1.6) * 0.015;
+    m.mouth.scale.set(0.85, 0.24, 1);
+    m.lidL.rotation.x = m.lidR.rotation.x = 0.2 + ((t * 0.7) % 3.3 < 0.1 ? 1.15 : 0);
+    m.armL.rotation.set(-0.5 + Math.sin(t * 1.3) * 0.08, 0, -0.35);
+    m.armR.rotation.set(-0.5 + Math.sin(t * 1.3 + 1) * 0.08, 0, 0.35);
+  });
+  return (
+    <group position={[x, 0, -0.95]}>
+      <group position={[0, 0.6, 0]}>
+        <Ape
+          id="dev-wallet"
+          register={register}
+          label={
+            <div className="brawl__tag is-dev">
+              <b>DEV</b>
+              <span>{dev.name}</span>
+              <i>{compact(dev.balance)} · not ranked</i>
+            </div>
+          }
+        />
       </group>
+      <RoundedBox args={[2.3, 1.2, 0.7]} radius={0.06} smoothness={4} position={[0, 0.6, 0.62]} castShadow receiveShadow>
+        <meshPhysicalMaterial color="#2a9d98" roughness={0.45} clearcoat={0.5} />
+      </RoundedBox>
+      <RoundedBox args={[2.5, 0.1, 0.9]} radius={0.04} smoothness={4} position={[0, 1.24, 0.62]} castShadow receiveShadow>
+        <meshStandardMaterial color="#b98a5a" roughness={0.6} />
+      </RoundedBox>
+      {/* a desk bell */}
+      <mesh position={[-0.75, 1.3, 0.75]} castShadow>
+        <sphereGeometry args={[0.13, 20, 12, 0, Math.PI * 2, 0, Math.PI / 2]} />
+        <meshStandardMaterial color="#ffc93c" metalness={1} roughness={0.2} />
+      </mesh>
+      <mesh position={[-0.75, 1.45, 0.75]}>
+        <sphereGeometry args={[0.03, 10, 8]} />
+        <meshStandardMaterial color="#ffc93c" metalness={1} roughness={0.2} />
+      </mesh>
     </group>
   );
 }
@@ -366,9 +416,9 @@ function Prize() {
 
 /* ───────── the director ───────── */
 
-type DirProps = { rows: BrawlRow[]; sold: string[]; cast: string[]; setCast: (f: (c: string[]) => string[]) => void; fx: Fx };
+type DirProps = { rows: BrawlRow[]; sold: string[]; cast: string[]; setCast: (f: (c: string[]) => string[]) => void; fx: Fx; scroll?: { current: number } };
 
-function Director({ rows, sold, cast, setCast, fx }: DirProps) {
+function Director({ rows, sold, cast, setCast, fx, scroll }: DirProps) {
   // the numbers on the tags follow the room, not the incoming board: a rank changes when the punch lands
   const [ranks, setRanks] = useState<string[]>([]);
   const onOrder = (ids: string[]) => setRanks(ids);
@@ -395,14 +445,17 @@ function Director({ rows, sold, cast, setCast, fx }: DirProps) {
   target.current = rows.slice(0, SLOTS).map((r) => r.id);
   soldSet.current = new Set(sold);
 
-  // first board: everyone is simply seated
+  // the board at mount is simply seated (it may be empty: an empty room is a real state, not a loading one)
+  const inited = useRef(false);
+  const push = useRef(0);
   useEffect(() => {
-    if (order.current.length || !target.current.length) return;
+    if (inited.current) return;
+    inited.current = true;
     order.current = [...target.current];
     order.current.forEach((id, i) => puppets.current.set(id, newPuppet(id, i)));
     setCast(() => [...order.current]);
     onOrder([...order.current]);
-  });
+  }, []);
 
   const tw = (p: Puppet, k: Key, b: number, delay: number, d: number, e = out3, done?: () => void) => tweens.current.push({ p, k, a: null, b, t0: now.current + delay, d, e, done });
   const after = (delay: number, fn: () => void) => timers.current.push({ at: now.current + delay, fn });
@@ -484,6 +537,16 @@ function Director({ rows, sold, cast, setCast, fx }: DirProps) {
     tweens.current.push({ p: v, k: "squash", a: 0.65, b: -0.45, t0: now.current + 0.71, d: 0.1, e: snap });
     tweens.current.push({ p: v, k: "squash", a: -0.45, b: 0, t0: now.current + 0.81, d: 0.6, e: lin });
   };
+  /** A newcomer hops in from the door, past the desk, to the front of chair i. Returns how long it takes. */
+  const walkIn = (a: Puppet, i: number) => {
+    const s = slotPos(i);
+    const [x0, z0] = [a.x, a.z];
+    const [tx, tz] = [s.x + 0.25, s.z + 1.1];
+    const n = Math.max(1, Math.ceil(Math.abs(x0 - tx) / 2.3));
+    a.rotY = -1.2;
+    for (let k = 1; k <= n; k++) hopTo(a, x0 + ((tx - x0) * k) / n, s.y, z0 + ((tz - z0) * k) / n, (k - 1) * 0.27, 0.25, 0.42);
+    return n * 0.27;
+  };
   /** Drops the guard and hops into chair i. */
   const takeSeat = (a: Puppet, i: number, delay: number, cheer: boolean) => {
     const s = seat(i);
@@ -557,13 +620,14 @@ function Director({ rows, sold, cast, setCast, fx }: DirProps) {
       busyUntil.current = now.current + 0.2;
       return true;
     }
+    const fresh = !a;
     if (!a) {
       // a new holder walks in from the door on the right
       a = newPuppet(aId, SLOTS - 1);
       const last = slotPos(SLOTS - 1);
-      a.x = last.x + 5;
+      a.x = (LAYOUT.tall ? last.x : 6.75) + 6.6;
       a.y = last.y;
-      a.z = last.z + 1;
+      a.z = last.z + 1.25;
       a.sit = 0;
       puppets.current.set(aId, a);
       setCast((c) => (c.includes(aId) ? c : [...c, aId]));
@@ -575,11 +639,12 @@ function Director({ rows, sold, cast, setCast, fx }: DirProps) {
     const v = vId ? alive(vId) : undefined;
 
     if (!v) {
-      // an empty chair: just take it
-      takeSeat(a, i, 0.05, false);
-      settle(0.3, new Set([a.id]));
-      busyUntil.current = now.current + 0.8;
-      onOrder([...order.current]);
+      // an empty chair: walk in and take it. The very first holder gets the gold one and a little hop of joy.
+      const d = fresh ? walkIn(a, i) : 0;
+      takeSeat(a, i, d + 0.08, i === 0);
+      settle(d + 0.3, new Set([a.id]));
+      after(d + 0.35, () => onOrder([...order.current]));
+      busyUntil.current = now.current + d + (i === 0 ? 1.3 : 0.85);
       return true;
     }
     approach(a, i);
@@ -607,7 +672,7 @@ function Director({ rows, sold, cast, setCast, fx }: DirProps) {
   useFrame(({ clock }, dt) => {
     real.current = clock.elapsedTime;
     const t = (now.current += Math.min(dt, 0.05) * SLOW * (real.current < stopUntil.current ? 0.04 : 1));
-    if (t >= busyUntil.current && order.current.length) step();
+    if (t >= busyUntil.current && inited.current) step();
 
     for (let n = timers.current.length - 1; n >= 0; n--) if (t >= timers.current[n].at) timers.current.splice(n, 1)[0].fn();
     const list = tweens.current;
@@ -700,15 +765,20 @@ function Director({ rows, sold, cast, setCast, fx }: DirProps) {
       cam.fov = fov;
       cam.updateProjectionMatrix();
     }
-    const span = LAYOUT.tall ? 8.2 : SLOTS * 1.5 + 4.2;
+    const span = LAYOUT.tall ? 8.2 : SLOTS * 1.5 + 6.2;
     const hf = 2 * Math.atan(Math.tan((fov * Math.PI) / 360) * (size.width / size.height));
     const dist = Math.max(11, span / 2 / Math.tan(hf / 2));
+    // scrolling the page pushes the camera in on the gold chair before the next section covers the room
+    push.current += ((scroll?.current ?? 0) - push.current) * Math.min(1, dt * 6);
+    const k = inOut(Math.min(1, Math.max(0, push.current)));
+    const g = seat(0);
+    const mix = (a: number, b: number) => a + (b - a) * k;
     if (LAYOUT.tall) {
-      cam.position.set(Math.sin(t * 0.25) * 0.3 + Math.sin(t * 61) * s, 7.2 + Math.cos(t * 53) * s, dist + 3);
-      cam.lookAt(0, 2.9, 0);
+      cam.position.set(mix(Math.sin(t * 0.25) * 0.3, g.x + 0.5) + Math.sin(t * 61) * s, mix(7.2, 3.4) + Math.cos(t * 53) * s, mix(dist + 3, g.z + 6.5));
+      cam.lookAt(mix(0, g.x), mix(2.9, g.y + 1.2), mix(0, g.z));
     } else {
-      cam.position.set(Math.sin(t * 0.25) * 0.5 + Math.sin(t * 61) * s, 3.4 + dist * 0.1 + Math.cos(t * 53) * s, dist);
-      cam.lookAt(0, 2.7, 0);
+      cam.position.set(mix(CX + Math.sin(t * 0.25) * 0.5, g.x + 2.4) + Math.sin(t * 61) * s, mix(3.4 + dist * 0.1, 2.7) + Math.cos(t * 53) * s, mix(dist, 7.6));
+      cam.lookAt(mix(CX, g.x + 0.9), mix(2.7, g.y + 1.35), 0);
     }
   });
 
@@ -737,6 +807,18 @@ function Director({ rows, sold, cast, setCast, fx }: DirProps) {
           />
         );
       })}
+      {Array.from({ length: Math.max(0, SLOTS - ranks.length) }, (_, n) => {
+        const i = ranks.length + n;
+        const c = seat(i);
+        return (
+          <Html key={i} position={[c.x, c.y - 0.02, c.z + 0.75]} center zIndexRange={[4, 0]} style={{ pointerEvents: "none" }}>
+            <div className={`brawl__tag is-empty${i === 0 ? " is-gold" : ""}`}>
+              <b>#{i + 1}</b>
+              <span>empty</span>
+            </div>
+          </Html>
+        );
+      })}
       <mesh ref={pow} visible={false} renderOrder={10}>
         <planeGeometry args={[1, 1]} />
         <meshBasicMaterial map={powMaps.pow} transparent depthTest={false} />
@@ -750,13 +832,13 @@ function Director({ rows, sold, cast, setCast, fx }: DirProps) {
 }
 
 /** Picks the layout from the canvas shape; the room and its cast are rebuilt when it flips. */
-function Scene(props: Omit<DirProps, "fx">) {
+function Scene({ dev, ...props }: Omit<DirProps, "fx"> & { dev?: Dev }) {
   const tall = useThree((s) => s.size.width / s.size.height < 0.9);
   LAYOUT.tall = tall;
   const fx = useRef<Fx>({ smash: () => {} });
   return (
     <group key={tall ? "tall" : "wide"}>
-      <Room fx={fx.current} />
+      <Room fx={fx.current} dev={dev} />
       <Director {...props} fx={fx.current} />
     </group>
   );
@@ -764,9 +846,12 @@ function Scene(props: Omit<DirProps, "fx">) {
 
 /**
  * `rows` is the board (top ten, best first). `sold` lists holders that sold: one of them leaving
- * the board goes out through the window instead of down the row. `fx` turns the post effects off.
+ * the board goes out through the window instead of down the row. `dev` puts the dev wallet behind
+ * the front desk. `scroll` is a 0..1 ref the page drives to push the camera in on the gold chair.
+ * Mount it once the board has loaded: whoever is on it at mount is seated without ceremony, and an
+ * empty board is shown as an empty room. `fx` turns the post effects off.
  */
-export default function WaitingRoom({ rows, sold = [], fx = true }: { rows: BrawlRow[]; sold?: string[]; fx?: boolean }) {
+export default function WaitingRoom({ rows, sold = [], dev, scroll, fx = true }: { rows: BrawlRow[]; sold?: string[]; dev?: Dev; scroll?: { current: number }; fx?: boolean }) {
   const [cast, setCast] = useState<string[]>([]);
   return (
     <Canvas shadows style={{ position: "absolute", inset: 0 }} dpr={[1, 1.75]} camera={{ fov: 32, near: 0.1, far: 240, position: [0, 4, 18] }} gl={{ antialias: !fx, toneMappingExposure: 0.92 }}>
@@ -777,7 +862,7 @@ export default function WaitingRoom({ rows, sold = [], fx = true }: { rows: Braw
       {/* ceiling light from the front right, daylight through the window as a rim */}
       <directionalLight position={[7, 13, 9]} color="#fff1d6" intensity={2.1} castShadow shadow-mapSize={[2048, 2048]} shadow-camera-left={-13} shadow-camera-right={13} shadow-camera-top={11} shadow-camera-bottom={-5} shadow-bias={-0.0003} shadow-normalBias={0.03} shadow-radius={6} />
       <directionalLight position={[-6, 8, -12]} color="#cfe8ff" intensity={1.5} />
-      <Scene rows={rows} sold={sold} cast={cast} setCast={setCast} />
+      <Scene rows={rows} sold={sold} dev={dev} scroll={scroll} cast={cast} setCast={setCast} />
       {fx ? (
         <EffectComposer multisampling={4}>
           <N8AO aoRadius={0.7} intensity={2.2} distanceFalloff={0.6} halfRes quality="performance" />

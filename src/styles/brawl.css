@@ -19,3 +19,38 @@
   .brawl__tag.is-first b { font-size: 15px; }
   .brawl__tag i { display: none; }
 }
+
+/* Empty chairs and the dev at the desk. */
+.brawl__tag.is-empty { background: rgba(255, 255, 255, 0.72); color: #6a5a48; border: 2px dashed #6a5a48; box-shadow: none; text-transform: uppercase; letter-spacing: 0.08em; }
+.brawl__tag.is-empty b { color: #6a5a48; }
+.brawl__tag.is-empty.is-gold { background: #fff3c4; border-color: #b07a00; color: #7a5200; animation: brawl-pulse 1.4s ease-in-out infinite; }
+.brawl__tag.is-empty.is-gold b { color: #7a5200; font-size: 20px; }
+.brawl__tag.is-dev { background: #fff; color: #1a1206; }
+.brawl__tag.is-dev b { color: #2a9d98; }
+.brawl__tag.is-dev i { color: #6a5a48; }
+@keyframes brawl-pulse { 50% { transform: scale(1.12); box-shadow: 0 0 0 6px rgba(255, 201, 60, 0.35); } }
+
+/* The hero pinned while the page scrolls: --p (0..1) is the push-in, then the sheet slides over it. */
+.lobby { --p: 0; background: #14110d; }
+.brawl--pin { position: sticky; top: 0; }
+.brawl--pin .brawl__title { opacity: calc(1 - var(--p) * 1.6); transform: translateY(calc(var(--p) * -40px)) scale(calc(1 - var(--p) * 0.08)); }
+.brawl--pin .brawl__ctl { opacity: calc(1 - var(--p) * 2.5); bottom: 46px; }
+.brawl__hint { position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); font: 700 11px/1 "JetBrains Mono", monospace; letter-spacing: 0.3em; text-transform: uppercase; color: #1a1206; opacity: calc(0.7 - var(--p) * 3); animation: brawl-bob 1.6s ease-in-out infinite; }
+.brawl__hint::after { content: "↓"; display: block; text-align: center; margin-top: 3px; letter-spacing: 0; }
+@keyframes brawl-bob { 50% { transform: translate(-50%, 5px); } }
+.brawl__dim { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 30% 55%, transparent 20%, #14110d 100%); opacity: calc(var(--p) * 0.75); }
+.lobby__gap { height: 70vh; }
+.sheet { position: relative; z-index: 6; margin-top: -1px; padding: 56px max(20px, calc(50vw - 440px)) 90px; background: #14110d; color: #f4ecdc; border-radius: 40px 40px 0 0; box-shadow: 0 -24px 60px rgba(0, 0, 0, 0.45); font: 700 14px/1.5 "JetBrains Mono", ui-monospace, monospace; }
+.sheet::before { content: ""; position: absolute; left: 50%; top: 16px; width: 56px; height: 5px; margin-left: -28px; border-radius: 3px; background: #4a4034; }
+.sheet h2 { margin: 0; font: 900 clamp(40px, 6vw, 72px)/0.95 "Barlow Condensed", system-ui, sans-serif; text-transform: uppercase; color: #ffc93c; }
+.sheet__note { margin: 8px 0 24px; color: #9c8f7c; }
+.sheet__rows { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.sheet__rows li { display: grid; grid-template-columns: 56px 1fr auto; align-items: center; padding: 10px 14px; background: #201b15; border-radius: 12px; }
+.sheet__rows b { font: 900 22px/1 "Barlow Condensed", system-ui, sans-serif; color: #ffc93c; }
+.sheet__rows i { font-style: normal; color: #9fe38c; }
+.sheet__rows li.is-first { background: #ffc93c; color: #1a1206; }
+.sheet__rows li.is-first b, .sheet__rows li.is-first i { color: #1a1206; }
+.sheet__empty { padding: 28px; border: 2px dashed #4a4034; border-radius: 16px; color: #c9bba6; text-align: center; }
+.sheet__rules { list-style: none; margin: 36px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
+.sheet__rules li { padding: 16px; background: #201b15; border-radius: 14px; color: #c9bba6; }
+.sheet__rules b { display: block; margin-bottom: 6px; font: 900 20px/1 "Barlow Condensed", system-ui, sans-serif; text-transform: uppercase; color: #f4ecdc; }
