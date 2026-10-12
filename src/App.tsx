@@ -4,30 +4,29 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { demoPond, demoStatus, usePoll, type Pond, type Status } from "./lib/api";
 import { prefersReducedMotion } from "./lib/motion";
-import { CrewCard } from "./components/CrewCard";
 import { restoreWallet } from "./lib/wallet";
-import { Header } from "./kp/Header";
-import { Hero } from "./kp/Hero";
-import { Board } from "./kp/Board";
-import { Round } from "./kp/Round";
-import { Rules } from "./kp/Rules";
-import { Record } from "./kp/Record";
-import { Close } from "./kp/Close";
-import { Ticker } from "./kp/Ticker";
+import { Header } from "./onsen/Header";
+import { Hero } from "./onsen/Hero";
+import { Pool } from "./onsen/Pool";
+import { Boiler } from "./onsen/Boiler";
+import { Rules } from "./onsen/Rules";
+import { Tag } from "./onsen/Tag";
+import { Ledger } from "./onsen/Ledger";
+import { Exit } from "./onsen/Exit";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export function App() {
   const { data: status, error } = usePoll<Status>("/api/status", 4000, demoStatus);
   const live = !!status?.tokenAddress;
-  // the Ladder is live: a new buyer is on the board within a few seconds
+  // the bath is live: a new buyer is in the list within a few seconds
   const { data: pond } = usePoll<Pond>(live ? "/api/pond?limit=50" : null, 3000, demoPond);
 
   // A wallet that already trusts this site shows as connected without a popup.
   useEffect(restoreWallet, []);
 
-  // The pinned scenes (hero, Round) measure where they start once; when fonts, X pictures or
-  // the live Ladder change the height above them, measure again so a pin never jumps or vanishes.
+  // The scrubbed and pinned scenes measure where they start once; when fonts, X pictures or the
+  // live bath change the height above them, measure again so a pin never jumps or vanishes.
   useEffect(() => {
     ScrollTrigger.config({ ignoreMobileResize: true });
     let t = 0;
@@ -37,7 +36,7 @@ export function App() {
     };
     document.fonts?.ready.then(again);
     window.addEventListener("load", again);
-    const watched = ["row", "round", "rules", "card", "record"].map((id) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
+    const watched = ["bath", "boiler", "rules", "card", "ledger"].map((id) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
     const heights = new Map<Element, number>();
     const ro = new ResizeObserver((entries) => {
       for (const e of entries) {
@@ -82,19 +81,17 @@ export function App() {
   }, []);
 
   return (
-    <div className="kp st">
+    <div className="onsen">
       <Header status={status} />
-      {/* the room stays pinned behind; the page below is a sheet that slides up over it */}
+      {/* the doorway stays put while you scroll; the water rises over it and becomes the bath below */}
       <Hero status={status} pond={pond} offline={!!error && !status} />
-      <div className="st-gap" aria-hidden="true" />
-      <main className="st-sheet">
-        <Ticker items={["Top 10 are seated", "Biggest holder gets the gold chair", "Sell once and you are out", "Rewards in ETH"]} />
-        <Board status={status} pond={pond} />
-        <Round status={status} />
+      <main>
+        <Pool status={status} pond={pond} />
+        <Boiler status={status} />
         <Rules status={status} />
-        <CrewCard live={live} />
-        <Record status={status} />
-        <Close status={status} />
+        <Tag live={live} />
+        <Ledger status={status} />
+        <Exit status={status} />
       </main>
     </div>
   );

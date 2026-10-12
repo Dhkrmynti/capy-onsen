@@ -1,3 +1,19 @@
+# Capy Onsen ($ONSEN) · working name · branch `lore-onsen` (12 Oct 2026)
+
+Rebranded from Take a Seat ($SEAT). Same site features and engine underneath; two things changed.
+
+**Lore.** A hot spring bathhouse run by capybaras. The ten biggest holders are the ten capybaras soaking in the water, and No. 1 wears the yuzu on its head. Overtake someone and you wade to their spot; the yuzu changes heads. Sell once and you are out of the water, in the cold, for good. The dev wallet is the attendant at the counter: always shown, never in the water, never paid. Under the bath is the boiler room: the buyback is thrown in the furnace, and that is what keeps the water hot. Each capybara wears its holder's portrait traits (coat, what is on the head, extras, the wall behind). Original characters.
+
+**Engine.** Buyback and burn are back. The cycle is four steps: reward (0.02 ETH to the ten in the water: No. 1-5 share 0.014, No. 6-10 share 0.006) → treasury (0.025) → buyback & burn (0.01, burns exactly what it bought) → treasury (0.025), then again. This is the engine as it was before the Take a Seat branch removed the burn; the `sold` list added on that branch is kept.
+
+Vocabulary: the bath (board) · the yuzu (No. 1) · hot pool / warm pool (the two tiers) · the towel line (11-50) · washing up (holding not aged yet) · got out (sold) · the attendant, at the counter (dev) · your bath tag (wallet card) · the changing room (name, capybara, X) · the boiler room (the cycle) · the furnace (buyback & burn) · the ledger (log).
+
+UI: flat illustration, no 3D. A noren over a Fuji mural, wood, tile, water, coal. Dela Gothic One, Zen Kaku Gothic New, DM Mono. Three scroll transitions: the noren lifts and the water rises over the doorway; the pipe run in the boiler room (pinned and horizontal on wide screens, a riser on phones); paper doors sliding open on the house rules. See `DESIGN.md`.
+
+Name and ticker live in `src/lib/brand.ts` (plus the engine logs, `index.html`, `public/favicon.svg`). The page is in `src/onsen/`. `lobby.html`, `city.html` and `brawl.html` are older prototypes and still show the ape and rabbit worlds. `scripts/`, `DEPLOY-VPS.md`, `public/terms.html` and `public/privacy.html` still name the earlier domain and X handle; nothing is deployed for this lore.
+
+---
+
 # Take a Seat ($SEAT) · working name · branch `lore-seat` (12 Oct 2026)
 
 Rebranded from Hawking ($HAWK). Same site and engine underneath; two things changed.

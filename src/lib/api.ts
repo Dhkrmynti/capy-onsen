@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export type RoundKind = "feeding" | "keeper";
+export type RoundKind = "feeding" | "keeper" | "sink";
 
 export interface Status {
   online: boolean;
@@ -10,12 +10,12 @@ export interface Status {
   curveAddress: string;
   treasuryAddress: string;
   escrowETH: string;
-  /** Display-only prices: USD per $HEIR and per ETH (0 when unknown). */
+  /** Display-only prices: USD per $ONSEN and per ETH (0 when unknown). */
   price?: { tokenUSD: number; ethUSD: number; source: string; at: number };
   cycle: { index: number; kind: RoundKind; thresholdETH: string; steps: { kind: RoundKind; thresholdETH: string }[] };
   rules: { minBalance: string; minHoldHours: number; topN: number; tiers?: Tier[] };
   counts: { sitters: number; waiting: number; hopped: number; holders: number };
-  totals: { feesClaimedETH: string; fedETH: string; keeperETH: string };
+  totals: { feesClaimedETH: string; fedETH: string; keeperETH: string; sinkETH: string; tokensBurned: string };
   rounds: number;
   lastIndexedBlock: number;
   logs?: { t: number; type: string; msg: string }[];
@@ -115,24 +115,30 @@ export interface RoundRow {
   recipients: number;
   fedETH: string;
   treasuryTx: string;
+  buyTx: string;
+  burnTx: string;
+  tokensBurned: string;
   tx: string;
   doneAt: number;
 }
 
 /** The cycle, in plain names. */
 export const STEP: Record<RoundKind, { name: string; does: string }> = {
-  feeding: { name: "Reward", does: "ETH to the ten seated holders" },
+  feeding: { name: "Reward", does: "ETH to the ten in the bath" },
   keeper: { name: "Treasury", does: "to the treasury wallet" },
+  sink: { name: "Buyback & burn", does: "buys $ONSEN back and burns it" },
 };
 
 export const DEFAULT_STEPS: Status["cycle"]["steps"] = [
   { kind: "feeding", thresholdETH: "0.02" },
   { kind: "keeper", thresholdETH: "0.025" },
+  { kind: "sink", thresholdETH: "0.01" },
+  { kind: "keeper", thresholdETH: "0.025" },
 ];
 
 /** Share of all fees each step gets over one full cycle, in whole percent. */
 export function stepShare(steps: Status["cycle"]["steps"], kind: RoundKind) {
-  const kinds: RoundKind[] = ["feeding", "keeper"];
+  const kinds: RoundKind[] = ["feeding", "keeper", "sink"];
   const total = steps.reduce((t, s) => t + parseFloat(s.thresholdETH), 0);
   if (!(total > 0)) return 0;
   // Whole percents that still add up to 100 (largest remainder).
@@ -349,7 +355,7 @@ export const demoStatus = (): Status => ({
   cycle: { index: 0, kind: "feeding", thresholdETH: "0.02", steps: DEFAULT_STEPS },
   rules: { minBalance: "100000", minHoldHours: 0, topN: 10, tiers: DEFAULT_TIERS },
   counts: { sitters: 87, waiting: 23, hopped: 41, holders: 151 },
-  totals: { feesClaimedETH: "0.8145", fedETH: "0.3618", keeperETH: "0.4518" },
+  totals: { feesClaimedETH: "0.7224", fedETH: "0.1808", keeperETH: "0.4512", sinkETH: "0.0904", tokensBurned: "4712204.8" },
   rounds: 36,
   lastIndexedBlock: 82931447,
 });
@@ -428,7 +434,7 @@ const seedPond = (): { total: number; topN: number; rows: PondRow[] } => {
       firstIn: now() - days[i] * 86400 - 3600 * i,
       padDays: days[i],
       received: String(rec[i]),
-      nickname: ["apeking", "", "bananas", "", "", "silverback", "", "", "", "", "", ""][i] || "",
+      nickname: ["yuzulord", "", "soakmaxxer", "", "", "prune hands", "", "", "", "", "", ""][i] || "",
       pp: [[1, 4, 3, 3], null, [2, 0, 2, 4], null, null, [4, 2, 4, 5], null, null, null, null, null, null][i] ?? null,
       x: null,
     })),
@@ -440,9 +446,9 @@ const demoHash = (k: number) => `0x${(k * 104729 + 17).toString(16).padStart(8, 
 export const demoRounds = (): RoundRow[] =>
   Array.from({ length: 12 }, (_, k) => {
     const n = 36 - k;
-    // newest first: … treasury, reward, treasury, reward …
-    const kind = (["keeper", "feeding"] as const)[k % 2];
-    const claimed = kind === "keeper" ? 0.0251 : 0.0201 + (k % 4) * 0.0002;
+    // newest first: … treasury, burn, treasury, reward …
+    const kind = (["keeper", "sink", "keeper", "feeding"] as const)[k % 4];
+    const claimed = kind === "keeper" ? 0.0251 : kind === "feeding" ? 0.0201 + (k % 4) * 0.0002 : 0.0101 + (k % 4) * 0.0002;
     return {
       n,
       kind,
@@ -454,6 +460,9 @@ export const demoRounds = (): RoundRow[] =>
       recipients: kind === "feeding" ? 10 : 0,
       fedETH: kind === "feeding" ? claimed.toFixed(4) : "0",
       treasuryTx: kind === "keeper" ? demoHash(k + 50) : "",
+      buyTx: kind === "sink" ? demoHash(k + 90) : "",
+      burnTx: kind === "sink" ? demoHash(k + 130) : "",
+      tokensBurned: kind === "sink" ? String(520000 + k * 13100) : "0",
       tx: demoHash(k + 200),
       doneAt: now() - k * 5400 - 840,
     };

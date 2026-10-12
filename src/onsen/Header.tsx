@@ -1,19 +1,18 @@
-/** The masthead: a floating bar with the name, the five sections and the way in. */
+/** The bar over the doorway: the name, the five rooms and the way in. */
 import { useEffect, useState } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { XLogo } from "@phosphor-icons/react";
 import { X_URL, type Status } from "../lib/api";
 import { NAME, TICKER } from "../lib/brand";
-import { BuyButton } from "../components/Bits";
-import { ConnectButton } from "../components/Connect";
-import { Mark } from "./Pieces";
+import { BuyButton, ConnectButton } from "./Bits";
+import { Mark } from "./Capy";
 
 export const NAV: [string, string][] = [
-  ["row", "The row"],
-  ["round", "The loop"],
+  ["bath", "The bath"],
+  ["boiler", "Boiler room"],
   ["rules", "House rules"],
-  ["card", "Your ticket"],
-  ["record", "Receipts"],
+  ["card", "Your tag"],
+  ["ledger", "Ledger"],
 ];
 
 export function Header({ status }: { status: Status | null }) {
@@ -24,22 +23,22 @@ export function Header({ status }: { status: Status | null }) {
     return () => [...st, top].forEach((s) => s.kill());
   }, []);
   return (
-    <header className="st-head">
-      <a className="st-head__brand" href="#top" aria-label={`${NAME}, back to the top`}>
-        <Mark size={34} />
-        <span className="st-head__word">{NAME}</span>
-        <span className="st-head__tick">{TICKER}</span>
+    <header className="head">
+      <a className="head__brand" href="#top" aria-label={`${NAME}, back to the top`}>
+        <Mark size={32} />
+        <span className="head__word">{NAME}</span>
+        <span className="head__tick num">{TICKER}</span>
       </a>
-      <nav className="st-nav" aria-label="Sections">
+      <nav className="nav" aria-label="Sections">
         {NAV.map(([id, label]) => (
           <a key={id} href={`#${id}`} className={on === id ? "is-on" : ""} aria-current={on === id ? "location" : undefined}>
             {label}
           </a>
         ))}
       </nav>
-      <div className="st-head__acts">
+      <div className="head__acts">
         {X_URL ? (
-          <a className="st-x" href={X_URL} target="_blank" rel="noreferrer noopener" aria-label={`${NAME} on X`} title={`${NAME} on X`}>
+          <a className="head__x" href={X_URL} target="_blank" rel="noreferrer noopener" aria-label={`${NAME} on X`} title={`${NAME} on X`}>
             <XLogo weight="bold" aria-hidden="true" />
           </a>
         ) : null}

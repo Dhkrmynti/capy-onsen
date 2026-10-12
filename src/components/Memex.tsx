@@ -44,7 +44,7 @@ export function Memex() {
           </div>
           <div>
             <dt>Operator wallet</dt>
-            <dd className="tabular">{status?.walletAddress ? short(status.walletAddress) : "not set"}</dd>
+            <dd className="num">{status?.walletAddress ? short(status.walletAddress) : "not set"}</dd>
           </div>
           <div>
             <dt>Token</dt>
@@ -75,7 +75,7 @@ export function Memex() {
           <input id="m-treasury" value={treasury} onChange={(e) => setTreasury(e.target.value)} placeholder={status?.treasuryAddress || "0x…"} spellCheck={false} />
           <label htmlFor="m-secret">Admin secret (needed for every save)</label>
           <input id="m-secret" type="password" value={secret} onChange={(e) => setSecret(e.target.value)} autoComplete="off" />
-          <button className="press-btn" type="submit" disabled={busy}>
+          <button className="btn" type="submit" disabled={busy}>
             {busy ? "Saving" : "Save"}
           </button>
           {msg ? (

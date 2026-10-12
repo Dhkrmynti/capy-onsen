@@ -1,4 +1,4 @@
-/* Operator room (/memex). Kept apart from the public gazette. */
+/* Operator room (/lotnok). Kept apart from the public page: plain paper, no scenery. */
 
 .memex {
   min-height: 100vh;
@@ -9,55 +9,50 @@
 
 .memex__card {
   width: min(720px, 100%);
-  background: var(--paper-lift);
-  color: var(--ink);
-  border-radius: var(--r-card);
   padding: clamp(24px, 4vw, 44px);
-  box-shadow: var(--lift);
+  border: 3px solid var(--ink);
+  background: var(--paper-2);
 }
 
 .memex h1 {
-  font-size: 56px;
-  text-transform: uppercase;
+  font: 400 44px/1.05 var(--sign);
 }
 
 .memex h2 {
   margin-top: 36px;
-  font-size: 28px;
-  text-transform: uppercase;
+  font: 400 24px/1.1 var(--sign);
 }
 
 .memex__lead {
   margin-top: 8px;
-  color: #2f5a46;
+  color: var(--muted);
 }
 
 .memex__state {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
   margin: 24px 0 0;
 }
 
 .memex__state dt {
-  font: 700 12px/1 var(--f-data);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #3f6b56;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
 }
 
 .memex__state dd {
   margin: 4px 0 0;
-  font: 700 19px/1.2 var(--f-data);
+  font: 500 17px/1.2 var(--mono);
   overflow-wrap: anywhere;
 }
 
 .memex__warn {
   margin-top: 22px;
   padding: 12px 14px;
-  border-radius: var(--r-card);
-  background: #fff4cf;
-  font: 500 15px/1.45 var(--f-body);
+  border: 2.5px solid var(--ink);
+  background: var(--yuzu);
+  font-size: 15px;
 }
 
 .memex__form {
@@ -68,19 +63,16 @@
 
 .memex__form label {
   margin-top: 8px;
-  font: 700 14px/1 var(--f-data);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-size: 13.5px;
+  font-weight: 700;
 }
 
 .memex__form input {
   height: 48px;
   padding: 0 14px;
-  border: 2px solid #b9c2b4;
-  border-radius: var(--r-card);
+  border: 2.5px solid var(--ink);
   background: #fff;
-  color: var(--ink);
-  font: 600 17px/1 var(--f-data);
+  font: 400 15px/1 var(--mono);
 }
 
 .memex__form .btn {
@@ -89,43 +81,37 @@
 }
 
 .memex__ok {
-  color: var(--paper);
-  font-weight: 600;
+  color: var(--ok);
+  font-weight: 700;
 }
 
 .memex__err {
-  color: #b42d16;
-  font-weight: 600;
+  color: #a82b15;
+  font-weight: 700;
 }
 
 .memex__log {
-  list-style: none;
   margin: 12px 0 0;
   padding: 14px;
   max-height: 360px;
   overflow: auto;
-  background: var(--paper-lift);
-  color: var(--ink);
-  border-radius: var(--r-card);
-  font: 500 14px/1.5 var(--f-data);
+  background: var(--coal);
+  color: var(--paper);
+  font: 400 13.5px/1.5 var(--mono);
 }
 
 .memex__log .is-error {
-  color: #ff8a73;
+  color: #ff8266;
 }
 
 .memex__log .is-success {
-  color: var(--red);
+  color: #8fd39f;
 }
 
 .memex__log .is-warn {
-  color: var(--red);
+  color: var(--yuzu);
 }
 
 .memex__log span {
-  color: var(--ink-faint);
+  opacity: 0.6;
 }
-
-.memex__state {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }

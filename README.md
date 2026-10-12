@@ -1,6 +1,6 @@
-# Robin Heist · $RBANK
+# Capy Onsen · $ONSEN
 
-Memecoin site + engine for **$RBANK · Robin Heist** (Robinhood Chain 4663, launched on Pons; rebranded from Pepads/$PADS on 8 Oct 2026, see `CONCEPT.md`). Creator fees run a three-step loop: ETH straight to the **10 biggest wallets that never sold**, the keeper's cut to the treasury, then a buyback burn. Concept: `CONCEPT.md`. Product truth: `PRODUCT.md`.
+Memecoin site + engine for **$ONSEN · Capy Onsen** (Robinhood Chain 4663, launched on Pons). Creator fees run a four-step loop: ETH straight to the **10 biggest wallets that never sold**, the treasury, a buyback that is burned, the treasury again. Concept and the earlier lores: `CONCEPT.md`. Design: `DESIGN.md`.
 
 ## Run locally
 
@@ -10,17 +10,17 @@ npm run bot          # engine + API on 127.0.0.1:5023 (standby until /lotnok is 
 npm run dev          # site on http://localhost:5183 (proxies /api to 5023)
 ```
 
-- `http://localhost:5183/?demo=1` shows labelled illustration data (amber strip at the top). Never share demo screenshots as real numbers.
+- The local dev server always shows labelled demo data; `http://localhost:5183/?live` shows the real state (empty until the engine has a token). Never share demo screenshots as real numbers.
 - `http://localhost:5183/lotnok` is the engine room.
 
 ## Engine (`bot/pads-engine.ts`)
 
 | Step | What happens |
 |---|---|
-| Indexer | Follows every `$PADS` Transfer from the mint block. Tracks balance, first-buy time, hopped-off flag. Contracts that relay tokens within one tx (routers) are recognised and never counted as holders. |
-| Hopped off | A wallet that sends `$PADS` to the Pons curve, a DEX, or any other contract is marked hopped off forever. Wallet-to-wallet is fine. |
-| The cycle | Each time the Pons fee escrow reaches the current step's size, the engine claims it (tongue snap) and spends all of it on that step, then moves on: **feeding** `FEEDING_ETH` (0.02) → ETH to the top `FEEDING_TOP_N` (10) sitters by balance, split by balance · **keeper** `KEEPER_ETH` (0.025) → treasury · **sink** `SINK_ETH` (0.01) → buy $PADS (curve, or Uniswap v4 after graduation) and send exactly what was bought to 0x…dEaD (the operator wallet's own bag is never touched) · back to feeding. |
-| Sitters | Never hopped off, balance ≥ `MIN_BALANCE`, first $PADS at least `MIN_HOLD_HOURS` old (live engine: 0, set 8 Oct 2026 so a full escrow pays out at once). |
+| Indexer | Follows every `$ONSEN` Transfer from the mint block. Tracks balance, first-buy time, hopped-off flag. Contracts that relay tokens within one tx (routers) are recognised and never counted as holders. |
+| Hopped off | A wallet that sends `$ONSEN` to the Pons curve, a DEX, or any other contract is marked hopped off forever. Wallet-to-wallet is fine. |
+| The cycle | Each time the Pons fee escrow reaches the current step's size, the engine claims it (tongue snap) and spends all of it on that step, then moves on: **feeding** `FEEDING_ETH` (0.02) → ETH to the top `FEEDING_TOP_N` (10) holders by balance, split by tier (`FEEDING_TIERS`) and balance · **keeper** `KEEPER_ETH` (0.025) → treasury · **sink** `SINK_ETH` (0.01) → buy $ONSEN (curve, or Uniswap v4 after graduation) and send exactly what was bought to 0x…dEaD (the operator wallet's own bag is never touched) · **keeper** again · back to feeding. |
+| Sitters | Never hopped off, balance ≥ `MIN_BALANCE`, first $ONSEN at least `MIN_HOLD_HOURS` old (live engine: 0, set 8 Oct 2026 so a full escrow pays out at once). |
 | Restarts | Every tx hash is saved before it is awaited; a restart checks the chain and resumes the round, so nothing is sent or counted twice. A recipient that refuses ETH is skipped and its share stays with the engine. |
 
 Settings come from env or `bot-config.json` (see `.env.example`). Token, operator key and treasury are **set once** in `/lotnok`; changing them later needs `ADMIN_SECRET` in the header.
@@ -47,7 +47,7 @@ nginx: new `/etc/nginx/sites-available/pepads.fun` serving `dist/` with `try_fil
 
 ## Launch checklist
 
-1. Launch $PADS on Pons **from the wallet whose key goes into the engine** (creator fees only reach the launching wallet).
+1. Launch $ONSEN on Pons **from the wallet whose key goes into the engine** (creator fees only reach the launching wallet).
 2. Put ~0.002 ETH gas in it.
 3. `/lotnok` → CA, key, treasury → Save. Check `/api/status` shows the token and an indexed block.
 4. The first feeding snaps once the escrow reaches 0.01 ETH and at least one wallet has held for an hour.
